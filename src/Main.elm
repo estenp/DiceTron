@@ -9,6 +9,7 @@ import Random
 -- MAIN
 
 
+main : Program () Model Msg
 main =
   Browser.element
     { init = init
@@ -22,12 +23,12 @@ main =
 -- MODEL
 
 
-type alias Model = { dieFace : Int }
+type alias Model = List Int
 
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( Model 1
+  ( []
   , Cmd.none
   )
 
@@ -37,13 +38,15 @@ init _ =
 {-
   update can receive messages from both the view, as well as the runtime.
   It receives runtime messages after requesting them via a command.
+
+  A command is basically code we want to run within the runtime, because it's side effecty/impure.
 -}
 
 type Msg =
   -- User wants a new roll value displayed.
   Roll
   -- Runtime is sending a new random die value.
-  | NewValue Int
+  | NewRoll (List Int)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -54,15 +57,15 @@ update msg model =
   -}
     Roll ->
       ( model
-      , Random.generate NewValue (Random.int 1 6)
+      , Random.generate NewRoll fiveDice
       )
   {-
-    If msg is of type NewValue, it will have some a die value tied to it.
+    If msg is of type NewRoll, it will have some a die value tied to it.
     Return a tuple and pass along the new value as the model, and an empty command.
   -}
-    NewValue value ->
+    NewRoll value ->
       (
-        { model | dieFace = value }
+        value
       , Cmd.none
       )
 
@@ -82,6 +85,20 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
   div []
-    [ h1 [] [ text (String.fromInt model.dieFace) ]
+    [ h1 [] (List.map
+              makeDieHTML
+              (List.sort model)
+            )
     , button [ onClick Roll ] [ text "Roll" ]
     ]
+
+
+-- UTILS
+
+
+fiveDice : Random.Generator (List Int)
+fiveDice =
+    Random.list 5 (Random.int 1 6)
+
+makeDieHTML : Int -> Html msg
+makeDieHTML dieVal = text ("[" ++ (String.fromInt dieVal) ++ "] ")
