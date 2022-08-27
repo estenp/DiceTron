@@ -22,8 +22,9 @@ main =
 
 -- MODEL
 
-
-type alias Model = List Int
+-- type alias Die = 1 | 2 | 3 | 4 | 5 | 6
+type alias Cup = List Int
+type alias Model = Cup
 
 
 init : () -> (Model, Cmd Msg)
@@ -46,7 +47,7 @@ type Msg =
   -- User wants a new roll value displayed.
   Roll
   -- Runtime is sending a new random die value.
-  | NewRoll (List Int)
+  | NewRoll (Cup)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -63,9 +64,8 @@ update msg model =
     If msg is of type NewRoll, it will have some a die value tied to it.
     Return a tuple and pass along the new value as the model, and an empty command.
   -}
-    NewRoll value ->
-      (
-        value
+    NewRoll roll ->
+      ( roll
       , Cmd.none
       )
 
@@ -85,10 +85,7 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
   div []
-    [ h1 [] (List.map
-              makeDieHTML
-              (List.sort model)
-            )
+    [ h2 [] (makeCupHTML model)
     , button [ onClick Roll ] [ text "Roll" ]
     ]
 
@@ -96,9 +93,15 @@ view model =
 -- UTILS
 
 
-fiveDice : Random.Generator (List Int)
+fiveDice : Random.Generator (Cup)
 fiveDice =
     Random.list 5 (Random.int 1 6)
 
+  -- Html Utils
+
 makeDieHTML : Int -> Html msg
 makeDieHTML dieVal = text ("[" ++ (String.fromInt dieVal) ++ "] ")
+
+
+makeCupHTML : Model -> List (Html msg)
+makeCupHTML = List.sort >> List.map makeDieHTML
