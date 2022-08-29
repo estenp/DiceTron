@@ -5256,10 +5256,27 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
+var $author$project$Main$Cup = F5(
+	function (a, b, c, d, e) {
+		return {$: 'Cup', a: a, b: b, c: c, d: d, e: e};
+	});
+var $author$project$Main$Quantity = function (a) {
+	return {$: 'Quantity', a: a};
+};
+var $author$project$Main$Two = {$: 'Two'};
+var $author$project$Main$Value = function (a) {
+	return {$: 'Value', a: a};
+};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
-	return _Utils_Tuple2(_List_Nil, $elm$core$Platform$Cmd$none);
+	return _Utils_Tuple2(
+		{
+			cup: A5($author$project$Main$Cup, $author$project$Main$Two, $author$project$Main$Two, $author$project$Main$Two, $author$project$Main$Two, $author$project$Main$Two),
+			quantity: $author$project$Main$Quantity(2),
+			value: $author$project$Main$Value(2)
+		},
+		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
@@ -5269,13 +5286,24 @@ var $author$project$Main$subscriptions = function (model) {
 var $author$project$Main$NewRoll = function (a) {
 	return {$: 'NewRoll', a: a};
 };
+var $author$project$Main$Five = {$: 'Five'};
+var $author$project$Main$Four = {$: 'Four'};
+var $author$project$Main$One = {$: 'One'};
+var $author$project$Main$Six = {$: 'Six'};
+var $author$project$Main$Three = {$: 'Three'};
+var $elm$random$Random$addOne = function (value) {
+	return _Utils_Tuple2(1, value);
+};
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
 var $elm$random$Random$Generator = function (a) {
 	return {$: 'Generator', a: a};
 };
 var $elm$core$Bitwise$and = _Bitwise_and;
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var $elm$random$Random$Seed = F2(
 	function (a, b) {
 		return {$: 'Seed', a: a, b: b};
@@ -5292,72 +5320,121 @@ var $elm$random$Random$peel = function (_v0) {
 	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
 	return ((word >>> 22) ^ word) >>> 0;
 };
-var $elm$random$Random$int = F2(
+var $elm$random$Random$float = F2(
 	function (a, b) {
 		return $elm$random$Random$Generator(
 			function (seed0) {
-				var _v0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
-				var lo = _v0.a;
-				var hi = _v0.b;
-				var range = (hi - lo) + 1;
-				if (!((range - 1) & range)) {
-					return _Utils_Tuple2(
-						(((range - 1) & $elm$random$Random$peel(seed0)) >>> 0) + lo,
-						$elm$random$Random$next(seed0));
-				} else {
-					var threshhold = (((-range) >>> 0) % range) >>> 0;
-					var accountForBias = function (seed) {
-						accountForBias:
-						while (true) {
-							var x = $elm$random$Random$peel(seed);
-							var seedN = $elm$random$Random$next(seed);
-							if (_Utils_cmp(x, threshhold) < 0) {
-								var $temp$seed = seedN;
-								seed = $temp$seed;
-								continue accountForBias;
-							} else {
-								return _Utils_Tuple2((x % range) + lo, seedN);
-							}
-						}
-					};
-					return accountForBias(seed0);
-				}
+				var seed1 = $elm$random$Random$next(seed0);
+				var range = $elm$core$Basics$abs(b - a);
+				var n1 = $elm$random$Random$peel(seed1);
+				var n0 = $elm$random$Random$peel(seed0);
+				var lo = (134217727 & n1) * 1.0;
+				var hi = (67108863 & n0) * 1.0;
+				var val = ((hi * 134217728.0) + lo) / 9007199254740992.0;
+				var scaled = (val * range) + a;
+				return _Utils_Tuple2(
+					scaled,
+					$elm$random$Random$next(seed1));
 			});
 	});
-var $elm$random$Random$listHelp = F4(
-	function (revList, n, gen, seed) {
-		listHelp:
+var $elm$random$Random$getByWeight = F3(
+	function (_v0, others, countdown) {
+		getByWeight:
 		while (true) {
-			if (n < 1) {
-				return _Utils_Tuple2(revList, seed);
+			var weight = _v0.a;
+			var value = _v0.b;
+			if (!others.b) {
+				return value;
 			} else {
-				var _v0 = gen(seed);
-				var value = _v0.a;
-				var newSeed = _v0.b;
-				var $temp$revList = A2($elm$core$List$cons, value, revList),
-					$temp$n = n - 1,
-					$temp$gen = gen,
-					$temp$seed = newSeed;
-				revList = $temp$revList;
-				n = $temp$n;
-				gen = $temp$gen;
-				seed = $temp$seed;
-				continue listHelp;
+				var second = others.a;
+				var otherOthers = others.b;
+				if (_Utils_cmp(
+					countdown,
+					$elm$core$Basics$abs(weight)) < 1) {
+					return value;
+				} else {
+					var $temp$_v0 = second,
+						$temp$others = otherOthers,
+						$temp$countdown = countdown - $elm$core$Basics$abs(weight);
+					_v0 = $temp$_v0;
+					others = $temp$others;
+					countdown = $temp$countdown;
+					continue getByWeight;
+				}
 			}
 		}
 	});
-var $elm$random$Random$list = F2(
-	function (n, _v0) {
-		var gen = _v0.a;
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
 		return $elm$random$Random$Generator(
-			function (seed) {
-				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
 			});
 	});
-var $author$project$Main$fiveDice = A2(
-	$elm$random$Random$list,
-	5,
-	A2($elm$random$Random$int, 1, 6));
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $elm$random$Random$weighted = F2(
+	function (first, others) {
+		var normalize = function (_v0) {
+			var weight = _v0.a;
+			return $elm$core$Basics$abs(weight);
+		};
+		var total = normalize(first) + $elm$core$List$sum(
+			A2($elm$core$List$map, normalize, others));
+		return A2(
+			$elm$random$Random$map,
+			A2($elm$random$Random$getByWeight, first, others),
+			A2($elm$random$Random$float, 0, total));
+	});
+var $elm$random$Random$uniform = F2(
+	function (value, valueList) {
+		return A2(
+			$elm$random$Random$weighted,
+			$elm$random$Random$addOne(value),
+			A2($elm$core$List$map, $elm$random$Random$addOne, valueList));
+	});
+var $author$project$Main$die = A2(
+	$elm$random$Random$uniform,
+	$author$project$Main$One,
+	_List_fromArray(
+		[$author$project$Main$Two, $author$project$Main$Three, $author$project$Main$Four, $author$project$Main$Five, $author$project$Main$Six]));
+var $elm$random$Random$map5 = F6(
+	function (func, _v0, _v1, _v2, _v3, _v4) {
+		var genA = _v0.a;
+		var genB = _v1.a;
+		var genC = _v2.a;
+		var genD = _v3.a;
+		var genE = _v4.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v5 = genA(seed0);
+				var a = _v5.a;
+				var seed1 = _v5.b;
+				var _v6 = genB(seed1);
+				var b = _v6.a;
+				var seed2 = _v6.b;
+				var _v7 = genC(seed2);
+				var c = _v7.a;
+				var seed3 = _v7.b;
+				var _v8 = genD(seed3);
+				var d = _v8.a;
+				var seed4 = _v8.b;
+				var _v9 = genE(seed4);
+				var e = _v9.a;
+				var seed5 = _v9.b;
+				return _Utils_Tuple2(
+					A5(func, a, b, c, d, e),
+					seed5);
+			});
+	});
+var $author$project$Main$cup = A6($elm$random$Random$map5, $author$project$Main$Cup, $author$project$Main$die, $author$project$Main$die, $author$project$Main$die, $author$project$Main$die, $author$project$Main$die);
 var $elm$random$Random$Generate = function (a) {
 	return {$: 'Generate', a: a};
 };
@@ -5425,19 +5502,6 @@ var $elm$random$Random$onSelfMsg = F3(
 	function (_v0, _v1, seed) {
 		return $elm$core$Task$succeed(seed);
 	});
-var $elm$random$Random$map = F2(
-	function (func, _v0) {
-		var genA = _v0.a;
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v1 = genA(seed0);
-				var a = _v1.a;
-				var seed1 = _v1.b;
-				return _Utils_Tuple2(
-					func(a),
-					seed1);
-			});
-	});
 var $elm$random$Random$cmdMap = F2(
 	function (func, _v0) {
 		var generator = _v0.a;
@@ -5454,38 +5518,64 @@ var $elm$random$Random$generate = F2(
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'Roll') {
-			return _Utils_Tuple2(
-				model,
-				A2($elm$random$Random$generate, $author$project$Main$NewRoll, $author$project$Main$fiveDice));
-		} else {
-			var roll = msg.a;
-			return _Utils_Tuple2(roll, $elm$core$Platform$Cmd$none);
+		switch (msg.$) {
+			case 'Roll':
+				return _Utils_Tuple2(
+					model,
+					A2($elm$random$Random$generate, $author$project$Main$NewRoll, $author$project$Main$cup));
+			case 'NewRoll':
+				var roll = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{cup: roll}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChangeQuantity':
+				var quant = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							quantity: $author$project$Main$Quantity(quant)
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChangeValue':
+				var val = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							value: $author$project$Main$Value(val)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$Roll = {$: 'Roll'};
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $author$project$Main$Pull = {$: 'Pull'};
+var $author$project$Main$cupToList = function (c) {
+	var slot1 = c.a;
+	var slot2 = c.b;
+	var slot3 = c.c;
+	var slot4 = c.d;
+	var slot5 = c.e;
+	return _List_fromArray(
+		[slot1, slot2, slot3, slot4, slot5]);
+};
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h2 = _VirtualDom_node('h2');
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
 	});
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$makeDieHTML = function (dieVal) {
-	return $elm$html$Html$text(
-		'[' + ($elm$core$String$fromInt(dieVal) + '] '));
-};
-var $elm$core$List$sortBy = _List_sortBy;
-var $elm$core$List$sort = function (xs) {
-	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
-};
-var $author$project$Main$makeCupHTML = A2(
-	$elm$core$Basics$composeR,
-	$elm$core$List$sort,
-	$elm$core$List$map($author$project$Main$makeDieHTML));
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5503,6 +5593,205 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$html$Html$option = _VirtualDom_node('option');
+var $elm$html$Html$select = _VirtualDom_node('select');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$displaySelectsHTML = function (cup1) {
+	return ($elm$core$List$length(
+		$author$project$Main$cupToList(cup1)) > 0) ? A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('quantity')
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$select,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$id('quantity')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('2')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('two')
+							])),
+						A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('3')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('three')
+							])),
+						A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('4')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('four')
+							])),
+						A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('5')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('five')
+							]))
+					])),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('value')
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$select,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$id('value')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('2')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('two')
+							])),
+						A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('3')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('three')
+							])),
+						A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('4')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('four')
+							])),
+						A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('5')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('five')
+							]))
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Main$Pull)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Pull')
+					]))
+			])) : A2($elm$html$Html$div, _List_Nil, _List_Nil);
+};
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $author$project$Main$dieToInt = function (d) {
+	switch (d.$) {
+		case 'One':
+			return 1;
+		case 'Two':
+			return 2;
+		case 'Three':
+			return 3;
+		case 'Four':
+			return 4;
+		case 'Five':
+			return 5;
+		default:
+			return 6;
+	}
+};
+var $author$project$Main$makeDieHTML = function (dieVal) {
+	return $elm$html$Html$text(
+		'[' + ($elm$core$String$fromInt(
+			$author$project$Main$dieToInt(dieVal)) + '] '));
+};
+var $author$project$Main$intToDie = function (d) {
+	switch (d) {
+		case 1:
+			return $author$project$Main$One;
+		case 2:
+			return $author$project$Main$Two;
+		case 3:
+			return $author$project$Main$Three;
+		case 4:
+			return $author$project$Main$Four;
+		case 5:
+			return $author$project$Main$Five;
+		case 6:
+			return $author$project$Main$Six;
+		default:
+			return $author$project$Main$Two;
+	}
+};
+var $elm$core$List$sortBy = _List_sortBy;
+var $elm$core$List$sort = function (xs) {
+	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
+};
+var $author$project$Main$sortCup = function (c) {
+	return A2(
+		$elm$core$List$map,
+		$author$project$Main$intToDie,
+		$elm$core$List$sort(
+			A2(
+				$elm$core$List$map,
+				$author$project$Main$dieToInt,
+				$author$project$Main$cupToList(c))));
+};
+var $author$project$Main$makeCupHTML = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Main$sortCup,
+	$elm$core$List$map($author$project$Main$makeDieHTML));
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -5512,7 +5801,7 @@ var $author$project$Main$view = function (model) {
 				A2(
 				$elm$html$Html$h2,
 				_List_Nil,
-				$author$project$Main$makeCupHTML(model)),
+				$author$project$Main$makeCupHTML(model.cup)),
 				A2(
 				$elm$html$Html$button,
 				_List_fromArray(
@@ -5522,7 +5811,8 @@ var $author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Roll')
-					]))
+					])),
+				$author$project$Main$displaySelectsHTML(model.cup)
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
