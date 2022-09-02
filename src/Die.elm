@@ -1,84 +1,154 @@
 module Die exposing (..)
+
+import Debug exposing (log)
 import Random
 
+
+
 -- Dice
-type Die
-    = One
-    | Two
-    | Three
-    | Four
-    | Five
-    | Six
 
 
-type Cup
-    = Cup Die Die Die Die Die
+type alias Die =
+    { value : Int, validAs : List Int }
 
 
-die : Random.Generator Die
-die =
-    Random.uniform One [ Two, Three, Four, Five, Six ]
+wild : Die
+wild =
+    { value = 1, validAs = [ 2, 3, 4, 5, 6 ] }
 
 
-cup : Random.Generator Cup
-cup =
-    Random.map5 Cup die die die die die
+two : Die
+two =
+    { value = 2, validAs = [ 2 ] }
+
+
+three : Die
+three =
+    { value = 3, validAs = [ 3 ] }
+
+
+four : Die
+four =
+    { value = 4, validAs = [ 4 ] }
+
+
+five : Die
+five =
+    { value = 5, validAs = [ 5 ] }
+
+
+six : Die
+six =
+    { value = 6, validAs = [ 6 ] }
+
+
+type alias Roll =
+    List Die
+
+
+dieGenerator : Random.Generator Die
+dieGenerator =
+    Random.uniform wild [ two, three, four, five, six ]
+
+
+rollGenerator : Int -> Random.Generator (List Die)
+rollGenerator quantity =
+    -- Random.map5 Roll dieGenerator dieGenerator dieGenerator dieGenerator dieGenerator
+    Random.list quantity dieGenerator
+
+
+
+-- rollToList : Roll -> List Die
+-- rollToList r =
+--     case r of
+--         Roll slot1 slot2 slot3 slot4 slot5 ->
+--             [ slot1, slot2, slot3, slot4, slot5 ]
+-- sortCup : Roll -> Roll
+-- sortCup c =
+--     List.sort (rollToList c)
+-- Try
+
+
+type alias Quantity =
+    Int
+
+
+type alias Value =
+    Int
+
+
+type alias Try =
+    ( Quantity, Value )
 
 
 dieToInt : Die -> Int
-dieToInt d =
-    case d of
-        One ->
-            1
+dieToInt die =
+    die.value
 
-        Two ->
-            2
 
-        Three ->
-            3
+assessRoll : Roll -> List Int
+assessRoll roll =
+    roll
+        |> List.map (\die -> die.value)
+        |> List.sort
+        |> (\list -> Debug.log "mylist" list)
 
-        Four ->
-            4
 
-        Five ->
-            5
+tryValues =
+    { twoTwos = ( 1, 2, 2 )
+    , twoThrees = ( 2, 2, 3 )
+    , twoFours = ( 3, 2, 4 )
+    }
 
-        Six ->
-            6
 
-intToDie : Int -> Die
-intToDie d =
-    case d of
-      1 ->
-        One
 
-      2 ->
-        Two
+{-
+   type DieValue
+     = Two
+     | Three
+     | Four
+     | Five
+     | Six
 
-      3 ->
-        Three
+   type Die
+     = Natural DieValue
+     | Wild (Maybe DieValue)
 
-      4 ->
-        Four
+   assign : DieValue -> Die -> Die
+   assign value wild =
+     case wild of
+       Wild Nothing ->
+         Wild (Just value)
+       _ ->
+         wild
 
-      5 ->
-        Five
+   cup = [ Natural Two, Natural Two, Wild Nothing, Natural Four, Natural Four ]
 
-      6 ->
-        Six
+   decode : Die -> Maybe number
+   decode die =
+       case die of
+           Natural val ->
+               case val of
+                   Two ->
+                       Just 2
+                   Three ->
+                       Just 3
+                   Four ->
+                       Just 4
+                   Five ->
+                       Just 5
+                   Six ->
+                       Just 6
+           Wild val ->
+               case val of
+                   Nothing ->
+                       Nothing
+                   Just value ->
+                       decode (Natural value)
 
-      _ ->
-        Two
+   decodedCup : List (Maybe number)
+   decodedCup =
+       List.map decode cup
 
-cupToList : Cup -> List Die
-cupToList c =
-  case c of
-    Cup slot1 slot2 slot3 slot4 slot5 ->
-      [slot1, slot2, slot3, slot4, slot5]
-
-sortCup : Cup -> List Die
-sortCup c =
-  (cupToList c)
-    |> List.map dieToInt
-    |> List.sort
-    |> List.map intToDie
+   d = Debug.log "cup" decodedCup
+-}
