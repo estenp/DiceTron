@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Browser
+import Dict exposing (Dict)
 import Die exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (for, id, value)
@@ -27,23 +28,34 @@ main =
 -- Form
 
 
-type FormField
+type TryDescript
     = Quantity Int
     | Value Int
 
 
+type CupState
+    = Covered
+    | Uncovered
+
+
 type alias Model =
-    { cup : Roll
-    , quantity : FormField
-    , value : FormField
+    { roll : Roll
+    , currentTry : Try
+    , quantity : TryDescript
+    , value : TryDescript
+    , tableWilds : Int
+    , cupState : CupState
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { cup = [ two, two, two, two, two ]
+    ( { roll = [ two, two, two, two, two ]
+      , currentTry = ( 2, 2 )
       , quantity = Quantity 2
       , value = Value 2
+      , tableWilds = 0
+      , cupState = Uncovered
       }
     , Cmd.none
     )
@@ -51,12 +63,6 @@ init _ =
 
 
 -- UPDATE
-{-
-   update can receive messages from both the view, as well as the runtime.
-   It receives runtime messages after requesting them via a command.
-
-   A command is basically code we want to run within the runtime, because it's side effecty/impure.
--}
 
 
 type Msg
@@ -67,6 +73,7 @@ type Msg
     | Pull
     | ChangeQuantity Int
     | ChangeValue Int
+    | Pass Try
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -86,7 +93,7 @@ update msg model =
            Return a tuple and pass along the new value as the model, and an empty command.
         -}
         NewRoll roll ->
-            ( { model | cup = roll }
+            ( { model | roll = roll }
             , Cmd.none
             )
 
@@ -101,7 +108,12 @@ update msg model =
             )
 
         Pull ->
-            ( model
+            ( { model | cupState = Uncovered }
+            , Cmd.none
+            )
+
+        Pass try ->
+            ( { model | currentTry = try, cupState = Covered }
             , Cmd.none
             )
 
@@ -122,13 +134,28 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     let
-      assess = assessRoll model.cup
+        assess =
+            assessRoll model.roll
 
+        value =
+            Debug.log "Best Try: " (Dict.get assess tryDict)
+
+        -- UI
+        cup =
+            case model.cupState of
+                Covered ->
+                    [ button [ onClick Pull ] [ text "Pull" ] ]
+
+                Uncovered ->
+                    makeCupHTML model.roll
+
+        selects =
+            displaySelectsHTML model.roll model.quantity model.value
     in
-      div []
-        [ h2 [] (makeCupHTML model.cup)
+    div []
+        [ h2 [] cup
         , button [ onClick RollClick ] [ text "Roll" ]
-        , displaySelectsHTML model.cup
+        , selects
         ]
 
 
@@ -139,7 +166,7 @@ view model =
 
 makeDieHTML : Die -> Html Msg
 makeDieHTML die =
-        text ("[" ++ String.fromInt die.value ++ "] ")
+    text ("[" ++ String.fromInt die.value ++ "] ")
 
 
 makeCupHTML : Roll -> List (Html Msg)
@@ -160,9 +187,9 @@ rollContainer model =
         div [] []
 
 
-displaySelectsHTML : Roll -> Html Msg
-displaySelectsHTML cup1 =
-    if List.length cup1 > 0 then
+displaySelectsHTML : Roll -> TryDescript -> TryDescript -> Html Msg
+displaySelectsHTML roll quantity val =
+    if List.length roll > 0 then
         div []
             [ label [ for "quantity" ] []
             , select [ id "quantity" ]
@@ -178,7 +205,7 @@ displaySelectsHTML cup1 =
                 , option [ value "4" ] [ text "four" ]
                 , option [ value "5" ] [ text "five" ]
                 ]
-            , button [ onClick Pull ] [ text "Pull" ]
+            , button [ onClick (Pass (quantity, val)) ] [ text "Pass" ]
             ]
 
     else
