@@ -1,7 +1,6 @@
 module Main exposing (..)
 
 import Browser
-import Dict exposing (Dict)
 import Die exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (for, id, value)
