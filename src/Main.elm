@@ -28,11 +28,6 @@ main =
 -- Form
 
 
-type TryDescript
-    = Quantity Int
-    | Value Int
-
-
 type CupState
     = Covered
     | Uncovered
@@ -41,8 +36,8 @@ type CupState
 type alias Model =
     { roll : Roll
     , currentTry : Try
-    , quantity : TryDescript
-    , value : TryDescript
+    , quantity : Quantity
+    , value : Face
     , tableWilds : Int
     , cupState : CupState
     }
@@ -50,10 +45,10 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { roll = [ two, two, two, two, two ]
-      , currentTry = ( 2, 2 )
-      , quantity = Quantity 2
-      , value = Value 2
+    ( { roll = [ Twos, Twos, Twos, Twos, Twos ]
+      , currentTry = ( Two, Twos )
+      , quantity = Two
+      , value = Twos
       , tableWilds = 0
       , cupState = Uncovered
       }
@@ -69,10 +64,10 @@ type Msg
     = -- User wants a new roll value displayed.
       RollClick
       -- Runtime is sending a new random die value.
-    | NewRoll (List Die)
+    | NewRoll (List Face)
     | Pull
-    | ChangeQuantity Int
-    | ChangeValue Int
+    | ChangeQuantity Quantity
+    | ChangeValue Face
     | Pass Try
 
 
@@ -98,12 +93,12 @@ update msg model =
             )
 
         ChangeQuantity quant ->
-            ( { model | quantity = Quantity quant }
+            ( { model | quantity = quant }
             , Cmd.none
             )
 
         ChangeValue val ->
-            ( { model | value = Value val }
+            ( { model | value = val }
             , Cmd.none
             )
 
@@ -134,11 +129,8 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     let
-        assess =
-            assessRoll model.roll
-
         value =
-            Debug.log "Best Try: " (Dict.get assess tryDict)
+            Debug.log "Best Try: " (evalTry (assessRoll model.roll))
 
         -- UI
         cup =
@@ -164,9 +156,9 @@ view model =
 -- Html Utils
 
 
-makeDieHTML : Die -> Html Msg
+makeDieHTML : Face -> Html Msg
 makeDieHTML die =
-    text ("[" ++ String.fromInt die.value ++ "] ")
+    text ("[" ++ String.fromInt (decodeFace die) ++ "] ")
 
 
 makeCupHTML : Roll -> List (Html Msg)
@@ -187,7 +179,7 @@ rollContainer model =
         div [] []
 
 
-displaySelectsHTML : Roll -> TryDescript -> TryDescript -> Html Msg
+displaySelectsHTML : Roll -> Quantity -> Face -> Html Msg
 displaySelectsHTML roll quantity val =
     if List.length roll > 0 then
         div []
@@ -205,7 +197,7 @@ displaySelectsHTML roll quantity val =
                 , option [ value "4" ] [ text "four" ]
                 , option [ value "5" ] [ text "five" ]
                 ]
-            , button [ onClick (Pass (quantity, val)) ] [ text "Pass" ]
+            , button [ onClick (Pass ( quantity, val )) ] [ text "Pass" ]
             ]
 
     else
