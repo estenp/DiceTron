@@ -4,6 +4,8 @@ import Char exposing (toLower)
 import Debug exposing (log)
 import Dict exposing (Dict)
 import Random
+import Tuple2
+
 
 
 
@@ -33,7 +35,8 @@ type Face
 
 
 type Quantity
-    = Two
+    = One
+    | Two
     | Three
     | Four
     | Five
@@ -82,9 +85,11 @@ tryDict =
         , ( ( decodeQuantity Five, decodeFace Sixes ), 20 )
         ]
 
+
 evalTry : Try -> Maybe Int
 evalTry try =
     Dict.get (decodeTry try) tryDict
+
 
 encodeTry : ( Int, Int ) -> Try
 encodeTry tup =
@@ -162,6 +167,9 @@ decodeFace die =
 encodeQuantity : Int -> Quantity
 encodeQuantity quant =
     case quant of
+        1 ->
+            One
+
         2 ->
             Two
 
@@ -181,6 +189,9 @@ encodeQuantity quant =
 decodeQuantity : Quantity -> Int
 decodeQuantity dieQuantity =
     case dieQuantity of
+        One ->
+            1
+
         Two ->
             2
 
@@ -237,11 +248,14 @@ getBestOfAKind dict =
         -- sort by the count
         |> List.sortBy Tuple.second
         -- encode counts to a Quantity
-        |> List.map encodeTry
         -- reverse the list so it's easy to grab the highest count with List.head
         |> List.reverse
         |> List.head
-        |> Maybe.withDefault ( Two, Twos )
+        |> Maybe.withDefault ( 2, 2 )
+        |> Tuple2.swap
+        |> Debug.log "hi"
+        |> encodeTry
+        |> Debug.log "encoded"
 
 
 

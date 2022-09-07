@@ -5764,9 +5764,12 @@ var $author$project$Die$encodeFace = function (die) {
 };
 var $author$project$Die$Five = {$: 'Five'};
 var $author$project$Die$Four = {$: 'Four'};
+var $author$project$Die$One = {$: 'One'};
 var $author$project$Die$Three = {$: 'Three'};
 var $author$project$Die$encodeQuantity = function (quant) {
 	switch (quant) {
+		case 1:
+			return $author$project$Die$One;
 		case 2:
 			return $author$project$Die$Two;
 		case 3:
@@ -5797,6 +5800,7 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
+var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Dict$map = F2(
 	function (func, dict) {
 		if (dict.$ === 'RBEmpty_elm_builtin') {
@@ -6179,32 +6183,41 @@ var $elm$core$Dict$remove = F2(
 		}
 	});
 var $elm$core$List$sortBy = _List_sortBy;
+var $TSFoster$elm_tuple_extra$Tuple2$swap = function (_v0) {
+	var a = _v0.a;
+	var b = _v0.b;
+	return _Utils_Tuple2(b, a);
+};
 var $author$project$Die$getBestOfAKind = function (dict) {
 	var wild_count = A2(
 		$elm$core$Maybe$withDefault,
 		0,
 		A2($elm$core$Dict$get, 1, dict));
 	return A2(
-		$elm$core$Maybe$withDefault,
-		_Utils_Tuple2($author$project$Die$Two, $author$project$Die$Twos),
-		$elm$core$List$head(
-			$elm$core$List$reverse(
-				A2(
-					$elm$core$List$map,
-					$author$project$Die$encodeTry,
+		$elm$core$Debug$log,
+		'encoded',
+		$author$project$Die$encodeTry(
+			A2(
+				$elm$core$Debug$log,
+				'hi',
+				$TSFoster$elm_tuple_extra$Tuple2$swap(
 					A2(
-						$elm$core$List$sortBy,
-						$elm$core$Tuple$second,
-						$elm$core$Dict$toList(
-							A2(
-								$elm$core$Dict$map,
-								F2(
-									function (k, v) {
-										return v + wild_count;
-									}),
-								A2($elm$core$Dict$remove, 1, dict))))))));
+						$elm$core$Maybe$withDefault,
+						_Utils_Tuple2(2, 2),
+						$elm$core$List$head(
+							$elm$core$List$reverse(
+								A2(
+									$elm$core$List$sortBy,
+									$elm$core$Tuple$second,
+									$elm$core$Dict$toList(
+										A2(
+											$elm$core$Dict$map,
+											F2(
+												function (k, v) {
+													return v + wild_count;
+												}),
+											A2($elm$core$Dict$remove, 1, dict)))))))))));
 };
-var $elm$core$Debug$log = _Debug_log;
 var $author$project$Die$assessRoll = function (roll) {
 	return A2(
 		$elm$core$Debug$log,
@@ -6389,6 +6402,8 @@ var $author$project$Main$displaySelectsHTML = F3(
 	});
 var $author$project$Die$decodeQuantity = function (dieQuantity) {
 	switch (dieQuantity.$) {
+		case 'One':
+			return 1;
 		case 'Two':
 			return 2;
 		case 'Three':
@@ -6534,6 +6549,11 @@ var $author$project$Main$makeDieHTML = function (die) {
 };
 var $author$project$Main$makeCupHTML = $elm$core$List$map($author$project$Main$makeDieHTML);
 var $author$project$Main$view = function (model) {
+	var value = A2(
+		$elm$core$Debug$log,
+		'Best Try: ',
+		$author$project$Die$evalTry(
+			$author$project$Die$assessRoll(model.roll)));
 	var selects = A3($author$project$Main$displaySelectsHTML, model.roll, model.quantity, model.value);
 	var cup = function () {
 		var _v0 = model.cupState;
@@ -6555,11 +6575,6 @@ var $author$project$Main$view = function (model) {
 			return $author$project$Main$makeCupHTML(model.roll);
 		}
 	}();
-	var assess = $author$project$Die$assessRoll(model.roll);
-	var value = A2(
-		$elm$core$Debug$log,
-		'Best Try: ',
-		$author$project$Die$evalTry(assess));
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
