@@ -5256,21 +5256,36 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
+var $author$project$Main$Covered = {$: 'Covered'};
+var $author$project$Main$PlayerId = function (a) {
+	return {$: 'PlayerId', a: a};
+};
+var $author$project$Die$Three = {$: 'Three'};
+var $author$project$Die$Threes = {$: 'Threes'};
 var $author$project$Die$Two = {$: 'Two'};
 var $author$project$Die$Twos = {$: 'Twos'};
-var $author$project$Main$Uncovered = {$: 'Uncovered'};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
-			cupState: $author$project$Main$Uncovered,
-			currentTry: _Utils_Tuple2($author$project$Die$Two, $author$project$Die$Twos),
+			cupLooked: false,
+			cupState: $author$project$Main$Covered,
 			quantity: $author$project$Die$Two,
 			roll: _List_fromArray(
 				[$author$project$Die$Twos, $author$project$Die$Twos, $author$project$Die$Twos, $author$project$Die$Twos, $author$project$Die$Twos]),
 			tableWilds: 0,
-			value: $author$project$Die$Twos
+			tryHistory: _List_fromArray(
+				[
+					_Utils_Tuple2(
+					_Utils_Tuple2($author$project$Die$Two, $author$project$Die$Twos),
+					$author$project$Main$PlayerId(1)),
+					_Utils_Tuple2(
+					_Utils_Tuple2($author$project$Die$Three, $author$project$Die$Threes),
+					$author$project$Main$PlayerId(2))
+				]),
+			value: $author$project$Die$Twos,
+			whosTurn: $author$project$Main$PlayerId(3)
 		},
 		$elm$core$Platform$Cmd$none);
 };
@@ -5279,10 +5294,18 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
-var $author$project$Main$Covered = {$: 'Covered'};
 var $author$project$Main$NewRoll = function (a) {
 	return {$: 'NewRoll', a: a};
 };
+var $author$project$Main$Uncovered = {$: 'Uncovered'};
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
 var $elm$random$Random$Generate = function (a) {
 	return {$: 'Generate', a: a};
 };
@@ -5393,7 +5416,6 @@ var $elm$random$Random$generate = F2(
 var $author$project$Die$Fives = {$: 'Fives'};
 var $author$project$Die$Fours = {$: 'Fours'};
 var $author$project$Die$Sixes = {$: 'Sixes'};
-var $author$project$Die$Threes = {$: 'Threes'};
 var $author$project$Die$Wilds = {$: 'Wilds'};
 var $elm$random$Random$addOne = function (value) {
 	return _Utils_Tuple2(1, value);
@@ -5553,15 +5575,32 @@ var $author$project$Main$update = F2(
 						model,
 						{cupState: $author$project$Main$Uncovered}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'Pass':
 				var _try = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{cupState: $author$project$Main$Covered, currentTry: _try}),
+						{
+							cupLooked: false,
+							cupState: $author$project$Main$Covered,
+							tryHistory: A2(
+								$elm$core$List$append,
+								model.tryHistory,
+								_List_fromArray(
+									[
+										_Utils_Tuple2(_try, model.whosTurn)
+									]))
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{cupLooked: true, cupState: $author$project$Main$Uncovered}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
+var $author$project$Main$Look = {$: 'Look'};
 var $author$project$Main$Pull = {$: 'Pull'};
 var $author$project$Main$RollClick = {$: 'RollClick'};
 var $author$project$Die$decodeFace = function (die) {
@@ -5765,7 +5804,6 @@ var $author$project$Die$encodeFace = function (die) {
 var $author$project$Die$Five = {$: 'Five'};
 var $author$project$Die$Four = {$: 'Four'};
 var $author$project$Die$One = {$: 'One'};
-var $author$project$Die$Three = {$: 'Three'};
 var $author$project$Die$encodeQuantity = function (quant) {
 	switch (quant) {
 		case 1:
@@ -6230,6 +6268,15 @@ var $author$project$Die$assessRoll = function (roll) {
 					A2($elm$core$List$map, $author$project$Die$decodeFace, roll)))));
 };
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $author$project$Main$decodePlayerId = function (p) {
+	var _int = p.a;
+	return _int;
+};
 var $author$project$Main$ChangeQuantity = function (a) {
 	return {$: 'ChangeQuantity', a: a};
 };
@@ -6345,6 +6392,16 @@ var $author$project$Main$displayTryHTML = F3(
 							$elm$html$Html$option,
 							_List_fromArray(
 								[
+									$elm$html$Html$Attributes$value('1')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('one')
+								])),
+							A2(
+							$elm$html$Html$option,
+							_List_fromArray(
+								[
 									$elm$html$Html$Attributes$value('2')
 								]),
 							_List_fromArray(
@@ -6399,7 +6456,7 @@ var $author$project$Main$displayTryHTML = F3(
 								A2(
 									$elm$core$Basics$composeL,
 									A2($elm$core$Basics$composeL, $author$project$Main$ChangeValue, $author$project$Die$encodeFace),
-									$elm$core$Maybe$withDefault(1)),
+									$elm$core$Maybe$withDefault(2)),
 								$elm$core$String$toInt)),
 							$elm$html$Html$Attributes$id('value')
 						]),
@@ -6413,7 +6470,7 @@ var $author$project$Main$displayTryHTML = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('two')
+									$elm$html$Html$text('twos')
 								])),
 							A2(
 							$elm$html$Html$option,
@@ -6423,7 +6480,7 @@ var $author$project$Main$displayTryHTML = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('three')
+									$elm$html$Html$text('threes')
 								])),
 							A2(
 							$elm$html$Html$option,
@@ -6433,7 +6490,7 @@ var $author$project$Main$displayTryHTML = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('four')
+									$elm$html$Html$text('fours')
 								])),
 							A2(
 							$elm$html$Html$option,
@@ -6443,7 +6500,17 @@ var $author$project$Main$displayTryHTML = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('five')
+									$elm$html$Html$text('fives')
+								])),
+							A2(
+							$elm$html$Html$option,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$value('6')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('sixes')
 								]))
 						])),
 					A2(
@@ -6601,21 +6668,17 @@ var $author$project$Die$evalTry = function (_try) {
 		$author$project$Die$decodeTry(_try),
 		$author$project$Die$tryDict);
 };
-var $author$project$Die$faceToString = function (die) {
-	switch (die.$) {
-		case 'Wilds':
-			return 'Wilds';
-		case 'Twos':
-			return 'Twos';
-		case 'Threes':
-			return 'Threes';
-		case 'Fours':
-			return 'Fours';
-		case 'Fives':
-			return 'Fives';
-		default:
-			return 'Sixes';
-	}
+var $author$project$Main$players = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2(1, 'Thad'),
+			_Utils_Tuple2(2, 'Pat')
+		]));
+var $author$project$Main$getPlayer = function (id) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		'Invalid Player ID',
+		A2($elm$core$Dict$get, id, $author$project$Main$players));
 };
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
@@ -6625,29 +6688,73 @@ var $author$project$Main$makeDieHTML = function (die) {
 			$author$project$Die$decodeFace(die)) + '] '));
 };
 var $author$project$Main$makeCupHTML = $elm$core$List$map($author$project$Main$makeDieHTML);
-var $author$project$Die$quantityToString = function (quant) {
-	switch (quant.$) {
-		case 'One':
-			return 'One';
-		case 'Two':
-			return 'Two';
-		case 'Three':
-			return 'Three';
-		case 'Four':
-			return 'Four';
-		default:
-			return 'Five';
-	}
+var $elm$core$Tuple$mapBoth = F3(
+	function (funcA, funcB, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			funcA(x),
+			funcB(y));
+	});
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $author$project$Die$tryToString = function (_try) {
+	return function (t) {
+		return $elm$core$String$fromInt(t.a) + (' ' + $elm$core$String$fromInt(t.b));
+	}(
+		$author$project$Die$decodeTry(_try));
+};
+var $author$project$Main$tryToHTML = function (_try) {
+	return function (node) {
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[node]));
+	}(
+		$elm$html$Html$text(
+			$author$project$Die$tryToString(_try)));
 };
 var $author$project$Main$view = function (model) {
+	var tryToBeat = $author$project$Main$tryToHTML(
+		A3(
+			$elm$core$Basics$composeR,
+			$elm$core$List$head,
+			$elm$core$Maybe$withDefault(
+				_Utils_Tuple2($author$project$Die$Two, $author$project$Die$Twos)),
+			A2(
+				$elm$core$List$map,
+				$elm$core$Tuple$first,
+				$elm$core$List$reverse(model.tryHistory))));
 	var trySelect = A3($author$project$Main$displayTryHTML, model.roll, model.quantity, model.value);
-	var currentTry = _List_fromArray(
-		[
-			$elm$html$Html$text(
-			$author$project$Die$quantityToString(model.quantity)),
-			$elm$html$Html$text(
-			'Current Roll: ' + ($author$project$Die$quantityToString(model.currentTry.a) + (' ' + $author$project$Die$faceToString(model.currentTry.b))))
-		]);
+	var tryHistory = A2(
+		$elm$core$List$map,
+		function (tup) {
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text(tup.b + (' -> ' + tup.a))
+					]));
+		},
+		A2(
+			$elm$core$List$map,
+			A2(
+				$elm$core$Tuple$mapBoth,
+				$author$project$Die$tryToString,
+				A2($elm$core$Basics$composeR, $author$project$Main$decodePlayerId, $author$project$Main$getPlayer)),
+			model.tryHistory));
+	var rollButtons = model.cupLooked ? A2(
+		$elm$html$Html$button,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onClick($author$project$Main$RollClick)
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Roll')
+			])) : A2($elm$html$Html$span, _List_Nil, _List_Nil);
+	var currentTry = tryToBeat;
 	var cup = function () {
 		var _v1 = model.cupState;
 		if (_v1.$ === 'Covered') {
@@ -6662,6 +6769,16 @@ var $author$project$Main$view = function (model) {
 					_List_fromArray(
 						[
 							$elm$html$Html$text('Pull')
+						])),
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick($author$project$Main$Look)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Look')
 						]))
 				]);
 		} else {
@@ -6678,18 +6795,17 @@ var $author$project$Main$view = function (model) {
 		_List_Nil,
 		_List_fromArray(
 			[
-				A2($elm$html$Html$h3, _List_Nil, currentTry),
-				A2($elm$html$Html$h2, _List_Nil, cup),
 				A2(
-				$elm$html$Html$button,
+				$elm$html$Html$h3,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Main$RollClick)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Roll')
+						$elm$html$Html$text('Passed Roll: '),
+						currentTry
 					])),
+				A2($elm$html$Html$div, _List_Nil, tryHistory),
+				A2($elm$html$Html$h2, _List_Nil, cup),
+				rollButtons,
 				trySelect
 			]));
 };

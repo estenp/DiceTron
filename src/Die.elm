@@ -101,6 +101,12 @@ decodeTry : Try -> ( Int, Int )
 decodeTry try =
     ( decodeQuantity (Tuple.first try), decodeFace (Tuple.second try) )
 
+tryToString : Try -> String
+tryToString try =
+    try
+        |> decodeTry
+        |> (\t -> ( (t |> Tuple.first |> String.fromInt) ++ " " ++ (t |> Tuple.second |> String.fromInt)))
+
 
 compareTry : Try -> Try -> Pull
 compareTry currentTry passedTry =

@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Browser
+import Dict exposing (..)
 import Die exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (for, id, value)
@@ -32,27 +33,46 @@ type CupState
     | Uncovered
 
 
+type PlayerId
+    = PlayerId Int
+
+
 type alias Model =
     { roll : Roll
-    , currentTry : Try
+    , tryHistory : List ( Try, PlayerId )
     , quantity : Quantity
     , value : Face
     , tableWilds : Int
     , cupState : CupState
+    , cupLooked : Bool
+    , whosTurn : PlayerId
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { roll = [ Twos, Twos, Twos, Twos, Twos ]
-      , currentTry = ( Two, Twos )
+      , tryHistory =
+            [ ( ( Two, Twos ), PlayerId 1 )
+            , ( ( Three, Threes ), PlayerId 2 )
+            ]
       , quantity = Two
       , value = Twos
       , tableWilds = 0
-      , cupState = Uncovered
+      , cupState = Covered
+      , cupLooked = False
+      , whosTurn = PlayerId 3
       }
     , Cmd.none
     )
+
+
+players : Dict number String
+players =
+    Dict.fromList
+        [ ( 1, "Thad" )
+        , ( 2, "Pat" )
+        ]
 
 
 
@@ -68,6 +88,7 @@ type Msg
     | ChangeQuantity Quantity
     | ChangeValue Face
     | Pass Try
+    | Look
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -94,12 +115,22 @@ update msg model =
             )
 
         Pull ->
+            -- placeholder.. update so a command(?) runs that assesses the currentTry and the tryToBeat
             ( { model | cupState = Uncovered }
             , Cmd.none
             )
 
         Pass try ->
-            ( { model | currentTry = try, cupState = Covered }
+            ( { model
+                | tryHistory = List.append model.tryHistory [ ( try, model.whosTurn ) ]
+                , cupState = Covered
+                , cupLooked = False
+              }
+            , Cmd.none
+            )
+
+        Look ->
+            ( { model | cupState = Uncovered, cupLooked = True }
             , Cmd.none
             )
 
@@ -124,24 +155,45 @@ view model =
             Debug.log "Best Try: " (evalTry (assessRoll model.roll))
 
         -- UI
-        currentTry =
-            [ text ("Current Roll: " ++ (quantityToString (Tuple.first model.currentTry) ++ " " ++ faceToString (Tuple.second model.currentTry))) ]
+
+        tryToBeat =
+            model.tryHistory
+                |> List.reverse
+                |> List.map (Tuple.first)
+                |> List.head >> Maybe.withDefault (Two, Twos)
+                |> tryToHTML
+        currentTry = tryToBeat
+
+        tryHistory =
+            model.tryHistory
+                |> List.map (Tuple.mapBoth tryToString (decodePlayerId >> getPlayer) )
+                |> List.map (\tup -> div [] [ text (Tuple.second tup ++ " -> " ++ Tuple.first tup) ])
 
         cup =
             case model.cupState of
                 Covered ->
-                    [ button [ onClick Pull ] [ text "Pull" ] ]
+                    [ button [ onClick Pull ] [ text "Pull" ]
+                    , button [ onClick Look ] [ text "Look" ]
+                    ]
 
                 Uncovered ->
                     makeCupHTML model.roll
+
+        rollButtons =
+            if model.cupLooked then
+                button [ onClick RollClick ] [ text "Roll" ]
+
+            else
+                span [] []
 
         trySelect =
             displayTryHTML model.roll model.quantity model.value
     in
     div []
-        [ h3 [] currentTry
+        [ h3 [] [text "Passed Roll: ", currentTry]
+        , div [] tryHistory
         , h2 [] cup
-        , button [ onClick RollClick ] [ text "Roll" ]
+        , rollButtons
         , trySelect
         ]
 
@@ -149,6 +201,14 @@ view model =
 
 -- UTILS
 -- Html Utils
+
+
+tryToHTML : Try -> Html Msg
+tryToHTML try =
+    try
+        |> tryToString
+        |> text
+        |> (\node -> div [] [ node ])
 
 
 makeDieHTML : Face -> Html Msg
@@ -181,21 +241,35 @@ displayTryHTML roll quantity val =
             [ label [ for "quantity" ] []
             , select [ onInput (ChangeQuantity << encodeQuantity << Maybe.withDefault 1 << String.toInt), id "quantity" ]
                 [ option [ value "1" ] [ text "one" ]
-                [ option [ value "2" ] [ text "two" ]
+                , option [ value "2" ] [ text "two" ]
                 , option [ value "3" ] [ text "three" ]
                 , option [ value "4" ] [ text "four" ]
                 , option [ value "5" ] [ text "five" ]
                 ]
             , label [ for "value" ] []
             , select [ onInput (ChangeValue << encodeFace << Maybe.withDefault 2 << String.toInt), id "value" ]
-                [ option [ value "2" ] [ text "two" ]
-                , option [ value "3" ] [ text "three" ]
-                , option [ value "4" ] [ text "four" ]
-                , option [ value "5" ] [ text "five" ]
-                , option [ value "5" ] [ text "six" ]
+                [ option [ value "2" ] [ text "twos" ]
+                , option [ value "3" ] [ text "threes" ]
+                , option [ value "4" ] [ text "fours" ]
+                , option [ value "5" ] [ text "fives" ]
+                , option [ value "6" ] [ text "sixes" ]
                 ]
             , button [ onClick (Pass ( quantity, val )) ] [ text "Pass" ]
             ]
 
     else
         div [] []
+
+
+
+-- Misc Utils
+
+
+decodePlayerId : PlayerId -> Int
+decodePlayerId p =
+    case p of
+        PlayerId int ->
+            int
+
+getPlayer id =
+    Maybe.withDefault "Invalid Player ID" (Dict.get id players)
