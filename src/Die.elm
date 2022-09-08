@@ -1,11 +1,8 @@
 module Die exposing (..)
 
-import Char exposing (toLower)
-import Debug exposing (log)
 import Dict exposing (Dict)
 import Random
 import Tuple2
-
 
 
 
@@ -86,6 +83,10 @@ tryDict =
         ]
 
 
+
+{- Given a Try, determine the "Try score". Returns a Maybe -}
+
+
 evalTry : Try -> Maybe Int
 evalTry try =
     Dict.get (decodeTry try) tryDict
@@ -162,6 +163,47 @@ decodeFace die =
 
         Sixes ->
             6
+
+
+quantityToString : Quantity -> String
+quantityToString quant =
+    case quant of
+        One ->
+            "One"
+
+        Two ->
+            "Two"
+
+        Three ->
+            "Three"
+
+        Four ->
+            "Four"
+
+        Five ->
+            "Five"
+
+
+faceToString : Face -> String
+faceToString die =
+    case die of
+        Wilds ->
+            "Wilds"
+
+        Twos ->
+            "Twos"
+
+        Threes ->
+            "Threes"
+
+        Fours ->
+            "Fours"
+
+        Fives ->
+            "Fives"
+
+        Sixes ->
+            "Sixes"
 
 
 encodeQuantity : Int -> Quantity

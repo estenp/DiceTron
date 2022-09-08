@@ -73,19 +73,11 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        {-
-           If msg is of type Roll, return a tuple and pass along the model without modifcation
-           and pass along a command requesting a random int.
-        -}
         RollClick ->
             ( model
             , Random.generate NewRoll (rollGenerator 5)
             )
 
-        {-
-           If msg is of type NewRoll, it will have some a die value tied to it.
-           Return a tuple and pass along the new value as the model, and an empty command.
-        -}
         NewRoll roll ->
             ( { model | roll = roll }
             , Cmd.none
@@ -117,7 +109,7 @@ update msg model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     Sub.none
 
 
@@ -128,10 +120,13 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     let
-        value =
+        _ =
             Debug.log "Best Try: " (evalTry (assessRoll model.roll))
 
         -- UI
+        currentTry =
+            [ text ("Current Roll: " ++ (quantityToString (Tuple.first model.currentTry) ++ " " ++ faceToString (Tuple.second model.currentTry))) ]
+
         cup =
             case model.cupState of
                 Covered ->
@@ -140,13 +135,14 @@ view model =
                 Uncovered ->
                     makeCupHTML model.roll
 
-        selects =
-            displaySelectsHTML model.roll model.quantity model.value
+        trySelect =
+            displayTryHTML model.roll model.quantity model.value
     in
     div []
-        [ h2 [] cup
+        [ h3 [] currentTry
+        , h2 [] cup
         , button [ onClick RollClick ] [ text "Roll" ]
-        , selects
+        , trySelect
         ]
 
 
@@ -166,7 +162,7 @@ makeCupHTML =
 
 
 rollContainer : Model -> Html Msg
-rollContainer model =
+rollContainer _ =
     let
         isFresh =
             True
@@ -178,23 +174,25 @@ rollContainer model =
         div [] []
 
 
-displaySelectsHTML : Roll -> Quantity -> Face -> Html Msg
-displaySelectsHTML roll quantity val =
+displayTryHTML : Roll -> Quantity -> Face -> Html Msg
+displayTryHTML roll quantity val =
     if List.length roll > 0 then
         div []
             [ label [ for "quantity" ] []
-            , select [ id "quantity" ]
+            , select [ onInput (ChangeQuantity << encodeQuantity << Maybe.withDefault 1 << String.toInt), id "quantity" ]
+                [ option [ value "1" ] [ text "one" ]
                 [ option [ value "2" ] [ text "two" ]
                 , option [ value "3" ] [ text "three" ]
                 , option [ value "4" ] [ text "four" ]
                 , option [ value "5" ] [ text "five" ]
                 ]
             , label [ for "value" ] []
-            , select [ id "value" ]
+            , select [ onInput (ChangeValue << encodeFace << Maybe.withDefault 2 << String.toInt), id "value" ]
                 [ option [ value "2" ] [ text "two" ]
                 , option [ value "3" ] [ text "three" ]
                 , option [ value "4" ] [ text "four" ]
                 , option [ value "5" ] [ text "five" ]
+                , option [ value "5" ] [ text "six" ]
                 ]
             , button [ onClick (Pass ( quantity, val )) ] [ text "Pass" ]
             ]

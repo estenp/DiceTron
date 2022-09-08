@@ -5276,7 +5276,7 @@ var $author$project$Main$init = function (_v0) {
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$subscriptions = function (model) {
+var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
 var $author$project$Main$Covered = {$: 'Covered'};
@@ -6230,9 +6230,20 @@ var $author$project$Die$assessRoll = function (roll) {
 					A2($elm$core$List$map, $author$project$Die$decodeFace, roll)))));
 };
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $author$project$Main$ChangeQuantity = function (a) {
+	return {$: 'ChangeQuantity', a: a};
+};
+var $author$project$Main$ChangeValue = function (a) {
+	return {$: 'ChangeValue', a: a};
+};
 var $author$project$Main$Pass = function (a) {
 	return {$: 'Pass', a: a};
 };
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -6262,12 +6273,45 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
 var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$select = _VirtualDom_node('select');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$displaySelectsHTML = F3(
+var $author$project$Main$displayTryHTML = F3(
 	function (roll, quantity, val) {
 		return ($elm$core$List$length(roll) > 0) ? A2(
 			$elm$html$Html$div,
@@ -6285,6 +6329,14 @@ var $author$project$Main$displaySelectsHTML = F3(
 					$elm$html$Html$select,
 					_List_fromArray(
 						[
+							$elm$html$Html$Events$onInput(
+							A2(
+								$elm$core$Basics$composeL,
+								A2(
+									$elm$core$Basics$composeL,
+									A2($elm$core$Basics$composeL, $author$project$Main$ChangeQuantity, $author$project$Die$encodeQuantity),
+									$elm$core$Maybe$withDefault(1)),
+								$elm$core$String$toInt)),
 							$elm$html$Html$Attributes$id('quantity')
 						]),
 					_List_fromArray(
@@ -6341,6 +6393,14 @@ var $author$project$Main$displaySelectsHTML = F3(
 					$elm$html$Html$select,
 					_List_fromArray(
 						[
+							$elm$html$Html$Events$onInput(
+							A2(
+								$elm$core$Basics$composeL,
+								A2(
+									$elm$core$Basics$composeL,
+									A2($elm$core$Basics$composeL, $author$project$Main$ChangeValue, $author$project$Die$encodeFace),
+									$elm$core$Maybe$withDefault(1)),
+								$elm$core$String$toInt)),
 							$elm$html$Html$Attributes$id('value')
 						]),
 					_List_fromArray(
@@ -6541,23 +6601,56 @@ var $author$project$Die$evalTry = function (_try) {
 		$author$project$Die$decodeTry(_try),
 		$author$project$Die$tryDict);
 };
+var $author$project$Die$faceToString = function (die) {
+	switch (die.$) {
+		case 'Wilds':
+			return 'Wilds';
+		case 'Twos':
+			return 'Twos';
+		case 'Threes':
+			return 'Threes';
+		case 'Fours':
+			return 'Fours';
+		case 'Fives':
+			return 'Fives';
+		default:
+			return 'Sixes';
+	}
+};
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $author$project$Main$makeDieHTML = function (die) {
 	return $elm$html$Html$text(
 		'[' + ($elm$core$String$fromInt(
 			$author$project$Die$decodeFace(die)) + '] '));
 };
 var $author$project$Main$makeCupHTML = $elm$core$List$map($author$project$Main$makeDieHTML);
+var $author$project$Die$quantityToString = function (quant) {
+	switch (quant.$) {
+		case 'One':
+			return 'One';
+		case 'Two':
+			return 'Two';
+		case 'Three':
+			return 'Three';
+		case 'Four':
+			return 'Four';
+		default:
+			return 'Five';
+	}
+};
 var $author$project$Main$view = function (model) {
-	var value = A2(
-		$elm$core$Debug$log,
-		'Best Try: ',
-		$author$project$Die$evalTry(
-			$author$project$Die$assessRoll(model.roll)));
-	var selects = A3($author$project$Main$displaySelectsHTML, model.roll, model.quantity, model.value);
+	var trySelect = A3($author$project$Main$displayTryHTML, model.roll, model.quantity, model.value);
+	var currentTry = _List_fromArray(
+		[
+			$elm$html$Html$text(
+			$author$project$Die$quantityToString(model.quantity)),
+			$elm$html$Html$text(
+			'Current Roll: ' + ($author$project$Die$quantityToString(model.currentTry.a) + (' ' + $author$project$Die$faceToString(model.currentTry.b))))
+		]);
 	var cup = function () {
-		var _v0 = model.cupState;
-		if (_v0.$ === 'Covered') {
+		var _v1 = model.cupState;
+		if (_v1.$ === 'Covered') {
 			return _List_fromArray(
 				[
 					A2(
@@ -6575,11 +6668,17 @@ var $author$project$Main$view = function (model) {
 			return $author$project$Main$makeCupHTML(model.roll);
 		}
 	}();
+	var _v0 = A2(
+		$elm$core$Debug$log,
+		'Best Try: ',
+		$author$project$Die$evalTry(
+			$author$project$Die$assessRoll(model.roll)));
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
+				A2($elm$html$Html$h3, _List_Nil, currentTry),
 				A2($elm$html$Html$h2, _List_Nil, cup),
 				A2(
 				$elm$html$Html$button,
@@ -6591,7 +6690,7 @@ var $author$project$Main$view = function (model) {
 					[
 						$elm$html$Html$text('Roll')
 					])),
-				selects
+				trySelect
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
