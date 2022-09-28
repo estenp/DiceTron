@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Dict exposing (..)
-import Die exposing (..)
+import Roll exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (for, id, value)
 import Html.Events exposing (..)
@@ -114,6 +114,9 @@ update msg model =
             )
 
         Pull ->
+            let
+                currentRollTry = assessRoll model.roll
+            in
             -- placeholder.. update so a command(?) runs that assesses the currentTry and the tryToBeat
             ( { model | cupState = Uncovered }
             , Cmd.none

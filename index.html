@@ -5257,11 +5257,11 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$Covered = {$: 'Covered'};
-var $author$project$Die$Three = {$: 'Three'};
-var $author$project$Die$Threes = {$: 'Threes'};
-var $author$project$Die$Two = {$: 'Two'};
-var $author$project$Die$Twos = {$: 'Twos'};
-var $author$project$Die$Wilds = {$: 'Wilds'};
+var $author$project$Roll$Three = {$: 'Three'};
+var $author$project$Roll$Threes = {$: 'Threes'};
+var $author$project$Roll$Two = {$: 'Two'};
+var $author$project$Roll$Twos = {$: 'Twos'};
+var $author$project$Roll$Wilds = {$: 'Wilds'};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Player$Player = F4(
@@ -5292,20 +5292,20 @@ var $author$project$Main$init = function (_v0) {
 			cupLooked: false,
 			cupState: $author$project$Main$Covered,
 			players: $author$project$Main$players,
-			quantity: $author$project$Die$Two,
+			quantity: $author$project$Roll$Two,
 			roll: _List_fromArray(
-				[$author$project$Die$Twos, $author$project$Die$Twos, $author$project$Die$Threes, $author$project$Die$Threes, $author$project$Die$Wilds]),
+				[$author$project$Roll$Twos, $author$project$Roll$Twos, $author$project$Roll$Threes, $author$project$Roll$Threes, $author$project$Roll$Wilds]),
 			tableWilds: 0,
 			tryHistory: _List_fromArray(
 				[
 					_Utils_Tuple2(
-					_Utils_Tuple2($author$project$Die$Two, $author$project$Die$Twos),
+					_Utils_Tuple2($author$project$Roll$Two, $author$project$Roll$Twos),
 					1),
 					_Utils_Tuple2(
-					_Utils_Tuple2($author$project$Die$Three, $author$project$Die$Threes),
+					_Utils_Tuple2($author$project$Roll$Three, $author$project$Roll$Threes),
 					2)
 				]),
-			value: $author$project$Die$Twos,
+			value: $author$project$Roll$Twos,
 			whosTurn: 3
 		},
 		$elm$core$Platform$Cmd$none);
@@ -5327,303 +5327,7 @@ var $elm$core$List$append = F2(
 			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
 		}
 	});
-var $elm$random$Random$Generate = function (a) {
-	return {$: 'Generate', a: a};
-};
-var $elm$random$Random$Seed = F2(
-	function (a, b) {
-		return {$: 'Seed', a: a, b: b};
-	});
-var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
-var $elm$random$Random$next = function (_v0) {
-	var state0 = _v0.a;
-	var incr = _v0.b;
-	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
-};
-var $elm$random$Random$initialSeed = function (x) {
-	var _v0 = $elm$random$Random$next(
-		A2($elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _v0.a;
-	var incr = _v0.b;
-	var state2 = (state1 + x) >>> 0;
-	return $elm$random$Random$next(
-		A2($elm$random$Random$Seed, state2, incr));
-};
-var $elm$time$Time$Name = function (a) {
-	return {$: 'Name', a: a};
-};
-var $elm$time$Time$Offset = function (a) {
-	return {$: 'Offset', a: a};
-};
-var $elm$time$Time$Zone = F2(
-	function (a, b) {
-		return {$: 'Zone', a: a, b: b};
-	});
-var $elm$time$Time$customZone = $elm$time$Time$Zone;
-var $elm$time$Time$Posix = function (a) {
-	return {$: 'Posix', a: a};
-};
-var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
-var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
-var $elm$time$Time$posixToMillis = function (_v0) {
-	var millis = _v0.a;
-	return millis;
-};
-var $elm$random$Random$init = A2(
-	$elm$core$Task$andThen,
-	function (time) {
-		return $elm$core$Task$succeed(
-			$elm$random$Random$initialSeed(
-				$elm$time$Time$posixToMillis(time)));
-	},
-	$elm$time$Time$now);
-var $elm$random$Random$step = F2(
-	function (_v0, seed) {
-		var generator = _v0.a;
-		return generator(seed);
-	});
-var $elm$random$Random$onEffects = F3(
-	function (router, commands, seed) {
-		if (!commands.b) {
-			return $elm$core$Task$succeed(seed);
-		} else {
-			var generator = commands.a.a;
-			var rest = commands.b;
-			var _v1 = A2($elm$random$Random$step, generator, seed);
-			var value = _v1.a;
-			var newSeed = _v1.b;
-			return A2(
-				$elm$core$Task$andThen,
-				function (_v2) {
-					return A3($elm$random$Random$onEffects, router, rest, newSeed);
-				},
-				A2($elm$core$Platform$sendToApp, router, value));
-		}
-	});
-var $elm$random$Random$onSelfMsg = F3(
-	function (_v0, _v1, seed) {
-		return $elm$core$Task$succeed(seed);
-	});
-var $elm$random$Random$Generator = function (a) {
-	return {$: 'Generator', a: a};
-};
-var $elm$random$Random$map = F2(
-	function (func, _v0) {
-		var genA = _v0.a;
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v1 = genA(seed0);
-				var a = _v1.a;
-				var seed1 = _v1.b;
-				return _Utils_Tuple2(
-					func(a),
-					seed1);
-			});
-	});
-var $elm$random$Random$cmdMap = F2(
-	function (func, _v0) {
-		var generator = _v0.a;
-		return $elm$random$Random$Generate(
-			A2($elm$random$Random$map, func, generator));
-	});
-_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
-var $elm$random$Random$command = _Platform_leaf('Random');
-var $elm$random$Random$generate = F2(
-	function (tagger, generator) {
-		return $elm$random$Random$command(
-			$elm$random$Random$Generate(
-				A2($elm$random$Random$map, tagger, generator)));
-	});
-var $author$project$Die$Fives = {$: 'Fives'};
-var $author$project$Die$Fours = {$: 'Fours'};
-var $author$project$Die$Sixes = {$: 'Sixes'};
-var $elm$random$Random$addOne = function (value) {
-	return _Utils_Tuple2(1, value);
-};
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var $elm$core$Basics$abs = function (n) {
-	return (n < 0) ? (-n) : n;
-};
-var $elm$core$Bitwise$and = _Bitwise_and;
-var $elm$core$Bitwise$xor = _Bitwise_xor;
-var $elm$random$Random$peel = function (_v0) {
-	var state = _v0.a;
-	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
-	return ((word >>> 22) ^ word) >>> 0;
-};
-var $elm$random$Random$float = F2(
-	function (a, b) {
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var seed1 = $elm$random$Random$next(seed0);
-				var range = $elm$core$Basics$abs(b - a);
-				var n1 = $elm$random$Random$peel(seed1);
-				var n0 = $elm$random$Random$peel(seed0);
-				var lo = (134217727 & n1) * 1.0;
-				var hi = (67108863 & n0) * 1.0;
-				var val = ((hi * 134217728.0) + lo) / 9007199254740992.0;
-				var scaled = (val * range) + a;
-				return _Utils_Tuple2(
-					scaled,
-					$elm$random$Random$next(seed1));
-			});
-	});
-var $elm$random$Random$getByWeight = F3(
-	function (_v0, others, countdown) {
-		getByWeight:
-		while (true) {
-			var weight = _v0.a;
-			var value = _v0.b;
-			if (!others.b) {
-				return value;
-			} else {
-				var second = others.a;
-				var otherOthers = others.b;
-				if (_Utils_cmp(
-					countdown,
-					$elm$core$Basics$abs(weight)) < 1) {
-					return value;
-				} else {
-					var $temp$_v0 = second,
-						$temp$others = otherOthers,
-						$temp$countdown = countdown - $elm$core$Basics$abs(weight);
-					_v0 = $temp$_v0;
-					others = $temp$others;
-					countdown = $temp$countdown;
-					continue getByWeight;
-				}
-			}
-		}
-	});
-var $elm$core$List$sum = function (numbers) {
-	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
-};
-var $elm$random$Random$weighted = F2(
-	function (first, others) {
-		var normalize = function (_v0) {
-			var weight = _v0.a;
-			return $elm$core$Basics$abs(weight);
-		};
-		var total = normalize(first) + $elm$core$List$sum(
-			A2($elm$core$List$map, normalize, others));
-		return A2(
-			$elm$random$Random$map,
-			A2($elm$random$Random$getByWeight, first, others),
-			A2($elm$random$Random$float, 0, total));
-	});
-var $elm$random$Random$uniform = F2(
-	function (value, valueList) {
-		return A2(
-			$elm$random$Random$weighted,
-			$elm$random$Random$addOne(value),
-			A2($elm$core$List$map, $elm$random$Random$addOne, valueList));
-	});
-var $author$project$Die$dieGenerator = A2(
-	$elm$random$Random$uniform,
-	$author$project$Die$Wilds,
-	_List_fromArray(
-		[$author$project$Die$Twos, $author$project$Die$Threes, $author$project$Die$Fours, $author$project$Die$Fives, $author$project$Die$Sixes]));
-var $elm$random$Random$listHelp = F4(
-	function (revList, n, gen, seed) {
-		listHelp:
-		while (true) {
-			if (n < 1) {
-				return _Utils_Tuple2(revList, seed);
-			} else {
-				var _v0 = gen(seed);
-				var value = _v0.a;
-				var newSeed = _v0.b;
-				var $temp$revList = A2($elm$core$List$cons, value, revList),
-					$temp$n = n - 1,
-					$temp$gen = gen,
-					$temp$seed = newSeed;
-				revList = $temp$revList;
-				n = $temp$n;
-				gen = $temp$gen;
-				seed = $temp$seed;
-				continue listHelp;
-			}
-		}
-	});
-var $elm$random$Random$list = F2(
-	function (n, _v0) {
-		var gen = _v0.a;
-		return $elm$random$Random$Generator(
-			function (seed) {
-				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
-			});
-	});
-var $author$project$Die$rollGenerator = function (quantity) {
-	return A2($elm$random$Random$list, quantity, $author$project$Die$dieGenerator);
-};
-var $author$project$Main$update = F2(
-	function (msg, model) {
-		switch (msg.$) {
-			case 'RollClick':
-				return _Utils_Tuple2(
-					model,
-					A2(
-						$elm$random$Random$generate,
-						$author$project$Main$NewRoll,
-						$author$project$Die$rollGenerator(5)));
-			case 'NewRoll':
-				var roll = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{roll: roll}),
-					$elm$core$Platform$Cmd$none);
-			case 'ChangeQuantity':
-				var quant = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{quantity: quant}),
-					$elm$core$Platform$Cmd$none);
-			case 'ChangeValue':
-				var val = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{value: val}),
-					$elm$core$Platform$Cmd$none);
-			case 'Pull':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{cupState: $author$project$Main$Uncovered}),
-					$elm$core$Platform$Cmd$none);
-			case 'Pass':
-				var _try = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							cupLooked: false,
-							cupState: $author$project$Main$Covered,
-							tryHistory: A2(
-								$elm$core$List$append,
-								model.tryHistory,
-								_List_fromArray(
-									[
-										_Utils_Tuple2(_try, model.whosTurn)
-									]))
-						}),
-					$elm$core$Platform$Cmd$none);
-			default:
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{cupLooked: true, cupState: $author$project$Main$Uncovered}),
-					$elm$core$Platform$Cmd$none);
-		}
-	});
-var $author$project$Main$Look = {$: 'Look'};
-var $author$project$Main$Pull = {$: 'Pull'};
-var $author$project$Main$RollClick = {$: 'RollClick'};
-var $author$project$Die$decodeFace = function (die) {
+var $author$project$Roll$decodeFace = function (die) {
 	switch (die.$) {
 		case 'Wilds':
 			return 1;
@@ -5790,7 +5494,7 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Die$freqReducer = F2(
+var $author$project$Roll$freqReducer = F2(
 	function (key, acc) {
 		return function (count) {
 			return A3($elm$core$Dict$insert, key, count + 1, acc);
@@ -5800,54 +5504,57 @@ var $author$project$Die$freqReducer = F2(
 				0,
 				A2($elm$core$Dict$get, key, acc)));
 	});
-var $author$project$Die$frequency = function (list) {
-	return A3($elm$core$List$foldl, $author$project$Die$freqReducer, $elm$core$Dict$empty, list);
+var $author$project$Roll$frequency = function (list) {
+	return A3($elm$core$List$foldl, $author$project$Roll$freqReducer, $elm$core$Dict$empty, list);
 };
-var $author$project$Die$encodeFace = function (die) {
+var $author$project$Roll$Fives = {$: 'Fives'};
+var $author$project$Roll$Fours = {$: 'Fours'};
+var $author$project$Roll$Sixes = {$: 'Sixes'};
+var $author$project$Roll$encodeFace = function (die) {
 	switch (die) {
 		case 1:
-			return $author$project$Die$Wilds;
+			return $author$project$Roll$Wilds;
 		case 2:
-			return $author$project$Die$Twos;
+			return $author$project$Roll$Twos;
 		case 3:
-			return $author$project$Die$Threes;
+			return $author$project$Roll$Threes;
 		case 4:
-			return $author$project$Die$Fours;
+			return $author$project$Roll$Fours;
 		case 5:
-			return $author$project$Die$Fives;
+			return $author$project$Roll$Fives;
 		case 6:
-			return $author$project$Die$Sixes;
+			return $author$project$Roll$Sixes;
 		default:
-			return $author$project$Die$Twos;
+			return $author$project$Roll$Twos;
 	}
 };
-var $author$project$Die$Five = {$: 'Five'};
-var $author$project$Die$Four = {$: 'Four'};
-var $author$project$Die$One = {$: 'One'};
-var $author$project$Die$encodeQuantity = function (quant) {
+var $author$project$Roll$Five = {$: 'Five'};
+var $author$project$Roll$Four = {$: 'Four'};
+var $author$project$Roll$One = {$: 'One'};
+var $author$project$Roll$encodeQuantity = function (quant) {
 	switch (quant) {
 		case 1:
-			return $author$project$Die$One;
+			return $author$project$Roll$One;
 		case 2:
-			return $author$project$Die$Two;
+			return $author$project$Roll$Two;
 		case 3:
-			return $author$project$Die$Three;
+			return $author$project$Roll$Three;
 		case 4:
-			return $author$project$Die$Four;
+			return $author$project$Roll$Four;
 		case 5:
-			return $author$project$Die$Five;
+			return $author$project$Roll$Five;
 		default:
-			return $author$project$Die$Two;
+			return $author$project$Roll$Two;
 	}
 };
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
 };
-var $author$project$Die$encodeTry = function (tup) {
+var $author$project$Roll$encodeTry = function (tup) {
 	return _Utils_Tuple2(
-		$author$project$Die$encodeQuantity(tup.a),
-		$author$project$Die$encodeFace(tup.b));
+		$author$project$Roll$encodeQuantity(tup.a),
+		$author$project$Roll$encodeFace(tup.b));
 };
 var $elm$core$List$head = function (list) {
 	if (list.b) {
@@ -6246,7 +5953,7 @@ var $TSFoster$elm_tuple_extra$Tuple2$swap = function (_v0) {
 	var b = _v0.b;
 	return _Utils_Tuple2(b, a);
 };
-var $author$project$Die$getBestOfAKind = function (dict) {
+var $author$project$Roll$getBestOfAKind = function (dict) {
 	var wild_count = A2(
 		$elm$core$Maybe$withDefault,
 		0,
@@ -6254,7 +5961,7 @@ var $author$project$Die$getBestOfAKind = function (dict) {
 	return A2(
 		$elm$core$Debug$log,
 		'encoded',
-		$author$project$Die$encodeTry(
+		$author$project$Roll$encodeTry(
 			A2(
 				$elm$core$Debug$log,
 				'hi',
@@ -6276,17 +5983,311 @@ var $author$project$Die$getBestOfAKind = function (dict) {
 												}),
 											A2($elm$core$Dict$remove, 1, dict)))))))))));
 };
-var $author$project$Die$assessRoll = function (roll) {
+var $author$project$Roll$assessRoll = function (roll) {
 	return A2(
 		$elm$core$Debug$log,
 		'Highest Roll: ',
-		$author$project$Die$getBestOfAKind(
+		$author$project$Roll$getBestOfAKind(
 			A2(
 				$elm$core$Debug$log,
 				'Frequency: ',
-				$author$project$Die$frequency(
-					A2($elm$core$List$map, $author$project$Die$decodeFace, roll)))));
+				$author$project$Roll$frequency(
+					A2($elm$core$List$map, $author$project$Roll$decodeFace, roll)))));
 };
+var $elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
+};
+var $elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 'Seed', a: a, b: b};
+	});
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$random$Random$next = function (_v0) {
+	var state0 = _v0.a;
+	var incr = _v0.b;
+	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $elm$time$Time$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var $elm$time$Time$Offset = function (a) {
+	return {$: 'Offset', a: a};
+};
+var $elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var $elm$time$Time$customZone = $elm$time$Time$Zone;
+var $elm$time$Time$Posix = function (a) {
+	return {$: 'Posix', a: a};
+};
+var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
+var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
+var $elm$time$Time$posixToMillis = function (_v0) {
+	var millis = _v0.a;
+	return millis;
+};
+var $elm$random$Random$init = A2(
+	$elm$core$Task$andThen,
+	function (time) {
+		return $elm$core$Task$succeed(
+			$elm$random$Random$initialSeed(
+				$elm$time$Time$posixToMillis(time)));
+	},
+	$elm$time$Time$now);
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return $elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _v1 = A2($elm$random$Random$step, generator, seed);
+			var value = _v1.a;
+			var newSeed = _v1.b;
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2($elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var $elm$random$Random$onSelfMsg = F3(
+	function (_v0, _v1, seed) {
+		return $elm$core$Task$succeed(seed);
+	});
+var $elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var $elm$random$Random$cmdMap = F2(
+	function (func, _v0) {
+		var generator = _v0.a;
+		return $elm$random$Random$Generate(
+			A2($elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
+var $elm$random$Random$command = _Platform_leaf('Random');
+var $elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return $elm$random$Random$command(
+			$elm$random$Random$Generate(
+				A2($elm$random$Random$map, tagger, generator)));
+	});
+var $elm$random$Random$addOne = function (value) {
+	return _Utils_Tuple2(1, value);
+};
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$xor = _Bitwise_xor;
+var $elm$random$Random$peel = function (_v0) {
+	var state = _v0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var $elm$random$Random$float = F2(
+	function (a, b) {
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var seed1 = $elm$random$Random$next(seed0);
+				var range = $elm$core$Basics$abs(b - a);
+				var n1 = $elm$random$Random$peel(seed1);
+				var n0 = $elm$random$Random$peel(seed0);
+				var lo = (134217727 & n1) * 1.0;
+				var hi = (67108863 & n0) * 1.0;
+				var val = ((hi * 134217728.0) + lo) / 9007199254740992.0;
+				var scaled = (val * range) + a;
+				return _Utils_Tuple2(
+					scaled,
+					$elm$random$Random$next(seed1));
+			});
+	});
+var $elm$random$Random$getByWeight = F3(
+	function (_v0, others, countdown) {
+		getByWeight:
+		while (true) {
+			var weight = _v0.a;
+			var value = _v0.b;
+			if (!others.b) {
+				return value;
+			} else {
+				var second = others.a;
+				var otherOthers = others.b;
+				if (_Utils_cmp(
+					countdown,
+					$elm$core$Basics$abs(weight)) < 1) {
+					return value;
+				} else {
+					var $temp$_v0 = second,
+						$temp$others = otherOthers,
+						$temp$countdown = countdown - $elm$core$Basics$abs(weight);
+					_v0 = $temp$_v0;
+					others = $temp$others;
+					countdown = $temp$countdown;
+					continue getByWeight;
+				}
+			}
+		}
+	});
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $elm$random$Random$weighted = F2(
+	function (first, others) {
+		var normalize = function (_v0) {
+			var weight = _v0.a;
+			return $elm$core$Basics$abs(weight);
+		};
+		var total = normalize(first) + $elm$core$List$sum(
+			A2($elm$core$List$map, normalize, others));
+		return A2(
+			$elm$random$Random$map,
+			A2($elm$random$Random$getByWeight, first, others),
+			A2($elm$random$Random$float, 0, total));
+	});
+var $elm$random$Random$uniform = F2(
+	function (value, valueList) {
+		return A2(
+			$elm$random$Random$weighted,
+			$elm$random$Random$addOne(value),
+			A2($elm$core$List$map, $elm$random$Random$addOne, valueList));
+	});
+var $author$project$Roll$dieGenerator = A2(
+	$elm$random$Random$uniform,
+	$author$project$Roll$Wilds,
+	_List_fromArray(
+		[$author$project$Roll$Twos, $author$project$Roll$Threes, $author$project$Roll$Fours, $author$project$Roll$Fives, $author$project$Roll$Sixes]));
+var $elm$random$Random$listHelp = F4(
+	function (revList, n, gen, seed) {
+		listHelp:
+		while (true) {
+			if (n < 1) {
+				return _Utils_Tuple2(revList, seed);
+			} else {
+				var _v0 = gen(seed);
+				var value = _v0.a;
+				var newSeed = _v0.b;
+				var $temp$revList = A2($elm$core$List$cons, value, revList),
+					$temp$n = n - 1,
+					$temp$gen = gen,
+					$temp$seed = newSeed;
+				revList = $temp$revList;
+				n = $temp$n;
+				gen = $temp$gen;
+				seed = $temp$seed;
+				continue listHelp;
+			}
+		}
+	});
+var $elm$random$Random$list = F2(
+	function (n, _v0) {
+		var gen = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed) {
+				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
+			});
+	});
+var $author$project$Roll$rollGenerator = function (quantity) {
+	return A2($elm$random$Random$list, quantity, $author$project$Roll$dieGenerator);
+};
+var $author$project$Main$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'RollClick':
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Main$NewRoll,
+						$author$project$Roll$rollGenerator(5)));
+			case 'NewRoll':
+				var roll = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{roll: roll}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChangeQuantity':
+				var quant = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{quantity: quant}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChangeValue':
+				var val = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{value: val}),
+					$elm$core$Platform$Cmd$none);
+			case 'Pull':
+				var currentRollTry = $author$project$Roll$assessRoll(model.roll);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{cupState: $author$project$Main$Uncovered}),
+					$elm$core$Platform$Cmd$none);
+			case 'Pass':
+				var _try = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							cupLooked: false,
+							cupState: $author$project$Main$Covered,
+							tryHistory: A2(
+								$elm$core$List$append,
+								model.tryHistory,
+								_List_fromArray(
+									[
+										_Utils_Tuple2(_try, model.whosTurn)
+									]))
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{cupLooked: true, cupState: $author$project$Main$Uncovered}),
+					$elm$core$Platform$Cmd$none);
+		}
+	});
+var $author$project$Main$Look = {$: 'Look'};
+var $author$project$Main$Pull = {$: 'Pull'};
+var $author$project$Main$RollClick = {$: 'RollClick'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
@@ -6307,7 +6308,7 @@ var $elm$core$Basics$composeL = F3(
 		return g(
 			f(x));
 	});
-var $author$project$Die$decodeQuantity = function (dieQuantity) {
+var $author$project$Roll$decodeQuantity = function (dieQuantity) {
 	switch (dieQuantity.$) {
 		case 'One':
 			return 1;
@@ -6343,7 +6344,7 @@ var $author$project$Main$displayQuantityOptions = F2(
 				function (o) {
 					return _Utils_cmp(
 						o.a,
-						$author$project$Die$decodeQuantity(quant)) > -1;
+						$author$project$Roll$decodeQuantity(quant)) > -1;
 				},
 				options));
 	});
@@ -6357,7 +6358,7 @@ var $author$project$Main$displayValueOptions = F2(
 				function (o) {
 					return _Utils_cmp(
 						o.a,
-						$author$project$Die$decodeFace(value)) > 0;
+						$author$project$Roll$decodeFace(value)) > 0;
 				},
 				options));
 	});
@@ -6430,7 +6431,7 @@ var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('
 var $author$project$Main$quantityOptions = _List_fromArray(
 	[
 		_Utils_Tuple2(
-		$author$project$Die$decodeQuantity($author$project$Die$One),
+		$author$project$Roll$decodeQuantity($author$project$Roll$One),
 		A2(
 			$elm$html$Html$option,
 			_List_fromArray(
@@ -6442,7 +6443,7 @@ var $author$project$Main$quantityOptions = _List_fromArray(
 					$elm$html$Html$text('one')
 				]))),
 		_Utils_Tuple2(
-		$author$project$Die$decodeQuantity($author$project$Die$Two),
+		$author$project$Roll$decodeQuantity($author$project$Roll$Two),
 		A2(
 			$elm$html$Html$option,
 			_List_fromArray(
@@ -6454,7 +6455,7 @@ var $author$project$Main$quantityOptions = _List_fromArray(
 					$elm$html$Html$text('two')
 				]))),
 		_Utils_Tuple2(
-		$author$project$Die$decodeQuantity($author$project$Die$Three),
+		$author$project$Roll$decodeQuantity($author$project$Roll$Three),
 		A2(
 			$elm$html$Html$option,
 			_List_fromArray(
@@ -6466,7 +6467,7 @@ var $author$project$Main$quantityOptions = _List_fromArray(
 					$elm$html$Html$text('three')
 				]))),
 		_Utils_Tuple2(
-		$author$project$Die$decodeQuantity($author$project$Die$Four),
+		$author$project$Roll$decodeQuantity($author$project$Roll$Four),
 		A2(
 			$elm$html$Html$option,
 			_List_fromArray(
@@ -6478,7 +6479,7 @@ var $author$project$Main$quantityOptions = _List_fromArray(
 					$elm$html$Html$text('four')
 				]))),
 		_Utils_Tuple2(
-		$author$project$Die$decodeQuantity($author$project$Die$Five),
+		$author$project$Roll$decodeQuantity($author$project$Roll$Five),
 		A2(
 			$elm$html$Html$option,
 			_List_fromArray(
@@ -6494,7 +6495,7 @@ var $elm$html$Html$select = _VirtualDom_node('select');
 var $author$project$Main$valueOptions = _List_fromArray(
 	[
 		_Utils_Tuple2(
-		$author$project$Die$decodeFace($author$project$Die$Twos),
+		$author$project$Roll$decodeFace($author$project$Roll$Twos),
 		A2(
 			$elm$html$Html$option,
 			_List_fromArray(
@@ -6506,7 +6507,7 @@ var $author$project$Main$valueOptions = _List_fromArray(
 					$elm$html$Html$text('twos')
 				]))),
 		_Utils_Tuple2(
-		$author$project$Die$decodeFace($author$project$Die$Threes),
+		$author$project$Roll$decodeFace($author$project$Roll$Threes),
 		A2(
 			$elm$html$Html$option,
 			_List_fromArray(
@@ -6518,7 +6519,7 @@ var $author$project$Main$valueOptions = _List_fromArray(
 					$elm$html$Html$text('threes')
 				]))),
 		_Utils_Tuple2(
-		$author$project$Die$decodeFace($author$project$Die$Fours),
+		$author$project$Roll$decodeFace($author$project$Roll$Fours),
 		A2(
 			$elm$html$Html$option,
 			_List_fromArray(
@@ -6530,7 +6531,7 @@ var $author$project$Main$valueOptions = _List_fromArray(
 					$elm$html$Html$text('fours')
 				]))),
 		_Utils_Tuple2(
-		$author$project$Die$decodeFace($author$project$Die$Fives),
+		$author$project$Roll$decodeFace($author$project$Roll$Fives),
 		A2(
 			$elm$html$Html$option,
 			_List_fromArray(
@@ -6542,7 +6543,7 @@ var $author$project$Main$valueOptions = _List_fromArray(
 					$elm$html$Html$text('fives')
 				]))),
 		_Utils_Tuple2(
-		$author$project$Die$decodeFace($author$project$Die$Sixes),
+		$author$project$Roll$decodeFace($author$project$Roll$Sixes),
 		A2(
 			$elm$html$Html$option,
 			_List_fromArray(
@@ -6577,7 +6578,7 @@ var $author$project$Main$displayTryHTML = F4(
 								$elm$core$Basics$composeL,
 								A2(
 									$elm$core$Basics$composeL,
-									A2($elm$core$Basics$composeL, $author$project$Main$ChangeQuantity, $author$project$Die$encodeQuantity),
+									A2($elm$core$Basics$composeL, $author$project$Main$ChangeQuantity, $author$project$Roll$encodeQuantity),
 									$elm$core$Maybe$withDefault(1)),
 								$elm$core$String$toInt)),
 							$elm$html$Html$Attributes$id('quantity')
@@ -6599,7 +6600,7 @@ var $author$project$Main$displayTryHTML = F4(
 								$elm$core$Basics$composeL,
 								A2(
 									$elm$core$Basics$composeL,
-									A2($elm$core$Basics$composeL, $author$project$Main$ChangeValue, $author$project$Die$encodeFace),
+									A2($elm$core$Basics$composeL, $author$project$Main$ChangeValue, $author$project$Roll$encodeFace),
 									$elm$core$Maybe$withDefault(2)),
 								$elm$core$String$toInt)),
 							$elm$html$Html$Attributes$id('value')
@@ -6619,10 +6620,10 @@ var $author$project$Main$displayTryHTML = F4(
 						]))
 				])) : A2($elm$html$Html$div, _List_Nil, _List_Nil);
 	});
-var $author$project$Die$decodeTry = function (_try) {
+var $author$project$Roll$decodeTry = function (_try) {
 	return _Utils_Tuple2(
-		$author$project$Die$decodeQuantity(_try.a),
-		$author$project$Die$decodeFace(_try.b));
+		$author$project$Roll$decodeQuantity(_try.a),
+		$author$project$Roll$decodeFace(_try.b));
 };
 var $elm$core$Dict$fromList = function (assocs) {
 	return A3(
@@ -6636,115 +6637,115 @@ var $elm$core$Dict$fromList = function (assocs) {
 		$elm$core$Dict$empty,
 		assocs);
 };
-var $author$project$Die$tryDict = $elm$core$Dict$fromList(
+var $author$project$Roll$tryDict = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Two),
-				$author$project$Die$decodeFace($author$project$Die$Twos)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Two),
+				$author$project$Roll$decodeFace($author$project$Roll$Twos)),
 			1),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Two),
-				$author$project$Die$decodeFace($author$project$Die$Threes)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Two),
+				$author$project$Roll$decodeFace($author$project$Roll$Threes)),
 			2),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Two),
-				$author$project$Die$decodeFace($author$project$Die$Fours)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Two),
+				$author$project$Roll$decodeFace($author$project$Roll$Fours)),
 			3),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Two),
-				$author$project$Die$decodeFace($author$project$Die$Fives)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Two),
+				$author$project$Roll$decodeFace($author$project$Roll$Fives)),
 			4),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Two),
-				$author$project$Die$decodeFace($author$project$Die$Sixes)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Two),
+				$author$project$Roll$decodeFace($author$project$Roll$Sixes)),
 			5),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Three),
-				$author$project$Die$decodeFace($author$project$Die$Twos)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Three),
+				$author$project$Roll$decodeFace($author$project$Roll$Twos)),
 			6),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Three),
-				$author$project$Die$decodeFace($author$project$Die$Threes)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Three),
+				$author$project$Roll$decodeFace($author$project$Roll$Threes)),
 			7),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Three),
-				$author$project$Die$decodeFace($author$project$Die$Fours)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Three),
+				$author$project$Roll$decodeFace($author$project$Roll$Fours)),
 			8),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Three),
-				$author$project$Die$decodeFace($author$project$Die$Fives)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Three),
+				$author$project$Roll$decodeFace($author$project$Roll$Fives)),
 			9),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Three),
-				$author$project$Die$decodeFace($author$project$Die$Sixes)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Three),
+				$author$project$Roll$decodeFace($author$project$Roll$Sixes)),
 			10),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Four),
-				$author$project$Die$decodeFace($author$project$Die$Twos)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Four),
+				$author$project$Roll$decodeFace($author$project$Roll$Twos)),
 			11),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Four),
-				$author$project$Die$decodeFace($author$project$Die$Threes)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Four),
+				$author$project$Roll$decodeFace($author$project$Roll$Threes)),
 			12),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Four),
-				$author$project$Die$decodeFace($author$project$Die$Fours)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Four),
+				$author$project$Roll$decodeFace($author$project$Roll$Fours)),
 			13),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Four),
-				$author$project$Die$decodeFace($author$project$Die$Fives)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Four),
+				$author$project$Roll$decodeFace($author$project$Roll$Fives)),
 			14),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Four),
-				$author$project$Die$decodeFace($author$project$Die$Sixes)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Four),
+				$author$project$Roll$decodeFace($author$project$Roll$Sixes)),
 			15),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Five),
-				$author$project$Die$decodeFace($author$project$Die$Twos)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Five),
+				$author$project$Roll$decodeFace($author$project$Roll$Twos)),
 			16),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Five),
-				$author$project$Die$decodeFace($author$project$Die$Threes)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Five),
+				$author$project$Roll$decodeFace($author$project$Roll$Threes)),
 			17),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Five),
-				$author$project$Die$decodeFace($author$project$Die$Fours)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Five),
+				$author$project$Roll$decodeFace($author$project$Roll$Fours)),
 			18),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Five),
-				$author$project$Die$decodeFace($author$project$Die$Fives)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Five),
+				$author$project$Roll$decodeFace($author$project$Roll$Fives)),
 			19),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Die$decodeQuantity($author$project$Die$Five),
-				$author$project$Die$decodeFace($author$project$Die$Sixes)),
+				$author$project$Roll$decodeQuantity($author$project$Roll$Five),
+				$author$project$Roll$decodeFace($author$project$Roll$Sixes)),
 			20)
 		]));
-var $author$project$Die$evalTry = function (_try) {
+var $author$project$Roll$evalTry = function (_try) {
 	return A2(
 		$elm$core$Dict$get,
-		$author$project$Die$decodeTry(_try),
-		$author$project$Die$tryDict);
+		$author$project$Roll$decodeTry(_try),
+		$author$project$Roll$tryDict);
 };
 var $author$project$Player$getPlayer = F2(
 	function (players, id) {
@@ -6772,7 +6773,7 @@ var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $author$project$Main$makeDieHTML = function (die) {
 	return $elm$html$Html$text(
 		'[' + ($elm$core$String$fromInt(
-			$author$project$Die$decodeFace(die)) + '] '));
+			$author$project$Roll$decodeFace(die)) + '] '));
 };
 var $author$project$Main$makeCupHTML = $elm$core$List$map($author$project$Main$makeDieHTML);
 var $elm$core$Tuple$mapBoth = F3(
@@ -6784,11 +6785,11 @@ var $elm$core$Tuple$mapBoth = F3(
 			funcB(y));
 	});
 var $elm$html$Html$span = _VirtualDom_node('span');
-var $author$project$Die$tryToString = function (_try) {
+var $author$project$Roll$tryToString = function (_try) {
 	return function (t) {
 		return $elm$core$String$fromInt(t.a) + (' ' + $elm$core$String$fromInt(t.b));
 	}(
-		$author$project$Die$decodeTry(_try));
+		$author$project$Roll$decodeTry(_try));
 };
 var $author$project$Main$tryToHTML = function (_try) {
 	return function (node) {
@@ -6799,14 +6800,14 @@ var $author$project$Main$tryToHTML = function (_try) {
 				[node]));
 	}(
 		$elm$html$Html$text(
-			$author$project$Die$tryToString(_try)));
+			$author$project$Roll$tryToString(_try)));
 };
 var $author$project$Main$view = function (model) {
 	var tryToBeat = A3(
 		$elm$core$Basics$composeR,
 		$elm$core$List$head,
 		$elm$core$Maybe$withDefault(
-			_Utils_Tuple2($author$project$Die$Two, $author$project$Die$Twos)),
+			_Utils_Tuple2($author$project$Roll$Two, $author$project$Roll$Twos)),
 		A2(
 			$elm$core$List$map,
 			$elm$core$Tuple$first,
@@ -6827,7 +6828,7 @@ var $author$project$Main$view = function (model) {
 			$elm$core$List$map,
 			A2(
 				$elm$core$Tuple$mapBoth,
-				$author$project$Die$tryToString,
+				$author$project$Roll$tryToString,
 				$author$project$Player$getName($author$project$Main$players)),
 			model.tryHistory));
 	var rollButtons = model.cupLooked ? A2(
@@ -6874,8 +6875,8 @@ var $author$project$Main$view = function (model) {
 	var _v0 = A2(
 		$elm$core$Debug$log,
 		'Best Try: ',
-		$author$project$Die$evalTry(
-			$author$project$Die$assessRoll(model.roll)));
+		$author$project$Roll$evalTry(
+			$author$project$Roll$assessRoll(model.roll)));
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,

@@ -1,4 +1,4 @@
-module Die exposing (..)
+module Roll exposing (..)
 
 import Dict exposing (Dict)
 import Random
