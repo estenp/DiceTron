@@ -6,7 +6,10 @@ import Die exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (for, id, value)
 import Html.Events exposing (..)
+import Player exposing (..)
 import Random
+import Tuple2
+import Array
 
 
 
@@ -26,26 +29,28 @@ main =
 
 -- MODEL
 -- Form
+players : List Player
+players =
+    makePlayers my_players
 
+playersArray = Array.fromList players
 
 type CupState
     = Covered
     | Uncovered
 
 
-type PlayerId
-    = PlayerId Int
-
-
 type alias Model =
     { roll : Roll
-    , tryHistory : List ( Try, PlayerId )
+    , tryHistory : List ( Try, Int )
     , quantity : Quantity
     , value : Face
     , tableWilds : Int
     , cupState : CupState
     , cupLooked : Bool
-    , whosTurn : PlayerId
+    , whosTurn : Int
+    , players : List Player
+    , activePlayers : List Player
     }
 
 
@@ -53,26 +58,20 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( { roll = [ Twos, Twos, Twos, Twos, Twos ]
       , tryHistory =
-            [ ( ( Two, Twos ), PlayerId 1 )
-            , ( ( Three, Threes ), PlayerId 2 )
+            [ ( ( Two, Twos ), 1 )
+            , ( ( Three, Threes ), 2 )
             ]
       , quantity = Two
       , value = Twos
       , tableWilds = 0
       , cupState = Covered
       , cupLooked = False
-      , whosTurn = PlayerId 3
+      , whosTurn = 3
+      , players = players
+      , activePlayers = players
       }
     , Cmd.none
     )
-
-
-players : Dict number String
-players =
-    Dict.fromList
-        [ ( 1, "Thad" )
-        , ( 2, "Pat" )
-        ]
 
 
 
@@ -82,7 +81,7 @@ players =
 type Msg
     = -- User wants a new roll value displayed.
       RollClick
-      -- Runtime is sending a new random die value.
+      -- Runtime is sending a new random die value.∏
     | NewRoll (List Face)
     | Pull
     | ChangeQuantity Quantity
@@ -155,18 +154,19 @@ view model =
             Debug.log "Best Try: " (evalTry (assessRoll model.roll))
 
         -- UI
-
         tryToBeat =
             model.tryHistory
                 |> List.reverse
-                |> List.map (Tuple.first)
-                |> List.head >> Maybe.withDefault (Two, Twos)
-                |> tryToHTML
-        currentTry = tryToBeat
+                |> List.map Tuple.first
+                |> List.head
+                >> Maybe.withDefault ( Two, Twos )
+
+        currentTry =
+            tryToHTML tryToBeat
 
         tryHistory =
             model.tryHistory
-                |> List.map (Tuple.mapBoth tryToString (decodePlayerId >> getPlayer) )
+                |> List.map (Tuple.mapBoth tryToString (getName players))
                 |> List.map (\tup -> div [] [ text (Tuple.second tup ++ " -> " ++ Tuple.first tup) ])
 
         cup =
@@ -187,10 +187,10 @@ view model =
                 span [] []
 
         trySelect =
-            displayTryHTML model.roll model.quantity model.value
+            displayTryHTML model.roll model.quantity model.value tryToBeat
     in
     div []
-        [ h3 [] [text "Passed Roll: ", currentTry]
+        [ h3 [] [ text "Passed Roll: ", currentTry ]
         , div [] tryHistory
         , h2 [] cup
         , rollButtons
@@ -234,18 +234,41 @@ rollContainer _ =
         div [] []
 
 
-displayTryHTML : Roll -> Quantity -> Face -> Html Msg
-displayTryHTML roll quantity val =
+quantityOptions =
+    [ ( decodeQuantity One, option [ value "1" ] [ text "one" ] )
+    , ( decodeQuantity Two, option [ value "2" ] [ text "two" ] )
+    , ( decodeQuantity Three, option [ value "3" ] [ text "three" ] )
+    , ( decodeQuantity Four, option [ value "4" ] [ text "four" ] )
+    , ( decodeQuantity Five, option [ value "5" ] [ text "five" ] )
+    ]
+
+
+valueOptions =
+    [ ( decodeFace Twos, option [ value "2" ] [ text "twos" ] )
+    , ( decodeFace Threes, option [ value "3" ] [ text "threes" ] )
+    , ( decodeFace Fours, option [ value "4" ] [ text "fours" ] )
+    , ( decodeFace Fives, option [ value "5" ] [ text "fives" ] )
+    , ( decodeFace Sixes, option [ value "6" ] [ text "sixes" ] )
+    ]
+
+
+displayQuantityOptions : Quantity -> List ( Int, Html Msg ) -> List (Html Msg)
+displayQuantityOptions quant options =
+    options
+        |> List.filter (\o -> Tuple.first o >= decodeQuantity quant)
+        |> List.map Tuple.second
+
+
+displayTryHTML : Roll -> Quantity -> Face -> Try -> Html Msg
+displayTryHTML roll quantity val tryToBeat =
     if List.length roll > 0 then
         div []
             [ label [ for "quantity" ] []
             , select [ onInput (ChangeQuantity << encodeQuantity << Maybe.withDefault 1 << String.toInt), id "quantity" ]
-                [ option [ value "1" ] [ text "one" ]
-                , option [ value "2" ] [ text "two" ]
-                , option [ value "3" ] [ text "three" ]
-                , option [ value "4" ] [ text "four" ]
-                , option [ value "5" ] [ text "five" ]
-                ]
+                (displayQuantityOptions
+                    (Tuple.first tryToBeat)
+                    quantityOptions
+                )
             , label [ for "value" ] []
             , select [ onInput (ChangeValue << encodeFace << Maybe.withDefault 2 << String.toInt), id "value" ]
                 [ option [ value "2" ] [ text "twos" ]
@@ -265,11 +288,18 @@ displayTryHTML roll quantity val =
 -- Misc Utils
 
 
-decodePlayerId : PlayerId -> Int
-decodePlayerId p =
-    case p of
-        PlayerId int ->
-            int
-
-getPlayer id =
-    Maybe.withDefault "Invalid Player ID" (Dict.get id players)
+mustPass : Try -> Try
+mustPass passedTry =
+    -- Maybe.withDefault (Two, Twos) (evalTry passedTry)
+    let
+        passedTryVal =
+            Maybe.withDefault 1 (evalTry passedTry)
+    in
+    tryDict
+        |> Dict.toList
+        -- |> List.map Tuple2.swap
+        |> List.filter (\t -> Tuple.second t == (passedTryVal + 1))
+        |> List.map Tuple.first
+        |> List.head
+        |> Maybe.withDefault ( 2, 2 )
+        |> encodeTry

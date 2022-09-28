@@ -5257,20 +5257,40 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$Covered = {$: 'Covered'};
-var $author$project$Main$PlayerId = function (a) {
-	return {$: 'PlayerId', a: a};
-};
 var $author$project$Die$Three = {$: 'Three'};
 var $author$project$Die$Threes = {$: 'Threes'};
 var $author$project$Die$Two = {$: 'Two'};
 var $author$project$Die$Twos = {$: 'Twos'};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Player$Player = F4(
+	function (id, name, hp, maxHp) {
+		return {hp: hp, id: id, maxHp: maxHp, name: name};
+	});
+var $author$project$Player$makePlayers = function (playerList) {
+	return A2(
+		$elm$core$List$map,
+		function (_v0) {
+			var id = _v0.id;
+			var name = _v0.name;
+			return A4($author$project$Player$Player, id, name, 5, 5);
+		},
+		playerList);
+};
+var $author$project$Player$my_players = _List_fromArray(
+	[
+		{id: 1, name: 'Thad'},
+		{id: 2, name: 'Pat'},
+		{id: 3, name: 'Esten'}
+	]);
+var $author$project$Main$players = $author$project$Player$makePlayers($author$project$Player$my_players);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
+			activePlayers: $author$project$Main$players,
 			cupLooked: false,
 			cupState: $author$project$Main$Covered,
+			players: $author$project$Main$players,
 			quantity: $author$project$Die$Two,
 			roll: _List_fromArray(
 				[$author$project$Die$Twos, $author$project$Die$Twos, $author$project$Die$Twos, $author$project$Die$Twos, $author$project$Die$Twos]),
@@ -5279,13 +5299,13 @@ var $author$project$Main$init = function (_v0) {
 				[
 					_Utils_Tuple2(
 					_Utils_Tuple2($author$project$Die$Two, $author$project$Die$Twos),
-					$author$project$Main$PlayerId(1)),
+					1),
 					_Utils_Tuple2(
 					_Utils_Tuple2($author$project$Die$Three, $author$project$Die$Threes),
-					$author$project$Main$PlayerId(2))
+					2)
 				]),
 			value: $author$project$Die$Twos,
-			whosTurn: $author$project$Main$PlayerId(3)
+			whosTurn: 3
 		},
 		$elm$core$Platform$Cmd$none);
 };
@@ -6273,10 +6293,6 @@ var $elm$core$Basics$composeR = F3(
 		return g(
 			f(x));
 	});
-var $author$project$Main$decodePlayerId = function (p) {
-	var _int = p.a;
-	return _int;
-};
 var $author$project$Main$ChangeQuantity = function (a) {
 	return {$: 'ChangeQuantity', a: a};
 };
@@ -6290,6 +6306,46 @@ var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
 		return g(
 			f(x));
+	});
+var $author$project$Die$decodeQuantity = function (dieQuantity) {
+	switch (dieQuantity.$) {
+		case 'One':
+			return 1;
+		case 'Two':
+			return 2;
+		case 'Three':
+			return 3;
+		case 'Four':
+			return 4;
+		default:
+			return 5;
+	}
+};
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$Basics$ge = _Utils_ge;
+var $author$project$Main$displayQuantityOptions = F2(
+	function (quant, options) {
+		return A2(
+			$elm$core$List$map,
+			$elm$core$Tuple$second,
+			A2(
+				$elm$core$List$filter,
+				function (o) {
+					return _Utils_cmp(
+						o.a,
+						$author$project$Die$decodeQuantity(quant)) > -1;
+				},
+				options));
 	});
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$json$Json$Encode$string = _Json_wrap;
@@ -6354,12 +6410,75 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
 var $elm$html$Html$option = _VirtualDom_node('option');
-var $elm$html$Html$select = _VirtualDom_node('select');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$displayTryHTML = F3(
-	function (roll, quantity, val) {
+var $author$project$Main$quantityOptions = _List_fromArray(
+	[
+		_Utils_Tuple2(
+		$author$project$Die$decodeQuantity($author$project$Die$One),
+		A2(
+			$elm$html$Html$option,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$value('1')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('one')
+				]))),
+		_Utils_Tuple2(
+		$author$project$Die$decodeQuantity($author$project$Die$Two),
+		A2(
+			$elm$html$Html$option,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$value('2')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('two')
+				]))),
+		_Utils_Tuple2(
+		$author$project$Die$decodeQuantity($author$project$Die$Three),
+		A2(
+			$elm$html$Html$option,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$value('3')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('three')
+				]))),
+		_Utils_Tuple2(
+		$author$project$Die$decodeQuantity($author$project$Die$Four),
+		A2(
+			$elm$html$Html$option,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$value('4')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('four')
+				]))),
+		_Utils_Tuple2(
+		$author$project$Die$decodeQuantity($author$project$Die$Five),
+		A2(
+			$elm$html$Html$option,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$value('5')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text('five')
+				])))
+	]);
+var $elm$html$Html$select = _VirtualDom_node('select');
+var $author$project$Main$displayTryHTML = F4(
+	function (roll, quantity, val, tryToBeat) {
 		return ($elm$core$List$length(roll) > 0) ? A2(
 			$elm$html$Html$div,
 			_List_Nil,
@@ -6386,59 +6505,7 @@ var $author$project$Main$displayTryHTML = F3(
 								$elm$core$String$toInt)),
 							$elm$html$Html$Attributes$id('quantity')
 						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$option,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$value('1')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('one')
-								])),
-							A2(
-							$elm$html$Html$option,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$value('2')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('two')
-								])),
-							A2(
-							$elm$html$Html$option,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$value('3')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('three')
-								])),
-							A2(
-							$elm$html$Html$option,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$value('4')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('four')
-								])),
-							A2(
-							$elm$html$Html$option,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$value('5')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('five')
-								]))
-						])),
+					A2($author$project$Main$displayQuantityOptions, tryToBeat.a, $author$project$Main$quantityOptions)),
 					A2(
 					$elm$html$Html$label,
 					_List_fromArray(
@@ -6527,20 +6594,6 @@ var $author$project$Main$displayTryHTML = F3(
 						]))
 				])) : A2($elm$html$Html$div, _List_Nil, _List_Nil);
 	});
-var $author$project$Die$decodeQuantity = function (dieQuantity) {
-	switch (dieQuantity.$) {
-		case 'One':
-			return 1;
-		case 'Two':
-			return 2;
-		case 'Three':
-			return 3;
-		case 'Four':
-			return 4;
-		default:
-			return 5;
-	}
-};
 var $author$project$Die$decodeTry = function (_try) {
 	return _Utils_Tuple2(
 		$author$project$Die$decodeQuantity(_try.a),
@@ -6668,18 +6721,27 @@ var $author$project$Die$evalTry = function (_try) {
 		$author$project$Die$decodeTry(_try),
 		$author$project$Die$tryDict);
 };
-var $author$project$Main$players = $elm$core$Dict$fromList(
-	_List_fromArray(
-		[
-			_Utils_Tuple2(1, 'Thad'),
-			_Utils_Tuple2(2, 'Pat')
-		]));
-var $author$project$Main$getPlayer = function (id) {
-	return A2(
-		$elm$core$Maybe$withDefault,
-		'Invalid Player ID',
-		A2($elm$core$Dict$get, id, $author$project$Main$players));
-};
+var $author$project$Player$getPlayer = F2(
+	function (players, id) {
+		var maybe = $elm$core$List$head(
+			A2(
+				$elm$core$List$filter,
+				function (p) {
+					return _Utils_eq(p.id, id);
+				},
+				players));
+		return A2(
+			$elm$core$Maybe$withDefault,
+			A4($author$project$Player$Player, 0, 'Empty', 5, 5),
+			maybe);
+	});
+var $author$project$Player$getName = F2(
+	function (players, id) {
+		return function ($) {
+			return $.name;
+		}(
+			A2($author$project$Player$getPlayer, players, id));
+	});
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $author$project$Main$makeDieHTML = function (die) {
@@ -6715,17 +6777,16 @@ var $author$project$Main$tryToHTML = function (_try) {
 			$author$project$Die$tryToString(_try)));
 };
 var $author$project$Main$view = function (model) {
-	var tryToBeat = $author$project$Main$tryToHTML(
-		A3(
-			$elm$core$Basics$composeR,
-			$elm$core$List$head,
-			$elm$core$Maybe$withDefault(
-				_Utils_Tuple2($author$project$Die$Two, $author$project$Die$Twos)),
-			A2(
-				$elm$core$List$map,
-				$elm$core$Tuple$first,
-				$elm$core$List$reverse(model.tryHistory))));
-	var trySelect = A3($author$project$Main$displayTryHTML, model.roll, model.quantity, model.value);
+	var tryToBeat = A3(
+		$elm$core$Basics$composeR,
+		$elm$core$List$head,
+		$elm$core$Maybe$withDefault(
+			_Utils_Tuple2($author$project$Die$Two, $author$project$Die$Twos)),
+		A2(
+			$elm$core$List$map,
+			$elm$core$Tuple$first,
+			$elm$core$List$reverse(model.tryHistory)));
+	var trySelect = A4($author$project$Main$displayTryHTML, model.roll, model.quantity, model.value, tryToBeat);
 	var tryHistory = A2(
 		$elm$core$List$map,
 		function (tup) {
@@ -6742,7 +6803,7 @@ var $author$project$Main$view = function (model) {
 			A2(
 				$elm$core$Tuple$mapBoth,
 				$author$project$Die$tryToString,
-				A2($elm$core$Basics$composeR, $author$project$Main$decodePlayerId, $author$project$Main$getPlayer)),
+				$author$project$Player$getName($author$project$Main$players)),
 			model.tryHistory));
 	var rollButtons = model.cupLooked ? A2(
 		$elm$html$Html$button,
@@ -6754,7 +6815,7 @@ var $author$project$Main$view = function (model) {
 			[
 				$elm$html$Html$text('Roll')
 			])) : A2($elm$html$Html$span, _List_Nil, _List_Nil);
-	var currentTry = tryToBeat;
+	var currentTry = $author$project$Main$tryToHTML(tryToBeat);
 	var cup = function () {
 		var _v1 = model.cupState;
 		if (_v1.$ === 'Covered') {
