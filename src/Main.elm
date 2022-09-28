@@ -56,7 +56,7 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { roll = [ Twos, Twos, Twos, Twos, Twos ]
+    ( { roll = [ Twos, Twos, Threes, Threes, Wilds ]
       , tryHistory =
             [ ( ( Two, Twos ), 1 )
             , ( ( Three, Threes ), 2 )
@@ -258,6 +258,12 @@ displayQuantityOptions quant options =
         |> List.filter (\o -> Tuple.first o >= decodeQuantity quant)
         |> List.map Tuple.second
 
+displayValueOptions : Face -> List ( Int, Html Msg ) -> List (Html Msg)
+displayValueOptions value options =
+    options
+        |> List.filter (\o -> Tuple.first o > decodeFace value)
+        |> List.map Tuple.second
+
 
 displayTryHTML : Roll -> Quantity -> Face -> Try -> Html Msg
 displayTryHTML roll quantity val tryToBeat =
@@ -265,18 +271,11 @@ displayTryHTML roll quantity val tryToBeat =
         div []
             [ label [ for "quantity" ] []
             , select [ onInput (ChangeQuantity << encodeQuantity << Maybe.withDefault 1 << String.toInt), id "quantity" ]
-                (displayQuantityOptions
-                    (Tuple.first tryToBeat)
-                    quantityOptions
+                (displayQuantityOptions (Tuple.first tryToBeat) quantityOptions
                 )
             , label [ for "value" ] []
             , select [ onInput (ChangeValue << encodeFace << Maybe.withDefault 2 << String.toInt), id "value" ]
-                [ option [ value "2" ] [ text "twos" ]
-                , option [ value "3" ] [ text "threes" ]
-                , option [ value "4" ] [ text "fours" ]
-                , option [ value "5" ] [ text "fives" ]
-                , option [ value "6" ] [ text "sixes" ]
-                ]
+                (displayValueOptions (Tuple.second tryToBeat) valueOptions)
             , button [ onClick (Pass ( quantity, val )) ] [ text "Pass" ]
             ]
 
