@@ -8,8 +8,9 @@ import Html.Attributes exposing (for, id, value)
 import Html.Events exposing (..)
 import Player exposing (..)
 import Random
-import Tuple2
 import Array
+import Deque
+
 
 
 
@@ -48,27 +49,24 @@ type alias Model =
     , tableWilds : Int
     , cupState : CupState
     , cupLooked : Bool
-    , whosTurn : Int
+    , whosTurn : Int -- index of activePlayers
     , players : List Player
-    , activePlayers : List Player
+    , activePlayers : Deque.Deque Int
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { roll = [ Twos, Twos, Threes, Threes, Wilds ]
-      , tryHistory =
-            [ ( ( Two, Twos ), 1 )
-            , ( ( Three, Threes ), 2 )
-            ]
+      , tryHistory = []
       , quantity = Two
       , value = Twos
       , tableWilds = 0
       , cupState = Covered
       , cupLooked = False
-      , whosTurn = 3
+      , whosTurn = 1
       , players = players
-      , activePlayers = players
+      , activePlayers = players |> List.map .id |> Deque.fromList
       }
     , Cmd.none
     )
@@ -114,22 +112,35 @@ update msg model =
             )
 
         Pull ->
+            -- check that the roll satisfied the required Try level
             let
                 currentRollTry = assessRoll model.roll
+                passedTry = model.tryHistory
+                    |> List.reverse
+                    |> List.head
+                    |> Maybe.withDefault ( (Two, Twos), 2 )
+
+                pull = compareTry currentRollTry (Tuple.first passedTry)
+
             in
-            -- placeholder.. update so a command(?) runs that assesses the currentTry and the tryToBeat
-            ( { model | cupState = Uncovered }
-            , Cmd.none
-            )
+            case pull of
+                HadIt ->
+                    -- current player takes a fold
+                    -- fresh roll
+
+                    ( { model | cupState = Uncovered }
+                    , Cmd.none
+                    )
+                    -- )
+                Fold ->
+                    -- previous player takes a fold
+                    -- fresh roll
+                    ( { model | cupState = Uncovered }
+                    , Cmd.none
+                    )
 
         Pass try ->
-            ( { model
-                | tryHistory = List.append model.tryHistory [ ( try, model.whosTurn ) ]
-                , cupState = Covered
-                , cupLooked = False
-              }
-            , Cmd.none
-            )
+            updatePass model try
 
         Look ->
             ( { model | cupState = Uncovered, cupLooked = True }
@@ -153,8 +164,11 @@ subscriptions _ =
 view : Model -> Html Msg
 view model =
     let
+        -- model_log = Debug.log "Model" model
+
         _ =
             Debug.log "Best Try: " (evalTry (assessRoll model.roll))
+
 
         -- UI
         tryToBeat =
@@ -194,6 +208,7 @@ view model =
     in
     div []
         [ h3 [] [ text "Passed Roll: ", currentTry ]
+        , h3 [] [ text "Current Turn: ", text (getName players model.whosTurn) ]
         , div [] tryHistory
         , h2 [] cup
         , rollButtons
@@ -284,6 +299,28 @@ displayTryHTML roll quantity val tryToBeat =
 
     else
         div [] []
+
+
+-- Model Utils
+
+
+updatePass : Model -> Try -> ( Model, Cmd msg )
+updatePass model try =
+    let
+        (currentTurn, rest) = model.activePlayers |> Debug.log "active players" |> Deque.popFront
+        newActivePlayers = Deque.pushBack (Maybe.withDefault 0 currentTurn) rest
+        newCurrentTurn = Deque.first newActivePlayers
+        asdf = Debug.log "new current" newCurrentTurn
+    in
+        ( { model
+            | tryHistory = List.append model.tryHistory [ ( try, model.whosTurn ) ]
+            , whosTurn = Maybe.withDefault 0 newCurrentTurn
+            , activePlayers = newActivePlayers
+            , cupState = Covered
+            , cupLooked = False
+        }
+        , Cmd.none
+        )
 
 
 

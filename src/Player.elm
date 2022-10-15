@@ -1,5 +1,5 @@
 module Player exposing (..)
-import Array
+import Deque
 
 
 type alias Player =
