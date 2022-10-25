@@ -1,4 +1,4 @@
-module Roll exposing (..)
+module Try exposing (Roll, Pull(..), Try, Face(..), Quantity(..), dieGenerator, rollGenerator, dictionary, compare, eval, toString, encodeFace, encodeQuantity, encode, decodeFace, decodeQuantity, decode, assessRoll, fromScore, appendHistory, getLastTry)
 
 import Dict exposing (Dict)
 import Random
@@ -57,8 +57,8 @@ rollGenerator quantity =
 -- UTILS
 
 
-tryDict : Dict ( Int, Int ) Int
-tryDict =
+dictionary : Dict ( Int, Int ) Int
+dictionary =
     Dict.fromList
         [ ( ( decodeQuantity Two, decodeFace Twos ), 1 )
         , ( ( decodeQuantity Two, decodeFace Threes ), 2 )
@@ -83,39 +83,45 @@ tryDict =
         ]
 
 
-
 {- Given a Try, determine the "Try score". Returns a Maybe -}
 
 
-evalTry : Try -> Maybe Int
-evalTry try =
-    Dict.get (decodeTry try) tryDict
+eval : Try -> Int
+eval try =
+    Maybe.withDefault 1 (Dict.get (decode try) dictionary)
+
+fromScore : Int -> Try
+fromScore score =
+    dictionary
+        |> Dict.filter (\_ v -> v == score)
+        |> Dict.keys
+        |> List.head
+        |> Maybe.withDefault (2, 2)
+        |> encode
 
 
-encodeTry : ( Int, Int ) -> Try
-encodeTry tup =
+encode : ( Int, Int ) -> Try
+encode tup =
     ( encodeQuantity (Tuple.first tup), encodeFace (Tuple.second tup) )
 
 
-decodeTry : Try -> ( Int, Int )
-decodeTry try =
+decode : Try -> ( Int, Int )
+decode try =
     ( decodeQuantity (Tuple.first try), decodeFace (Tuple.second try) )
 
-tryToString : Try -> String
-tryToString try =
+toString : Try -> String
+toString try =
     try
-        |> decodeTry
+        |> decode
         |> (\t -> ( (t |> Tuple.first |> String.fromInt) ++ " " ++ (t |> Tuple.second |> String.fromInt)))
 
 
-compareTry : Try -> Try -> Pull
-compareTry currentTry passedTry =
+compare : Try -> Try -> Pull
+compare currentTry passedTry =
     let
-        currentTryVal =
-            Maybe.withDefault 1 (evalTry currentTry)
+        currentTryVal = eval currentTry
 
-        passedTryVal =
-            Maybe.withDefault 1 (evalTry passedTry)
+        passedTryVal = eval passedTry
     in
     if currentTryVal > passedTryVal then
         HadIt
@@ -290,7 +296,7 @@ getBestOfAKind dict =
         -- Wilds have been counted, remove them from dict
         |> Dict.remove 1
         -- apply wild count to all Face counts to see which count is highest with the addition of the Wilds
-        |> Dict.map (\k v -> v + wild_count)
+        |> Dict.map (\_ v -> v + wild_count)
         -- convert the Dict to a List of Tuple
         |> Dict.toList
         -- sort by the count
@@ -301,11 +307,18 @@ getBestOfAKind dict =
         |> List.head
         |> Maybe.withDefault ( 2, 2 )
         |> Tuple2.swap
-        |> Debug.log "hi"
-        |> encodeTry
-        |> Debug.log "encoded"
+        |> encode
 
+appendHistory : { a | tryHistory : List (b, c), whosTurn : c } -> b -> List (b, c)
+appendHistory model try = List.append model.tryHistory [ ( try, model.whosTurn ) ]
 
+getLastTry : List (Try, Int) -> Try
+getLastTry tryHistory =
+    tryHistory
+        |> List.reverse
+        |> List.map Tuple.first
+        |> List.head
+        >> Maybe.withDefault ( Two, Twos )
 
 --    decodeFace : Die -> Maybe Int
 --    decodeFace die =

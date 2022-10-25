@@ -1,5 +1,6 @@
-module Player exposing (..)
+module Player exposing (Players, my_players, getPlayer, getName, hit)
 import Deque
+import Dict exposing (Dict)
 
 
 type alias Player =
@@ -16,7 +17,7 @@ type alias PlayerData =
     }
 
 
-my_players : List PlayerData
+{- my_players : List PlayerData
 my_players =
     [ { id = 1
       , name = "Thad"
@@ -27,6 +28,33 @@ my_players =
     , { id = 3
       , name = "Esten"
       }
+    ] -}
+
+default_player =
+    { id = 0
+    , name = "DEFAULT"
+    , hp = 0
+    , maxHp = 0
+    }
+
+type alias Players = Dict Int Player
+my_players : Players
+my_players =
+    Dict.fromList [ (1, { id = 1
+    , name = "Thad"
+    , hp = 5
+    , maxHp = 5
+    })
+    , (2, { id = 2
+    , name = "Pat"
+    , hp = 5
+    , maxHp = 5
+    })
+    , (3, { id = 3
+    , name = "Esten"
+    , hp = 5
+    , maxHp = 5
+    })
     ]
 
 
@@ -55,15 +83,21 @@ getPlayer id players =
         Nothing ->
             Err "Player not found." -}
 
-getPlayer : List Player -> Int -> Player
+getPlayer : Players -> Int -> Player
 getPlayer players id =
     let
-        maybe =
-            players
-                |> List.filter (\p -> p.id == id)
-                |> List.head
+        maybe = Dict.get id players
     in
-    Maybe.withDefault (Player 0 "Empty" 5 5) maybe
+    Maybe.withDefault default_player maybe
 
-getName : List Player -> Int -> String
+getName : Players -> Int -> String
 getName players id = .name (getPlayer players id)
+
+hit : Players -> Int -> Players
+hit players id =
+    let
+        player = getPlayer players id
+    in
+        -- if you can decrement this, return the player record
+        -- else return nothing or bad result?
+        Dict.insert id ({ player | hp = player.hp - 1 }) players

@@ -1,0 +1,40 @@
+turn states:
+
+Fresh roll
+  - only can roll, no cup visible, no wilds
+
+OR
+
+Received roll
+  - look button
+  - pull button
+  - pass button
+  - re-roll button
+  - try selects
+
+  |
+  v
+
+Looked
+  - cup
+  - pass button
+  - re-roll button
+  - try selects
+
+  |
+  v
+
+Pulled roll (or just straight to fresh)
+  - cup
+  - info on result
+
+->
+
+Rolled
+  - cup
+  - pass button
+  - try selects
+
+
+Off turn
+  - show some useful data, stats etc

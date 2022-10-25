@@ -5257,10 +5257,9 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$Covered = {$: 'Covered'};
-var $author$project$Roll$Threes = {$: 'Threes'};
-var $author$project$Roll$Two = {$: 'Two'};
-var $author$project$Roll$Twos = {$: 'Twos'};
-var $author$project$Roll$Wilds = {$: 'Wilds'};
+var $author$project$Main$Fresh = {$: 'Fresh'};
+var $author$project$Try$Two = {$: 'Two'};
+var $author$project$Try$Twos = {$: 'Twos'};
 var $folkertdev$elm_deque$Deque$Deque = function (a) {
 	return {$: 'Deque', a: a};
 };
@@ -5458,111 +5457,8 @@ var $folkertdev$elm_deque$Internal$fromList = function (list) {
 		});
 };
 var $folkertdev$elm_deque$Deque$fromList = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Deque$Deque, $folkertdev$elm_deque$Internal$fromList);
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Player$Player = F4(
-	function (id, name, hp, maxHp) {
-		return {hp: hp, id: id, maxHp: maxHp, name: name};
-	});
-var $author$project$Player$makePlayers = function (playerList) {
-	return A2(
-		$elm$core$List$map,
-		function (_v0) {
-			var id = _v0.id;
-			var name = _v0.name;
-			return A4($author$project$Player$Player, id, name, 5, 5);
-		},
-		playerList);
-};
-var $author$project$Player$my_players = _List_fromArray(
-	[
-		{id: 1, name: 'Thad'},
-		{id: 2, name: 'Pat'},
-		{id: 3, name: 'Esten'}
-	]);
-var $author$project$Main$players = $author$project$Player$makePlayers($author$project$Player$my_players);
-var $author$project$Main$init = function (_v0) {
-	return _Utils_Tuple2(
-		{
-			activePlayers: $folkertdev$elm_deque$Deque$fromList(
-				A2(
-					$elm$core$List$map,
-					function ($) {
-						return $.id;
-					},
-					$author$project$Main$players)),
-			cupLooked: false,
-			cupState: $author$project$Main$Covered,
-			players: $author$project$Main$players,
-			quantity: $author$project$Roll$Two,
-			roll: _List_fromArray(
-				[$author$project$Roll$Twos, $author$project$Roll$Twos, $author$project$Roll$Threes, $author$project$Roll$Threes, $author$project$Roll$Wilds]),
-			tableWilds: 0,
-			tryHistory: _List_Nil,
-			value: $author$project$Roll$Twos,
-			whosTurn: 1
-		},
-		$elm$core$Platform$Cmd$none);
-};
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$subscriptions = function (_v0) {
-	return $elm$core$Platform$Sub$none;
-};
-var $author$project$Main$NewRoll = function (a) {
-	return {$: 'NewRoll', a: a};
-};
-var $author$project$Main$Uncovered = {$: 'Uncovered'};
-var $author$project$Roll$decodeFace = function (die) {
-	switch (die.$) {
-		case 'Wilds':
-			return 1;
-		case 'Twos':
-			return 2;
-		case 'Threes':
-			return 3;
-		case 'Fours':
-			return 4;
-		case 'Fives':
-			return 5;
-		default:
-			return 6;
-	}
-};
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
-var $elm$core$Basics$compare = _Utils_compare;
-var $elm$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
-				switch (_v1.$) {
-					case 'LT':
-						var $temp$targetKey = targetKey,
-							$temp$dict = left;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-					case 'EQ':
-						return $elm$core$Maybe$Just(value);
-					default:
-						var $temp$targetKey = targetKey,
-							$temp$dict = right;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-				}
-			}
-		}
-	});
 var $elm$core$Dict$Black = {$: 'Black'};
 var $elm$core$Dict$RBNode_elm_builtin = F5(
 	function (a, b, c, d, e) {
@@ -5623,6 +5519,7 @@ var $elm$core$Dict$balance = F5(
 			}
 		}
 	});
+var $elm$core$Basics$compare = _Utils_compare;
 var $elm$core$Dict$insertHelp = F3(
 	function (key, value, dict) {
 		if (dict.$ === 'RBEmpty_elm_builtin') {
@@ -5671,6 +5568,129 @@ var $elm$core$Dict$insert = F3(
 			return x;
 		}
 	});
+var $elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, dict) {
+				var key = _v0.a;
+				var value = _v0.b;
+				return A3($elm$core$Dict$insert, key, value, dict);
+			}),
+		$elm$core$Dict$empty,
+		assocs);
+};
+var $author$project$Player$my_players = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2(
+			1,
+			{hp: 5, id: 1, maxHp: 5, name: 'Thad'}),
+			_Utils_Tuple2(
+			2,
+			{hp: 5, id: 2, maxHp: 5, name: 'Pat'}),
+			_Utils_Tuple2(
+			3,
+			{hp: 5, id: 3, maxHp: 5, name: 'Esten'})
+		]));
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Main$init = function (_v0) {
+	return _Utils_Tuple2(
+		{
+			activePlayers: $folkertdev$elm_deque$Deque$fromList(
+				$elm$core$Dict$keys($author$project$Player$my_players)),
+			cupLooked: false,
+			cupState: $author$project$Main$Covered,
+			players: $author$project$Player$my_players,
+			quantity: $author$project$Try$Two,
+			roll: _List_Nil,
+			tableWilds: 0,
+			tryHistory: _List_Nil,
+			turnStatus: $author$project$Main$Fresh,
+			value: $author$project$Try$Twos,
+			whosTurn: 1
+		},
+		$elm$core$Platform$Cmd$none);
+};
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Main$subscriptions = function (_v0) {
+	return $elm$core$Platform$Sub$none;
+};
+var $author$project$Main$Looked = {$: 'Looked'};
+var $author$project$Main$NewRoll = function (a) {
+	return {$: 'NewRoll', a: a};
+};
+var $author$project$Main$Pending = {$: 'Pending'};
+var $author$project$Main$Pull = {$: 'Pull'};
+var $author$project$Main$Rolled = {$: 'Rolled'};
+var $author$project$Main$Uncovered = {$: 'Uncovered'};
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $author$project$Try$appendHistory = F2(
+	function (model, _try) {
+		return A2(
+			$elm$core$List$append,
+			model.tryHistory,
+			_List_fromArray(
+				[
+					_Utils_Tuple2(_try, model.whosTurn)
+				]));
+	});
+var $author$project$Try$decodeFace = function (die) {
+	switch (die.$) {
+		case 'Wilds':
+			return 1;
+		case 'Twos':
+			return 2;
+		case 'Threes':
+			return 3;
+		case 'Fours':
+			return 4;
+		case 'Fives':
+			return 5;
+		default:
+			return 6;
+	}
+};
+var $elm$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
+				switch (_v1.$) {
+					case 'LT':
+						var $temp$targetKey = targetKey,
+							$temp$dict = left;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+					case 'EQ':
+						return $elm$core$Maybe$Just(value);
+					default:
+						var $temp$targetKey = targetKey,
+							$temp$dict = right;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+				}
+			}
+		}
+	});
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5680,7 +5700,7 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var $author$project$Roll$freqReducer = F2(
+var $author$project$Try$freqReducer = F2(
 	function (key, acc) {
 		return function (count) {
 			return A3($elm$core$Dict$insert, key, count + 1, acc);
@@ -5690,58 +5710,60 @@ var $author$project$Roll$freqReducer = F2(
 				0,
 				A2($elm$core$Dict$get, key, acc)));
 	});
-var $author$project$Roll$frequency = function (list) {
-	return A3($elm$core$List$foldl, $author$project$Roll$freqReducer, $elm$core$Dict$empty, list);
+var $author$project$Try$frequency = function (list) {
+	return A3($elm$core$List$foldl, $author$project$Try$freqReducer, $elm$core$Dict$empty, list);
 };
-var $author$project$Roll$Fives = {$: 'Fives'};
-var $author$project$Roll$Fours = {$: 'Fours'};
-var $author$project$Roll$Sixes = {$: 'Sixes'};
-var $author$project$Roll$encodeFace = function (die) {
+var $author$project$Try$Fives = {$: 'Fives'};
+var $author$project$Try$Fours = {$: 'Fours'};
+var $author$project$Try$Sixes = {$: 'Sixes'};
+var $author$project$Try$Threes = {$: 'Threes'};
+var $author$project$Try$Wilds = {$: 'Wilds'};
+var $author$project$Try$encodeFace = function (die) {
 	switch (die) {
 		case 1:
-			return $author$project$Roll$Wilds;
+			return $author$project$Try$Wilds;
 		case 2:
-			return $author$project$Roll$Twos;
+			return $author$project$Try$Twos;
 		case 3:
-			return $author$project$Roll$Threes;
+			return $author$project$Try$Threes;
 		case 4:
-			return $author$project$Roll$Fours;
+			return $author$project$Try$Fours;
 		case 5:
-			return $author$project$Roll$Fives;
+			return $author$project$Try$Fives;
 		case 6:
-			return $author$project$Roll$Sixes;
+			return $author$project$Try$Sixes;
 		default:
-			return $author$project$Roll$Twos;
+			return $author$project$Try$Twos;
 	}
 };
-var $author$project$Roll$Five = {$: 'Five'};
-var $author$project$Roll$Four = {$: 'Four'};
-var $author$project$Roll$One = {$: 'One'};
-var $author$project$Roll$Three = {$: 'Three'};
-var $author$project$Roll$encodeQuantity = function (quant) {
+var $author$project$Try$Five = {$: 'Five'};
+var $author$project$Try$Four = {$: 'Four'};
+var $author$project$Try$One = {$: 'One'};
+var $author$project$Try$Three = {$: 'Three'};
+var $author$project$Try$encodeQuantity = function (quant) {
 	switch (quant) {
 		case 1:
-			return $author$project$Roll$One;
+			return $author$project$Try$One;
 		case 2:
-			return $author$project$Roll$Two;
+			return $author$project$Try$Two;
 		case 3:
-			return $author$project$Roll$Three;
+			return $author$project$Try$Three;
 		case 4:
-			return $author$project$Roll$Four;
+			return $author$project$Try$Four;
 		case 5:
-			return $author$project$Roll$Five;
+			return $author$project$Try$Five;
 		default:
-			return $author$project$Roll$Two;
+			return $author$project$Try$Two;
 	}
 };
 var $elm$core$Tuple$second = function (_v0) {
 	var y = _v0.b;
 	return y;
 };
-var $author$project$Roll$encodeTry = function (tup) {
+var $author$project$Try$encode = function (tup) {
 	return _Utils_Tuple2(
-		$author$project$Roll$encodeQuantity(tup.a),
-		$author$project$Roll$encodeFace(tup.b));
+		$author$project$Try$encodeQuantity(tup.a),
+		$author$project$Try$encodeFace(tup.b));
 };
 var $elm$core$List$head = function (list) {
 	if (list.b) {
@@ -5752,7 +5774,6 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Dict$map = F2(
 	function (func, dict) {
 		if (dict.$ === 'RBEmpty_elm_builtin') {
@@ -6140,50 +6161,45 @@ var $TSFoster$elm_tuple_extra$Tuple2$swap = function (_v0) {
 	var b = _v0.b;
 	return _Utils_Tuple2(b, a);
 };
-var $author$project$Roll$getBestOfAKind = function (dict) {
+var $author$project$Try$getBestOfAKind = function (dict) {
 	var wild_count = A2(
 		$elm$core$Maybe$withDefault,
 		0,
 		A2($elm$core$Dict$get, 1, dict));
-	return A2(
-		$elm$core$Debug$log,
-		'encoded',
-		$author$project$Roll$encodeTry(
+	return $author$project$Try$encode(
+		$TSFoster$elm_tuple_extra$Tuple2$swap(
 			A2(
-				$elm$core$Debug$log,
-				'hi',
-				$TSFoster$elm_tuple_extra$Tuple2$swap(
-					A2(
-						$elm$core$Maybe$withDefault,
-						_Utils_Tuple2(2, 2),
-						$elm$core$List$head(
-							$elm$core$List$reverse(
+				$elm$core$Maybe$withDefault,
+				_Utils_Tuple2(2, 2),
+				$elm$core$List$head(
+					$elm$core$List$reverse(
+						A2(
+							$elm$core$List$sortBy,
+							$elm$core$Tuple$second,
+							$elm$core$Dict$toList(
 								A2(
-									$elm$core$List$sortBy,
-									$elm$core$Tuple$second,
-									$elm$core$Dict$toList(
-										A2(
-											$elm$core$Dict$map,
-											F2(
-												function (k, v) {
-													return v + wild_count;
-												}),
-											A2($elm$core$Dict$remove, 1, dict)))))))))));
+									$elm$core$Dict$map,
+									F2(
+										function (_v0, v) {
+											return v + wild_count;
+										}),
+									A2($elm$core$Dict$remove, 1, dict)))))))));
 };
-var $author$project$Roll$assessRoll = function (roll) {
+var $elm$core$Debug$log = _Debug_log;
+var $author$project$Try$assessRoll = function (roll) {
 	return A2(
 		$elm$core$Debug$log,
 		'Highest Roll: ',
-		$author$project$Roll$getBestOfAKind(
+		$author$project$Try$getBestOfAKind(
 			A2(
 				$elm$core$Debug$log,
 				'Frequency: ',
-				$author$project$Roll$frequency(
-					A2($elm$core$List$map, $author$project$Roll$decodeFace, roll)))));
+				$author$project$Try$frequency(
+					A2($elm$core$List$map, $author$project$Try$decodeFace, roll)))));
 };
-var $author$project$Roll$Fold = {$: 'Fold'};
-var $author$project$Roll$HadIt = {$: 'HadIt'};
-var $author$project$Roll$decodeQuantity = function (dieQuantity) {
+var $author$project$Try$Fold = {$: 'Fold'};
+var $author$project$Try$HadIt = {$: 'HadIt'};
+var $author$project$Try$decodeQuantity = function (dieQuantity) {
 	switch (dieQuantity.$) {
 		case 'One':
 			return 1;
@@ -6197,145 +6213,145 @@ var $author$project$Roll$decodeQuantity = function (dieQuantity) {
 			return 5;
 	}
 };
-var $author$project$Roll$decodeTry = function (_try) {
+var $author$project$Try$decode = function (_try) {
 	return _Utils_Tuple2(
-		$author$project$Roll$decodeQuantity(_try.a),
-		$author$project$Roll$decodeFace(_try.b));
+		$author$project$Try$decodeQuantity(_try.a),
+		$author$project$Try$decodeFace(_try.b));
 };
-var $elm$core$Dict$fromList = function (assocs) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (_v0, dict) {
-				var key = _v0.a;
-				var value = _v0.b;
-				return A3($elm$core$Dict$insert, key, value, dict);
-			}),
-		$elm$core$Dict$empty,
-		assocs);
-};
-var $author$project$Roll$tryDict = $elm$core$Dict$fromList(
+var $author$project$Try$dictionary = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Two),
-				$author$project$Roll$decodeFace($author$project$Roll$Twos)),
+				$author$project$Try$decodeQuantity($author$project$Try$Two),
+				$author$project$Try$decodeFace($author$project$Try$Twos)),
 			1),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Two),
-				$author$project$Roll$decodeFace($author$project$Roll$Threes)),
+				$author$project$Try$decodeQuantity($author$project$Try$Two),
+				$author$project$Try$decodeFace($author$project$Try$Threes)),
 			2),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Two),
-				$author$project$Roll$decodeFace($author$project$Roll$Fours)),
+				$author$project$Try$decodeQuantity($author$project$Try$Two),
+				$author$project$Try$decodeFace($author$project$Try$Fours)),
 			3),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Two),
-				$author$project$Roll$decodeFace($author$project$Roll$Fives)),
+				$author$project$Try$decodeQuantity($author$project$Try$Two),
+				$author$project$Try$decodeFace($author$project$Try$Fives)),
 			4),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Two),
-				$author$project$Roll$decodeFace($author$project$Roll$Sixes)),
+				$author$project$Try$decodeQuantity($author$project$Try$Two),
+				$author$project$Try$decodeFace($author$project$Try$Sixes)),
 			5),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Three),
-				$author$project$Roll$decodeFace($author$project$Roll$Twos)),
+				$author$project$Try$decodeQuantity($author$project$Try$Three),
+				$author$project$Try$decodeFace($author$project$Try$Twos)),
 			6),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Three),
-				$author$project$Roll$decodeFace($author$project$Roll$Threes)),
+				$author$project$Try$decodeQuantity($author$project$Try$Three),
+				$author$project$Try$decodeFace($author$project$Try$Threes)),
 			7),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Three),
-				$author$project$Roll$decodeFace($author$project$Roll$Fours)),
+				$author$project$Try$decodeQuantity($author$project$Try$Three),
+				$author$project$Try$decodeFace($author$project$Try$Fours)),
 			8),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Three),
-				$author$project$Roll$decodeFace($author$project$Roll$Fives)),
+				$author$project$Try$decodeQuantity($author$project$Try$Three),
+				$author$project$Try$decodeFace($author$project$Try$Fives)),
 			9),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Three),
-				$author$project$Roll$decodeFace($author$project$Roll$Sixes)),
+				$author$project$Try$decodeQuantity($author$project$Try$Three),
+				$author$project$Try$decodeFace($author$project$Try$Sixes)),
 			10),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Four),
-				$author$project$Roll$decodeFace($author$project$Roll$Twos)),
+				$author$project$Try$decodeQuantity($author$project$Try$Four),
+				$author$project$Try$decodeFace($author$project$Try$Twos)),
 			11),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Four),
-				$author$project$Roll$decodeFace($author$project$Roll$Threes)),
+				$author$project$Try$decodeQuantity($author$project$Try$Four),
+				$author$project$Try$decodeFace($author$project$Try$Threes)),
 			12),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Four),
-				$author$project$Roll$decodeFace($author$project$Roll$Fours)),
+				$author$project$Try$decodeQuantity($author$project$Try$Four),
+				$author$project$Try$decodeFace($author$project$Try$Fours)),
 			13),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Four),
-				$author$project$Roll$decodeFace($author$project$Roll$Fives)),
+				$author$project$Try$decodeQuantity($author$project$Try$Four),
+				$author$project$Try$decodeFace($author$project$Try$Fives)),
 			14),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Four),
-				$author$project$Roll$decodeFace($author$project$Roll$Sixes)),
+				$author$project$Try$decodeQuantity($author$project$Try$Four),
+				$author$project$Try$decodeFace($author$project$Try$Sixes)),
 			15),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Five),
-				$author$project$Roll$decodeFace($author$project$Roll$Twos)),
+				$author$project$Try$decodeQuantity($author$project$Try$Five),
+				$author$project$Try$decodeFace($author$project$Try$Twos)),
 			16),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Five),
-				$author$project$Roll$decodeFace($author$project$Roll$Threes)),
+				$author$project$Try$decodeQuantity($author$project$Try$Five),
+				$author$project$Try$decodeFace($author$project$Try$Threes)),
 			17),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Five),
-				$author$project$Roll$decodeFace($author$project$Roll$Fours)),
+				$author$project$Try$decodeQuantity($author$project$Try$Five),
+				$author$project$Try$decodeFace($author$project$Try$Fours)),
 			18),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Five),
-				$author$project$Roll$decodeFace($author$project$Roll$Fives)),
+				$author$project$Try$decodeQuantity($author$project$Try$Five),
+				$author$project$Try$decodeFace($author$project$Try$Fives)),
 			19),
 			_Utils_Tuple2(
 			_Utils_Tuple2(
-				$author$project$Roll$decodeQuantity($author$project$Roll$Five),
-				$author$project$Roll$decodeFace($author$project$Roll$Sixes)),
+				$author$project$Try$decodeQuantity($author$project$Try$Five),
+				$author$project$Try$decodeFace($author$project$Try$Sixes)),
 			20)
 		]));
-var $author$project$Roll$evalTry = function (_try) {
+var $author$project$Try$eval = function (_try) {
 	return A2(
-		$elm$core$Dict$get,
-		$author$project$Roll$decodeTry(_try),
-		$author$project$Roll$tryDict);
+		$elm$core$Maybe$withDefault,
+		1,
+		A2(
+			$elm$core$Dict$get,
+			$author$project$Try$decode(_try),
+			$author$project$Try$dictionary));
 };
-var $author$project$Roll$compareTry = F2(
+var $author$project$Try$compare = F2(
 	function (currentTry, passedTry) {
-		var passedTryVal = A2(
-			$elm$core$Maybe$withDefault,
-			1,
-			$author$project$Roll$evalTry(passedTry));
-		var currentTryVal = A2(
-			$elm$core$Maybe$withDefault,
-			1,
-			$author$project$Roll$evalTry(currentTry));
-		return (_Utils_cmp(currentTryVal, passedTryVal) > 0) ? $author$project$Roll$HadIt : $author$project$Roll$Fold;
+		var passedTryVal = $author$project$Try$eval(passedTry);
+		var currentTryVal = $author$project$Try$eval(currentTry);
+		return (_Utils_cmp(currentTryVal, passedTryVal) > 0) ? $author$project$Try$HadIt : $author$project$Try$Fold;
 	});
+var $folkertdev$elm_deque$Internal$first = function (deque) {
+	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
+	if (((!_v0.a.b) && _v0.b.b) && (!_v0.b.b.b)) {
+		var _v1 = _v0.b;
+		var x = _v1.a;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$List$head(deque.front);
+	}
+};
+var $folkertdev$elm_deque$Deque$unwrap = function (_v0) {
+	var boundedDeque = _v0.a;
+	return boundedDeque;
+};
+var $folkertdev$elm_deque$Deque$first = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$first, $folkertdev$elm_deque$Deque$unwrap);
 var $elm$random$Random$Generate = function (a) {
 	return {$: 'Generate', a: a};
 };
@@ -6443,6 +6459,145 @@ var $elm$random$Random$generate = F2(
 			$elm$random$Random$Generate(
 				A2($elm$random$Random$map, tagger, generator)));
 	});
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $author$project$Try$getLastTry = function (tryHistory) {
+	return A3(
+		$elm$core$Basics$composeR,
+		$elm$core$List$head,
+		$elm$core$Maybe$withDefault(
+			_Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos)),
+		A2(
+			$elm$core$List$map,
+			$elm$core$Tuple$first,
+			$elm$core$List$reverse(tryHistory)));
+};
+var $author$project$Player$default_player = {hp: 0, id: 0, maxHp: 0, name: 'DEFAULT'};
+var $author$project$Player$getPlayer = F2(
+	function (players, id) {
+		var maybe = A2($elm$core$Dict$get, id, players);
+		return A2($elm$core$Maybe$withDefault, $author$project$Player$default_player, maybe);
+	});
+var $author$project$Player$hit = F2(
+	function (players, id) {
+		var player = A2($author$project$Player$getPlayer, players, id);
+		return A3(
+			$elm$core$Dict$insert,
+			id,
+			_Utils_update(
+				player,
+				{hp: player.hp - 1}),
+			players);
+	});
+var $folkertdev$elm_deque$Internal$last = function (deque) {
+	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
+	if ((_v0.a.b && (!_v0.a.b.b)) && (!_v0.b.b)) {
+		var _v1 = _v0.a;
+		var x = _v1.a;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$List$head(deque.rear);
+	}
+};
+var $folkertdev$elm_deque$Deque$last = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$last, $folkertdev$elm_deque$Deque$unwrap);
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $author$project$Main$mustPass = function (passedTry) {
+	var passedTryVal = $author$project$Try$eval(passedTry);
+	var nextTry = $elm$core$List$head(
+		A2(
+			$elm$core$List$map,
+			$elm$core$Tuple$first,
+			A2(
+				$elm$core$List$filter,
+				function (t) {
+					return _Utils_eq(t.b, passedTryVal + 1);
+				},
+				$elm$core$Dict$toList($author$project$Try$dictionary))));
+	if (nextTry.$ === 'Just') {
+		var tup = nextTry.a;
+		return $elm$core$Maybe$Just(
+			$author$project$Try$encode(tup));
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$Tuple$mapSecond = F2(
+	function (func, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			x,
+			func(y));
+	});
+var $folkertdev$elm_deque$Internal$empty = {front: _List_Nil, rear: _List_Nil, sizeF: 0, sizeR: 0};
+var $folkertdev$elm_deque$Internal$popFront = function (deque) {
+	var front = deque.front;
+	var rear = deque.rear;
+	var _v0 = _Utils_Tuple2(front, rear);
+	if (!_v0.a.b) {
+		if (!_v0.b.b) {
+			return _Utils_Tuple2($elm$core$Maybe$Nothing, $folkertdev$elm_deque$Internal$empty);
+		} else {
+			if (!_v0.b.b.b) {
+				var _v1 = _v0.b;
+				var x = _v1.a;
+				return _Utils_Tuple2(
+					$elm$core$Maybe$Just(x),
+					$folkertdev$elm_deque$Internal$empty);
+			} else {
+				return _Utils_Tuple2($elm$core$Maybe$Nothing, $folkertdev$elm_deque$Internal$empty);
+			}
+		}
+	} else {
+		var _v2 = _v0.a;
+		var f = _v2.a;
+		var fs = _v2.b;
+		return _Utils_Tuple2(
+			$elm$core$Maybe$Just(f),
+			$folkertdev$elm_deque$Internal$rebalance(
+				{front: fs, rear: deque.rear, sizeF: deque.sizeF - 1, sizeR: deque.sizeR}));
+	}
+};
+var $folkertdev$elm_deque$Deque$popFront = A2(
+	$elm$core$Basics$composeL,
+	A2(
+		$elm$core$Basics$composeL,
+		$elm$core$Tuple$mapSecond($folkertdev$elm_deque$Deque$Deque),
+		$folkertdev$elm_deque$Internal$popFront),
+	$folkertdev$elm_deque$Deque$unwrap);
+var $folkertdev$elm_deque$Deque$mapAbstract = F2(
+	function (f, _v0) {
+		var _abstract = _v0.a;
+		return $folkertdev$elm_deque$Deque$Deque(
+			f(_abstract));
+	});
+var $folkertdev$elm_deque$Deque$pushBack = F2(
+	function (elem, _v0) {
+		var deque = _v0.a;
+		return A2(
+			$folkertdev$elm_deque$Deque$mapAbstract,
+			$folkertdev$elm_deque$Internal$rebalance,
+			$folkertdev$elm_deque$Deque$Deque(
+				{
+					front: deque.front,
+					rear: A2($elm$core$List$cons, elem, deque.rear),
+					sizeF: deque.sizeF,
+					sizeR: deque.sizeR + 1
+				}));
+	});
 var $elm$random$Random$addOne = function (value) {
 	return _Utils_Tuple2(1, value);
 };
@@ -6526,11 +6681,11 @@ var $elm$random$Random$uniform = F2(
 			$elm$random$Random$addOne(value),
 			A2($elm$core$List$map, $elm$random$Random$addOne, valueList));
 	});
-var $author$project$Roll$dieGenerator = A2(
+var $author$project$Try$dieGenerator = A2(
 	$elm$random$Random$uniform,
-	$author$project$Roll$Wilds,
+	$author$project$Try$Wilds,
 	_List_fromArray(
-		[$author$project$Roll$Twos, $author$project$Roll$Threes, $author$project$Roll$Fours, $author$project$Roll$Fives, $author$project$Roll$Sixes]));
+		[$author$project$Try$Twos, $author$project$Try$Threes, $author$project$Try$Fours, $author$project$Try$Fives, $author$project$Try$Sixes]));
 var $elm$random$Random$listHelp = F4(
 	function (revList, n, gen, seed) {
 		listHelp:
@@ -6561,200 +6716,112 @@ var $elm$random$Random$list = F2(
 				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
 			});
 	});
-var $author$project$Roll$rollGenerator = function (quantity) {
-	return A2($elm$random$Random$list, quantity, $author$project$Roll$dieGenerator);
+var $author$project$Try$rollGenerator = function (quantity) {
+	return A2($elm$random$Random$list, quantity, $author$project$Try$dieGenerator);
 };
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $folkertdev$elm_deque$Internal$first = function (deque) {
-	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
-	if (((!_v0.a.b) && _v0.b.b) && (!_v0.b.b.b)) {
-		var _v1 = _v0.b;
-		var x = _v1.a;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$List$head(deque.front);
-	}
-};
-var $folkertdev$elm_deque$Deque$unwrap = function (_v0) {
-	var boundedDeque = _v0.a;
-	return boundedDeque;
-};
-var $folkertdev$elm_deque$Deque$first = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$first, $folkertdev$elm_deque$Deque$unwrap);
-var $elm$core$Tuple$mapSecond = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			x,
-			func(y));
-	});
-var $folkertdev$elm_deque$Internal$empty = {front: _List_Nil, rear: _List_Nil, sizeF: 0, sizeR: 0};
-var $folkertdev$elm_deque$Internal$popFront = function (deque) {
-	var front = deque.front;
-	var rear = deque.rear;
-	var _v0 = _Utils_Tuple2(front, rear);
-	if (!_v0.a.b) {
-		if (!_v0.b.b) {
-			return _Utils_Tuple2($elm$core$Maybe$Nothing, $folkertdev$elm_deque$Internal$empty);
-		} else {
-			if (!_v0.b.b.b) {
-				var _v1 = _v0.b;
-				var x = _v1.a;
-				return _Utils_Tuple2(
-					$elm$core$Maybe$Just(x),
-					$folkertdev$elm_deque$Internal$empty);
-			} else {
-				return _Utils_Tuple2($elm$core$Maybe$Nothing, $folkertdev$elm_deque$Internal$empty);
-			}
-		}
-	} else {
-		var _v2 = _v0.a;
-		var f = _v2.a;
-		var fs = _v2.b;
-		return _Utils_Tuple2(
-			$elm$core$Maybe$Just(f),
-			$folkertdev$elm_deque$Internal$rebalance(
-				{front: fs, rear: deque.rear, sizeF: deque.sizeF - 1, sizeR: deque.sizeR}));
-	}
-};
-var $folkertdev$elm_deque$Deque$popFront = A2(
-	$elm$core$Basics$composeL,
-	A2(
-		$elm$core$Basics$composeL,
-		$elm$core$Tuple$mapSecond($folkertdev$elm_deque$Deque$Deque),
-		$folkertdev$elm_deque$Internal$popFront),
-	$folkertdev$elm_deque$Deque$unwrap);
-var $folkertdev$elm_deque$Deque$mapAbstract = F2(
-	function (f, _v0) {
-		var _abstract = _v0.a;
-		return $folkertdev$elm_deque$Deque$Deque(
-			f(_abstract));
-	});
-var $folkertdev$elm_deque$Deque$pushBack = F2(
-	function (elem, _v0) {
-		var deque = _v0.a;
-		return A2(
-			$folkertdev$elm_deque$Deque$mapAbstract,
-			$folkertdev$elm_deque$Internal$rebalance,
-			$folkertdev$elm_deque$Deque$Deque(
-				{
-					front: deque.front,
-					rear: A2($elm$core$List$cons, elem, deque.rear),
-					sizeF: deque.sizeF,
-					sizeR: deque.sizeR + 1
-				}));
-	});
-var $author$project$Main$updatePass = F2(
-	function (model, _try) {
-		var _v0 = $folkertdev$elm_deque$Deque$popFront(
-			A2($elm$core$Debug$log, 'active players', model.activePlayers));
-		var currentTurn = _v0.a;
-		var rest = _v0.b;
-		var newActivePlayers = A2(
-			$folkertdev$elm_deque$Deque$pushBack,
-			A2($elm$core$Maybe$withDefault, 0, currentTurn),
-			rest);
-		var newCurrentTurn = $folkertdev$elm_deque$Deque$first(newActivePlayers);
-		var asdf = A2($elm$core$Debug$log, 'new current', newCurrentTurn);
-		return _Utils_Tuple2(
-			_Utils_update(
-				model,
-				{
-					activePlayers: newActivePlayers,
-					cupLooked: false,
-					cupState: $author$project$Main$Covered,
-					tryHistory: A2(
-						$elm$core$List$append,
-						model.tryHistory,
-						_List_fromArray(
-							[
-								_Utils_Tuple2(_try, model.whosTurn)
-							])),
-					whosTurn: A2($elm$core$Maybe$withDefault, 0, newCurrentTurn)
-				}),
-			$elm$core$Platform$Cmd$none);
-	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		switch (msg.$) {
-			case 'RollClick':
-				return _Utils_Tuple2(
-					model,
-					A2(
-						$elm$random$Random$generate,
-						$author$project$Main$NewRoll,
-						$author$project$Roll$rollGenerator(5)));
-			case 'NewRoll':
-				var roll = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
+		update:
+		while (true) {
+			switch (msg.$) {
+				case 'RollClick':
+					return _Utils_Tuple2(
 						model,
-						{roll: roll}),
-					$elm$core$Platform$Cmd$none);
-			case 'ChangeQuantity':
-				var quant = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{quantity: quant}),
-					$elm$core$Platform$Cmd$none);
-			case 'ChangeValue':
-				var val = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{value: val}),
-					$elm$core$Platform$Cmd$none);
-			case 'Pull':
-				var passedTry = A2(
-					$elm$core$Maybe$withDefault,
-					_Utils_Tuple2(
-						_Utils_Tuple2($author$project$Roll$Two, $author$project$Roll$Twos),
-						2),
-					$elm$core$List$head(
-						$elm$core$List$reverse(model.tryHistory)));
-				var currentRollTry = $author$project$Roll$assessRoll(model.roll);
-				var pull = A2($author$project$Roll$compareTry, currentRollTry, passedTry.a);
-				if (pull.$ === 'HadIt') {
+						A2(
+							$elm$random$Random$generate,
+							$author$project$Main$NewRoll,
+							$author$project$Try$rollGenerator(5)));
+				case 'NewRoll':
+					var roll = msg.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{cupState: $author$project$Main$Uncovered}),
+							{roll: roll, turnStatus: $author$project$Main$Rolled}),
 						$elm$core$Platform$Cmd$none);
-				} else {
+				case 'ChangeQuantity':
+					var quant = msg.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{cupState: $author$project$Main$Uncovered}),
+							{quantity: quant}),
 						$elm$core$Platform$Cmd$none);
-				}
-			case 'Pass':
-				var _try = msg.a;
-				return A2($author$project$Main$updatePass, model, _try);
-			default:
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{cupLooked: true, cupState: $author$project$Main$Uncovered}),
-					$elm$core$Platform$Cmd$none);
+				case 'ChangeValue':
+					var val = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{value: val}),
+						$elm$core$Platform$Cmd$none);
+				case 'Pull':
+					var passedTry = $author$project$Try$getLastTry(model.tryHistory);
+					var currentRollTry = $author$project$Try$assessRoll(model.roll);
+					var pull = A2($author$project$Try$compare, currentRollTry, passedTry);
+					if (pull.$ === 'HadIt') {
+						var players = A2($author$project$Player$hit, model.players, model.whosTurn);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{cupState: $author$project$Main$Uncovered, players: players, quantity: $author$project$Try$Two, turnStatus: $author$project$Main$Fresh, value: $author$project$Try$Twos}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var p = A2(
+							$elm$core$Maybe$withDefault,
+							0,
+							$folkertdev$elm_deque$Deque$last(model.activePlayers));
+						var players = A2($author$project$Player$hit, model.players, p);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{cupState: $author$project$Main$Uncovered, players: players, quantity: $author$project$Try$Two, turnStatus: $author$project$Main$Fresh, value: $author$project$Try$Twos}),
+							$elm$core$Platform$Cmd$none);
+					}
+				case 'Pass':
+					var _try = msg.a;
+					var _v2 = $folkertdev$elm_deque$Deque$popFront(
+						A2($elm$core$Debug$log, 'active players', model.activePlayers));
+					var currentTurn = _v2.a;
+					var rest = _v2.b;
+					var newActivePlayers = A2(
+						$folkertdev$elm_deque$Deque$pushBack,
+						A2($elm$core$Maybe$withDefault, 0, currentTurn),
+						rest);
+					var newCurrentTurn = $folkertdev$elm_deque$Deque$first(newActivePlayers);
+					var _v3 = $author$project$Main$mustPass(_try);
+					if (_v3.$ === 'Just') {
+						var next = _v3.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									activePlayers: newActivePlayers,
+									cupLooked: false,
+									cupState: $author$project$Main$Covered,
+									quantity: next.a,
+									tryHistory: A2($author$project$Try$appendHistory, model, next),
+									turnStatus: $author$project$Main$Pending,
+									value: next.b,
+									whosTurn: A2($elm$core$Maybe$withDefault, 0, newCurrentTurn)
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var $temp$msg = $author$project$Main$Pull,
+							$temp$model = model;
+						msg = $temp$msg;
+						model = $temp$model;
+						continue update;
+					}
+				default:
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{cupLooked: true, cupState: $author$project$Main$Uncovered, turnStatus: $author$project$Main$Looked}),
+						$elm$core$Platform$Cmd$none);
+			}
 		}
 	});
 var $author$project$Main$Look = {$: 'Look'};
-var $author$project$Main$Pull = {$: 'Pull'};
 var $author$project$Main$RollClick = {$: 'RollClick'};
 var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
 var $author$project$Main$ChangeQuantity = function (a) {
 	return {$: 'ChangeQuantity', a: a};
 };
@@ -6764,46 +6831,6 @@ var $author$project$Main$ChangeValue = function (a) {
 var $author$project$Main$Pass = function (a) {
 	return {$: 'Pass', a: a};
 };
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var $elm$core$Basics$ge = _Utils_ge;
-var $author$project$Main$displayQuantityOptions = F2(
-	function (quant, options) {
-		return A2(
-			$elm$core$List$map,
-			$elm$core$Tuple$second,
-			A2(
-				$elm$core$List$filter,
-				function (o) {
-					return _Utils_cmp(
-						o.a,
-						$author$project$Roll$decodeQuantity(quant)) > -1;
-				},
-				options));
-	});
-var $author$project$Main$displayValueOptions = F2(
-	function (value, options) {
-		return A2(
-			$elm$core$List$map,
-			$elm$core$Tuple$second,
-			A2(
-				$elm$core$List$filter,
-				function (o) {
-					return _Utils_cmp(
-						o.a,
-						$author$project$Roll$decodeFace(value)) > 0;
-				},
-				options));
-	});
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -6814,6 +6841,122 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$core$Dict$foldl = F3(
+	function (func, acc, dict) {
+		foldl:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var $temp$func = func,
+					$temp$acc = A3(
+					func,
+					key,
+					value,
+					A3($elm$core$Dict$foldl, func, acc, left)),
+					$temp$dict = right;
+				func = $temp$func;
+				acc = $temp$acc;
+				dict = $temp$dict;
+				continue foldl;
+			}
+		}
+	});
+var $elm$core$Dict$filter = F2(
+	function (isGood, dict) {
+		return A3(
+			$elm$core$Dict$foldl,
+			F3(
+				function (k, v, d) {
+					return A2(isGood, k, v) ? A3($elm$core$Dict$insert, k, v, d) : d;
+				}),
+			$elm$core$Dict$empty,
+			dict);
+	});
+var $elm$core$Set$Set_elm_builtin = function (a) {
+	return {$: 'Set_elm_builtin', a: a};
+};
+var $elm$core$Set$empty = $elm$core$Set$Set_elm_builtin($elm$core$Dict$empty);
+var $elm$core$Set$insert = F2(
+	function (key, _v0) {
+		var dict = _v0.a;
+		return $elm$core$Set$Set_elm_builtin(
+			A3($elm$core$Dict$insert, key, _Utils_Tuple0, dict));
+	});
+var $elm$core$Set$fromList = function (list) {
+	return A3($elm$core$List$foldl, $elm$core$Set$insert, $elm$core$Set$empty, list);
+};
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$Dict$update = F3(
+	function (targetKey, alter, dictionary) {
+		var _v0 = alter(
+			A2($elm$core$Dict$get, targetKey, dictionary));
+		if (_v0.$ === 'Just') {
+			var value = _v0.a;
+			return A3($elm$core$Dict$insert, targetKey, value, dictionary);
+		} else {
+			return A2($elm$core$Dict$remove, targetKey, dictionary);
+		}
+	});
+var $elm_community$dict_extra$Dict$Extra$groupBy = F2(
+	function (keyfn, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A3(
+						$elm$core$Dict$update,
+						keyfn(x),
+						A2(
+							$elm$core$Basics$composeR,
+							$elm$core$Maybe$map(
+								$elm$core$List$cons(x)),
+							A2(
+								$elm$core$Basics$composeR,
+								$elm$core$Maybe$withDefault(
+									_List_fromArray(
+										[x])),
+								$elm$core$Maybe$Just)),
+						acc);
+				}),
+			$elm$core$Dict$empty,
+			list);
+	});
+var $author$project$Main$getPassableTrys = function (_try) {
+	var tryValue = $author$project$Try$eval(_try);
+	var toUnique = A2($elm$core$Basics$composeR, $elm$core$Set$fromList, $elm$core$Set$toList);
+	var betterTrys = $elm$core$Dict$keys(
+		A2(
+			$elm$core$Dict$filter,
+			F2(
+				function (_v0, v) {
+					return _Utils_cmp(v, tryValue) > 0;
+				}),
+			$author$project$Try$dictionary));
+	var groupedTrys = A2($elm_community$dict_extra$Dict$Extra$groupBy, $elm$core$Tuple$first, betterTrys);
+	var groupedDict = A2(
+		$elm$core$Dict$map,
+		F2(
+			function (k, v) {
+				return A2($elm$core$List$map, $elm$core$Tuple$second, v);
+			}),
+		groupedTrys);
+	var gt = A2($elm$core$Debug$log, 'grouped trys', groupedDict);
+	return groupedDict;
+};
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -6866,139 +7009,200 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
-var $elm$html$Html$option = _VirtualDom_node('option');
+var $elm$html$Html$select = _VirtualDom_node('select');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$quantityOptions = _List_fromArray(
-	[
-		_Utils_Tuple2(
-		$author$project$Roll$decodeQuantity($author$project$Roll$One),
-		A2(
-			$elm$html$Html$option,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value('1')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('one')
-				]))),
-		_Utils_Tuple2(
-		$author$project$Roll$decodeQuantity($author$project$Roll$Two),
-		A2(
-			$elm$html$Html$option,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value('2')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('two')
-				]))),
-		_Utils_Tuple2(
-		$author$project$Roll$decodeQuantity($author$project$Roll$Three),
-		A2(
-			$elm$html$Html$option,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value('3')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('three')
-				]))),
-		_Utils_Tuple2(
-		$author$project$Roll$decodeQuantity($author$project$Roll$Four),
-		A2(
-			$elm$html$Html$option,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value('4')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('four')
-				]))),
-		_Utils_Tuple2(
-		$author$project$Roll$decodeQuantity($author$project$Roll$Five),
-		A2(
-			$elm$html$Html$option,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value('5')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('five')
-				])))
-	]);
-var $elm$html$Html$select = _VirtualDom_node('select');
-var $author$project$Main$valueOptions = _List_fromArray(
-	[
-		_Utils_Tuple2(
-		$author$project$Roll$decodeFace($author$project$Roll$Twos),
-		A2(
-			$elm$html$Html$option,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value('2')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('twos')
-				]))),
-		_Utils_Tuple2(
-		$author$project$Roll$decodeFace($author$project$Roll$Threes),
-		A2(
-			$elm$html$Html$option,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value('3')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('threes')
-				]))),
-		_Utils_Tuple2(
-		$author$project$Roll$decodeFace($author$project$Roll$Fours),
-		A2(
-			$elm$html$Html$option,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value('4')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('fours')
-				]))),
-		_Utils_Tuple2(
-		$author$project$Roll$decodeFace($author$project$Roll$Fives),
-		A2(
-			$elm$html$Html$option,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value('5')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('fives')
-				]))),
-		_Utils_Tuple2(
-		$author$project$Roll$decodeFace($author$project$Roll$Sixes),
-		A2(
-			$elm$html$Html$option,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value('6')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('sixes')
-				])))
-	]);
+var $author$project$Main$quantityOptions = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2(
+			$author$project$Try$decodeQuantity($author$project$Try$One),
+			A2(
+				$elm$html$Html$option,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value('1')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('one')
+					]))),
+			_Utils_Tuple2(
+			$author$project$Try$decodeQuantity($author$project$Try$Two),
+			A2(
+				$elm$html$Html$option,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value('2')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('two')
+					]))),
+			_Utils_Tuple2(
+			$author$project$Try$decodeQuantity($author$project$Try$Three),
+			A2(
+				$elm$html$Html$option,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value('3')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('three')
+					]))),
+			_Utils_Tuple2(
+			$author$project$Try$decodeQuantity($author$project$Try$Four),
+			A2(
+				$elm$html$Html$option,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value('4')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('four')
+					]))),
+			_Utils_Tuple2(
+			$author$project$Try$decodeQuantity($author$project$Try$Five),
+			A2(
+				$elm$html$Html$option,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value('5')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('five')
+					])))
+		]));
+var $author$project$Main$valueOptions = $elm$core$Dict$fromList(
+	_List_fromArray(
+		[
+			_Utils_Tuple2(
+			$author$project$Try$decodeFace($author$project$Try$Twos),
+			A2(
+				$elm$html$Html$option,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value('2')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('twos')
+					]))),
+			_Utils_Tuple2(
+			$author$project$Try$decodeFace($author$project$Try$Threes),
+			A2(
+				$elm$html$Html$option,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value('3')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('threes')
+					]))),
+			_Utils_Tuple2(
+			$author$project$Try$decodeFace($author$project$Try$Fours),
+			A2(
+				$elm$html$Html$option,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value('4')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('fours')
+					]))),
+			_Utils_Tuple2(
+			$author$project$Try$decodeFace($author$project$Try$Fives),
+			A2(
+				$elm$html$Html$option,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value('5')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('fives')
+					]))),
+			_Utils_Tuple2(
+			$author$project$Try$decodeFace($author$project$Try$Sixes),
+			A2(
+				$elm$html$Html$option,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$value('6')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('sixes')
+					])))
+		]));
+var $author$project$Main$tryToOptionPair = F2(
+	function (_try, quantity) {
+		var tryValue = $author$project$Try$eval(_try);
+		var toUnique = A2($elm$core$Basics$composeR, $elm$core$Set$fromList, $elm$core$Set$toList);
+		var passableTrysDict = $author$project$Main$getPassableTrys(_try);
+		var vOptions = A2(
+			$elm$core$List$map,
+			function (o) {
+				return A2(
+					$elm$core$Maybe$withDefault,
+					A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('2')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('twos')
+							])),
+					A2($elm$core$Dict$get, o, $author$project$Main$valueOptions));
+			},
+			A2(
+				$elm$core$Maybe$withDefault,
+				_List_fromArray(
+					[2, 3, 4, 5]),
+				A2(
+					$elm$core$Dict$get,
+					$author$project$Try$decodeQuantity(quantity),
+					passableTrysDict)));
+		var passableQuants = $elm$core$Dict$keys(passableTrysDict);
+		var qOptions = A2(
+			$elm$core$List$map,
+			function (o) {
+				return A2(
+					$elm$core$Maybe$withDefault,
+					A2(
+						$elm$html$Html$option,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value('2')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('two')
+							])),
+					A2($elm$core$Dict$get, o, $author$project$Main$quantityOptions));
+			},
+			passableQuants);
+		var betterTrys = A2(
+			$elm$core$Dict$filter,
+			F2(
+				function (_v0, v) {
+					return _Utils_cmp(v, tryValue) > 0;
+				}),
+			$author$project$Try$dictionary);
+		return _Utils_Tuple2(qOptions, vOptions);
+	});
 var $author$project$Main$displayTryHTML = F4(
 	function (roll, quantity, val, tryToBeat) {
+		var something = $author$project$Main$getPassableTrys(tryToBeat);
 		return ($elm$core$List$length(roll) > 0) ? A2(
 			$elm$html$Html$div,
 			_List_Nil,
@@ -7020,12 +7224,12 @@ var $author$project$Main$displayTryHTML = F4(
 								$elm$core$Basics$composeL,
 								A2(
 									$elm$core$Basics$composeL,
-									A2($elm$core$Basics$composeL, $author$project$Main$ChangeQuantity, $author$project$Roll$encodeQuantity),
+									A2($elm$core$Basics$composeL, $author$project$Main$ChangeQuantity, $author$project$Try$encodeQuantity),
 									$elm$core$Maybe$withDefault(1)),
 								$elm$core$String$toInt)),
 							$elm$html$Html$Attributes$id('quantity')
 						]),
-					A2($author$project$Main$displayQuantityOptions, tryToBeat.a, $author$project$Main$quantityOptions)),
+					A2($author$project$Main$tryToOptionPair, tryToBeat, quantity).a),
 					A2(
 					$elm$html$Html$label,
 					_List_fromArray(
@@ -7042,12 +7246,12 @@ var $author$project$Main$displayTryHTML = F4(
 								$elm$core$Basics$composeL,
 								A2(
 									$elm$core$Basics$composeL,
-									A2($elm$core$Basics$composeL, $author$project$Main$ChangeValue, $author$project$Roll$encodeFace),
+									A2($elm$core$Basics$composeL, $author$project$Main$ChangeValue, $author$project$Try$encodeFace),
 									$elm$core$Maybe$withDefault(2)),
 								$elm$core$String$toInt)),
 							$elm$html$Html$Attributes$id('value')
 						]),
-					A2($author$project$Main$displayValueOptions, tryToBeat.b, $author$project$Main$valueOptions)),
+					A2($author$project$Main$tryToOptionPair, tryToBeat, quantity).b),
 					A2(
 					$elm$html$Html$button,
 					_List_fromArray(
@@ -7062,20 +7266,6 @@ var $author$project$Main$displayTryHTML = F4(
 						]))
 				])) : A2($elm$html$Html$div, _List_Nil, _List_Nil);
 	});
-var $author$project$Player$getPlayer = F2(
-	function (players, id) {
-		var maybe = $elm$core$List$head(
-			A2(
-				$elm$core$List$filter,
-				function (p) {
-					return _Utils_eq(p.id, id);
-				},
-				players));
-		return A2(
-			$elm$core$Maybe$withDefault,
-			A4($author$project$Player$Player, 0, 'Empty', 5, 5),
-			maybe);
-	});
 var $author$project$Player$getName = F2(
 	function (players, id) {
 		return function ($) {
@@ -7088,7 +7278,7 @@ var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $author$project$Main$makeDieHTML = function (die) {
 	return $elm$html$Html$text(
 		'[' + ($elm$core$String$fromInt(
-			$author$project$Roll$decodeFace(die)) + '] '));
+			$author$project$Try$decodeFace(die)) + '] '));
 };
 var $author$project$Main$makeCupHTML = $elm$core$List$map($author$project$Main$makeDieHTML);
 var $elm$core$Tuple$mapBoth = F3(
@@ -7099,12 +7289,13 @@ var $elm$core$Tuple$mapBoth = F3(
 			funcA(x),
 			funcB(y));
 	});
+var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$html$Html$span = _VirtualDom_node('span');
-var $author$project$Roll$tryToString = function (_try) {
+var $author$project$Try$toString = function (_try) {
 	return function (t) {
 		return $elm$core$String$fromInt(t.a) + (' ' + $elm$core$String$fromInt(t.b));
 	}(
-		$author$project$Roll$decodeTry(_try));
+		$author$project$Try$decode(_try));
 };
 var $author$project$Main$tryToHTML = function (_try) {
 	return function (node) {
@@ -7115,18 +7306,10 @@ var $author$project$Main$tryToHTML = function (_try) {
 				[node]));
 	}(
 		$elm$html$Html$text(
-			$author$project$Roll$tryToString(_try)));
+			$author$project$Try$toString(_try)));
 };
 var $author$project$Main$view = function (model) {
-	var tryToBeat = A3(
-		$elm$core$Basics$composeR,
-		$elm$core$List$head,
-		$elm$core$Maybe$withDefault(
-			_Utils_Tuple2($author$project$Roll$Two, $author$project$Roll$Twos)),
-		A2(
-			$elm$core$List$map,
-			$elm$core$Tuple$first,
-			$elm$core$List$reverse(model.tryHistory)));
+	var tryToBeat = $author$project$Try$getLastTry(model.tryHistory);
 	var trySelect = A4($author$project$Main$displayTryHTML, model.roll, model.quantity, model.value, tryToBeat);
 	var tryHistory = A2(
 		$elm$core$List$map,
@@ -7143,68 +7326,82 @@ var $author$project$Main$view = function (model) {
 			$elm$core$List$map,
 			A2(
 				$elm$core$Tuple$mapBoth,
-				$author$project$Roll$tryToString,
-				$author$project$Player$getName($author$project$Main$players)),
+				$author$project$Try$toString,
+				$author$project$Player$getName(model.players)),
 			model.tryHistory));
-	var rollButtons = model.cupLooked ? A2(
-		$elm$html$Html$button,
-		_List_fromArray(
-			[
-				$elm$html$Html$Events$onClick($author$project$Main$RollClick)
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('Roll')
-			])) : A2($elm$html$Html$span, _List_Nil, _List_Nil);
-	var currentTry = $author$project$Main$tryToHTML(tryToBeat);
-	var cup = function () {
-		var _v1 = model.cupState;
-		if (_v1.$ === 'Covered') {
-			return _List_fromArray(
-				[
-					A2(
+	var rollButtons = function () {
+		var _v0 = model.turnStatus;
+		switch (_v0.$) {
+			case 'Fresh':
+				return A2(
 					$elm$html$Html$button,
 					_List_fromArray(
 						[
-							$elm$html$Html$Events$onClick($author$project$Main$Pull)
+							$elm$html$Html$Events$onClick($author$project$Main$RollClick)
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Pull')
-						])),
-					A2(
+							$elm$html$Html$text('Roll')
+						]));
+			case 'Pending':
+				return A2($elm$html$Html$span, _List_Nil, _List_Nil);
+			case 'Looked':
+				return A2(
 					$elm$html$Html$button,
 					_List_fromArray(
 						[
-							$elm$html$Html$Events$onClick($author$project$Main$Look)
+							$elm$html$Html$Events$onClick($author$project$Main$RollClick)
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Look')
-						]))
-				]);
-		} else {
-			return $author$project$Main$makeCupHTML(model.roll);
+							$elm$html$Html$text('Re-Roll')
+						]));
+			default:
+				return A2($elm$html$Html$span, _List_Nil, _List_Nil);
 		}
 	}();
-	var _v0 = A2(
-		$elm$core$Debug$log,
-		'Best Try: ',
-		$author$project$Roll$evalTry(
-			$author$project$Roll$assessRoll(model.roll)));
-	return A2(
+	var model_log = A2($elm$core$Debug$log, 'Model', model);
+	var currentTry = (!_Utils_eq(model.turnStatus, $author$project$Main$Fresh)) ? _List_fromArray(
+		[
+			$elm$html$Html$text('Try to Beat'),
+			$author$project$Main$tryToHTML(tryToBeat)
+		]) : _List_fromArray(
+		[
+			$elm$html$Html$text('')
+		]);
+	var cupButtons = _Utils_eq(model.turnStatus, $author$project$Main$Pending) ? A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$h3,
-				_List_Nil,
+				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Passed Roll: '),
-						currentTry
+						$elm$html$Html$Events$onClick($author$project$Main$Pull)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Pull')
 					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Main$Look)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Look')
+					]))
+			])) : A2($elm$html$Html$div, _List_Nil, _List_Nil);
+	var cup = (_Utils_eq(model.turnStatus, $author$project$Main$Looked) || _Utils_eq(model.turnStatus, $author$project$Main$Rolled)) ? $author$project$Main$makeCupHTML(model.roll) : _List_Nil;
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$h3, _List_Nil, currentTry),
 				A2(
 				$elm$html$Html$h3,
 				_List_Nil,
@@ -7212,10 +7409,11 @@ var $author$project$Main$view = function (model) {
 					[
 						$elm$html$Html$text('Current Turn: '),
 						$elm$html$Html$text(
-						A2($author$project$Player$getName, $author$project$Main$players, model.whosTurn))
+						A2($author$project$Player$getName, model.players, model.whosTurn))
 					])),
 				A2($elm$html$Html$div, _List_Nil, tryHistory),
 				A2($elm$html$Html$h2, _List_Nil, cup),
+				cupButtons,
 				rollButtons,
 				trySelect
 			]));
