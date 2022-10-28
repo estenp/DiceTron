@@ -1,6 +1,7 @@
-module Try exposing (Roll, Pull(..), Try, Face(..), Quantity(..), dieGenerator, rollGenerator, dictionary, compare, eval, toString, encodeFace, encodeQuantity, encode, decodeFace, decodeQuantity, decode, assessRoll, fromScore, appendHistory, getLastTry)
+module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, appendHistory, assessRoll, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, rollGenerator, toString, view)
 
 import Dict exposing (Dict)
+import Html exposing (..)
 import Random
 import Tuple2
 
@@ -83,6 +84,7 @@ dictionary =
         ]
 
 
+
 {- Given a Try, determine the "Try score". Returns a Maybe -}
 
 
@@ -90,13 +92,14 @@ eval : Try -> Int
 eval try =
     Maybe.withDefault 1 (Dict.get (decode try) dictionary)
 
+
 fromScore : Int -> Try
 fromScore score =
     dictionary
         |> Dict.filter (\_ v -> v == score)
         |> Dict.keys
         |> List.head
-        |> Maybe.withDefault (2, 2)
+        |> Maybe.withDefault ( 2, 2 )
         |> encode
 
 
@@ -109,19 +112,22 @@ decode : Try -> ( Int, Int )
 decode try =
     ( decodeQuantity (Tuple.first try), decodeFace (Tuple.second try) )
 
+
 toString : Try -> String
 toString try =
     try
         |> decode
-        |> (\t -> ( (t |> Tuple.first |> String.fromInt) ++ " " ++ (t |> Tuple.second |> String.fromInt)))
+        |> (\t -> (t |> Tuple.first |> String.fromInt) ++ " " ++ (t |> Tuple.second |> String.fromInt))
 
 
 compare : Try -> Try -> Pull
 compare currentTry passedTry =
     let
-        currentTryVal = eval currentTry
+        currentTryVal =
+            eval currentTry
 
-        passedTryVal = eval passedTry
+        passedTryVal =
+            eval passedTry
     in
     if currentTryVal > passedTryVal then
         HadIt
@@ -309,16 +315,29 @@ getBestOfAKind dict =
         |> Tuple2.swap
         |> encode
 
-appendHistory : { a | tryHistory : List (b, c), whosTurn : c } -> b -> List (b, c)
-appendHistory model try = List.append model.tryHistory [ ( try, model.whosTurn ) ]
 
-getLastTry : List (Try, Int) -> Try
+appendHistory : { a | tryHistory : List ( b, c ), whosTurn : c } -> b -> List ( b, c )
+appendHistory model try =
+    List.append model.tryHistory [ ( try, model.whosTurn ) ]
+
+
+getLastTry : List ( Try, Int ) -> Try
 getLastTry tryHistory =
     tryHistory
         |> List.reverse
         |> List.map Tuple.first
         |> List.head
         >> Maybe.withDefault ( Two, Twos )
+
+
+view : Try -> Html msg
+view try =
+    try
+        |> toString
+        |> text
+        |> (\node -> div [] [ node ])
+
+
 
 --    decodeFace : Die -> Maybe Int
 --    decodeFace die =

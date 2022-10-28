@@ -5624,6 +5624,7 @@ var $author$project$Main$NewRoll = function (a) {
 };
 var $author$project$Main$Pending = {$: 'Pending'};
 var $author$project$Main$Pull = {$: 'Pull'};
+var $author$project$Main$Pulled = {$: 'Pulled'};
 var $author$project$Main$Rolled = {$: 'Rolled'};
 var $author$project$Main$Uncovered = {$: 'Uncovered'};
 var $elm$core$List$append = F2(
@@ -6761,7 +6762,7 @@ var $author$project$Main$update = F2(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{cupState: $author$project$Main$Uncovered, players: players, quantity: $author$project$Try$Two, turnStatus: $author$project$Main$Fresh, value: $author$project$Try$Twos}),
+								{cupState: $author$project$Main$Uncovered, players: players, quantity: $author$project$Try$Two, turnStatus: $author$project$Main$Pulled, value: $author$project$Try$Twos}),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						var p = A2(
@@ -6772,7 +6773,7 @@ var $author$project$Main$update = F2(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{cupState: $author$project$Main$Uncovered, players: players, quantity: $author$project$Try$Two, turnStatus: $author$project$Main$Fresh, value: $author$project$Try$Twos}),
+								{cupState: $author$project$Main$Uncovered, players: players, quantity: $author$project$Try$Two, turnStatus: $author$project$Main$Pulled, value: $author$project$Try$Twos}),
 							$elm$core$Platform$Cmd$none);
 					}
 				case 'Pass':
@@ -7289,7 +7290,6 @@ var $elm$core$Tuple$mapBoth = F3(
 			funcA(x),
 			funcB(y));
 	});
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $author$project$Try$toString = function (_try) {
 	return function (t) {
@@ -7297,7 +7297,7 @@ var $author$project$Try$toString = function (_try) {
 	}(
 		$author$project$Try$decode(_try));
 };
-var $author$project$Main$tryToHTML = function (_try) {
+var $author$project$Try$view = function (_try) {
 	return function (node) {
 		return A2(
 			$elm$html$Html$div,
@@ -7312,26 +7312,29 @@ var $author$project$Main$view = function (model) {
 	var tryToBeat = $author$project$Try$getLastTry(model.tryHistory);
 	var trySelect = A4($author$project$Main$displayTryHTML, model.roll, model.quantity, model.value, tryToBeat);
 	var tryHistory = A2(
-		$elm$core$List$map,
-		function (tup) {
-			return A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(tup.b + (' -> ' + tup.a))
-					]));
-		},
+		$elm$html$Html$div,
+		_List_Nil,
 		A2(
 			$elm$core$List$map,
+			function (tup) {
+				return A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text(tup.b + (' -> ' + tup.a))
+						]));
+			},
 			A2(
-				$elm$core$Tuple$mapBoth,
-				$author$project$Try$toString,
-				$author$project$Player$getName(model.players)),
-			model.tryHistory));
+				$elm$core$List$map,
+				A2(
+					$elm$core$Tuple$mapBoth,
+					$author$project$Try$toString,
+					$author$project$Player$getName(model.players)),
+				model.tryHistory)));
 	var rollButtons = function () {
-		var _v0 = model.turnStatus;
-		switch (_v0.$) {
+		var _v1 = model.turnStatus;
+		switch (_v1.$) {
 			case 'Fresh':
 				return A2(
 					$elm$html$Html$button,
@@ -7343,8 +7346,17 @@ var $author$project$Main$view = function (model) {
 						[
 							$elm$html$Html$text('Roll')
 						]));
-			case 'Pending':
-				return A2($elm$html$Html$span, _List_Nil, _List_Nil);
+			case 'Pulled':
+				return A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick($author$project$Main$RollClick)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Roll')
+						]));
 			case 'Looked':
 				return A2(
 					$elm$html$Html$button,
@@ -7361,15 +7373,24 @@ var $author$project$Main$view = function (model) {
 		}
 	}();
 	var model_log = A2($elm$core$Debug$log, 'Model', model);
-	var currentTry = (!_Utils_eq(model.turnStatus, $author$project$Main$Fresh)) ? _List_fromArray(
-		[
-			$elm$html$Html$text('Try to Beat'),
-			$author$project$Main$tryToHTML(tryToBeat)
-		]) : _List_fromArray(
-		[
-			$elm$html$Html$text('')
-		]);
-	var cupButtons = _Utils_eq(model.turnStatus, $author$project$Main$Pending) ? A2(
+	var currentTurn = A2(
+		$elm$html$Html$h3,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Current Turn: '),
+				$elm$html$Html$text(
+				A2($author$project$Player$getName, model.players, model.whosTurn))
+			]));
+	var currentTry = A2(
+		$elm$html$Html$h3,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Try to Beat'),
+				$author$project$Try$view(tryToBeat)
+			]));
+	var cupButtons = A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
@@ -7394,29 +7415,44 @@ var $author$project$Main$view = function (model) {
 					[
 						$elm$html$Html$text('Look')
 					]))
-			])) : A2($elm$html$Html$div, _List_Nil, _List_Nil);
-	var cup = (_Utils_eq(model.turnStatus, $author$project$Main$Looked) || _Utils_eq(model.turnStatus, $author$project$Main$Rolled)) ? $author$project$Main$makeCupHTML(model.roll) : _List_Nil;
-	return A2(
-		$elm$html$Html$div,
+			]));
+	var cup = A2(
+		$elm$html$Html$h2,
 		_List_Nil,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$h3, _List_Nil, currentTry),
-				A2(
-				$elm$html$Html$h3,
+		$author$project$Main$makeCupHTML(model.roll));
+	var _v0 = model.turnStatus;
+	switch (_v0.$) {
+		case 'Fresh':
+			return A2(
+				$elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
-					[
-						$elm$html$Html$text('Current Turn: '),
-						$elm$html$Html$text(
-						A2($author$project$Player$getName, model.players, model.whosTurn))
-					])),
-				A2($elm$html$Html$div, _List_Nil, tryHistory),
-				A2($elm$html$Html$h2, _List_Nil, cup),
-				cupButtons,
-				rollButtons,
-				trySelect
-			]));
+					[currentTurn, tryHistory, rollButtons]));
+		case 'Rolled':
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[currentTry, currentTurn, tryHistory, cup, rollButtons, trySelect]));
+		case 'Pending':
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[currentTry, currentTurn, tryHistory, cupButtons, trySelect]));
+		case 'Looked':
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[currentTry, currentTurn, tryHistory, cup, rollButtons, trySelect]));
+		default:
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[currentTry, currentTurn, tryHistory, cup, rollButtons]));
+	}
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
