@@ -16,7 +16,7 @@ type alias Roll =
 
 type Pull
     = HadIt
-    | Fold
+    | Lie
 
 
 type alias Try =
@@ -121,19 +121,19 @@ toString try =
 
 
 compare : Try -> Try -> Pull
-compare currentTry passedTry =
+compare toBeat passedTry =
     let
-        currentTryVal =
-            eval currentTry
+        toBeatVal =
+            eval toBeat
 
         passedTryVal =
             eval passedTry
     in
-    if currentTryVal > passedTryVal then
+    if toBeatVal >= passedTryVal then
         HadIt
 
     else
-        Fold
+        Lie
 
 
 encodeFace : Int -> Face

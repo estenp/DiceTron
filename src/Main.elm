@@ -47,12 +47,13 @@ type TurnStatus
     | Pending
     | Looked
     | Rolled
-    | Pulled
+    | Pulled Pull
 
 
 type alias Model =
     { roll : Roll
     , tryHistory : List ( Try, Int )
+    , tryToBeat : Try
     , quantity : Quantity
     , value : Face
     , tableWilds : Int
@@ -69,8 +70,9 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( { roll = []
       , tryHistory = []
+      , tryToBeat = ( Two, Twos )
       , quantity = Try.Two
-      , value = Try.Twos
+      , value = Try.Threes
       , tableWilds = 0
       , cupState = Covered
       , cupLooked = False
@@ -131,10 +133,13 @@ update msg model =
                 passedTry =
                     Try.getLastTry model.tryHistory
 
-                pull =
+                pullResult =
                     Try.compare currentRollTry passedTry
+
+                test =
+                    Debug.log "compare current passed" { compare = pullResult, cur = currentRollTry, passed = passedTry }
             in
-            case pull of
+            case pullResult of
                 HadIt ->
                     -- current player takes a fold
                     -- fresh roll
@@ -143,12 +148,12 @@ update msg model =
                         players =
                             Player.hit model.players model.whosTurn
                     in
-                    ( { model | cupState = Uncovered, turnStatus = Pulled, quantity = Two, value = Twos, players = players }
+                    ( { model | cupState = Uncovered, turnStatus = Pulled HadIt, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players }
                     , Cmd.none
                     )
 
                 -- )
-                Fold ->
+                Lie ->
                     let
                         -- previous player takes a fold
                         -- fresh roll
@@ -158,7 +163,7 @@ update msg model =
                         players =
                             Player.hit model.players p
                     in
-                    ( { model | cupState = Uncovered, turnStatus = Pulled, quantity = Two, value = Twos, players = players }
+                    ( { model | cupState = Uncovered, turnStatus = Pulled Lie, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players }
                     , Cmd.none
                     )
 
@@ -177,18 +182,20 @@ update msg model =
 
                 -- asdf = Debug.log "new current" newCurrentTurn
                 -- (newQuantity, newValue) = mustPass try
+                mustPassTry = mustPass try
             in
-            case mustPass try of
+            case mustPassTry of
                 {-
                    there is a "next" try to be passed
                 -}
-                Just next ->
+                Just t ->
                     ( { model
-                        | tryHistory = Try.appendHistory model next
+                        | tryHistory = Try.appendHistory model try
+                        , tryToBeat = try
                         , whosTurn = Maybe.withDefault 0 newCurrentTurn
                         , activePlayers = newActivePlayers
-                        , quantity = Tuple.first next
-                        , value = Tuple.second next
+                        , quantity = Tuple.first t
+                        , value = Tuple.second t
                         , cupState = Covered
                         , cupLooked = False
                         , turnStatus = Pending
@@ -232,7 +239,7 @@ view model =
         --     Debug.log "Best Try: " (Try.eval (Try.assessRoll model.roll))
         -- UI
         tryToBeat =
-            Try.getLastTry model.tryHistory
+            model.tryToBeat
 
         currentTry =
             h3 [] [ text "Try to Beat", Try.view tryToBeat ]
@@ -261,7 +268,7 @@ view model =
                 Fresh ->
                     button [ onClick RollClick ] [ text "Roll" ]
 
-                Pulled ->
+                Pulled _ ->
                     button [ onClick RollClick ] [ text "Roll" ]
 
                 Looked ->
@@ -272,6 +279,9 @@ view model =
 
         trySelect =
             displayTryHTML model.roll model.quantity model.value tryToBeat
+
+        _ =
+            Debug.log "tryselect" ( model.roll, model.quantity, model.value )
     in
     case model.turnStatus of
         Fresh ->
@@ -310,12 +320,22 @@ view model =
                 , trySelect
                 ]
 
-        Pulled ->
+        Pulled result ->
+            let
+                pullResult =
+                    case result of
+                        HadIt ->
+                            p [] [ text "Previous player had the roll. You will lose 1 hp." ]
+
+                        Lie ->
+                            p [] [ text "Previous player lied. They will lose 1 hp." ]
+            in
             div []
                 [ currentTry
                 , currentTurn
                 , tryHistory
                 , cup
+                , pullResult
                 , rollButtons
                 ]
 
@@ -438,7 +458,12 @@ tryToOptionPair try quantity =
             Dict.filter (\_ v -> v > tryValue) Try.dictionary
 
         qOptions =
-            List.map (\o -> Maybe.withDefault (option [ value "2" ] [ text "two" ]) (Dict.get o quantityOptions)) passableQuants
+            List.map
+                (\o ->
+                    Maybe.withDefault (option [ value "2" ] [ text "two" ])
+                        (Dict.get o quantityOptions)
+                )
+                passableQuants
 
         vOptions =
             List.map
@@ -448,7 +473,8 @@ tryToOptionPair try quantity =
                 )
                 (Maybe.withDefault [ 2, 3, 4, 5 ] (Dict.get (Try.decodeQuantity quantity) passableTrysDict))
 
-        -- _ = Debug.log "options tup" qOptions
+        _ =
+            Debug.log "options tup" ( qOptions, vOptions )
     in
     ( qOptions, vOptions )
 
