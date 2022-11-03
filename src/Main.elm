@@ -105,8 +105,21 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         RollClick ->
-            ( model
-            , Random.generate NewRoll (Try.rollGenerator 5)
+            let
+                -- move to view and determine this before the update? issue is on fresh roll the model is nothing
+                ( cup, wilds ) =
+                    List.partition (\d -> d /= Wilds) model.roll
+            in
+            ( { model | tableWilds = List.length wilds + model.tableWilds }
+            , Random.generate NewRoll
+                (Try.rollGenerator
+                    (if List.length cup > 0 && model.turnStatus /= Fresh then
+                        List.length cup
+
+                     else
+                        5
+                    )
+                )
             )
 
         NewRoll roll ->
@@ -128,7 +141,7 @@ update msg model =
             -- check that the roll satisfied the required Try level
             let
                 currentRollTry =
-                    Try.assessRoll model.roll
+                    Try.assessRoll (model.roll ++ List.repeat model.tableWilds Wilds)
 
                 passedTry =
                     Try.getLastTry model.tryHistory
@@ -182,7 +195,11 @@ update msg model =
 
                 -- asdf = Debug.log "new current" newCurrentTurn
                 -- (newQuantity, newValue) = mustPass try
-                mustPassTry = mustPass try
+                mustPassTry =
+                    mustPass try
+
+                _ =
+                    Debug.log "Must Pass: " mustPassTry
             in
             case mustPassTry of
                 {-
@@ -263,6 +280,9 @@ view model =
                 , button [ onClick Look ] [ text "Look" ]
                 ]
 
+        tableWilds =
+            h2 [] (makeCupHTML (List.repeat model.tableWilds Wilds))
+
         rollButtons =
             case model.turnStatus of
                 Fresh ->
@@ -296,6 +316,7 @@ view model =
                 [ currentTry
                 , currentTurn
                 , tryHistory
+                , tableWilds
                 , cup
                 , rollButtons
                 , trySelect
@@ -306,6 +327,7 @@ view model =
                 [ currentTry
                 , currentTurn
                 , tryHistory
+                , tableWilds
                 , cupButtons
                 , trySelect
                 ]
@@ -315,6 +337,7 @@ view model =
                 [ currentTry
                 , currentTurn
                 , tryHistory
+                , tableWilds
                 , cup
                 , rollButtons
                 , trySelect
@@ -334,6 +357,7 @@ view model =
                 [ currentTry
                 , currentTurn
                 , tryHistory
+                , tableWilds
                 , cup
                 , pullResult
                 , rollButtons

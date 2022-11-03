@@ -5633,6 +5633,7 @@ var $author$project$Main$Pulled = function (a) {
 };
 var $author$project$Main$Rolled = {$: 'Rolled'};
 var $author$project$Main$Uncovered = {$: 'Uncovered'};
+var $author$project$Try$Wilds = {$: 'Wilds'};
 var $elm$core$List$append = F2(
 	function (xs, ys) {
 		if (!ys.b) {
@@ -5723,7 +5724,6 @@ var $author$project$Try$frequency = function (list) {
 var $author$project$Try$Fives = {$: 'Fives'};
 var $author$project$Try$Fours = {$: 'Fours'};
 var $author$project$Try$Sixes = {$: 'Sixes'};
-var $author$project$Try$Wilds = {$: 'Wilds'};
 var $author$project$Try$encodeFace = function (die) {
 	switch (die) {
 		case 1:
@@ -6539,6 +6539,25 @@ var $author$project$Main$mustPass = function (passedTry) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $elm$core$List$partition = F2(
+	function (pred, list) {
+		var step = F2(
+			function (x, _v0) {
+				var trues = _v0.a;
+				var falses = _v0.b;
+				return pred(x) ? _Utils_Tuple2(
+					A2($elm$core$List$cons, x, trues),
+					falses) : _Utils_Tuple2(
+					trues,
+					A2($elm$core$List$cons, x, falses));
+			});
+		return A3(
+			$elm$core$List$foldr,
+			step,
+			_Utils_Tuple2(_List_Nil, _List_Nil),
+			list);
+	});
 var $elm$core$Tuple$mapSecond = F2(
 	function (func, _v0) {
 		var x = _v0.a;
@@ -6602,6 +6621,27 @@ var $folkertdev$elm_deque$Deque$pushBack = F2(
 					sizeF: deque.sizeF,
 					sizeR: deque.sizeR + 1
 				}));
+	});
+var $elm$core$List$repeatHelp = F3(
+	function (result, n, value) {
+		repeatHelp:
+		while (true) {
+			if (n <= 0) {
+				return result;
+			} else {
+				var $temp$result = A2($elm$core$List$cons, value, result),
+					$temp$n = n - 1,
+					$temp$value = value;
+				result = $temp$result;
+				n = $temp$n;
+				value = $temp$value;
+				continue repeatHelp;
+			}
+		}
+	});
+var $elm$core$List$repeat = F2(
+	function (n, value) {
+		return A3($elm$core$List$repeatHelp, _List_Nil, n, value);
 	});
 var $elm$random$Random$addOne = function (value) {
 	return _Utils_Tuple2(1, value);
@@ -6730,12 +6770,25 @@ var $author$project$Main$update = F2(
 		while (true) {
 			switch (msg.$) {
 				case 'RollClick':
+					var _v1 = A2(
+						$elm$core$List$partition,
+						function (d) {
+							return !_Utils_eq(d, $author$project$Try$Wilds);
+						},
+						model.roll);
+					var cup = _v1.a;
+					var wilds = _v1.b;
 					return _Utils_Tuple2(
-						model,
+						_Utils_update(
+							model,
+							{
+								tableWilds: $elm$core$List$length(wilds) + model.tableWilds
+							}),
 						A2(
 							$elm$random$Random$generate,
 							$author$project$Main$NewRoll,
-							$author$project$Try$rollGenerator(5)));
+							$author$project$Try$rollGenerator(
+								(($elm$core$List$length(cup) > 0) && (!_Utils_eq(model.turnStatus, $author$project$Main$Fresh))) ? $elm$core$List$length(cup) : 5)));
 				case 'NewRoll':
 					var roll = msg.a;
 					return _Utils_Tuple2(
@@ -6759,7 +6812,10 @@ var $author$project$Main$update = F2(
 						$elm$core$Platform$Cmd$none);
 				case 'Pull':
 					var passedTry = $author$project$Try$getLastTry(model.tryHistory);
-					var currentRollTry = $author$project$Try$assessRoll(model.roll);
+					var currentRollTry = $author$project$Try$assessRoll(
+						_Utils_ap(
+							model.roll,
+							A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
 					var pullResult = A2($author$project$Try$compare, currentRollTry, passedTry);
 					var test = A2(
 						$elm$core$Debug$log,
@@ -6801,15 +6857,16 @@ var $author$project$Main$update = F2(
 				case 'Pass':
 					var _try = msg.a;
 					var mustPassTry = $author$project$Main$mustPass(_try);
-					var _v2 = $folkertdev$elm_deque$Deque$popFront(
+					var _v3 = $folkertdev$elm_deque$Deque$popFront(
 						A2($elm$core$Debug$log, 'active players', model.activePlayers));
-					var currentTurn = _v2.a;
-					var rest = _v2.b;
+					var currentTurn = _v3.a;
+					var rest = _v3.b;
 					var newActivePlayers = A2(
 						$folkertdev$elm_deque$Deque$pushBack,
 						A2($elm$core$Maybe$withDefault, 0, currentTurn),
 						rest);
 					var newCurrentTurn = $folkertdev$elm_deque$Deque$first(newActivePlayers);
+					var _v4 = A2($elm$core$Debug$log, 'Must Pass: ', mustPassTry);
 					if (mustPassTry.$ === 'Just') {
 						var t = mustPassTry.a;
 						return _Utils_Tuple2(
@@ -7360,6 +7417,11 @@ var $author$project$Main$view = function (model) {
 					$author$project$Try$toString,
 					$author$project$Player$getName(model.players)),
 				model.tryHistory)));
+	var tableWilds = A2(
+		$elm$html$Html$h2,
+		_List_Nil,
+		$author$project$Main$makeCupHTML(
+			A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
 	var rollButtons = function () {
 		var _v3 = model.turnStatus;
 		switch (_v3.$) {
@@ -7465,7 +7527,7 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
-					[currentTry, currentTurn, tryHistory, cup, rollButtons, trySelect]));
+					[currentTry, currentTurn, tryHistory, tableWilds, cup, rollButtons, trySelect]));
 		case 'Pending':
 			return A2(
 				$elm$html$Html$div,
@@ -7477,7 +7539,7 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
-					[currentTry, currentTurn, tryHistory, cup, rollButtons, trySelect]));
+					[currentTry, currentTurn, tryHistory, tableWilds, cup, rollButtons, trySelect]));
 		default:
 			var result = _v1.a;
 			var pullResult = function () {
@@ -7503,7 +7565,7 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
-					[currentTry, currentTurn, tryHistory, cup, pullResult, rollButtons]));
+					[currentTry, currentTurn, tryHistory, tableWilds, cup, pullResult, rollButtons]));
 	}
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
