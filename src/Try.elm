@@ -1,9 +1,11 @@
-module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, appendHistory, assessRoll, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, rollGenerator, toString, view)
+module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, assessRoll, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, rollGenerator, toString, view)
 
 import Dict exposing (Dict)
 import Html exposing (..)
+import Player
 import Random
 import Tuple2
+import Tuple3
 
 
 
@@ -316,16 +318,11 @@ getBestOfAKind dict =
         |> encode
 
 
-appendHistory : { a | tryHistory : List ( b, c ), whosTurn : c } -> b -> List ( b, c )
-appendHistory model try =
-    List.append model.tryHistory [ ( try, model.whosTurn ) ]
-
-
-getLastTry : List ( Try, Int ) -> Try
+getLastTry : List ( Try, Int, String ) -> Try
 getLastTry tryHistory =
     tryHistory
         |> List.reverse
-        |> List.map Tuple.first
+        |> List.map Tuple3.first
         |> List.head
         >> Maybe.withDefault ( Two, Twos )
 

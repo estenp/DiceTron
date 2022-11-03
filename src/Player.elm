@@ -1,4 +1,4 @@
-module Player exposing (Players, getName, getPlayer, hit, my_players)
+module Player exposing (Players, getName, getPlayer, health, hit, my_players)
 
 import Deque
 import Dict exposing (Dict)
@@ -32,6 +32,15 @@ type alias PlayerData =
          }
        ]
 -}
+
+
+health : Int -> Players -> String
+health playerId players =
+    let
+        player =
+            getPlayer players playerId
+    in
+    "(" ++ String.fromInt player.hp ++ "/" ++ String.fromInt player.maxHp ++ ")"
 
 
 default_player =

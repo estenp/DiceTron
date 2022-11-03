@@ -5642,32 +5642,7 @@ var $elm$core$List$append = F2(
 			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
 		}
 	});
-var $author$project$Try$appendHistory = F2(
-	function (model, _try) {
-		return A2(
-			$elm$core$List$append,
-			model.tryHistory,
-			_List_fromArray(
-				[
-					_Utils_Tuple2(_try, model.whosTurn)
-				]));
-	});
-var $author$project$Try$decodeFace = function (die) {
-	switch (die.$) {
-		case 'Wilds':
-			return 1;
-		case 'Twos':
-			return 2;
-		case 'Threes':
-			return 3;
-		case 'Fours':
-			return 4;
-		case 'Fives':
-			return 5;
-		default:
-			return 6;
-	}
-};
+var $author$project$Player$default_player = {hp: 0, id: 0, maxHp: 0, name: 'DEFAULT'};
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
@@ -5708,6 +5683,45 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
+var $author$project$Player$getPlayer = F2(
+	function (players, id) {
+		var maybe = A2($elm$core$Dict$get, id, players);
+		return A2($elm$core$Maybe$withDefault, $author$project$Player$default_player, maybe);
+	});
+var $author$project$Player$health = F2(
+	function (playerId, players) {
+		var player = A2($author$project$Player$getPlayer, players, playerId);
+		return '(' + ($elm$core$String$fromInt(player.hp) + ('/' + ($elm$core$String$fromInt(player.maxHp) + ')')));
+	});
+var $author$project$Main$appendHistory = F2(
+	function (model, _try) {
+		return A2(
+			$elm$core$List$append,
+			model.tryHistory,
+			_List_fromArray(
+				[
+					_Utils_Tuple3(
+					_try,
+					model.whosTurn,
+					A2($author$project$Player$health, model.whosTurn, model.players))
+				]));
+	});
+var $author$project$Try$decodeFace = function (die) {
+	switch (die.$) {
+		case 'Wilds':
+			return 1;
+		case 'Twos':
+			return 2;
+		case 'Threes':
+			return 3;
+		case 'Fours':
+			return 4;
+		case 'Fives':
+			return 5;
+		default:
+			return 6;
+	}
+};
 var $author$project$Try$freqReducer = F2(
 	function (key, acc) {
 		return function (count) {
@@ -6469,6 +6483,10 @@ var $elm$core$Basics$composeR = F3(
 		return g(
 			f(x));
 	});
+var $TSFoster$elm_tuple_extra$Tuple3$first = function (_v0) {
+	var a = _v0.a;
+	return a;
+};
 var $author$project$Try$getLastTry = function (tryHistory) {
 	return A3(
 		$elm$core$Basics$composeR,
@@ -6477,15 +6495,9 @@ var $author$project$Try$getLastTry = function (tryHistory) {
 			_Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos)),
 		A2(
 			$elm$core$List$map,
-			$elm$core$Tuple$first,
+			$TSFoster$elm_tuple_extra$Tuple3$first,
 			$elm$core$List$reverse(tryHistory)));
 };
-var $author$project$Player$default_player = {hp: 0, id: 0, maxHp: 0, name: 'DEFAULT'};
-var $author$project$Player$getPlayer = F2(
-	function (players, id) {
-		var maybe = A2($elm$core$Dict$get, id, players);
-		return A2($elm$core$Maybe$withDefault, $author$project$Player$default_player, maybe);
-	});
 var $author$project$Player$hit = F2(
 	function (players, id) {
 		var player = A2($author$project$Player$getPlayer, players, id);
@@ -6770,25 +6782,53 @@ var $author$project$Main$update = F2(
 		while (true) {
 			switch (msg.$) {
 				case 'RollClick':
-					var _v1 = A2(
-						$elm$core$List$partition,
-						function (d) {
-							return !_Utils_eq(d, $author$project$Try$Wilds);
-						},
-						model.roll);
-					var cup = _v1.a;
-					var wilds = _v1.b;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								tableWilds: $elm$core$List$length(wilds) + model.tableWilds
-							}),
-						A2(
-							$elm$random$Random$generate,
-							$author$project$Main$NewRoll,
-							$author$project$Try$rollGenerator(
-								(($elm$core$List$length(cup) > 0) && (!_Utils_eq(model.turnStatus, $author$project$Main$Fresh))) ? $elm$core$List$length(cup) : 5)));
+					var _v1 = model.turnStatus;
+					switch (_v1.$) {
+						case 'Pulled':
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{tableWilds: 0}),
+								A2(
+									$elm$random$Random$generate,
+									$author$project$Main$NewRoll,
+									$author$project$Try$rollGenerator(5)));
+						case 'Fresh':
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{tableWilds: 0}),
+								A2(
+									$elm$random$Random$generate,
+									$author$project$Main$NewRoll,
+									$author$project$Try$rollGenerator(5)));
+						default:
+							var _v2 = A2(
+								$elm$core$List$partition,
+								function (d) {
+									return !_Utils_eq(d, $author$project$Try$Wilds);
+								},
+								model.roll);
+							var cup = _v2.a;
+							var wilds = _v2.b;
+							return (!(!$elm$core$List$length(cup))) ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										tableWilds: $elm$core$List$length(wilds) + model.tableWilds
+									}),
+								A2(
+									$elm$random$Random$generate,
+									$author$project$Main$NewRoll,
+									$author$project$Try$rollGenerator(
+										$elm$core$List$length(cup)))) : _Utils_Tuple2(
+								model,
+								A2(
+									$elm$random$Random$generate,
+									$author$project$Main$NewRoll,
+									$author$project$Try$rollGenerator(
+										$elm$core$List$length(model.roll))));
+					}
 				case 'NewRoll':
 					var roll = msg.a;
 					return _Utils_Tuple2(
@@ -6857,16 +6897,16 @@ var $author$project$Main$update = F2(
 				case 'Pass':
 					var _try = msg.a;
 					var mustPassTry = $author$project$Main$mustPass(_try);
-					var _v3 = $folkertdev$elm_deque$Deque$popFront(
+					var _v4 = $folkertdev$elm_deque$Deque$popFront(
 						A2($elm$core$Debug$log, 'active players', model.activePlayers));
-					var currentTurn = _v3.a;
-					var rest = _v3.b;
+					var currentTurn = _v4.a;
+					var rest = _v4.b;
 					var newActivePlayers = A2(
 						$folkertdev$elm_deque$Deque$pushBack,
 						A2($elm$core$Maybe$withDefault, 0, currentTurn),
 						rest);
 					var newCurrentTurn = $folkertdev$elm_deque$Deque$first(newActivePlayers);
-					var _v4 = A2($elm$core$Debug$log, 'Must Pass: ', mustPassTry);
+					var _v5 = A2($elm$core$Debug$log, 'Must Pass: ', mustPassTry);
 					if (mustPassTry.$ === 'Just') {
 						var t = mustPassTry.a;
 						return _Utils_Tuple2(
@@ -6877,7 +6917,7 @@ var $author$project$Main$update = F2(
 									cupLooked: false,
 									cupState: $author$project$Main$Covered,
 									quantity: t.a,
-									tryHistory: A2($author$project$Try$appendHistory, model, _try),
+									tryHistory: A2($author$project$Main$appendHistory, model, _try),
 									tryToBeat: _try,
 									turnStatus: $author$project$Main$Pending,
 									value: t.b,
@@ -7366,16 +7406,26 @@ var $author$project$Main$makeDieHTML = function (die) {
 			$author$project$Try$decodeFace(die)) + '] '));
 };
 var $author$project$Main$makeCupHTML = $elm$core$List$map($author$project$Main$makeDieHTML);
-var $elm$core$Tuple$mapBoth = F3(
-	function (funcA, funcB, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			funcA(x),
-			funcB(y));
+var $TSFoster$elm_tuple_extra$Tuple3$mapAllThree = F4(
+	function (aFn, bFn, cFn, _v0) {
+		var a = _v0.a;
+		var b = _v0.b;
+		var c = _v0.c;
+		return _Utils_Tuple3(
+			aFn(a),
+			bFn(b),
+			cFn(c));
 	});
 var $elm$html$Html$p = _VirtualDom_node('p');
+var $TSFoster$elm_tuple_extra$Tuple3$second = function (_v0) {
+	var b = _v0.b;
+	return b;
+};
 var $elm$html$Html$span = _VirtualDom_node('span');
+var $TSFoster$elm_tuple_extra$Tuple3$third = function (_v0) {
+	var c = _v0.c;
+	return c;
+};
 var $author$project$Try$toString = function (_try) {
 	return function (t) {
 		return $elm$core$String$fromInt(t.a) + (' ' + $elm$core$String$fromInt(t.b));
@@ -7407,15 +7457,17 @@ var $author$project$Main$view = function (model) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text(tup.b + (' -> ' + tup.a))
+							$elm$html$Html$text(
+							$TSFoster$elm_tuple_extra$Tuple3$second(tup) + (' -> ' + ($TSFoster$elm_tuple_extra$Tuple3$first(tup) + (' ' + ($TSFoster$elm_tuple_extra$Tuple3$third(tup) + 'hp')))))
 						]));
 			},
 			A2(
 				$elm$core$List$map,
-				A2(
-					$elm$core$Tuple$mapBoth,
+				A3(
+					$TSFoster$elm_tuple_extra$Tuple3$mapAllThree,
 					$author$project$Try$toString,
-					$author$project$Player$getName(model.players)),
+					$author$project$Player$getName(model.players),
+					$elm$core$Basics$identity),
 				model.tryHistory)));
 	var tableWilds = A2(
 		$elm$html$Html$h2,
@@ -7533,7 +7585,7 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
-					[currentTry, currentTurn, tryHistory, cupButtons, trySelect]));
+					[currentTry, currentTurn, tryHistory, tableWilds, cupButtons, trySelect]));
 		case 'Looked':
 			return A2(
 				$elm$html$Html$div,

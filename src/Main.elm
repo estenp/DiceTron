@@ -12,6 +12,7 @@ import Player exposing (Players, my_players)
 import Random
 import Set
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
+import Tuple3
 
 
 
@@ -52,7 +53,7 @@ type TurnStatus
 
 type alias Model =
     { roll : Roll
-    , tryHistory : List ( Try, Int )
+    , tryHistory : List ( Try, Int, String )
     , tryToBeat : Try
     , quantity : Quantity
     , value : Face
@@ -101,26 +102,57 @@ type Msg
     | Look
 
 
+appendHistory : Model -> Try -> List ( Try, Int, String )
+appendHistory model try =
+    List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
+
+
+
+{- msgView : Msg -> String
+   msgView msg =
+       case msg of
+           RollClick ->
+               'roll'
+           Pull ->
+               'pull'
+           Pass ->
+               'pass'
+           Look ->
+               'look'
+           _ ->
+               ''
+-}
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         RollClick ->
-            let
-                -- move to view and determine this before the update? issue is on fresh roll the model is nothing
-                ( cup, wilds ) =
-                    List.partition (\d -> d /= Wilds) model.roll
-            in
-            ( { model | tableWilds = List.length wilds + model.tableWilds }
-            , Random.generate NewRoll
-                (Try.rollGenerator
-                    (if List.length cup > 0 && model.turnStatus /= Fresh then
-                        List.length cup
+            case model.turnStatus of
+                Pulled _ ->
+                    -- reset
+                    ( { model | tableWilds = 0 }, Random.generate NewRoll (Try.rollGenerator 5) )
 
-                     else
-                        5
-                    )
-                )
-            )
+                Fresh ->
+                    -- reset
+                    ( { model | tableWilds = 0 }, Random.generate NewRoll (Try.rollGenerator 5) )
+
+                _ ->
+                    let
+                        -- pull the wilds from the roll
+                        ( cup, wilds ) =
+                            List.partition (\d -> d /= Wilds) model.roll
+                    in
+                    if List.length cup /= 0 then
+                        -- add pulled wilds to the tableWilds count, create new roll with remaining cup
+                        ( { model | tableWilds = List.length wilds + model.tableWilds }
+                        , Random.generate NewRoll (Try.rollGenerator (List.length cup))
+                        )
+
+                    else
+                        ( model
+                        , Random.generate NewRoll (Try.rollGenerator (List.length model.roll))
+                        )
 
         NewRoll roll ->
             ( { model | roll = roll, turnStatus = Rolled }
@@ -207,7 +239,7 @@ update msg model =
                 -}
                 Just t ->
                     ( { model
-                        | tryHistory = Try.appendHistory model try
+                        | tryHistory = appendHistory model try
                         , tryToBeat = try
                         , whosTurn = Maybe.withDefault 0 newCurrentTurn
                         , activePlayers = newActivePlayers
@@ -267,8 +299,8 @@ view model =
         tryHistory =
             div []
                 (model.tryHistory
-                    |> List.map (Tuple.mapBoth Try.toString (Player.getName model.players))
-                    |> List.map (\tup -> div [] [ text (Tuple.second tup ++ " -> " ++ Tuple.first tup) ])
+                    |> List.map (Tuple3.mapAllThree Try.toString (Player.getName model.players) identity)
+                    |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup ++ " " ++ Tuple3.third tup ++ "hp") ])
                 )
 
         cup =
