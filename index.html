@@ -5581,12 +5581,12 @@ var $elm$core$Dict$fromList = function (assocs) {
 		$elm$core$Dict$empty,
 		assocs);
 };
-var $author$project$Player$my_players = $elm$core$Dict$fromList(
+var $author$project$Main$my_players = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
 			_Utils_Tuple2(
 			1,
-			{hp: 5, id: 1, maxHp: 5, name: 'Thad'}),
+			{hp: 1, id: 1, maxHp: 5, name: 'Thad'}),
 			_Utils_Tuple2(
 			2,
 			{hp: 5, id: 2, maxHp: 5, name: 'Pat'}),
@@ -5600,10 +5600,10 @@ var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
 			activePlayers: $folkertdev$elm_deque$Deque$fromList(
-				$elm$core$Dict$keys($author$project$Player$my_players)),
+				$elm$core$Dict$keys($author$project$Main$my_players)),
 			cupLooked: false,
 			cupState: $author$project$Main$Covered,
-			players: $author$project$Player$my_players,
+			players: $author$project$Main$my_players,
 			quantity: $author$project$Try$Two,
 			roll: _List_Nil,
 			tableWilds: 0,
@@ -6501,13 +6501,52 @@ var $author$project$Try$getLastTry = function (tryHistory) {
 var $author$project$Player$hit = F2(
 	function (players, id) {
 		var player = A2($author$project$Player$getPlayer, players, id);
+		return (player.hp > 0) ? _Utils_update(
+			player,
+			{hp: player.hp - 1}) : player;
+	});
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $elm$core$List$partition = F2(
+	function (pred, list) {
+		var step = F2(
+			function (x, _v0) {
+				var trues = _v0.a;
+				var falses = _v0.b;
+				return pred(x) ? _Utils_Tuple2(
+					A2($elm$core$List$cons, x, trues),
+					falses) : _Utils_Tuple2(
+					trues,
+					A2($elm$core$List$cons, x, falses));
+			});
 		return A3(
-			$elm$core$Dict$insert,
-			id,
-			_Utils_update(
-				player,
-				{hp: player.hp - 1}),
-			players);
+			$elm$core$List$foldr,
+			step,
+			_Utils_Tuple2(_List_Nil, _List_Nil),
+			list);
+	});
+var $folkertdev$elm_deque$Deque$partition = F2(
+	function (p, _v0) {
+		var deque = _v0.a;
+		var _v1 = A2($elm$core$List$partition, p, deque.rear);
+		var l2 = _v1.a;
+		var r2 = _v1.b;
+		var _v2 = A2($elm$core$List$partition, p, deque.front);
+		var l1 = _v2.a;
+		var r1 = _v2.b;
+		return _Utils_Tuple2(
+			$folkertdev$elm_deque$Deque$fromList(
+				_Utils_ap(l1, l2)),
+			$folkertdev$elm_deque$Deque$fromList(
+				_Utils_ap(r1, r2)));
+	});
+var $author$project$Player$ko = F2(
+	function (id, activePlayers) {
+		return A2(
+			$folkertdev$elm_deque$Deque$partition,
+			function (activePlayer) {
+				return !_Utils_eq(activePlayer, id);
+			},
+			activePlayers).a;
 	});
 var $folkertdev$elm_deque$Internal$last = function (deque) {
 	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
@@ -6551,25 +6590,6 @@ var $author$project$Main$mustPass = function (passedTry) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $elm$core$Basics$neq = _Utils_notEqual;
-var $elm$core$List$partition = F2(
-	function (pred, list) {
-		var step = F2(
-			function (x, _v0) {
-				var trues = _v0.a;
-				var falses = _v0.b;
-				return pred(x) ? _Utils_Tuple2(
-					A2($elm$core$List$cons, x, trues),
-					falses) : _Utils_Tuple2(
-					trues,
-					A2($elm$core$List$cons, x, falses));
-			});
-		return A3(
-			$elm$core$List$foldr,
-			step,
-			_Utils_Tuple2(_List_Nil, _List_Nil),
-			list);
-	});
 var $elm$core$Tuple$mapSecond = F2(
 	function (func, _v0) {
 		var x = _v0.a;
@@ -6862,29 +6882,40 @@ var $author$project$Main$update = F2(
 						'compare current passed',
 						{compare: pullResult, cur: currentRollTry, passed: passedTry});
 					if (pullResult.$ === 'HadIt') {
-						var players = A2($author$project$Player$hit, model.players, model.whosTurn);
+						var hitPlayer = A2($author$project$Player$hit, model.players, model.whosTurn);
+						var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
+						var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
+						var newWhosTurn = A2(
+							$elm$core$Maybe$withDefault,
+							0,
+							$folkertdev$elm_deque$Deque$first(activePlayers));
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
+									activePlayers: activePlayers,
 									cupState: $author$project$Main$Uncovered,
 									players: players,
 									quantity: $author$project$Try$Two,
 									tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
 									turnStatus: $author$project$Main$Pulled($author$project$Try$HadIt),
-									value: $author$project$Try$Twos
+									value: $author$project$Try$Twos,
+									whosTurn: newWhosTurn
 								}),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						var p = A2(
+						var prevPlayer = A2(
 							$elm$core$Maybe$withDefault,
 							0,
 							$folkertdev$elm_deque$Deque$last(model.activePlayers));
-						var players = A2($author$project$Player$hit, model.players, p);
+						var hitPlayer = A2($author$project$Player$hit, model.players, prevPlayer);
+						var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
+						var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
+									activePlayers: activePlayers,
 									cupState: $author$project$Main$Uncovered,
 									players: players,
 									quantity: $author$project$Try$Two,
@@ -7400,6 +7431,10 @@ var $author$project$Player$getName = F2(
 	});
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $folkertdev$elm_deque$Internal$length = function (deque) {
+	return deque.sizeF + deque.sizeR;
+};
+var $folkertdev$elm_deque$Deque$length = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$length, $folkertdev$elm_deque$Deque$unwrap);
 var $author$project$Main$makeDieHTML = function (die) {
 	return $elm$html$Html$text(
 		'[' + ($elm$core$String$fromInt(
@@ -7416,6 +7451,7 @@ var $TSFoster$elm_tuple_extra$Tuple3$mapAllThree = F4(
 			bFn(b),
 			cFn(c));
 	});
+var $elm$core$Basics$not = _Basics_not;
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $TSFoster$elm_tuple_extra$Tuple3$second = function (_v0) {
 	var b = _v0.b;
@@ -7515,6 +7551,7 @@ var $author$project$Main$view = function (model) {
 		}
 	}();
 	var model_log = A2($elm$core$Debug$log, 'Model', model);
+	var done = $folkertdev$elm_deque$Deque$length(model.activePlayers) <= 1;
 	var currentTurn = A2(
 		$elm$html$Html$h3,
 		_List_Nil,
@@ -7566,58 +7603,75 @@ var $author$project$Main$view = function (model) {
 		$elm$core$Debug$log,
 		'tryselect',
 		_Utils_Tuple3(model.roll, model.quantity, model.value));
-	var _v1 = model.turnStatus;
-	switch (_v1.$) {
-		case 'Fresh':
-			return A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[currentTurn, tryHistory, rollButtons]));
-		case 'Rolled':
-			return A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[currentTry, currentTurn, tryHistory, tableWilds, cup, rollButtons, trySelect]));
-		case 'Pending':
-			return A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[currentTry, currentTurn, tryHistory, tableWilds, cupButtons, trySelect]));
-		case 'Looked':
-			return A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[currentTry, currentTurn, tryHistory, tableWilds, cup, rollButtons, trySelect]));
-		default:
-			var result = _v1.a;
-			var pullResult = function () {
-				if (result.$ === 'HadIt') {
-					return A2(
-						$elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Previous player had the roll. You will lose 1 hp.')
-							]));
-				} else {
-					return A2(
-						$elm$html$Html$p,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Previous player lied. They will lose 1 hp.')
-							]));
-				}
-			}();
-			return A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[currentTry, currentTurn, tryHistory, tableWilds, cup, pullResult, rollButtons]));
+	if (!done) {
+		var _v1 = model.turnStatus;
+		switch (_v1.$) {
+			case 'Fresh':
+				return A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[currentTurn, tryHistory, rollButtons]));
+			case 'Rolled':
+				return A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[currentTry, currentTurn, tryHistory, tableWilds, cup, rollButtons, trySelect]));
+			case 'Pending':
+				return A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[currentTry, currentTurn, tryHistory, tableWilds, cupButtons, trySelect]));
+			case 'Looked':
+				return A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[currentTry, currentTurn, tryHistory, tableWilds, cup, rollButtons, trySelect]));
+			default:
+				var result = _v1.a;
+				var pullResult = function () {
+					if (result.$ === 'HadIt') {
+						return A2(
+							$elm$html$Html$p,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Previous player had the roll. You will lose 1 hp.')
+								]));
+					} else {
+						return A2(
+							$elm$html$Html$p,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Previous player lied. They will lose 1 hp.')
+								]));
+					}
+				}();
+				return A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[currentTry, currentTurn, tryHistory, tableWilds, cup, pullResult, rollButtons]));
+		}
+	} else {
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text(
+					'Game over.' + (A2(
+						$author$project$Player$getName,
+						model.players,
+						A2(
+							$elm$core$Maybe$withDefault,
+							0,
+							$folkertdev$elm_deque$Deque$first(model.activePlayers))) + ' wins!'))
+				]));
 	}
 };
 var $author$project$Main$main = $elm$browser$Browser$element(

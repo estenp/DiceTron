@@ -1,4 +1,4 @@
-module Player exposing (Players, getName, getPlayer, health, hit, my_players)
+module Player exposing (Players, Player, getName, getPlayer, health, hit, ko)
 
 import Deque
 import Dict exposing (Dict)
@@ -43,6 +43,7 @@ health playerId players =
     "(" ++ String.fromInt player.hp ++ "/" ++ String.fromInt player.maxHp ++ ")"
 
 
+default_player : Player
 default_player =
     { id = 0
     , name = "DEFAULT"
@@ -53,61 +54,6 @@ default_player =
 
 type alias Players =
     Dict Int Player
-
-
-my_players : Players
-my_players =
-    Dict.fromList
-        [ ( 1
-          , { id = 1
-            , name = "Thad"
-            , hp = 5
-            , maxHp = 5
-            }
-          )
-        , ( 2
-          , { id = 2
-            , name = "Pat"
-            , hp = 5
-            , maxHp = 5
-            }
-          )
-        , ( 3
-          , { id = 3
-            , name = "Esten"
-            , hp = 5
-            , maxHp = 5
-            }
-          )
-        ]
-
-
-makePlayers : List PlayerData -> List Player
-makePlayers playerList =
-    List.map
-        (\{ id, name } ->
-            Player id name 5 5
-        )
-        playerList
-
-
-
-{- getPlayer : Int -> List Player -> Result String Player
-   getPlayer id players =
-       let
-           maybe =
-               players
-                   |> List.filter (\p -> p.id == id)
-                   |> List.head
-       in
-       case maybe of
-           Just player ->
-               Ok player
-
-           -- pull up a chair
-           Nothing ->
-               Err "Player not found."
--}
 
 
 getPlayer : Players -> Int -> Player
@@ -124,7 +70,7 @@ getName players id =
     .name (getPlayer players id)
 
 
-hit : Players -> Int -> Players
+hit : Players -> Int -> Player
 hit players id =
     let
         player =
@@ -132,4 +78,11 @@ hit players id =
     in
     -- if you can decrement this, return the player record
     -- else return nothing or bad result?
-    Dict.insert id { player | hp = player.hp - 1 } players
+    if player.hp > 0 then
+        { player | hp = player.hp - 1 }
+    else
+        player
+
+ko : Int -> Deque.Deque Int -> Deque.Deque Int
+ko id activePlayers =
+    Tuple.first (Deque.partition (\activePlayer -> activePlayer /= id) activePlayers)

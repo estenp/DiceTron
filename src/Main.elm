@@ -8,7 +8,7 @@ import Dict.Extra as DictExtra exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (for, id, value)
 import Html.Events exposing (..)
-import Player exposing (Players, my_players)
+import Player exposing (Players, Player)
 import Random
 import Set
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
@@ -49,6 +49,32 @@ type TurnStatus
     | Looked
     | Rolled
     | Pulled Pull
+
+my_players : Players
+my_players =
+    Dict.fromList
+        [ ( 1
+          , { id = 1
+            , name = "Thad"
+            , hp = 1
+            , maxHp = 5
+            }
+          )
+        , ( 2
+          , { id = 2
+            , name = "Pat"
+            , hp = 5
+            , maxHp = 5
+            }
+          )
+        , ( 3
+          , { id = 3
+            , name = "Esten"
+            , hp = 5
+            , maxHp = 5
+            }
+          )
+        ]
 
 
 type alias Model =
@@ -190,25 +216,47 @@ update msg model =
                     -- fresh roll
                     let
                         -- hitPlayer = Player.getPlayer model.players model.whosTurn
-                        players =
+                        hitPlayer =
                             Player.hit model.players model.whosTurn
+
+                        players =
+                            Dict.insert hitPlayer.id hitPlayer model.players
+
+                        activePlayers =
+                            if hitPlayer.hp /= 0 then
+                                model.activePlayers
+                            else
+                                Player.ko hitPlayer.id model.activePlayers
+
+                        newWhosTurn = Maybe.withDefault 0 (Deque.first activePlayers)
+
                     in
-                    ( { model | cupState = Uncovered, turnStatus = Pulled HadIt, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players }
+                    ( { model | cupState = Uncovered, turnStatus = Pulled HadIt, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers, whosTurn = newWhosTurn }
                     , Cmd.none
                     )
 
                 -- )
                 Lie ->
+                    -- previous player takes a fold
+                    -- fresh roll
                     let
-                        -- previous player takes a fold
-                        -- fresh roll
-                        p =
+                        prevPlayer =
                             Maybe.withDefault 0 (Deque.last model.activePlayers)
 
+                        hitPlayer =
+                            Player.hit model.players prevPlayer
+
                         players =
-                            Player.hit model.players p
+                            Dict.insert hitPlayer.id hitPlayer model.players
+
+                        activePlayers =
+                            if hitPlayer.hp /= 0 then
+                                model.activePlayers
+                            else
+                                Player.ko hitPlayer.id model.activePlayers
+
                     in
-                    ( { model | cupState = Uncovered, turnStatus = Pulled Lie, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players }
+                    ( { model | cupState = Uncovered, turnStatus = Pulled Lie, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers }
                     , Cmd.none
                     )
 
@@ -287,6 +335,9 @@ view model =
         -- _ =
         --     Debug.log "Best Try: " (Try.eval (Try.assessRoll model.roll))
         -- UI
+
+        done = (Deque.length model.activePlayers) <= 1
+
         tryToBeat =
             model.tryToBeat
 
@@ -335,66 +386,70 @@ view model =
         _ =
             Debug.log "tryselect" ( model.roll, model.quantity, model.value )
     in
-    case model.turnStatus of
-        Fresh ->
-            div []
-                [ currentTurn
-                , tryHistory
-                , rollButtons
-                ]
+    if not done then
+        case model.turnStatus of
+            Fresh ->
+                div []
+                    [ currentTurn
+                    , tryHistory
+                    , rollButtons
+                    ]
 
-        Rolled ->
-            div []
-                [ currentTry
-                , currentTurn
-                , tryHistory
-                , tableWilds
-                , cup
-                , rollButtons
-                , trySelect
-                ]
+            Rolled ->
+                div []
+                    [ currentTry
+                    , currentTurn
+                    , tryHistory
+                    , tableWilds
+                    , cup
+                    , rollButtons
+                    , trySelect
+                    ]
 
-        Pending ->
-            div []
-                [ currentTry
-                , currentTurn
-                , tryHistory
-                , tableWilds
-                , cupButtons
-                , trySelect
-                ]
+            Pending ->
+                div []
+                    [ currentTry
+                    , currentTurn
+                    , tryHistory
+                    , tableWilds
+                    , cupButtons
+                    , trySelect
+                    ]
 
-        Looked ->
-            div []
-                [ currentTry
-                , currentTurn
-                , tryHistory
-                , tableWilds
-                , cup
-                , rollButtons
-                , trySelect
-                ]
+            Looked ->
+                div []
+                    [ currentTry
+                    , currentTurn
+                    , tryHistory
+                    , tableWilds
+                    , cup
+                    , rollButtons
+                    , trySelect
+                    ]
 
-        Pulled result ->
-            let
-                pullResult =
-                    case result of
-                        HadIt ->
-                            p [] [ text "Previous player had the roll. You will lose 1 hp." ]
+            Pulled result ->
+                let
+                    pullResult =
+                        case result of
+                            HadIt ->
+                                p [] [ text "Previous player had the roll. You will lose 1 hp." ]
 
-                        Lie ->
-                            p [] [ text "Previous player lied. They will lose 1 hp." ]
-            in
-            div []
-                [ currentTry
-                , currentTurn
-                , tryHistory
-                , tableWilds
-                , cup
-                , pullResult
-                , rollButtons
-                ]
-
+                            Lie ->
+                                p [] [ text "Previous player lied. They will lose 1 hp." ]
+                in
+                div []
+                    [ currentTry
+                    , currentTurn
+                    , tryHistory
+                    , tableWilds
+                    , cup
+                    , pullResult
+                    , rollButtons
+                    ]
+    else
+        div [] [
+            text ("Game over." ++ Player.getName model.players (Maybe.withDefault 0 (Deque.first model.activePlayers)) ++ " wins!")
+        ]
 
 
 {- div []
