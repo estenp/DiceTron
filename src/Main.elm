@@ -1,21 +1,20 @@
 module Main exposing (..)
 
-import Array
 import Browser
 import Deque
 import Dict exposing (..)
-import Dict.Extra as DictExtra exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (for, id, value)
 import Html.Events exposing (..)
-import Player exposing (Players, Player, ActivePlayers)
+import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
-import Set
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
 import Tuple3
-import Player exposing (PlayerId)
+
+
 
 -- CONSTANTS, DUMMY DATA
+
 
 my_players : Players
 my_players =
@@ -44,6 +43,29 @@ my_players =
         ]
 
 
+quantityOptions : Dict Int (Html msg)
+quantityOptions =
+    Dict.fromList
+        [ ( Try.decodeQuantity One, option [ value "1" ] [ text "one" ] )
+        , ( Try.decodeQuantity Two, option [ value "2" ] [ text "two" ] )
+        , ( Try.decodeQuantity Three, option [ value "3" ] [ text "three" ] )
+        , ( Try.decodeQuantity Four, option [ value "4" ] [ text "four" ] )
+        , ( Try.decodeQuantity Five, option [ value "5" ] [ text "five" ] )
+        ]
+
+
+valueOptions : Dict Int (Html msg)
+valueOptions =
+    Dict.fromList
+        [ ( Try.decodeFace Twos, option [ value "2" ] [ text "twos" ] )
+        , ( Try.decodeFace Threes, option [ value "3" ] [ text "threes" ] )
+        , ( Try.decodeFace Fours, option [ value "4" ] [ text "fours" ] )
+        , ( Try.decodeFace Fives, option [ value "5" ] [ text "fives" ] )
+        , ( Try.decodeFace Sixes, option [ value "6" ] [ text "sixes" ] )
+        ]
+
+
+
 -- MODEL
 -- Form
 
@@ -51,10 +73,6 @@ my_players =
 type CupState
     = Covered
     | Uncovered
-
-
-
--- WORK ON TURN STATE -> USE BETTER COMBO OF STATE RECORD AND CUSTOM TYPES
 
 
 type TurnStatus
@@ -66,24 +84,28 @@ type TurnStatus
 
 
 type alias History =
-    List { playerId : PlayerId
+    List
+        { playerId : PlayerId
+        }
 
-         }
 
 type alias Model =
     { -- dice state
       roll : Roll
-      -- view state
+
+    -- view state
     , quantity : Quantity
     , value : Face
     , tableWilds : Int
     , tryHistory : List ( Try, Int, String )
     , tryToBeat : Try
+
     -- turn state
     , cupState : CupState
     , cupLooked : Bool
     , turnStatus : TurnStatus
     , whosTurn : Int -- index of activePlayers
+
     -- player state
     , players : Players
     , activePlayers : ActivePlayers
@@ -111,22 +133,26 @@ init _ =
 
 
 -- UPDATE
-
 -- Update messages
+
+
 type ViewState
     = ChangeQuantity Quantity
     | ChangeValue Face
+
 
 type GameEvent
     = Pull
     | Pass Try
     | Look
 
+
 type Dice
     = -- User wants a new roll value displayed.
       RollClick
       -- Runtime is sending a new random die value.∏
     | NewRoll (List Face)
+
 
 type Msg
     = Dice Dice
@@ -137,7 +163,6 @@ type Msg
 appendHistory : Model -> Try -> List ( Try, Int, String )
 appendHistory model try =
     List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
-
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -215,11 +240,12 @@ update msg model =
                         activePlayers =
                             if hitPlayer.hp /= 0 then
                                 model.activePlayers
+
                             else
                                 Player.ko hitPlayer.id model.activePlayers
 
-                        newWhosTurn = Maybe.withDefault 0 (Deque.first activePlayers)
-
+                        newWhosTurn =
+                            Maybe.withDefault 0 (Deque.first activePlayers)
                     in
                     ( { model | cupState = Uncovered, turnStatus = Pulled HadIt, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers, whosTurn = newWhosTurn }
                     , Cmd.none
@@ -242,47 +268,37 @@ update msg model =
                         activePlayers =
                             if hitPlayer.hp /= 0 then
                                 model.activePlayers
+
                             else
                                 Player.ko hitPlayer.id model.activePlayers
-
                     in
                     ( { model | cupState = Uncovered, turnStatus = Pulled Lie, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers }
                     , Cmd.none
                     )
 
         GameEvent (Pass try) ->
-            -- wrap this whole let in with a case around mustPass try Maybe
-            -- if nothing, return command to update with Pull
-            let
-                ( currentTurn, rest ) =
-                    model.activePlayers |> Debug.log "active players" |> Deque.popFront
-
-                newActivePlayers =
-                    Deque.pushBack (Maybe.withDefault 0 currentTurn) rest
-
-                newCurrentTurn =
-                    Deque.first newActivePlayers
-
-                -- asdf = Debug.log "new current" newCurrentTurn
-                -- (newQuantity, newValue) = mustPass try
-                mustPassTry =
-                    mustPass try
-
-                _ =
-                    Debug.log "Must Pass: " mustPassTry
-            in
-            case mustPassTry of
+            case Try.mustPass try of
                 {-
                    there is a "next" try to be passed
                 -}
-                Just t ->
+                Just nextPassableTry ->
+                    let
+                        ( currentTurn, rest ) =
+                            Deque.popFront model.activePlayers
+
+                        newActivePlayers =
+                            Deque.pushBack (Maybe.withDefault 0 currentTurn) rest
+
+                        newCurrentTurn =
+                            Deque.first newActivePlayers
+                    in
                     ( { model
                         | tryHistory = appendHistory model try
                         , tryToBeat = try
                         , whosTurn = Maybe.withDefault 0 newCurrentTurn
                         , activePlayers = newActivePlayers
-                        , quantity = Tuple.first t
-                        , value = Tuple.second t
+                        , quantity = Tuple.first nextPassableTry
+                        , value = Tuple.second nextPassableTry
                         , cupState = Covered
                         , cupLooked = False
                         , turnStatus = Pending
@@ -323,9 +339,8 @@ view model =
             Debug.log "Model" model
 
         -- UI
-
-        isGameOver = (Deque.length model.activePlayers) <= 1
-
+        isGameOver =
+            Deque.length model.activePlayers <= 1
 
         currentTry =
             h3 [] [ text "Try to Beat", Try.view model.tryToBeat ]
@@ -341,7 +356,7 @@ view model =
                 )
 
         cup =
-            h2 [] (makeCupHTML model.roll)
+            h2 [] (viewCup model.roll)
 
         cupButtons =
             div []
@@ -350,7 +365,7 @@ view model =
                 ]
 
         tableWilds =
-            h2 [] (makeCupHTML (List.repeat model.tableWilds Wilds))
+            h2 [] (viewCup (List.repeat model.tableWilds Wilds))
 
         rollButtons =
             case model.turnStatus of
@@ -367,7 +382,11 @@ view model =
                     span [] []
 
         trySelect =
-            displayTryHTML model.roll model.quantity model.value model.tryToBeat
+            if List.length model.roll > 0 then
+                viewPassTry model.quantity model.value model.tryToBeat
+
+            else
+                div [] []
 
         _ =
             Debug.log "tryselect" ( model.roll, model.quantity, model.value )
@@ -432,117 +451,65 @@ view model =
                     , pullResult
                     , rollButtons
                     ]
+
     else
-        div [] [
-            text ("Game over." ++ Player.getName model.players (Maybe.withDefault 0 (Deque.first model.activePlayers)) ++ " wins!")
-        ]
+        div []
+            [ text ("Game over." ++ Player.getName model.players (Maybe.withDefault 0 (Deque.first model.activePlayers)) ++ " wins!")
+            ]
+
 
 
 -- UTILS
 -- Html Utils
 
 
-makeDieHTML : Face -> Html Msg
-makeDieHTML die =
+viewDie : Face -> Html Msg
+viewDie die =
     text ("[" ++ String.fromInt (Try.decodeFace die) ++ "] ")
 
 
-makeCupHTML : Roll -> List (Html Msg)
-makeCupHTML =
-    List.map makeDieHTML
+viewCup : Roll -> List (Html Msg)
+viewCup =
+    List.map viewDie
 
 
-rollContainer : Model -> Html Msg
-rollContainer _ =
+
+{- Takes a Quantity, Face, and a Try to best, and returns HTML for Try HTML `select`'s -}
+
+
+viewPassTry : Quantity -> Face -> Try -> Html Msg
+viewPassTry quantity val tryToBeat =
     let
-        isFresh =
-            True
+        ( quantities, values ) =
+            availTrySelectOpts tryToBeat quantity
+
+        changeQuantity =
+            (ViewState << ChangeQuantity) << Try.encodeQuantity << Maybe.withDefault 1 << String.toInt
+
+        changeValue =
+            (ViewState << ChangeValue) << Try.encodeFace << Maybe.withDefault 2 << String.toInt
     in
-    if isFresh then
-        div [] [ text "yes" ]
-
-    else
-        div [] []
-
-
-quantityOptions : Dict Int (Html msg)
-quantityOptions =
-    Dict.fromList
-        [ ( Try.decodeQuantity One, option [ value "1" ] [ text "one" ] )
-        , ( Try.decodeQuantity Two, option [ value "2" ] [ text "two" ] )
-        , ( Try.decodeQuantity Three, option [ value "3" ] [ text "three" ] )
-        , ( Try.decodeQuantity Four, option [ value "4" ] [ text "four" ] )
-        , ( Try.decodeQuantity Five, option [ value "5" ] [ text "five" ] )
+    div []
+        [ label [ for "quantity" ] []
+        , select [ onInput changeQuantity, id "quantity" ] quantities
+        , label [ for "value" ] []
+        , select [ onInput changeValue, id "value" ] values
+        , button [ onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "Pass" ]
         ]
 
 
-valueOptions : Dict Int (Html msg)
-valueOptions =
-    Dict.fromList
-        [ ( Try.decodeFace Twos, option [ value "2" ] [ text "twos" ] )
-        , ( Try.decodeFace Threes, option [ value "3" ] [ text "threes" ] )
-        , ( Try.decodeFace Fours, option [ value "4" ] [ text "fours" ] )
-        , ( Try.decodeFace Fives, option [ value "5" ] [ text "fives" ] )
-        , ( Try.decodeFace Sixes, option [ value "6" ] [ text "sixes" ] )
-        ]
+
+{- Takes a Try and a Quantity and returns a tuple of a list of Quantity HTML options and a list of Face HTML options -}
 
 
-displayQuantityOptions : Quantity -> List ( Int, Html Msg ) -> List (Html Msg)
-displayQuantityOptions quant options =
-    options
-        |> List.filter (\o -> Tuple.first o >= Try.decodeQuantity quant)
-        |> Debug.log "quantity options"
-        |> List.map Tuple.second
-
-
-displayValueOptions : Face -> List ( Int, Html Msg ) -> List (Html Msg)
-displayValueOptions value options =
-    options
-        |> List.filter (\o -> Tuple.first o >= Try.decodeFace value)
-        |> Debug.log "value options"
-        |> List.map Tuple.second
-
-
-displayTryHTML : Roll -> Quantity -> Face -> Try -> Html Msg
-displayTryHTML roll quantity val tryToBeat =
-    let
-        something =
-            getPassableTrys tryToBeat
-    in
-    if List.length roll > 0 then
-        div []
-            [ label [ for "quantity" ] []
-            , select
-                [ onInput ((ViewState << ChangeQuantity) << Try.encodeQuantity << Maybe.withDefault 1 << String.toInt), id "quantity" ]
-                (Tuple.first (tryToOptionPair tryToBeat quantity))
-            , label [ for "value" ] []
-            , select
-                [ onInput ((ViewState << ChangeValue) << Try.encodeFace << Maybe.withDefault 2 << String.toInt), id "value" ]
-                (Tuple.second (tryToOptionPair tryToBeat quantity))
-            , button [ onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "Pass" ]
-            ]
-
-    else
-        div [] []
-
-
-tryToOptionPair : Try -> Quantity -> ( List (Html msg1), List (Html msg) )
-tryToOptionPair try quantity =
+availTrySelectOpts : Try -> Quantity -> ( List (Html msg1), List (Html msg) )
+availTrySelectOpts try quantity =
     let
         passableTrysDict =
-            getPassableTrys try
+            Try.getPassableTrys try
 
         passableQuants =
             Dict.keys passableTrysDict
-
-        toUnique =
-            Set.fromList >> Set.toList
-
-        tryValue =
-            Try.eval try
-
-        betterTrys =
-            Dict.filter (\_ v -> v > tryValue) Try.dictionary
 
         qOptions =
             List.map
@@ -559,69 +526,13 @@ tryToOptionPair try quantity =
                         (Dict.get o valueOptions)
                 )
                 (Maybe.withDefault [ 2, 3, 4, 5 ] (Dict.get (Try.decodeQuantity quantity) passableTrysDict))
-
-        _ =
-            Debug.log "options tup" ( qOptions, vOptions )
     in
     ( qOptions, vOptions )
 
 
 
--- fold? betterTrys down to 2, 3, 4 where the value is a list of allowed Face
-
-
-getPassableTrys try =
-    let
-        toUnique =
-            Set.fromList >> Set.toList
-
-        tryValue =
-            Try.eval try
-
-        betterTrys =
-            Dict.keys (Dict.filter (\_ v -> v > tryValue) Try.dictionary)
-
-        groupedTrys =
-            DictExtra.groupBy Tuple.first betterTrys
-
-        groupedDict =
-            groupedTrys
-                |> Dict.map (\k v -> List.map Tuple.second v)
-
-        gt =
-            Debug.log "grouped trys" groupedDict
-    in
-    groupedDict
-
-
-
 -- Model Utils
 -- Misc Utils
-
-
-mustPass : Try -> Maybe Try
-mustPass passedTry =
-    -- Maybe.withDefault (Two, Twos) (Try.eval passedTry)
-    let
-        passedTryVal =
-            Try.eval passedTry
-
-        nextTry =
-            Try.dictionary
-                |> Dict.toList
-                -- |> List.map Tuple2.swap
-                |> List.filter (\t -> Tuple.second t == (passedTryVal + 1))
-                |> List.map Tuple.first
-                |> List.head
-    in
-    case nextTry of
-        Just tup ->
-            Just (Try.encode tup)
-
-        _ ->
-            Nothing
-
-
 -- MAIN
 
 

@@ -1,8 +1,8 @@
-module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, assessRoll, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, rollGenerator, toString, view)
+module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, assessRoll, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, getPassableTrys, mustPass, rollGenerator, toString, view)
 
 import Dict exposing (Dict)
 import Html exposing (..)
-import Player
+import Dict.Extra as DictExtra exposing (..)
 import Random
 import Tuple2
 import Tuple3
@@ -336,28 +336,48 @@ view try =
 
 
 
---    decodeFace : Die -> Maybe Int
---    decodeFace die =
---        case die of
---            Natural val ->
---                case val of
---                    Two ->
---                        Just 2
---                    Three ->
---                        Just 3
---                    Four ->
---                        Just 4
---                    Five ->
---                        Just 5
---                    Six ->
---                        Just 6
---            Wild val ->
---                case val of
---                    Nothing ->
---                        Nothing
---                    Just value ->
---                        decodeFace (Natural value)
---    decodedCup : List Die
---    decodedCup =
---        List.map decode cup
---    d = Debug.log "cup" decodedCup
+-- Takes a Try and determines the next highest Try. If the passed Try is the highest possible, return Nothing
+
+
+mustPass : Try -> Maybe Try
+mustPass receivedTry =
+    let
+        receivedTryVal =
+            eval receivedTry
+
+        nextTry =
+            dictionary
+                |> Dict.toList
+                |> List.filter (\t -> Tuple.second t == (receivedTryVal + 1))
+                |> List.map Tuple.first
+                |> List.head
+    in
+    case nextTry of
+        Just tup ->
+            Just (encode tup)
+
+        _ ->
+            Nothing
+
+
+
+{- Takes a Try and returns a Dictionary with a key of quantity, and value of a list of faces -}
+
+
+getPassableTrys : Try -> Dict Int (List Int)
+getPassableTrys try =
+    let
+        tryValue =
+            eval try
+
+        betterTrys =
+            Dict.keys (Dict.filter (\_ v -> v > tryValue) dictionary)
+
+        groupedTrys =
+            DictExtra.groupBy Tuple.first betterTrys
+
+        groupedDict =
+            groupedTrys
+                |> Dict.map (\_ v -> List.map Tuple.second v)
+    in
+    groupedDict
