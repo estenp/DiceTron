@@ -6509,7 +6509,9 @@ var $author$project$Player$hit = F2(
 		var player = A2($author$project$Player$getPlayer, players, id);
 		return (player.hp > 0) ? _Utils_update(
 			player,
-			{hp: player.hp - 1}) : player;
+			{hp: player.hp - 1}) : _Utils_update(
+			player,
+			{hp: 0});
 	});
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$List$partition = F2(

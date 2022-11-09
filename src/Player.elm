@@ -62,7 +62,7 @@ hit players id =
     if player.hp > 0 then
         { player | hp = player.hp - 1 }
     else
-        player
+        { player | hp = 0}
 
 ko : PlayerId -> ActivePlayers -> ActivePlayers
 ko id activePlayers =
