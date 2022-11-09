@@ -322,17 +322,13 @@ view model =
         model_log =
             Debug.log "Model" model
 
-        -- _ =
-        --     Debug.log "Best Try: " (Try.eval (Try.assessRoll model.roll))
         -- UI
 
-        gameOver = (Deque.length model.activePlayers) <= 1
+        isGameOver = (Deque.length model.activePlayers) <= 1
 
-        tryToBeat =
-            model.tryToBeat
 
         currentTry =
-            h3 [] [ text "Try to Beat", Try.view tryToBeat ]
+            h3 [] [ text "Try to Beat", Try.view model.tryToBeat ]
 
         currentTurn =
             h3 [] [ text "Current Turn: ", text (Player.getName model.players model.whosTurn) ]
@@ -371,12 +367,12 @@ view model =
                     span [] []
 
         trySelect =
-            displayTryHTML model.roll model.quantity model.value tryToBeat
+            displayTryHTML model.roll model.quantity model.value model.tryToBeat
 
         _ =
             Debug.log "tryselect" ( model.roll, model.quantity, model.value )
     in
-    if not gameOver then
+    if not isGameOver then
         case model.turnStatus of
             Fresh ->
                 div []
