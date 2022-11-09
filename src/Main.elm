@@ -362,7 +362,7 @@ view model =
                 |> Dict.toList
                 |> List.map Tuple.second
                 |> List.map (Player.view model.whosTurn)
-                |> div [ style "display" "flex", style "justify-content" "space-evenly", style "margin" "1rem" ]
+                |> div [ style "display" "flex", style "justify-content" "space-evenly", style "padding" "1rem", style "margin-bottom" "1rem", style "box-shadow" "5px 5px 5px #ddd" ]
 
         cup =
             h2 [] (viewCup model.roll)
