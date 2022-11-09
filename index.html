@@ -6810,8 +6810,8 @@ var $author$project$Main$update = F2(
 		while (true) {
 			switch (msg.$) {
 				case 'Dice':
-					if (msg.a.$ === 'RollClick') {
-						var _v1 = msg.a;
+					var subMsg = msg.a;
+					if (subMsg.$ === 'RollClick') {
 						var _v2 = model.turnStatus;
 						switch (_v2.$) {
 							case 'Pulled':
@@ -6860,7 +6860,7 @@ var $author$project$Main$update = F2(
 											$elm$core$List$length(model.roll))));
 						}
 					} else {
-						var roll = msg.a.a;
+						var roll = subMsg.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -6868,15 +6868,16 @@ var $author$project$Main$update = F2(
 							$elm$core$Platform$Cmd$none);
 					}
 				case 'ViewState':
-					if (msg.a.$ === 'ChangeQuantity') {
-						var quant = msg.a.a;
+					var subMsg = msg.a;
+					if (subMsg.$ === 'ChangeQuantity') {
+						var quant = subMsg.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{quantity: quant}),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						var val = msg.a.a;
+						var val = subMsg.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -6884,9 +6885,9 @@ var $author$project$Main$update = F2(
 							$elm$core$Platform$Cmd$none);
 					}
 				default:
-					switch (msg.a.$) {
+					var subMsg = msg.a;
+					switch (subMsg.$) {
 						case 'Pull':
-							var _v4 = msg.a;
 							var passedTry = $author$project$Try$getLastTry(model.tryHistory);
 							var currentRollTry = $author$project$Try$assessRoll(
 								_Utils_ap(
@@ -6938,13 +6939,13 @@ var $author$project$Main$update = F2(
 									$elm$core$Platform$Cmd$none);
 							}
 						case 'Pass':
-							var _try = msg.a.a;
-							var _v6 = $author$project$Try$mustPass(_try);
-							if (_v6.$ === 'Just') {
-								var nextPassableTry = _v6.a;
-								var _v7 = $folkertdev$elm_deque$Deque$popFront(model.activePlayers);
-								var currentTurn = _v7.a;
-								var rest = _v7.b;
+							var _try = subMsg.a;
+							var _v7 = $author$project$Try$mustPass(_try);
+							if (_v7.$ === 'Just') {
+								var nextPassableTry = _v7.a;
+								var _v8 = $folkertdev$elm_deque$Deque$popFront(model.activePlayers);
+								var currentTurn = _v8.a;
+								var rest = _v8.b;
 								var newActivePlayers = A2(
 									$folkertdev$elm_deque$Deque$pushBack,
 									A2($elm$core$Maybe$withDefault, 0, currentTurn),
@@ -6973,7 +6974,6 @@ var $author$project$Main$update = F2(
 								continue update;
 							}
 						default:
-							var _v8 = msg.a;
 							return _Utils_Tuple2(
 								_Utils_update(
 									model,

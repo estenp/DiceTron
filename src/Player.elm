@@ -1,9 +1,12 @@
-module Player exposing (Players, Player, PlayerId, ActivePlayers, getName, getPlayer, health, hit, ko)
+module Player exposing (ActivePlayers, Player, PlayerId, Players, getName, getPlayer, health, hit, ko)
 
 import Deque exposing (Deque)
 import Dict exposing (Dict)
 
-type alias PlayerId = Int
+
+type alias PlayerId =
+    Int
+
 
 type alias Player =
     { id : PlayerId
@@ -12,10 +15,14 @@ type alias Player =
     , maxHp : Int
     }
 
+
 type alias Players =
     Dict Int Player
 
-type alias ActivePlayers = Deque Int
+
+type alias ActivePlayers =
+    Deque Int
+
 
 health : PlayerId -> Players -> String
 health playerId players =
@@ -33,8 +40,6 @@ default_player =
     , hp = 0
     , maxHp = 0
     }
-
-
 
 
 getPlayer : Players -> PlayerId -> Player
@@ -61,8 +66,10 @@ hit players id =
     -- else return nothing or bad result?
     if player.hp > 0 then
         { player | hp = player.hp - 1 }
+
     else
-        { player | hp = 0}
+        { player | hp = 0 }
+
 
 ko : PlayerId -> ActivePlayers -> ActivePlayers
 ko id activePlayers =

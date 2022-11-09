@@ -168,153 +168,156 @@ appendHistory model try =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Dice RollClick ->
-            case model.turnStatus of
-                Pulled _ ->
-                    -- reset
-                    ( { model | tableWilds = 0 }, Random.generate (Dice << NewRoll) (Try.rollGenerator 5) )
+        -- dice messages
+        Dice subMsg ->
+            case subMsg of
+                RollClick ->
+                    case model.turnStatus of
+                        Pulled _ ->
+                            -- reset
+                            ( { model | tableWilds = 0 }, Random.generate (Dice << NewRoll) (Try.rollGenerator 5) )
 
-                Fresh ->
-                    -- reset
-                    ( { model | tableWilds = 0 }, Random.generate (Dice << NewRoll) (Try.rollGenerator 5) )
+                        Fresh ->
+                            -- reset
+                            ( { model | tableWilds = 0 }, Random.generate (Dice << NewRoll) (Try.rollGenerator 5) )
 
-                _ ->
-                    let
-                        -- pull the wilds from the roll
-                        ( cup, wilds ) =
-                            List.partition (\d -> d /= Wilds) model.roll
-                    in
-                    if List.length cup /= 0 then
-                        -- add pulled wilds to the tableWilds count, create new roll with remaining cup
-                        ( { model | tableWilds = List.length wilds + model.tableWilds }
-                        , Random.generate (Dice << NewRoll) (Try.rollGenerator (List.length cup))
-                        )
-
-                    else
-                        ( model
-                        , Random.generate (Dice << NewRoll) (Try.rollGenerator (List.length model.roll))
-                        )
-
-        Dice (NewRoll roll) ->
-            ( { model | roll = roll, turnStatus = Rolled }
-            , Cmd.none
-            )
-
-        ViewState (ChangeQuantity quant) ->
-            ( { model | quantity = quant }
-            , Cmd.none
-            )
-
-        ViewState (ChangeValue val) ->
-            ( { model | value = val }
-            , Cmd.none
-            )
-
-        GameEvent Pull ->
-            -- check that the roll satisfied the required Try level
-            let
-                currentRollTry =
-                    Try.assessRoll (model.roll ++ List.repeat model.tableWilds Wilds)
-
-                passedTry =
-                    Try.getLastTry model.tryHistory
-
-                pullResult =
-                    Try.compare currentRollTry passedTry
-
-            in
-            case pullResult of
-                HadIt ->
-                    -- current player takes a fold
-                    -- fresh roll
-                    let
-                        -- hitPlayer = Player.getPlayer model.players model.whosTurn
-                        hitPlayer =
-                            Player.hit model.players model.whosTurn
-
-                        players =
-                            Dict.insert hitPlayer.id hitPlayer model.players
-
-                        activePlayers =
-                            if hitPlayer.hp /= 0 then
-                                model.activePlayers
+                        _ ->
+                            let
+                                -- pull the wilds from the roll
+                                ( cup, wilds ) =
+                                    List.partition (\d -> d /= Wilds) model.roll
+                            in
+                            if List.length cup /= 0 then
+                                -- add pulled wilds to the tableWilds count, create new roll with remaining cup
+                                ( { model | tableWilds = List.length wilds + model.tableWilds }
+                                , Random.generate (Dice << NewRoll) (Try.rollGenerator (List.length cup))
+                                )
 
                             else
-                                Player.ko hitPlayer.id model.activePlayers
+                                ( model
+                                , Random.generate (Dice << NewRoll) (Try.rollGenerator (List.length model.roll))
+                                )
 
-                        newWhosTurn =
-                            Maybe.withDefault 0 (Deque.first activePlayers)
-                    in
-                    ( { model | cupState = Uncovered, turnStatus = Pulled HadIt, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers, whosTurn = newWhosTurn }
+                NewRoll roll ->
+                    ( { model | roll = roll, turnStatus = Rolled }
                     , Cmd.none
                     )
 
-                -- )
-                Lie ->
-                    -- previous player takes a fold
-                    -- fresh roll
+        -- view state messages
+        ViewState subMsg ->
+            case subMsg of
+                ChangeQuantity quant ->
+                    ( { model | quantity = quant }
+                    , Cmd.none
+                    )
+
+                ChangeValue val ->
+                    ( { model | value = val }
+                    , Cmd.none
+                    )
+
+        -- game event messages
+        GameEvent subMsg ->
+            case subMsg of
+                Pull ->
+                    -- check that the roll satisfied the required Try level
                     let
-                        prevPlayer =
-                            Maybe.withDefault 0 (Deque.last model.activePlayers)
+                        currentRollTry =
+                            Try.assessRoll (model.roll ++ List.repeat model.tableWilds Wilds)
 
-                        hitPlayer =
-                            Player.hit model.players prevPlayer
+                        passedTry =
+                            Try.getLastTry model.tryHistory
 
-                        players =
-                            Dict.insert hitPlayer.id hitPlayer model.players
-
-                        activePlayers =
-                            if hitPlayer.hp /= 0 then
-                                model.activePlayers
-
-                            else
-                                Player.ko hitPlayer.id model.activePlayers
+                        pullResult =
+                            Try.compare currentRollTry passedTry
                     in
-                    ( { model | cupState = Uncovered, turnStatus = Pulled Lie, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers }
+                    case pullResult of
+                        HadIt ->
+                            -- current player takes a fold
+                            -- fresh roll
+                            let
+                                hitPlayer =
+                                    Player.hit model.players model.whosTurn
+
+                                players =
+                                    Dict.insert hitPlayer.id hitPlayer model.players
+
+                                activePlayers =
+                                    if hitPlayer.hp /= 0 then
+                                        model.activePlayers
+
+                                    else
+                                        Player.ko hitPlayer.id model.activePlayers
+
+                                newWhosTurn =
+                                    Maybe.withDefault 0 (Deque.first activePlayers)
+                            in
+                            ( { model | cupState = Uncovered, turnStatus = Pulled HadIt, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers, whosTurn = newWhosTurn }
+                            , Cmd.none
+                            )
+
+                        -- )
+                        Lie ->
+                            -- previous player takes a fold
+                            -- fresh roll
+                            let
+                                prevPlayer =
+                                    Maybe.withDefault 0 (Deque.last model.activePlayers)
+
+                                hitPlayer =
+                                    Player.hit model.players prevPlayer
+
+                                players =
+                                    Dict.insert hitPlayer.id hitPlayer model.players
+
+                                activePlayers =
+                                    if hitPlayer.hp /= 0 then
+                                        model.activePlayers
+
+                                    else
+                                        Player.ko hitPlayer.id model.activePlayers
+                            in
+                            ( { model | cupState = Uncovered, turnStatus = Pulled Lie, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers }
+                            , Cmd.none
+                            )
+
+                Pass try ->
+                    case Try.mustPass try of
+                        -- there is a "next" try to be passed
+                        Just nextPassableTry ->
+                            let
+                                ( currentTurn, rest ) =
+                                    Deque.popFront model.activePlayers
+
+                                newActivePlayers =
+                                    Deque.pushBack (Maybe.withDefault 0 currentTurn) rest
+
+                                newCurrentTurn =
+                                    Deque.first newActivePlayers
+                            in
+                            ( { model
+                                | tryHistory = appendHistory model try
+                                , tryToBeat = try
+                                , whosTurn = Maybe.withDefault 0 newCurrentTurn
+                                , activePlayers = newActivePlayers
+                                , quantity = Tuple.first nextPassableTry
+                                , value = Tuple.second nextPassableTry
+                                , cupState = Covered
+                                , cupLooked = False
+                                , turnStatus = Pending
+                              }
+                            , Cmd.none
+                            )
+
+                        -- The last try passed was as high as you can possibly roll this means we must force a Pull message,
+                        -- evaluate the roll and determine if the passer or the receiver gets a fold.
+                        Nothing ->
+                            update (GameEvent Pull) model
+
+                Look ->
+                    ( { model | cupState = Uncovered, cupLooked = True, turnStatus = Looked }
                     , Cmd.none
                     )
-
-        GameEvent (Pass try) ->
-            case Try.mustPass try of
-                {-
-                   there is a "next" try to be passed
-                -}
-                Just nextPassableTry ->
-                    let
-                        ( currentTurn, rest ) =
-                            Deque.popFront model.activePlayers
-
-                        newActivePlayers =
-                            Deque.pushBack (Maybe.withDefault 0 currentTurn) rest
-
-                        newCurrentTurn =
-                            Deque.first newActivePlayers
-                    in
-                    ( { model
-                        | tryHistory = appendHistory model try
-                        , tryToBeat = try
-                        , whosTurn = Maybe.withDefault 0 newCurrentTurn
-                        , activePlayers = newActivePlayers
-                        , quantity = Tuple.first nextPassableTry
-                        , value = Tuple.second nextPassableTry
-                        , cupState = Covered
-                        , cupLooked = False
-                        , turnStatus = Pending
-                      }
-                    , Cmd.none
-                    )
-
-                {-
-                   the last try passed was as high as you can possibly roll
-                   this means we must force a Pull message, evaluate the roll and determine if the passer or the receiver gets a fold
-                -}
-                Nothing ->
-                    update (GameEvent Pull) model
-
-        GameEvent Look ->
-            ( { model | cupState = Uncovered, cupLooked = True, turnStatus = Looked }
-            , Cmd.none
-            )
 
 
 
@@ -385,7 +388,6 @@ view model =
 
             else
                 div [] []
-
     in
     if not isGameOver then
         case model.turnStatus of
