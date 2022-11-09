@@ -4,7 +4,7 @@ import Browser
 import Deque
 import Dict exposing (..)
 import Html exposing (..)
-import Html.Attributes exposing (for, id, value)
+import Html.Attributes exposing (for, id, style, value)
 import Html.Events exposing (..)
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
@@ -149,6 +149,7 @@ type GameEvent
 
 type Dice
     = -- User wants a new roll value displayed.
+      -- Should this be a GameEvent variant?
       RollClick
       -- Runtime is sending a new random die value.∏
     | NewRoll (List Face)
@@ -347,7 +348,7 @@ view model =
             h3 [] [ text "Try to Beat", Try.view model.tryToBeat ]
 
         currentTurn =
-            h3 [] [ text "Current Turn: ", text (Player.getName model.players model.whosTurn) ]
+            h3 [] [ text "Current Turn: ", text (Player.getName model.players model.whosTurn), playerStats ]
 
         tryHistory =
             div []
@@ -355,6 +356,13 @@ view model =
                     |> List.map (Tuple3.mapAllThree Try.toString (Player.getName model.players) identity)
                     |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup ++ " " ++ Tuple3.third tup ++ "hp") ])
                 )
+
+        playerStats =
+            model.players
+                |> Dict.toList
+                |> List.map Tuple.second
+                |> List.map (Player.view model.whosTurn)
+                |> div [ style "display" "flex", style "justify-content" "space-evenly", style "margin" "1rem" ]
 
         cup =
             h2 [] (viewCup model.roll)
@@ -369,18 +377,20 @@ view model =
             h2 [] (viewCup (List.repeat model.tableWilds Wilds))
 
         rollButtons =
-            case model.turnStatus of
-                Fresh ->
-                    button [ onClick (Dice RollClick) ] [ text "Roll" ]
+            div [ style "max-width" "6rem" ]
+                [ case model.turnStatus of
+                    Fresh ->
+                        button [ onClick (Dice RollClick) ] [ text "Roll" ]
 
-                Pulled _ ->
-                    button [ onClick (Dice RollClick) ] [ text "Roll" ]
+                    Pulled _ ->
+                        button [ onClick (Dice RollClick) ] [ text "Roll" ]
 
-                Looked ->
-                    button [ onClick (Dice RollClick) ] [ text "Re-Roll" ]
+                    Looked ->
+                        button [ onClick (Dice RollClick) ] [ text "Re-Roll" ]
 
-                _ ->
-                    span [] []
+                    _ ->
+                        span [] []
+                ]
 
         trySelect =
             if List.length model.roll > 0 then
@@ -390,65 +400,67 @@ view model =
                 div [] []
     in
     if not isGameOver then
-        case model.turnStatus of
-            Fresh ->
-                div []
-                    [ currentTurn
-                    , tryHistory
-                    , rollButtons
-                    ]
+        div [ style "width" "100%" ]
+            [ case model.turnStatus of
+                Fresh ->
+                    tableContainer
+                        [ playerStats
+                        , tryHistory
+                        , rollButtons
+                        ]
 
-            Rolled ->
-                div []
-                    [ currentTry
-                    , currentTurn
-                    , tryHistory
-                    , tableWilds
-                    , cup
-                    , rollButtons
-                    , trySelect
-                    ]
+                Rolled ->
+                    tableContainer
+                        [ playerStats
+                        , tryHistory
+                        , tableWilds
+                        , cup
+                        , rollButtons
+                        , currentTry
+                        , trySelect
+                        ]
 
-            Pending ->
-                div []
-                    [ currentTry
-                    , currentTurn
-                    , tryHistory
-                    , tableWilds
-                    , cupButtons
-                    , trySelect
-                    ]
+                Pending ->
+                    tableContainer
+                        [ playerStats
+                        , tryHistory
+                        , tableWilds
+                        , cupButtons
+                        , currentTry
+                        , trySelect
+                        ]
 
-            Looked ->
-                div []
-                    [ currentTry
-                    , currentTurn
-                    , tryHistory
-                    , tableWilds
-                    , cup
-                    , rollButtons
-                    , trySelect
-                    ]
+                Looked ->
+                    tableContainer
+                        [ playerStats
+                        , tryHistory
+                        , tableWilds
+                        , cup
+                        , rollButtons
+                        , currentTry
+                        , trySelect
+                        ]
 
-            Pulled result ->
-                let
-                    pullResult =
-                        case result of
-                            HadIt ->
-                                p [] [ text "Previous player had the roll. You will lose 1 hp." ]
+                Pulled result ->
+                    let
+                        pullResult =
+                            case result of
+                                HadIt ->
+                                    p [] [ text "Previous player had the roll. You will lose 1 hp." ]
 
-                            Lie ->
-                                p [] [ text "Previous player lied. They will lose 1 hp." ]
-                in
-                div []
-                    [ currentTry
-                    , currentTurn
-                    , tryHistory
-                    , tableWilds
-                    , cup
-                    , pullResult
-                    , rollButtons
-                    ]
+                                Lie ->
+                                    p [] [ text "Previous player lied. They will lose 1 hp." ]
+                    in
+                    tableContainer
+                        [ playerStats
+                        , tryHistory
+                        , tableWilds
+                        , cup
+                        , pullResult
+                        , rollButtons
+                        , currentTry
+                        ]
+            ]
 
     else
         div []
@@ -459,6 +471,10 @@ view model =
 
 -- UTILS
 -- Html Utils
+
+
+tableContainer =
+    div [ style "display" "grid" ]
 
 
 viewDie : Face -> Html Msg

@@ -1,7 +1,9 @@
-module Player exposing (ActivePlayers, Player, PlayerId, Players, getName, getPlayer, health, hit, ko)
+module Player exposing (ActivePlayers, Player, PlayerId, Players, getName, getPlayer, health, hit, ko, view)
 
 import Deque exposing (Deque)
 import Dict exposing (Dict)
+import Html exposing (..)
+import Html.Attributes exposing (style)
 
 
 type alias PlayerId =
@@ -74,3 +76,30 @@ hit players id =
 ko : PlayerId -> ActivePlayers -> ActivePlayers
 ko id activePlayers =
     Tuple.first (Deque.partition (\activePlayer -> activePlayer /= id) activePlayers)
+
+
+view : PlayerId -> Player -> Html msg
+view currentTurn player =
+    let
+        hp =
+            String.fromInt player.hp
+
+        maxHp =
+            String.fromInt player.maxHp
+    in
+    div
+        [ style "color"
+            (if player.hp <= 0 then
+                "orangered"
+
+             else if player.id == currentTurn then
+                "cornflowerblue"
+
+             else
+                "black"
+            )
+        , style "display" "inline-block"
+        ]
+        [ h3 [] [ text player.name ]
+        , text ("( " ++ hp ++ " / " ++ maxHp ++ " ) ")
+        ]

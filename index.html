@@ -7034,6 +7034,13 @@ var $TSFoster$elm_tuple_extra$Tuple3$second = function (_v0) {
 	return b;
 };
 var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $author$project$Main$tableContainer = $elm$html$Html$div(
+	_List_fromArray(
+		[
+			A2($elm$html$Html$Attributes$style, 'display', 'grid')
+		]));
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $TSFoster$elm_tuple_extra$Tuple3$third = function (_v0) {
@@ -7046,6 +7053,32 @@ var $author$project$Try$toString = function (_try) {
 	}(
 		$author$project$Try$decode(_try));
 };
+var $author$project$Player$view = F2(
+	function (currentTurn, player) {
+		var maxHp = $elm$core$String$fromInt(player.maxHp);
+		var hp = $elm$core$String$fromInt(player.hp);
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$Attributes$style,
+					'color',
+					(player.hp <= 0) ? 'orangered' : (_Utils_eq(player.id, currentTurn) ? 'cornflowerblue' : 'black')),
+					A2($elm$html$Html$Attributes$style, 'display', 'inline-block')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$h3,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text(player.name)
+						])),
+					$elm$html$Html$text('( ' + (hp + (' / ' + (maxHp + ' ) '))))
+				]));
+	});
 var $author$project$Try$view = function (_try) {
 	return function (node) {
 		return A2(
@@ -7504,49 +7537,73 @@ var $author$project$Main$view = function (model) {
 		_List_Nil,
 		$author$project$Main$viewCup(
 			A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
-	var rollButtons = function () {
-		var _v2 = model.turnStatus;
-		switch (_v2.$) {
-			case 'Fresh':
-				return A2(
-					$elm$html$Html$button,
-					_List_fromArray(
-						[
-							$elm$html$Html$Events$onClick(
-							$author$project$Main$Dice($author$project$Main$RollClick))
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text('Roll')
-						]));
-			case 'Pulled':
-				return A2(
-					$elm$html$Html$button,
-					_List_fromArray(
-						[
-							$elm$html$Html$Events$onClick(
-							$author$project$Main$Dice($author$project$Main$RollClick))
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text('Roll')
-						]));
-			case 'Looked':
-				return A2(
-					$elm$html$Html$button,
-					_List_fromArray(
-						[
-							$elm$html$Html$Events$onClick(
-							$author$project$Main$Dice($author$project$Main$RollClick))
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text('Re-Roll')
-						]));
-			default:
-				return A2($elm$html$Html$span, _List_Nil, _List_Nil);
-		}
-	}();
+	var rollButtons = A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'max-width', '6rem')
+			]),
+		_List_fromArray(
+			[
+				function () {
+				var _v2 = model.turnStatus;
+				switch (_v2.$) {
+					case 'Fresh':
+						return A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$Dice($author$project$Main$RollClick))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Roll')
+								]));
+					case 'Pulled':
+						return A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$Dice($author$project$Main$RollClick))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Roll')
+								]));
+					case 'Looked':
+						return A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$Dice($author$project$Main$RollClick))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Re-Roll')
+								]));
+					default:
+						return A2($elm$html$Html$span, _List_Nil, _List_Nil);
+				}
+			}()
+			]));
+	var playerStats = A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+				A2($elm$html$Html$Attributes$style, 'justify-content', 'space-evenly'),
+				A2($elm$html$Html$Attributes$style, 'margin', '1rem')
+			]),
+		A2(
+			$elm$core$List$map,
+			$author$project$Player$view(model.whosTurn),
+			A2(
+				$elm$core$List$map,
+				$elm$core$Tuple$second,
+				$elm$core$Dict$toList(model.players))));
 	var model_log = A2($elm$core$Debug$log, 'Model', model);
 	var isGameOver = $folkertdev$elm_deque$Deque$length(model.activePlayers) <= 1;
 	var currentTurn = A2(
@@ -7556,7 +7613,8 @@ var $author$project$Main$view = function (model) {
 			[
 				$elm$html$Html$text('Current Turn: '),
 				$elm$html$Html$text(
-				A2($author$project$Player$getName, model.players, model.whosTurn))
+				A2($author$project$Player$getName, model.players, model.whosTurn)),
+				playerStats
 			]));
 	var currentTry = A2(
 		$elm$html$Html$h3,
@@ -7598,76 +7656,73 @@ var $author$project$Main$view = function (model) {
 		$elm$html$Html$h2,
 		_List_Nil,
 		$author$project$Main$viewCup(model.roll));
-	if (!isGameOver) {
-		var _v0 = model.turnStatus;
-		switch (_v0.$) {
-			case 'Fresh':
-				return A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[currentTurn, tryHistory, rollButtons]));
-			case 'Rolled':
-				return A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[currentTry, currentTurn, tryHistory, tableWilds, cup, rollButtons, trySelect]));
-			case 'Pending':
-				return A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[currentTry, currentTurn, tryHistory, tableWilds, cupButtons, trySelect]));
-			case 'Looked':
-				return A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[currentTry, currentTurn, tryHistory, tableWilds, cup, rollButtons, trySelect]));
-			default:
-				var result = _v0.a;
-				var pullResult = function () {
-					if (result.$ === 'HadIt') {
-						return A2(
-							$elm$html$Html$p,
-							_List_Nil,
+	return (!isGameOver) ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'width', '100%')
+			]),
+		_List_fromArray(
+			[
+				function () {
+				var _v0 = model.turnStatus;
+				switch (_v0.$) {
+					case 'Fresh':
+						return $author$project$Main$tableContainer(
 							_List_fromArray(
-								[
-									$elm$html$Html$text('Previous player had the roll. You will lose 1 hp.')
-								]));
-					} else {
-						return A2(
-							$elm$html$Html$p,
-							_List_Nil,
+								[playerStats, tryHistory, rollButtons]));
+					case 'Rolled':
+						return $author$project$Main$tableContainer(
 							_List_fromArray(
-								[
-									$elm$html$Html$text('Previous player lied. They will lose 1 hp.')
-								]));
-					}
-				}();
-				return A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[currentTry, currentTurn, tryHistory, tableWilds, cup, pullResult, rollButtons]));
-		}
-	} else {
-		return A2(
-			$elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					$elm$html$Html$text(
-					'Game over.' + (A2(
-						$author$project$Player$getName,
-						model.players,
-						A2(
-							$elm$core$Maybe$withDefault,
-							0,
-							$folkertdev$elm_deque$Deque$first(model.activePlayers))) + ' wins!'))
-				]));
-	}
+								[playerStats, tryHistory, tableWilds, cup, rollButtons, currentTry, trySelect]));
+					case 'Pending':
+						return $author$project$Main$tableContainer(
+							_List_fromArray(
+								[playerStats, tryHistory, tableWilds, cupButtons, currentTry, trySelect]));
+					case 'Looked':
+						return $author$project$Main$tableContainer(
+							_List_fromArray(
+								[playerStats, tryHistory, tableWilds, cup, rollButtons, currentTry, trySelect]));
+					default:
+						var result = _v0.a;
+						var pullResult = function () {
+							if (result.$ === 'HadIt') {
+								return A2(
+									$elm$html$Html$p,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Previous player had the roll. You will lose 1 hp.')
+										]));
+							} else {
+								return A2(
+									$elm$html$Html$p,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Previous player lied. They will lose 1 hp.')
+										]));
+							}
+						}();
+						return $author$project$Main$tableContainer(
+							_List_fromArray(
+								[playerStats, tryHistory, tableWilds, cup, pullResult, rollButtons, currentTry]));
+				}
+			}()
+			])) : A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$text(
+				'Game over.' + (A2(
+					$author$project$Player$getName,
+					model.players,
+					A2(
+						$elm$core$Maybe$withDefault,
+						0,
+						$folkertdev$elm_deque$Deque$first(model.activePlayers))) + ' wins!'))
+			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
