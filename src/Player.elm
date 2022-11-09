@@ -1,40 +1,23 @@
-module Player exposing (Players, Player, getName, getPlayer, health, hit, ko)
+module Player exposing (Players, Player, PlayerId, ActivePlayers, getName, getPlayer, health, hit, ko)
 
-import Deque
+import Deque exposing (Deque)
 import Dict exposing (Dict)
 
+type alias PlayerId = Int
 
 type alias Player =
-    { id : Int
+    { id : PlayerId
     , name : String
     , hp : Int
     , maxHp : Int
     }
 
+type alias Players =
+    Dict Int Player
 
-type alias PlayerData =
-    { id : Int
-    , name : String
-    }
+type alias ActivePlayers = Deque Int
 
-
-
-{- my_players : List PlayerData
-   my_players =
-       [ { id = 1
-         , name = "Thad"
-         }
-       , { id = 2
-         , name = "Pat"
-         }
-       , { id = 3
-         , name = "Esten"
-         }
-       ]
--}
-
-
-health : Int -> Players -> String
+health : PlayerId -> Players -> String
 health playerId players =
     let
         player =
@@ -52,11 +35,9 @@ default_player =
     }
 
 
-type alias Players =
-    Dict Int Player
 
 
-getPlayer : Players -> Int -> Player
+getPlayer : Players -> PlayerId -> Player
 getPlayer players id =
     let
         maybe =
@@ -65,12 +46,12 @@ getPlayer players id =
     Maybe.withDefault default_player maybe
 
 
-getName : Players -> Int -> String
+getName : Players -> PlayerId -> String
 getName players id =
     .name (getPlayer players id)
 
 
-hit : Players -> Int -> Player
+hit : Players -> PlayerId -> Player
 hit players id =
     let
         player =
@@ -83,6 +64,6 @@ hit players id =
     else
         player
 
-ko : Int -> Deque.Deque Int -> Deque.Deque Int
+ko : PlayerId -> ActivePlayers -> ActivePlayers
 ko id activePlayers =
     Tuple.first (Deque.partition (\activePlayer -> activePlayer /= id) activePlayers)

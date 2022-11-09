@@ -8,47 +8,14 @@ import Dict.Extra as DictExtra exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (for, id, value)
 import Html.Events exposing (..)
-import Player exposing (Players, Player)
+import Player exposing (Players, Player, ActivePlayers)
 import Random
 import Set
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
 import Tuple3
+import Player exposing (PlayerId)
 
-
-
--- MAIN
-
-
-main : Program () Model Msg
-main =
-    Browser.element
-        { init = init
-        , update = update
-        , subscriptions = subscriptions
-        , view = view
-        }
-
-
-
--- MODEL
--- Form
-
-
-type CupState
-    = Covered
-    | Uncovered
-
-
-
--- WORK ON TURN STATE -> USE BETTER COMBO OF STATE RECORD AND CUSTOM TYPES
-
-
-type TurnStatus
-    = Fresh
-    | Pending
-    | Looked
-    | Rolled
-    | Pulled Pull
+-- CONSTANTS, DUMMY DATA
 
 my_players : Players
 my_players =
@@ -77,19 +44,49 @@ my_players =
         ]
 
 
+-- MODEL
+-- Form
+
+
+type CupState
+    = Covered
+    | Uncovered
+
+
+
+-- WORK ON TURN STATE -> USE BETTER COMBO OF STATE RECORD AND CUSTOM TYPES
+
+
+type TurnStatus
+    = Fresh
+    | Pending
+    | Looked
+    | Rolled
+    | Pulled Pull
+
+
+type alias History =
+    List { playerId : PlayerId
+
+         }
+
 type alias Model =
-    { roll : Roll
-    , tryHistory : List ( Try, Int, String )
-    , tryToBeat : Try
+    { -- dice state
+      roll : Roll
+      -- view state
     , quantity : Quantity
     , value : Face
     , tableWilds : Int
+    , tryHistory : List ( Try, Int, String )
+    , tryToBeat : Try
+    -- turn state
     , cupState : CupState
     , cupLooked : Bool
     , turnStatus : TurnStatus
     , whosTurn : Int -- index of activePlayers
+    -- player state
     , players : Players
-    , activePlayers : Deque.Deque Int
+    , activePlayers : ActivePlayers
     }
 
 
@@ -115,17 +112,26 @@ init _ =
 
 -- UPDATE
 
+-- Update messages
+type ViewState
+    = ChangeQuantity Quantity
+    | ChangeValue Face
 
-type Msg
+type GameEvent
+    = Pull
+    | Pass Try
+    | Look
+
+type Dice
     = -- User wants a new roll value displayed.
       RollClick
       -- Runtime is sending a new random die value.∏
     | NewRoll (List Face)
-    | Pull
-    | ChangeQuantity Quantity
-    | ChangeValue Face
-    | Pass Try
-    | Look
+
+type Msg
+    = Dice Dice
+    | ViewState ViewState
+    | GameEvent GameEvent
 
 
 appendHistory : Model -> Try -> List ( Try, Int, String )
@@ -134,34 +140,18 @@ appendHistory model try =
 
 
 
-{- msgView : Msg -> String
-   msgView msg =
-       case msg of
-           RollClick ->
-               'roll'
-           Pull ->
-               'pull'
-           Pass ->
-               'pass'
-           Look ->
-               'look'
-           _ ->
-               ''
--}
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        RollClick ->
+        Dice RollClick ->
             case model.turnStatus of
                 Pulled _ ->
                     -- reset
-                    ( { model | tableWilds = 0 }, Random.generate NewRoll (Try.rollGenerator 5) )
+                    ( { model | tableWilds = 0 }, Random.generate (Dice << NewRoll) (Try.rollGenerator 5) )
 
                 Fresh ->
                     -- reset
-                    ( { model | tableWilds = 0 }, Random.generate NewRoll (Try.rollGenerator 5) )
+                    ( { model | tableWilds = 0 }, Random.generate (Dice << NewRoll) (Try.rollGenerator 5) )
 
                 _ ->
                     let
@@ -172,30 +162,30 @@ update msg model =
                     if List.length cup /= 0 then
                         -- add pulled wilds to the tableWilds count, create new roll with remaining cup
                         ( { model | tableWilds = List.length wilds + model.tableWilds }
-                        , Random.generate NewRoll (Try.rollGenerator (List.length cup))
+                        , Random.generate (Dice << NewRoll) (Try.rollGenerator (List.length cup))
                         )
 
                     else
                         ( model
-                        , Random.generate NewRoll (Try.rollGenerator (List.length model.roll))
+                        , Random.generate (Dice << NewRoll) (Try.rollGenerator (List.length model.roll))
                         )
 
-        NewRoll roll ->
+        Dice (NewRoll roll) ->
             ( { model | roll = roll, turnStatus = Rolled }
             , Cmd.none
             )
 
-        ChangeQuantity quant ->
+        ViewState (ChangeQuantity quant) ->
             ( { model | quantity = quant }
             , Cmd.none
             )
 
-        ChangeValue val ->
+        ViewState (ChangeValue val) ->
             ( { model | value = val }
             , Cmd.none
             )
 
-        Pull ->
+        GameEvent Pull ->
             -- check that the roll satisfied the required Try level
             let
                 currentRollTry =
@@ -260,7 +250,7 @@ update msg model =
                     , Cmd.none
                     )
 
-        Pass try ->
+        GameEvent (Pass try) ->
             -- wrap this whole let in with a case around mustPass try Maybe
             -- if nothing, return command to update with Pull
             let
@@ -305,9 +295,9 @@ update msg model =
                    this means we must force a Pull message, evaluate the roll and determine if the passer or the receiver gets a fold
                 -}
                 Nothing ->
-                    update Pull model
+                    update (GameEvent Pull) model
 
-        Look ->
+        GameEvent Look ->
             ( { model | cupState = Uncovered, cupLooked = True, turnStatus = Looked }
             , Cmd.none
             )
@@ -336,7 +326,7 @@ view model =
         --     Debug.log "Best Try: " (Try.eval (Try.assessRoll model.roll))
         -- UI
 
-        done = (Deque.length model.activePlayers) <= 1
+        gameOver = (Deque.length model.activePlayers) <= 1
 
         tryToBeat =
             model.tryToBeat
@@ -359,8 +349,8 @@ view model =
 
         cupButtons =
             div []
-                [ button [ onClick Pull ] [ text "Pull" ]
-                , button [ onClick Look ] [ text "Look" ]
+                [ button [ onClick (GameEvent Pull) ] [ text "Pull" ]
+                , button [ onClick (GameEvent Look) ] [ text "Look" ]
                 ]
 
         tableWilds =
@@ -369,13 +359,13 @@ view model =
         rollButtons =
             case model.turnStatus of
                 Fresh ->
-                    button [ onClick RollClick ] [ text "Roll" ]
+                    button [ onClick (Dice RollClick) ] [ text "Roll" ]
 
                 Pulled _ ->
-                    button [ onClick RollClick ] [ text "Roll" ]
+                    button [ onClick (Dice RollClick) ] [ text "Roll" ]
 
                 Looked ->
-                    button [ onClick RollClick ] [ text "Re-Roll" ]
+                    button [ onClick (Dice RollClick) ] [ text "Re-Roll" ]
 
                 _ ->
                     span [] []
@@ -386,7 +376,7 @@ view model =
         _ =
             Debug.log "tryselect" ( model.roll, model.quantity, model.value )
     in
-    if not done then
+    if not gameOver then
         case model.turnStatus of
             Fresh ->
                 div []
@@ -452,16 +442,6 @@ view model =
         ]
 
 
-{- div []
-   [ currentTry
-   , currentTurn
-   , tryHistory
-   , cup
-   , cupButtons
-   , rollButtons
-   , trySelect
-   ]
--}
 -- UTILS
 -- Html Utils
 
@@ -537,13 +517,13 @@ displayTryHTML roll quantity val tryToBeat =
         div []
             [ label [ for "quantity" ] []
             , select
-                [ onInput (ChangeQuantity << Try.encodeQuantity << Maybe.withDefault 1 << String.toInt), id "quantity" ]
+                [ onInput ((ViewState << ChangeQuantity) << Try.encodeQuantity << Maybe.withDefault 1 << String.toInt), id "quantity" ]
                 (Tuple.first (tryToOptionPair tryToBeat quantity))
             , label [ for "value" ] []
             , select
-                [ onInput (ChangeValue << Try.encodeFace << Maybe.withDefault 2 << String.toInt), id "value" ]
+                [ onInput ((ViewState << ChangeValue) << Try.encodeFace << Maybe.withDefault 2 << String.toInt), id "value" ]
                 (Tuple.second (tryToOptionPair tryToBeat quantity))
-            , button [ onClick (Pass ( quantity, val )) ] [ text "Pass" ]
+            , button [ onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "Pass" ]
             ]
 
     else
@@ -644,3 +624,16 @@ mustPass passedTry =
 
         _ ->
             Nothing
+
+
+-- MAIN
+
+
+main : Program () Model Msg
+main =
+    Browser.element
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        }

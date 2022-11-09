@@ -5620,6 +5620,12 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
+var $author$project$Main$Dice = function (a) {
+	return {$: 'Dice', a: a};
+};
+var $author$project$Main$GameEvent = function (a) {
+	return {$: 'GameEvent', a: a};
+};
 var $author$project$Try$HadIt = {$: 'HadIt'};
 var $author$project$Try$Lie = {$: 'Lie'};
 var $author$project$Main$Looked = {$: 'Looked'};
@@ -6801,173 +6807,183 @@ var $author$project$Main$update = F2(
 		update:
 		while (true) {
 			switch (msg.$) {
-				case 'RollClick':
-					var _v1 = model.turnStatus;
-					switch (_v1.$) {
-						case 'Pulled':
-							return _Utils_Tuple2(
-								_Utils_update(
+				case 'Dice':
+					if (msg.a.$ === 'RollClick') {
+						var _v1 = msg.a;
+						var _v2 = model.turnStatus;
+						switch (_v2.$) {
+							case 'Pulled':
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{tableWilds: 0}),
+									A2(
+										$elm$random$Random$generate,
+										A2($elm$core$Basics$composeL, $author$project$Main$Dice, $author$project$Main$NewRoll),
+										$author$project$Try$rollGenerator(5)));
+							case 'Fresh':
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{tableWilds: 0}),
+									A2(
+										$elm$random$Random$generate,
+										A2($elm$core$Basics$composeL, $author$project$Main$Dice, $author$project$Main$NewRoll),
+										$author$project$Try$rollGenerator(5)));
+							default:
+								var _v3 = A2(
+									$elm$core$List$partition,
+									function (d) {
+										return !_Utils_eq(d, $author$project$Try$Wilds);
+									},
+									model.roll);
+								var cup = _v3.a;
+								var wilds = _v3.b;
+								return (!(!$elm$core$List$length(cup))) ? _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											tableWilds: $elm$core$List$length(wilds) + model.tableWilds
+										}),
+									A2(
+										$elm$random$Random$generate,
+										A2($elm$core$Basics$composeL, $author$project$Main$Dice, $author$project$Main$NewRoll),
+										$author$project$Try$rollGenerator(
+											$elm$core$List$length(cup)))) : _Utils_Tuple2(
 									model,
-									{tableWilds: 0}),
-								A2(
-									$elm$random$Random$generate,
-									$author$project$Main$NewRoll,
-									$author$project$Try$rollGenerator(5)));
-						case 'Fresh':
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
-									{tableWilds: 0}),
-								A2(
-									$elm$random$Random$generate,
-									$author$project$Main$NewRoll,
-									$author$project$Try$rollGenerator(5)));
-						default:
-							var _v2 = A2(
-								$elm$core$List$partition,
-								function (d) {
-									return !_Utils_eq(d, $author$project$Try$Wilds);
-								},
-								model.roll);
-							var cup = _v2.a;
-							var wilds = _v2.b;
-							return (!(!$elm$core$List$length(cup))) ? _Utils_Tuple2(
-								_Utils_update(
-									model,
-									{
-										tableWilds: $elm$core$List$length(wilds) + model.tableWilds
-									}),
-								A2(
-									$elm$random$Random$generate,
-									$author$project$Main$NewRoll,
-									$author$project$Try$rollGenerator(
-										$elm$core$List$length(cup)))) : _Utils_Tuple2(
-								model,
-								A2(
-									$elm$random$Random$generate,
-									$author$project$Main$NewRoll,
-									$author$project$Try$rollGenerator(
-										$elm$core$List$length(model.roll))));
-					}
-				case 'NewRoll':
-					var roll = msg.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{roll: roll, turnStatus: $author$project$Main$Rolled}),
-						$elm$core$Platform$Cmd$none);
-				case 'ChangeQuantity':
-					var quant = msg.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{quantity: quant}),
-						$elm$core$Platform$Cmd$none);
-				case 'ChangeValue':
-					var val = msg.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{value: val}),
-						$elm$core$Platform$Cmd$none);
-				case 'Pull':
-					var passedTry = $author$project$Try$getLastTry(model.tryHistory);
-					var currentRollTry = $author$project$Try$assessRoll(
-						_Utils_ap(
-							model.roll,
-							A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
-					var pullResult = A2($author$project$Try$compare, currentRollTry, passedTry);
-					var test = A2(
-						$elm$core$Debug$log,
-						'compare current passed',
-						{compare: pullResult, cur: currentRollTry, passed: passedTry});
-					if (pullResult.$ === 'HadIt') {
-						var hitPlayer = A2($author$project$Player$hit, model.players, model.whosTurn);
-						var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
-						var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
-						var newWhosTurn = A2(
-							$elm$core$Maybe$withDefault,
-							0,
-							$folkertdev$elm_deque$Deque$first(activePlayers));
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{
-									activePlayers: activePlayers,
-									cupState: $author$project$Main$Uncovered,
-									players: players,
-									quantity: $author$project$Try$Two,
-									tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
-									turnStatus: $author$project$Main$Pulled($author$project$Try$HadIt),
-									value: $author$project$Try$Twos,
-									whosTurn: newWhosTurn
-								}),
-							$elm$core$Platform$Cmd$none);
+									A2(
+										$elm$random$Random$generate,
+										A2($elm$core$Basics$composeL, $author$project$Main$Dice, $author$project$Main$NewRoll),
+										$author$project$Try$rollGenerator(
+											$elm$core$List$length(model.roll))));
+						}
 					} else {
-						var prevPlayer = A2(
-							$elm$core$Maybe$withDefault,
-							0,
-							$folkertdev$elm_deque$Deque$last(model.activePlayers));
-						var hitPlayer = A2($author$project$Player$hit, model.players, prevPlayer);
-						var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
-						var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
+						var roll = msg.a.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{
-									activePlayers: activePlayers,
-									cupState: $author$project$Main$Uncovered,
-									players: players,
-									quantity: $author$project$Try$Two,
-									tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
-									turnStatus: $author$project$Main$Pulled($author$project$Try$Lie),
-									value: $author$project$Try$Twos
-								}),
+								{roll: roll, turnStatus: $author$project$Main$Rolled}),
 							$elm$core$Platform$Cmd$none);
 					}
-				case 'Pass':
-					var _try = msg.a;
-					var mustPassTry = $author$project$Main$mustPass(_try);
-					var _v4 = $folkertdev$elm_deque$Deque$popFront(
-						A2($elm$core$Debug$log, 'active players', model.activePlayers));
-					var currentTurn = _v4.a;
-					var rest = _v4.b;
-					var newActivePlayers = A2(
-						$folkertdev$elm_deque$Deque$pushBack,
-						A2($elm$core$Maybe$withDefault, 0, currentTurn),
-						rest);
-					var newCurrentTurn = $folkertdev$elm_deque$Deque$first(newActivePlayers);
-					var _v5 = A2($elm$core$Debug$log, 'Must Pass: ', mustPassTry);
-					if (mustPassTry.$ === 'Just') {
-						var t = mustPassTry.a;
+				case 'ViewState':
+					if (msg.a.$ === 'ChangeQuantity') {
+						var quant = msg.a.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{
-									activePlayers: newActivePlayers,
-									cupLooked: false,
-									cupState: $author$project$Main$Covered,
-									quantity: t.a,
-									tryHistory: A2($author$project$Main$appendHistory, model, _try),
-									tryToBeat: _try,
-									turnStatus: $author$project$Main$Pending,
-									value: t.b,
-									whosTurn: A2($elm$core$Maybe$withDefault, 0, newCurrentTurn)
-								}),
+								{quantity: quant}),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						var $temp$msg = $author$project$Main$Pull,
-							$temp$model = model;
-						msg = $temp$msg;
-						model = $temp$model;
-						continue update;
+						var val = msg.a.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{value: val}),
+							$elm$core$Platform$Cmd$none);
 					}
 				default:
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{cupLooked: true, cupState: $author$project$Main$Uncovered, turnStatus: $author$project$Main$Looked}),
-						$elm$core$Platform$Cmd$none);
+					switch (msg.a.$) {
+						case 'Pull':
+							var _v4 = msg.a;
+							var passedTry = $author$project$Try$getLastTry(model.tryHistory);
+							var currentRollTry = $author$project$Try$assessRoll(
+								_Utils_ap(
+									model.roll,
+									A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
+							var pullResult = A2($author$project$Try$compare, currentRollTry, passedTry);
+							var test = A2(
+								$elm$core$Debug$log,
+								'compare current passed',
+								{compare: pullResult, cur: currentRollTry, passed: passedTry});
+							if (pullResult.$ === 'HadIt') {
+								var hitPlayer = A2($author$project$Player$hit, model.players, model.whosTurn);
+								var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
+								var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
+								var newWhosTurn = A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$folkertdev$elm_deque$Deque$first(activePlayers));
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											activePlayers: activePlayers,
+											cupState: $author$project$Main$Uncovered,
+											players: players,
+											quantity: $author$project$Try$Two,
+											tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
+											turnStatus: $author$project$Main$Pulled($author$project$Try$HadIt),
+											value: $author$project$Try$Twos,
+											whosTurn: newWhosTurn
+										}),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								var prevPlayer = A2(
+									$elm$core$Maybe$withDefault,
+									0,
+									$folkertdev$elm_deque$Deque$last(model.activePlayers));
+								var hitPlayer = A2($author$project$Player$hit, model.players, prevPlayer);
+								var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
+								var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											activePlayers: activePlayers,
+											cupState: $author$project$Main$Uncovered,
+											players: players,
+											quantity: $author$project$Try$Two,
+											tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
+											turnStatus: $author$project$Main$Pulled($author$project$Try$Lie),
+											value: $author$project$Try$Twos
+										}),
+									$elm$core$Platform$Cmd$none);
+							}
+						case 'Pass':
+							var _try = msg.a.a;
+							var mustPassTry = $author$project$Main$mustPass(_try);
+							var _v6 = $folkertdev$elm_deque$Deque$popFront(
+								A2($elm$core$Debug$log, 'active players', model.activePlayers));
+							var currentTurn = _v6.a;
+							var rest = _v6.b;
+							var newActivePlayers = A2(
+								$folkertdev$elm_deque$Deque$pushBack,
+								A2($elm$core$Maybe$withDefault, 0, currentTurn),
+								rest);
+							var newCurrentTurn = $folkertdev$elm_deque$Deque$first(newActivePlayers);
+							var _v7 = A2($elm$core$Debug$log, 'Must Pass: ', mustPassTry);
+							if (mustPassTry.$ === 'Just') {
+								var t = mustPassTry.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											activePlayers: newActivePlayers,
+											cupLooked: false,
+											cupState: $author$project$Main$Covered,
+											quantity: t.a,
+											tryHistory: A2($author$project$Main$appendHistory, model, _try),
+											tryToBeat: _try,
+											turnStatus: $author$project$Main$Pending,
+											value: t.b,
+											whosTurn: A2($elm$core$Maybe$withDefault, 0, newCurrentTurn)
+										}),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								var $temp$msg = $author$project$Main$GameEvent($author$project$Main$Pull),
+									$temp$model = model;
+								msg = $temp$msg;
+								model = $temp$model;
+								continue update;
+							}
+						default:
+							var _v9 = msg.a;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{cupLooked: true, cupState: $author$project$Main$Uncovered, turnStatus: $author$project$Main$Looked}),
+								$elm$core$Platform$Cmd$none);
+					}
 			}
 		}
 	});
@@ -6982,6 +6998,9 @@ var $author$project$Main$ChangeValue = function (a) {
 };
 var $author$project$Main$Pass = function (a) {
 	return {$: 'Pass', a: a};
+};
+var $author$project$Main$ViewState = function (a) {
+	return {$: 'ViewState', a: a};
 };
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$json$Json$Encode$string = _Json_wrap;
@@ -7380,7 +7399,10 @@ var $author$project$Main$displayTryHTML = F4(
 								$elm$core$Basics$composeL,
 								A2(
 									$elm$core$Basics$composeL,
-									A2($elm$core$Basics$composeL, $author$project$Main$ChangeQuantity, $author$project$Try$encodeQuantity),
+									A2(
+										$elm$core$Basics$composeL,
+										A2($elm$core$Basics$composeL, $author$project$Main$ViewState, $author$project$Main$ChangeQuantity),
+										$author$project$Try$encodeQuantity),
 									$elm$core$Maybe$withDefault(1)),
 								$elm$core$String$toInt)),
 							$elm$html$Html$Attributes$id('quantity')
@@ -7402,7 +7424,10 @@ var $author$project$Main$displayTryHTML = F4(
 								$elm$core$Basics$composeL,
 								A2(
 									$elm$core$Basics$composeL,
-									A2($elm$core$Basics$composeL, $author$project$Main$ChangeValue, $author$project$Try$encodeFace),
+									A2(
+										$elm$core$Basics$composeL,
+										A2($elm$core$Basics$composeL, $author$project$Main$ViewState, $author$project$Main$ChangeValue),
+										$author$project$Try$encodeFace),
 									$elm$core$Maybe$withDefault(2)),
 								$elm$core$String$toInt)),
 							$elm$html$Html$Attributes$id('value')
@@ -7413,7 +7438,7 @@ var $author$project$Main$displayTryHTML = F4(
 					_List_fromArray(
 						[
 							$elm$html$Html$Events$onClick(
-							$author$project$Main$Pass(
+							A2($elm$core$Basics$composeL, $author$project$Main$GameEvent, $author$project$Main$Pass)(
 								_Utils_Tuple2(quantity, val)))
 						]),
 					_List_fromArray(
@@ -7518,7 +7543,8 @@ var $author$project$Main$view = function (model) {
 					$elm$html$Html$button,
 					_List_fromArray(
 						[
-							$elm$html$Html$Events$onClick($author$project$Main$RollClick)
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$Dice($author$project$Main$RollClick))
 						]),
 					_List_fromArray(
 						[
@@ -7529,7 +7555,8 @@ var $author$project$Main$view = function (model) {
 					$elm$html$Html$button,
 					_List_fromArray(
 						[
-							$elm$html$Html$Events$onClick($author$project$Main$RollClick)
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$Dice($author$project$Main$RollClick))
 						]),
 					_List_fromArray(
 						[
@@ -7540,7 +7567,8 @@ var $author$project$Main$view = function (model) {
 					$elm$html$Html$button,
 					_List_fromArray(
 						[
-							$elm$html$Html$Events$onClick($author$project$Main$RollClick)
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$Dice($author$project$Main$RollClick))
 						]),
 					_List_fromArray(
 						[
@@ -7578,7 +7606,8 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Main$Pull)
+						$elm$html$Html$Events$onClick(
+						$author$project$Main$GameEvent($author$project$Main$Pull))
 					]),
 				_List_fromArray(
 					[
@@ -7588,7 +7617,8 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Main$Look)
+						$elm$html$Html$Events$onClick(
+						$author$project$Main$GameEvent($author$project$Main$Look))
 					]),
 				_List_fromArray(
 					[
