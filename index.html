@@ -6891,10 +6891,6 @@ var $author$project$Main$update = F2(
 									model.roll,
 									A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
 							var pullResult = A2($author$project$Try$compare, currentRollTry, passedTry);
-							var test = A2(
-								$elm$core$Debug$log,
-								'compare current passed',
-								{compare: pullResult, cur: currentRollTry, passed: passedTry});
 							if (pullResult.$ === 'HadIt') {
 								var hitPlayer = A2($author$project$Player$hit, model.players, model.whosTurn);
 								var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
@@ -7507,8 +7503,8 @@ var $author$project$Main$view = function (model) {
 		$author$project$Main$viewCup(
 			A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
 	var rollButtons = function () {
-		var _v3 = model.turnStatus;
-		switch (_v3.$) {
+		var _v2 = model.turnStatus;
+		switch (_v2.$) {
 			case 'Fresh':
 				return A2(
 					$elm$html$Html$button,
@@ -7600,13 +7596,9 @@ var $author$project$Main$view = function (model) {
 		$elm$html$Html$h2,
 		_List_Nil,
 		$author$project$Main$viewCup(model.roll));
-	var _v0 = A2(
-		$elm$core$Debug$log,
-		'tryselect',
-		_Utils_Tuple3(model.roll, model.quantity, model.value));
 	if (!isGameOver) {
-		var _v1 = model.turnStatus;
-		switch (_v1.$) {
+		var _v0 = model.turnStatus;
+		switch (_v0.$) {
 			case 'Fresh':
 				return A2(
 					$elm$html$Html$div,
@@ -7632,7 +7624,7 @@ var $author$project$Main$view = function (model) {
 					_List_fromArray(
 						[currentTry, currentTurn, tryHistory, tableWilds, cup, rollButtons, trySelect]));
 			default:
-				var result = _v1.a;
+				var result = _v0.a;
 				var pullResult = function () {
 					if (result.$ === 'HadIt') {
 						return A2(

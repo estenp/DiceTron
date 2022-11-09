@@ -222,8 +222,6 @@ update msg model =
                 pullResult =
                     Try.compare currentRollTry passedTry
 
-                test =
-                    Debug.log "compare current passed" { compare = pullResult, cur = currentRollTry, passed = passedTry }
             in
             case pullResult of
                 HadIt ->
@@ -388,8 +386,6 @@ view model =
             else
                 div [] []
 
-        _ =
-            Debug.log "tryselect" ( model.roll, model.quantity, model.value )
     in
     if not isGameOver then
         case model.turnStatus of
