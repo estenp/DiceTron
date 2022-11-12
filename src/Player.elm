@@ -1,9 +1,11 @@
 module Player exposing (ActivePlayers, Player, PlayerId, Players, getName, getPlayer, health, hit, ko, view)
 
+import Css exposing (..)
 import Deque exposing (Deque)
 import Dict exposing (Dict)
-import Html exposing (..)
-import Html.Attributes exposing (style)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (css, href, src, style)
+import Tailwind.Utilities exposing (..)
 
 
 type alias PlayerId =
@@ -88,17 +90,19 @@ view currentTurn player =
             String.fromInt player.maxHp
     in
     div
-        [ style "color"
-            (if player.hp <= 0 then
-                "orangered"
+        [ css
+            [ color
+                (if player.hp <= 0 then
+                    rgb 255 69 0
 
-             else if player.id == currentTurn then
-                "cornflowerblue"
+                 else if player.id == currentTurn then
+                    rgb 100 149 237
 
-             else
-                "black"
-            )
-        , style "display" "inline-block"
+                 else
+                    hex "dfeee3"
+                )
+            ]
+        , css [ inline_block ]
         ]
         [ h3 [] [ text player.name ]
         , text ("( " ++ hp ++ " / " ++ maxHp ++ " ) ")

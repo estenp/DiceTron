@@ -1,0 +1,31 @@
+/* .main {
+  display: grid;
+  grid-template-areas:
+    "stats stats"
+    "header header"
+    "roll history"
+    "try chat";
+    grid-template-columns: 1fr 1fr;
+} */
+
+.stats {
+  grid-area: stats;
+}
+.roll {
+  grid-area: roll;
+}
+.history {
+  grid-area: history;
+}
+.try {
+  grid-area: try;
+}
+
+body {
+  background-color: #033f63;
+  color: #dfeee3;
+}
+
+button {
+  color: #907AD6
+}

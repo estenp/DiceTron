@@ -1,13 +1,18 @@
 module Main exposing (..)
 
 import Browser
+import Css exposing (..)
+import Css.Animations
+import Css.Global exposing (global)
 import Deque
 import Dict exposing (..)
-import Html exposing (..)
-import Html.Attributes exposing (for, id, style, value)
-import Html.Events exposing (..)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (class, css, for, id, style, value)
+import Html.Styled.Events exposing (..)
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
+import Tailwind.Breakpoints as Break exposing (..)
+import Tailwind.Utilities as Tw exposing (..)
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
 import Tuple3
 
@@ -21,7 +26,7 @@ my_players =
     Dict.fromList
         [ ( 1
           , { id = 1
-            , name = "Thad"
+            , name = "Rick"
             , hp = 1
             , maxHp = 5
             }
@@ -350,43 +355,59 @@ view model =
         currentTurn =
             h3 [] [ text "Current Turn: ", text (Player.getName model.players model.whosTurn), playerStats ]
 
-        tryHistory =
-            div []
-                (model.tryHistory
-                    |> List.map (Tuple3.mapAllThree Try.toString (Player.getName model.players) identity)
-                    |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup ++ " " ++ Tuple3.third tup ++ "hp") ])
-                )
-
         playerStats =
             model.players
                 |> Dict.toList
                 |> List.map Tuple.second
                 |> List.map (Player.view model.whosTurn)
-                |> div [ style "display" "flex", style "justify-content" "space-evenly", style "padding" "1rem", style "margin-bottom" "1rem", style "box-shadow" "5px 5px 5px #ddd" ]
+                |> stats_
+
+        tryHistory =
+            div [ class "history" ]
+                (model.tryHistory
+                    |> List.map (Tuple3.mapAllThree Try.toString (Player.getName model.players) identity)
+                    |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup ++ " " ++ Tuple3.third tup ++ "hp") ])
+                )
 
         cup =
-            h2 [] (viewCup model.roll)
+            h2
+                [ class "roll"
+                , css
+                    [ Css.animationName
+                        (Css.Animations.keyframes
+                            [ ( 0, [ Css.Animations.opacity (Css.int 0) ] )
+                            , ( 20, [ Css.Animations.opacity (Css.int 30) ] )
+                            , ( 80, [ Css.Animations.opacity (Css.int 70) ] )
+                            , ( 100, [ Css.Animations.opacity (Css.int 100) ] )
+                            ]
+                        )
+                    , Css.animationIterationCount (Css.int 1)
+                    , Css.animationDuration (4000 |> ms)
+                    ]
+                , css [ Tw.flex, Tw.justify_evenly ]
+                ]
+                (viewCup model.roll)
 
         cupButtons =
             div []
-                [ button [ onClick (GameEvent Pull) ] [ text "Pull" ]
-                , button [ onClick (GameEvent Look) ] [ text "Look" ]
+                [ button_ [ onClick (GameEvent Pull) ] [ text "Pull" ]
+                , button_ [ onClick (GameEvent Look) ] [ text "Look" ]
                 ]
 
         tableWilds =
             h2 [] (viewCup (List.repeat model.tableWilds Wilds))
 
         rollButtons =
-            div [ style "max-width" "6rem" ]
+            div []
                 [ case model.turnStatus of
                     Fresh ->
-                        button [ onClick (Dice RollClick) ] [ text "Roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "Roll" ]
 
                     Pulled _ ->
-                        button [ onClick (Dice RollClick) ] [ text "Roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "Roll" ]
 
                     Looked ->
-                        button [ onClick (Dice RollClick) ] [ text "Re-Roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "Re-Roll" ]
 
                     _ ->
                         span [] []
@@ -397,20 +418,21 @@ view model =
                 viewPassTry model.quantity model.value model.tryToBeat
 
             else
-                div [] []
+                span [] []
     in
     if not isGameOver then
-        div [ style "width" "100%" ]
-            [ case model.turnStatus of
+        div []
+            [ global globalStyles
+            , case model.turnStatus of
                 Fresh ->
-                    tableContainer
+                    mainContainer_
                         [ playerStats
                         , tryHistory
                         , rollButtons
                         ]
 
                 Rolled ->
-                    tableContainer
+                    mainContainer_
                         [ playerStats
                         , tryHistory
                         , tableWilds
@@ -421,7 +443,7 @@ view model =
                         ]
 
                 Pending ->
-                    tableContainer
+                    mainContainer_
                         [ playerStats
                         , tryHistory
                         , tableWilds
@@ -431,7 +453,7 @@ view model =
                         ]
 
                 Looked ->
-                    tableContainer
+                    mainContainer_
                         [ playerStats
                         , tryHistory
                         , tableWilds
@@ -451,7 +473,7 @@ view model =
                                 Lie ->
                                     p [] [ text "Previous player lied. They will lose 1 hp." ]
                     in
-                    tableContainer
+                    mainContainer_
                         [ playerStats
                         , tryHistory
                         , tableWilds
@@ -473,19 +495,54 @@ view model =
 -- Html Utils
 
 
-tableContainer =
-    div [ style "display" "grid" ]
+mainContainer_ =
+    div
+        [ class "main"
+        ]
+
+
+inputBaseStyles : List Style
+inputBaseStyles =
+    [ Tw.border_solid, Tw.border_2, Tw.px_4, Tw.py_2, Tw.border_gray_400 ]
+
+
+button_ =
+    styled button
+        ((color (hex "907AD6")) :: (List.concat [ inputBaseStyles, [ Tw.bg_blue_50, Tw.rounded_md, sm [ Tw.w_52 ], Tw.w_full ] ]))
+
+
+select_ =
+    styled select
+        (List.concat [ inputBaseStyles, [] ])
+
+
+stats_ =
+    div [ class "stats", css [ Tw.flex, Tw.justify_evenly, Tw.p_4, Tw.my_4, Tw.shadow_sm ] ]
 
 
 viewDie : Face -> Html Msg
 viewDie die =
-    text ("[" ++ String.fromInt (Try.decodeFace die) ++ "] ")
+    div
+        [ css
+            (Tw.text_center
+                :: Tw.w_40
+                :: Tw.inline_block
+                :: Tw.p_2
+                :: Tw.m_2
+                :: [ Tw.text_9xl
+                   , Tw.border_4
+                   , Tw.rounded_2xl
+                   ]
+            )
+        , css [ borderColor (hex "DFEEE3"), color (hex "DFEEE3")   ]
+        ]
+        [ text (String.fromInt (Try.decodeFace die))
+        ]
 
 
 viewCup : Roll -> List (Html Msg)
 viewCup =
     List.map viewDie
-
 
 
 {- Takes a Quantity, Face, and a Try to best, and returns HTML for Try HTML `select`'s -}
@@ -503,12 +560,14 @@ viewPassTry quantity val tryToBeat =
         changeValue =
             (ViewState << ChangeValue) << Try.encodeFace << Maybe.withDefault 2 << String.toInt
     in
-    div []
-        [ label [ for "quantity" ] []
-        , select [ onInput changeQuantity, id "quantity" ] quantities
-        , label [ for "value" ] []
-        , select [ onInput changeValue, id "value" ] values
-        , button [ onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "Pass" ]
+    div [ class "try" ]
+        [ div []
+            [ label [ for "quantity" ] []
+            , select_ [ onInput changeQuantity, id "quantity" ] quantities
+            , label [ for "value" ] []
+            , select_ [ onInput changeValue, id "value" ] values
+            ]
+        , button_ [ onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "Pass" ]
         ]
 
 
@@ -556,5 +615,5 @@ main =
         { init = init
         , update = update
         , subscriptions = subscriptions
-        , view = view
+        , view = view >> toUnstyled
         }

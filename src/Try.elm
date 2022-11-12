@@ -1,7 +1,7 @@
 module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, assessRoll, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, getPassableTrys, mustPass, rollGenerator, toString, view)
 
 import Dict exposing (Dict)
-import Html exposing (..)
+import Html.Styled exposing (..)
 import Dict.Extra as DictExtra exposing (..)
 import Random
 import Tuple2
@@ -300,22 +300,25 @@ getBestOfAKind dict =
         wild_count =
             Maybe.withDefault 0 (Dict.get 1 dict)
     in
-    dict
-        -- Wilds have been counted, remove them from dict
-        |> Dict.remove 1
-        -- apply wild count to all Face counts to see which count is highest with the addition of the Wilds
-        |> Dict.map (\_ v -> v + wild_count)
-        -- convert the Dict to a List of Tuple
-        |> Dict.toList
-        -- sort by the count
-        |> List.sortBy Tuple.second
-        -- encode counts to a Quantity
-        -- reverse the list so it's easy to grab the highest count with List.head
-        |> List.reverse
-        |> List.head
-        |> Maybe.withDefault ( 2, 2 )
-        |> Tuple2.swap
-        |> encode
+    if wild_count == 5 then
+        (Five, Sixes)
+    else
+        dict
+            -- Wilds have been counted, remove them from dict
+            |> Dict.remove 1
+            -- apply wild count to all Face counts to see which count is highest with the addition of the Wilds
+            |> Dict.map (\_ v -> v + wild_count)
+            -- convert the Dict to a List of Tuple
+            |> Dict.toList
+            -- sort by the count
+            |> List.sortBy Tuple.second
+            -- encode counts to a Quantity
+            -- reverse the list so it's easy to grab the highest count with List.head
+            |> List.reverse
+            |> List.head
+            |> Maybe.withDefault ( 2, 2 )
+            |> Tuple2.swap
+            |> encode
 
 
 getLastTry : List ( Try, Int, String ) -> Try
