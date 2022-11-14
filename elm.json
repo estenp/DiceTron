@@ -13,7 +13,6 @@
             "elm/random": "1.0.0",
             "elm-community/dict-extra": "2.4.0",
             "folkertdev/elm-deque": "3.0.1",
-            "matheus23/elm-default-tailwind-modules": "2.0.3",
             "rtfeldman/elm-css": "17.1.1"
         },
         "indirect": {

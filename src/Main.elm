@@ -7,7 +7,7 @@ import Css.Global exposing (global)
 import Deque
 import Dict exposing (..)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (class, css, for, id, style, value)
+import Html.Styled.Attributes exposing (class, classList, css, for, id, style, value)
 import Html.Styled.Events exposing (..)
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
@@ -426,14 +426,14 @@ view model =
             , case model.turnStatus of
                 Fresh ->
                     mainContainer_
-                        [ playerStats
+                        [ header_ [] [ logo, playerStats ]
                         , tryHistory
                         , rollButtons
                         ]
 
                 Rolled ->
                     mainContainer_
-                        [ playerStats
+                        [ header_ [] [ logo, playerStats ]
                         , tryHistory
                         , tableWilds
                         , cup
@@ -444,7 +444,7 @@ view model =
 
                 Pending ->
                     mainContainer_
-                        [ playerStats
+                        [ header_ [] [ logo, playerStats ]
                         , tryHistory
                         , tableWilds
                         , cupButtons
@@ -454,7 +454,7 @@ view model =
 
                 Looked ->
                     mainContainer_
-                        [ playerStats
+                        [ header_ [] [ logo, playerStats ]
                         , tryHistory
                         , tableWilds
                         , cup
@@ -474,7 +474,7 @@ view model =
                                     p [] [ text "Previous player lied. They will lose 1 hp." ]
                     in
                     mainContainer_
-                        [ playerStats
+                        [ header_ [] [ logo, playerStats ]
                         , tryHistory
                         , tableWilds
                         , cup
@@ -501,14 +501,22 @@ mainContainer_ =
         ]
 
 
+header_ =
+    styled div [ Tw.grid, Tw.grid_cols_header, Tw.mb_10 ]
+
+
+logo =
+    div [ css [ Tw.w_24, Tw.h_24, Tw.flex, Tw.justify_center, Tw.items_center, Tw.text_4xl, Tw.font_bold, Tw.bg_primary, Tw.rounded_br, Tw.shadow_md, Tw.bg_gradient_to_br, Tw.from_primary, Tw.to_destruct ] ] [ text "D T" ]
+
+
 inputBaseStyles : List Style
 inputBaseStyles =
-    [ Tw.border_solid, Tw.border_2, Tw.px_4, Tw.py_2, Tw.border_gray_400 ]
+    [ Tw.border_solid, Tw.border_2, Tw.px_4, Tw.py_2, Tw.bg_secondary, Tw.rounded_md, Tw.text_destruct ]
 
 
 button_ =
     styled button
-        ((color (hex "907AD6")) :: (List.concat [ inputBaseStyles, [ Tw.bg_blue_50, Tw.rounded_md, sm [ Tw.w_52 ], Tw.w_full ] ]))
+        (List.concat [ inputBaseStyles, [ sm [ Tw.w_52 ], Tw.w_full ] ])
 
 
 select_ =
@@ -517,7 +525,7 @@ select_ =
 
 
 stats_ =
-    div [ class "stats", css [ Tw.flex, Tw.justify_evenly, Tw.p_4, Tw.my_4, Tw.shadow_sm ] ]
+    div [ class "stats", css [ Tw.flex, Tw.justify_around, Tw.p_4, Tw.shadow_sm, Tw.bg_secondary, Tw.rounded_b, Tw.shadow_md, Tw.text_tertiary ] ]
 
 
 viewDie : Face -> Html Msg
@@ -534,7 +542,13 @@ viewDie die =
                    , Tw.rounded_2xl
                    ]
             )
-        , css [ borderColor (hex "DFEEE3"), color (hex "DFEEE3")   ]
+        , css
+            [ if Try.decodeFace die == 1 then
+                Tw.bg_exclaim
+
+              else
+                Tw.text_secondary
+            ]
         ]
         [ text (String.fromInt (Try.decodeFace die))
         ]
@@ -543,6 +557,7 @@ viewDie die =
 viewCup : Roll -> List (Html Msg)
 viewCup =
     List.map viewDie
+
 
 
 {- Takes a Quantity, Face, and a Try to best, and returns HTML for Try HTML `select`'s -}

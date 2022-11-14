@@ -8,7 +8,7 @@
     grid-template-columns: 1fr 1fr;
 } */
 
-.stats {
+/* .stats {
   grid-area: stats;
 }
 .roll {
@@ -19,13 +19,19 @@
 }
 .try {
   grid-area: try;
-}
+} */
 
 body {
-  background-color: #033f63;
-  color: #dfeee3;
+  background-color: #A19FBB;
+  color: #dfeee3ff;
+  font-family: 'Space Grotesk', sans-serif;
 }
-
+/*
 button {
   color: #907AD6
 }
+
+.wild {
+  color: #907AD6;
+  background-color: #dfeee3;
+} */

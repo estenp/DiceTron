@@ -5,7 +5,7 @@ import Deque exposing (Deque)
 import Dict exposing (Dict)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, src, style)
-import Tailwind.Utilities exposing (..)
+import Tailwind.Utilities as Tw exposing (..)
 
 
 type alias PlayerId =
@@ -83,27 +83,56 @@ ko id activePlayers =
 view : PlayerId -> Player -> Html msg
 view currentTurn player =
     let
+        healthPercent =
+            player.hp // player.maxHp
+
+        healthDiff =
+            player.maxHp - player.hp
+
         hp =
             String.fromInt player.hp
 
         maxHp =
             String.fromInt player.maxHp
+
+        healthDiv bgStyle =
+            div [ css [ bgStyle, Tw.w_8, Tw.h_4, Tw.border_b_2, Tw.border_success ] ] []
+
+        -- healthStack =
+        --     List.repeat player.maxHp healthDiv
+        healthBg h =
+            if h <= player.hp then
+                if (toFloat h / toFloat player.maxHp) <= (1 / 5) then
+                    Tw.bg_destruct
+                else if (toFloat h / toFloat player.maxHp) <= (3 / 5) then
+                    Tw.bg_exclaim
+                else
+                    Tw.bg_success
+            else
+                Tw.bg_secondary
+
+        healthStack =
+            List.map healthBg (List.reverse (List.range 1 player.maxHp))
     in
     div
-        [ css
-            [ color
-                (if player.hp <= 0 then
-                    rgb 255 69 0
+        [ {- css
+                 [ color
+                     (if player.hp <= 0 then
+                         rgb 255 69 0
 
-                 else if player.id == currentTurn then
-                    rgb 100 149 237
+                      else if player.id == currentTurn then
+                         rgb 100 149 237
 
-                 else
-                    hex "dfeee3"
-                )
-            ]
-        , css [ inline_block ]
+                      else
+                         hex "dfeee3"
+                     )
+                 ]
+             ,
+          -}
+          css [ inline_block ]
         ]
         [ h3 [] [ text player.name ]
-        , text ("( " ++ hp ++ " / " ++ maxHp ++ " ) ")
+        , div [ css [ Tw.inline_block ] ] (List.map healthDiv healthStack)
+
+        -- , text ("( " ++ hp ++ " / " ++ maxHp ++ " ) ")
         ]
