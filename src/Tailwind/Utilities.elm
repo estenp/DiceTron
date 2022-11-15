@@ -8235,7 +8235,7 @@ bg_success : Css.Style
 bg_success =
     Css.batch
         [ Css.property "--tw-bg-opacity" "1"
-        , Css.property "background-color" "rgba(44, 165, 141, var(--tw-bg-opacity))"
+        , Css.property "background-color" "rgba(78, 208, 182, var(--tw-bg-opacity))"
         ]
 
 
@@ -8781,7 +8781,7 @@ border_success : Css.Style
 border_success =
     Css.batch
         [ Css.property "--tw-border-opacity" "1"
-        , Css.property "border-color" "rgba(44, 165, 141, var(--tw-border-opacity))"
+        , Css.property "border-color" "rgba(78, 208, 182, var(--tw-border-opacity))"
         ]
 
 
@@ -10509,7 +10509,7 @@ divide_success =
         [ Css.Global.children
             [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
                 [ Css.property "--tw-divide-opacity" "1"
-                , Css.property "border-color" "rgba(44, 165, 141, var(--tw-divide-opacity))"
+                , Css.property "border-color" "rgba(78, 208, 182, var(--tw-divide-opacity))"
                 ]
             ]
         ]
@@ -11591,8 +11591,8 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 from_success : Css.Style
 from_success =
     Css.batch
-        [ Css.property "--tw-gradient-from" "#2CA58D"
-        , Css.property "--tw-gradient-stops" "var(--tw-gradient-from), var(--tw-gradient-to, rgba(44, 165, 141, 0))"
+        [ Css.property "--tw-gradient-from" "#4ED0B6"
+        , Css.property "--tw-gradient-stops" "var(--tw-gradient-from), var(--tw-gradient-to, rgba(78, 208, 182, 0))"
         ]
 
 
@@ -29178,11 +29178,11 @@ placeholder_success =
     Css.batch
         [ Css.pseudoElement "placeholder"
             [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(44, 165, 141, var(--tw-placeholder-opacity))"
+            , Css.property "color" "rgba(78, 208, 182, var(--tw-placeholder-opacity))"
             ]
         , Css.pseudoElement "-moz-placeholder"
             [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(44, 165, 141, var(--tw-placeholder-opacity))"
+            , Css.property "color" "rgba(78, 208, 182, var(--tw-placeholder-opacity))"
             ]
         ]
 
@@ -32962,7 +32962,7 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 
 ring_offset_success : Css.Style
 ring_offset_success =
-    Css.property "--tw-ring-offset-color" "#2CA58D"
+    Css.property "--tw-ring-offset-color" "#4ED0B6"
 
 
 {-| The tailwind class `ring-offset-tertiary`.
@@ -33138,7 +33138,7 @@ ring_success : Css.Style
 ring_success =
     Css.batch
         [ Css.property "--tw-ring-opacity" "1"
-        , Css.property "--tw-ring-color" "rgba(44, 165, 141, var(--tw-ring-opacity))"
+        , Css.property "--tw-ring-color" "rgba(78, 208, 182, var(--tw-ring-opacity))"
         ]
 
 
@@ -36772,7 +36772,7 @@ text_success : Css.Style
 text_success =
     Css.batch
         [ Css.property "--tw-text-opacity" "1"
-        , Css.property "color" "rgba(44, 165, 141, var(--tw-text-opacity))"
+        , Css.property "color" "rgba(78, 208, 182, var(--tw-text-opacity))"
         ]
 
 
@@ -36854,7 +36854,7 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 
 to_success : Css.Style
 to_success =
-    Css.property "--tw-gradient-to" "#2CA58D"
+    Css.property "--tw-gradient-to" "#4ED0B6"
 
 
 {-| The tailwind class `to-tertiary`.
@@ -38270,7 +38270,7 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 
 via_success : Css.Style
 via_success =
-    Css.property "--tw-gradient-stops" "var(--tw-gradient-from), #2CA58D, var(--tw-gradient-to, rgba(44, 165, 141, 0))"
+    Css.property "--tw-gradient-stops" "var(--tw-gradient-from), #4ED0B6, var(--tw-gradient-to, rgba(78, 208, 182, 0))"
 
 
 {-| The tailwind class `via-tertiary`.

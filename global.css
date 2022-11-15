@@ -22,9 +22,10 @@
 } */
 
 body {
-  background-color: #A19FBB;
+  background-color: #a19fbb;
   color: #dfeee3ff;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
 }
 /*
 button {

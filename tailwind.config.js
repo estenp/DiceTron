@@ -6,13 +6,13 @@ export default {
       sans: [ "'Space Grotesk', sans-serif" ]
     },
     colors: {
-      secondary: "#dfeee3ff",
+      secondary: "#dfeee3",
       // secondary_gradient: "linear-gradient(0deg, #dfeee3ff)",
       primary: "#965958",
       tertiary: "#A19FBB",
       destruct: "#8E4A49",
       exclaim: "#E0905D",
-      success: "#2CA58D"
+      success: "#4ED0B6"
     },
     extend: {
       gridTemplateColumns: {

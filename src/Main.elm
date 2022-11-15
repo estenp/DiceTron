@@ -498,25 +498,26 @@ view model =
 mainContainer_ =
     div
         [ class "main"
+        , css [ Tw.grid, Tw.grid_cols_1, Tw.justify_items_center, Tw.gap_8 ]
         ]
 
 
 header_ =
-    styled div [ Tw.grid, Tw.grid_cols_header, Tw.mb_10 ]
+    styled div [ Tw.grid, Tw.grid_cols_header, Tw.mb_10, Tw.w_full ]
 
 
 logo =
-    div [ css [ Tw.w_24, Tw.h_24, Tw.flex, Tw.justify_center, Tw.items_center, Tw.text_4xl, Tw.font_bold, Tw.bg_primary, Tw.rounded_br, Tw.shadow_md, Tw.bg_gradient_to_br, Tw.from_primary, Tw.to_destruct ] ] [ text "D T" ]
+    div [ css [ Css.transform (rotate (270 |> deg)) ], css [ Tw.w_32, Tw.h_32, Tw.flex, Tw.justify_center, Tw.items_center, Tw.text_8xl, Tw.font_bold, Tw.bg_primary, Tw.rounded_bl, Tw.shadow_md, Tw.bg_gradient_to_bl, Tw.from_primary, Tw.to_destruct ] ] [ text "𞡥" ]
 
 
 inputBaseStyles : List Style
 inputBaseStyles =
-    [ Tw.border_solid, Tw.border_2, Tw.px_4, Tw.py_2, Tw.bg_secondary, Tw.rounded_md, Tw.text_destruct ]
+    [ Tw.border_solid, Tw.border_2, Tw.px_4, Tw.py_2, Tw.bg_secondary, Tw.rounded_md, Tw.text_tertiary, Tw.border_secondary, Tw.text_4xl ]
 
 
 button_ =
     styled button
-        (List.concat [ inputBaseStyles, [ sm [ Tw.w_52 ], Tw.w_full ] ])
+        (List.concat [ inputBaseStyles, [] ])
 
 
 select_ =
@@ -575,14 +576,16 @@ viewPassTry quantity val tryToBeat =
         changeValue =
             (ViewState << ChangeValue) << Try.encodeFace << Maybe.withDefault 2 << String.toInt
     in
-    div [ class "try" ]
+    div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, md [ Tw.w_1over4 ], Tw.w_full ] ]
         [ div []
-            [ label [ for "quantity" ] []
+            [ label [ for "quantity" ] [ text "Quantity" ]
             , select_ [ onInput changeQuantity, id "quantity" ] quantities
-            , label [ for "value" ] []
+            ]
+        , div []
+            [ label [ for "value" ] [ text "Value" ]
             , select_ [ onInput changeValue, id "value" ] values
             ]
-        , button_ [ onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "Pass" ]
+        , button_ [ css [ Tw.col_span_2 ], onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "pass" ]
         ]
 
 

@@ -103,11 +103,11 @@ view currentTurn player =
         healthBg h =
             if h <= player.hp then
                 if (toFloat h / toFloat player.maxHp) <= (1 / 5) then
-                    Tw.bg_destruct
+                    Tw.bg_primary
                 else if (toFloat h / toFloat player.maxHp) <= (3 / 5) then
                     Tw.bg_exclaim
                 else
-                    Tw.bg_success
+                    Tw.bg_tertiary
             else
                 Tw.bg_secondary
 
@@ -131,7 +131,7 @@ view currentTurn player =
           -}
           css [ inline_block ]
         ]
-        [ h3 [] [ text player.name ]
+        [ h3 [css [ Tw.text_3xl ] ] [ text player.name ]
         , div [ css [ Tw.inline_block ] ] (List.map healthDiv healthStack)
 
         -- , text ("( " ++ hp ++ " / " ++ maxHp ++ " ) ")
