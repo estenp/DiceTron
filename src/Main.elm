@@ -4,6 +4,7 @@ import Browser
 import Css exposing (..)
 import Css.Animations
 import Css.Global exposing (global)
+import Css.Transitions
 import Deque
 import Dict exposing (..)
 import Html.Styled exposing (..)
@@ -363,10 +364,10 @@ view model =
                 |> stats_
 
         tryHistory =
-            div [ class "history" ]
+            div [ class "history", css [ Tw.justify_self_center, Tw.mt_4, Tw.overflow_auto ] ]
                 (model.tryHistory
                     |> List.map (Tuple3.mapAllThree Try.toString (Player.getName model.players) identity)
-                    |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup ++ " " ++ Tuple3.third tup ++ "hp") ])
+                    |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup) ])
                 )
 
         cup =
@@ -389,9 +390,9 @@ view model =
                 (viewCup model.roll)
 
         cupButtons =
-            div []
-                [ button_ [ onClick (GameEvent Pull) ] [ text "Pull" ]
-                , button_ [ onClick (GameEvent Look) ] [ text "Look" ]
+            div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, md [ Tw.w_1over4 ], Tw.w_full ] ]
+                [ button_ [ onClick (GameEvent Pull) ] [ text "pull" ]
+                , button_ [ onClick (GameEvent Look) ] [ text "look" ]
                 ]
 
         tableWilds =
@@ -401,13 +402,13 @@ view model =
             div []
                 [ case model.turnStatus of
                     Fresh ->
-                        button_ [ onClick (Dice RollClick) ] [ text "Roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "roll" ]
 
                     Pulled _ ->
-                        button_ [ onClick (Dice RollClick) ] [ text "Roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "roll" ]
 
                     Looked ->
-                        button_ [ onClick (Dice RollClick) ] [ text "Re-Roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "re-roll" ]
 
                     _ ->
                         span [] []
@@ -426,40 +427,33 @@ view model =
             , case model.turnStatus of
                 Fresh ->
                     mainContainer_
-                        [ header_ [] [ logo, playerStats ]
-                        , tryHistory
+                        [ header_ [] [ logo, playerStats, tryHistory ]
                         , rollButtons
                         ]
 
                 Rolled ->
                     mainContainer_
-                        [ header_ [] [ logo, playerStats ]
-                        , tryHistory
+                        [ header_ [] [ logo, playerStats, tryHistory ]
                         , tableWilds
                         , cup
                         , rollButtons
-                        , currentTry
                         , trySelect
                         ]
 
                 Pending ->
                     mainContainer_
-                        [ header_ [] [ logo, playerStats ]
-                        , tryHistory
+                        [ header_ [] [ logo, playerStats, tryHistory ]
                         , tableWilds
                         , cupButtons
-                        , currentTry
                         , trySelect
                         ]
 
                 Looked ->
                     mainContainer_
-                        [ header_ [] [ logo, playerStats ]
-                        , tryHistory
+                        [ header_ [] [ logo, playerStats, tryHistory ]
                         , tableWilds
                         , cup
                         , rollButtons
-                        , currentTry
                         , trySelect
                         ]
 
@@ -474,13 +468,11 @@ view model =
                                     p [] [ text "Previous player lied. They will lose 1 hp." ]
                     in
                     mainContainer_
-                        [ header_ [] [ logo, playerStats ]
-                        , tryHistory
+                        [ header_ [] [ logo, playerStats, tryHistory ]
                         , tableWilds
                         , cup
                         , pullResult
                         , rollButtons
-                        , currentTry
                         ]
             ]
 
@@ -495,54 +487,103 @@ view model =
 -- Html Utils
 
 
+mainContainer_ : List (Html msg) -> Html msg
 mainContainer_ =
     div
         [ class "main"
-        , css [ Tw.grid, Tw.grid_cols_1, Tw.justify_items_center, Tw.gap_8 ]
+        , css [ Tw.grid, Tw.grid_cols_1, Tw.justify_items_center, Tw.gap_4 ]
         ]
 
 
+header_ : List (Attribute msg) -> List (Html msg) -> Html msg
 header_ =
     styled div [ Tw.grid, Tw.grid_cols_header, Tw.mb_10, Tw.w_full ]
 
 
+logo : Html msg
 logo =
-    div [ css [ Css.transform (rotate (270 |> deg)) ], css [ Tw.w_32, Tw.h_32, Tw.flex, Tw.justify_center, Tw.items_center, Tw.text_8xl, Tw.font_bold, Tw.bg_primary, Tw.rounded_bl, Tw.shadow_md, Tw.bg_gradient_to_bl, Tw.from_primary, Tw.to_destruct ] ] [ text "𞡥" ]
+    div
+        [ css
+            [ Tw.w_32
+            , Tw.h_32
+            , Tw.flex
+            , Tw.justify_center
+            , Tw.items_center
+            , Tw.text_8xl
+            , Tw.font_bold
+            , Tw.bg_primary
+            , Tw.rounded_bl
+            , Tw.shadow_md
+            , Tw.bg_gradient_to_bl
+            , Tw.from_primary
+            , Tw.to_destruct
+            ]
+        , class "logo-container"
+        ]
+        [ div
+            [ id "logo" ]
+            [ text "𞡥" ]
+        ]
 
 
 inputBaseStyles : List Style
 inputBaseStyles =
-    [ Tw.border_solid, Tw.border_2, Tw.px_4, Tw.py_2, Tw.bg_secondary, Tw.rounded_md, Tw.text_tertiary, Tw.border_secondary, Tw.text_4xl ]
+    [ Tw.border_solid
+    , Tw.border_2
+    , Tw.px_4
+    , Tw.py_2
+    , Tw.bg_secondary
+    , Tw.rounded_md
+    , Tw.text_tertiary
+    , Tw.border_secondary
+    , Tw.text_4xl
+    , Tw.w_full
+    ]
 
 
+button_ : List (Attribute msg) -> List (Html msg) -> Html msg
 button_ =
     styled button
         (List.concat [ inputBaseStyles, [] ])
 
 
+select_ : List (Attribute msg) -> List (Html msg) -> Html msg
 select_ =
     styled select
         (List.concat [ inputBaseStyles, [] ])
 
 
+stats_ : List (Html msg) -> Html msg
 stats_ =
-    div [ class "stats", css [ Tw.flex, Tw.justify_around, Tw.p_4, Tw.shadow_sm, Tw.bg_secondary, Tw.rounded_b, Tw.shadow_md, Tw.text_tertiary ] ]
+    div
+        [ class "stats"
+        , css
+            [ Tw.flex
+            , Tw.justify_around
+            , Tw.p_4
+            , Tw.shadow_sm
+            , Tw.bg_secondary
+            , Tw.rounded_b
+            , Tw.shadow_md
+            , Tw.text_tertiary
+            , Tw.gap_8
+            ]
+        ]
 
 
 viewDie : Face -> Html Msg
 viewDie die =
     div
         [ css
-            (Tw.text_center
-                :: Tw.w_40
-                :: Tw.inline_block
-                :: Tw.p_2
-                :: Tw.m_2
-                :: [ Tw.text_9xl
-                   , Tw.border_4
-                   , Tw.rounded_2xl
-                   ]
-            )
+            [ Tw.text_center
+            , Tw.w_40
+            , Tw.inline_block
+            , Tw.p_2
+            , Tw.m_2
+            , Tw.text_9xl
+            , Tw.border_4
+            , Tw.rounded_2xl
+            ]
         , css
             [ if Try.decodeFace die == 1 then
                 Tw.bg_exclaim

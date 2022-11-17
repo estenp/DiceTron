@@ -7745,14 +7745,24 @@ var $rtfeldman$elm_css$Html$Styled$button = $rtfeldman$elm_css$Html$Styled$node(
 var $elm$core$List$concat = function (lists) {
 	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
 };
-var $author$project$Tailwind$Utilities$bg_secondary = A2($rtfeldman$elm_css$Css$property, 'background-color', '#dfeee3ff');
-var $author$project$Tailwind$Utilities$border_2 = A2($rtfeldman$elm_css$Css$property, 'border-width', '2px');
-var $author$project$Tailwind$Utilities$border_secondary = A2($rtfeldman$elm_css$Css$property, 'border-color', '#dfeee3ff');
-var $author$project$Tailwind$Utilities$border_solid = A2($rtfeldman$elm_css$Css$property, 'border-style', 'solid');
 var $rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
 	return {$: 'ApplyStyles', a: a};
 };
 var $rtfeldman$elm_css$Css$batch = $rtfeldman$elm_css$Css$Preprocess$ApplyStyles;
+var $author$project$Tailwind$Utilities$bg_secondary = $rtfeldman$elm_css$Css$batch(
+	_List_fromArray(
+		[
+			A2($rtfeldman$elm_css$Css$property, '--tw-bg-opacity', '1'),
+			A2($rtfeldman$elm_css$Css$property, 'background-color', 'rgba(223, 238, 227, var(--tw-bg-opacity))')
+		]));
+var $author$project$Tailwind$Utilities$border_2 = A2($rtfeldman$elm_css$Css$property, 'border-width', '2px');
+var $author$project$Tailwind$Utilities$border_secondary = $rtfeldman$elm_css$Css$batch(
+	_List_fromArray(
+		[
+			A2($rtfeldman$elm_css$Css$property, '--tw-border-opacity', '1'),
+			A2($rtfeldman$elm_css$Css$property, 'border-color', 'rgba(223, 238, 227, var(--tw-border-opacity))')
+		]));
+var $author$project$Tailwind$Utilities$border_solid = A2($rtfeldman$elm_css$Css$property, 'border-style', 'solid');
 var $author$project$Tailwind$Utilities$px_4 = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
 		[
@@ -7778,8 +7788,9 @@ var $author$project$Tailwind$Utilities$text_tertiary = $rtfeldman$elm_css$Css$ba
 			A2($rtfeldman$elm_css$Css$property, '--tw-text-opacity', '1'),
 			A2($rtfeldman$elm_css$Css$property, 'color', 'rgba(161, 159, 187, var(--tw-text-opacity))')
 		]));
+var $author$project$Tailwind$Utilities$w_full = A2($rtfeldman$elm_css$Css$property, 'width', '100%');
 var $author$project$Main$inputBaseStyles = _List_fromArray(
-	[$author$project$Tailwind$Utilities$border_solid, $author$project$Tailwind$Utilities$border_2, $author$project$Tailwind$Utilities$px_4, $author$project$Tailwind$Utilities$py_2, $author$project$Tailwind$Utilities$bg_secondary, $author$project$Tailwind$Utilities$rounded_md, $author$project$Tailwind$Utilities$text_tertiary, $author$project$Tailwind$Utilities$border_secondary, $author$project$Tailwind$Utilities$text_4xl]);
+	[$author$project$Tailwind$Utilities$border_solid, $author$project$Tailwind$Utilities$border_2, $author$project$Tailwind$Utilities$px_4, $author$project$Tailwind$Utilities$py_2, $author$project$Tailwind$Utilities$bg_secondary, $author$project$Tailwind$Utilities$rounded_md, $author$project$Tailwind$Utilities$text_tertiary, $author$project$Tailwind$Utilities$border_secondary, $author$project$Tailwind$Utilities$text_4xl, $author$project$Tailwind$Utilities$w_full]);
 var $rtfeldman$elm_css$VirtualDom$Styled$Attribute = F3(
 	function (a, b, c) {
 		return {$: 'Attribute', a: a, b: b, c: c};
@@ -9178,6 +9189,7 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$class = $rtfeldman$elm_css$Html$St
 var $rtfeldman$elm_css$Html$Styled$Attributes$css = $rtfeldman$elm_css$Html$Styled$Internal$css;
 var $rtfeldman$elm_css$Html$Styled$div = $rtfeldman$elm_css$Html$Styled$node('div');
 var $author$project$Tailwind$Utilities$flex = A2($rtfeldman$elm_css$Css$property, 'display', 'flex');
+var $author$project$Tailwind$Utilities$gap_4 = A2($rtfeldman$elm_css$Css$property, 'gap', '1rem');
 var $author$project$Player$getName = F2(
 	function (players, id) {
 		return function ($) {
@@ -9621,12 +9633,12 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 				A2($rtfeldman$elm_css$Css$property, '--tw-ring-shadow', '0 0 #0000')
 			]))
 	]);
+var $author$project$Tailwind$Utilities$grid = A2($rtfeldman$elm_css$Css$property, 'display', 'grid');
+var $author$project$Tailwind$Utilities$grid_cols_2 = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', 'repeat(2, minmax(0, 1fr))');
 var $rtfeldman$elm_css$Html$Styled$h2 = $rtfeldman$elm_css$Html$Styled$node('h2');
 var $rtfeldman$elm_css$Html$Styled$h3 = $rtfeldman$elm_css$Html$Styled$node('h3');
-var $author$project$Tailwind$Utilities$grid = A2($rtfeldman$elm_css$Css$property, 'display', 'grid');
 var $author$project$Tailwind$Utilities$grid_cols_header = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', '1fr 2fr 1fr');
 var $author$project$Tailwind$Utilities$mb_10 = A2($rtfeldman$elm_css$Css$property, 'margin-bottom', '2.5rem');
-var $author$project$Tailwind$Utilities$w_full = A2($rtfeldman$elm_css$Css$property, 'width', '100%');
 var $author$project$Main$header_ = A2(
 	$rtfeldman$elm_css$Html$Styled$styled,
 	$rtfeldman$elm_css$Html$Styled$div,
@@ -9649,6 +9661,7 @@ var $rtfeldman$elm_css$Css$int = function (val) {
 	};
 };
 var $author$project$Tailwind$Utilities$justify_evenly = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'space-evenly');
+var $author$project$Tailwind$Utilities$justify_self_center = A2($rtfeldman$elm_css$Css$property, 'justify-self', 'center');
 var $rtfeldman$elm_css$Css$Internal$printKeyframeSelector = function (_v0) {
 	var percentage = _v0.a;
 	var properties = _v0.b;
@@ -9684,18 +9697,6 @@ var $author$project$Tailwind$Utilities$bg_primary = $rtfeldman$elm_css$Css$batch
 			A2($rtfeldman$elm_css$Css$property, '--tw-bg-opacity', '1'),
 			A2($rtfeldman$elm_css$Css$property, 'background-color', 'rgba(150, 89, 88, var(--tw-bg-opacity))')
 		]));
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $rtfeldman$elm_css$Css$angleConverter = F2(
-	function (suffix, angleVal) {
-		return {
-			angle: $rtfeldman$elm_css$Css$Structure$Compatible,
-			angleOrDirection: $rtfeldman$elm_css$Css$Structure$Compatible,
-			value: _Utils_ap(
-				$elm$core$String$fromFloat(angleVal),
-				suffix)
-		};
-	});
-var $rtfeldman$elm_css$Css$deg = $rtfeldman$elm_css$Css$angleConverter('deg');
 var $author$project$Tailwind$Utilities$font_bold = A2($rtfeldman$elm_css$Css$property, 'font-weight', '700');
 var $author$project$Tailwind$Utilities$from_primary = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
@@ -9704,23 +9705,9 @@ var $author$project$Tailwind$Utilities$from_primary = $rtfeldman$elm_css$Css$bat
 			A2($rtfeldman$elm_css$Css$property, '--tw-gradient-stops', 'var(--tw-gradient-from), var(--tw-gradient-to, rgba(150, 89, 88, 0))')
 		]));
 var $author$project$Tailwind$Utilities$h_32 = A2($rtfeldman$elm_css$Css$property, 'height', '8rem');
+var $rtfeldman$elm_css$Html$Styled$Attributes$id = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
 var $author$project$Tailwind$Utilities$items_center = A2($rtfeldman$elm_css$Css$property, 'align-items', 'center');
 var $author$project$Tailwind$Utilities$justify_center = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'center');
-var $rtfeldman$elm_css$Css$cssFunction = F2(
-	function (funcName, args) {
-		return funcName + ('(' + (A2($elm$core$String$join, ',', args) + ')'));
-	});
-var $rtfeldman$elm_css$Css$rotate = function (_v0) {
-	var value = _v0.value;
-	return {
-		transform: $rtfeldman$elm_css$Css$Structure$Compatible,
-		value: A2(
-			$rtfeldman$elm_css$Css$cssFunction,
-			'rotate',
-			_List_fromArray(
-				[value]))
-	};
-};
 var $author$project$Tailwind$Utilities$rounded_bl = A2($rtfeldman$elm_css$Css$property, 'border-bottom-left-radius', '0.25rem');
 var $author$project$Tailwind$Utilities$shadow_md = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
@@ -9740,26 +9727,6 @@ var $author$project$Tailwind$Utilities$text_8xl = $rtfeldman$elm_css$Css$batch(
 			A2($rtfeldman$elm_css$Css$property, 'line-height', '1')
 		]));
 var $author$project$Tailwind$Utilities$to_destruct = A2($rtfeldman$elm_css$Css$property, '--tw-gradient-to', '#8E4A49');
-var $rtfeldman$elm_css$Css$valuesOrNone = function (list) {
-	return $elm$core$List$isEmpty(list) ? {value: 'none'} : {
-		value: A3(
-			$rtfeldman$elm_css$Css$String$mapJoin,
-			function ($) {
-				return $.value;
-			},
-			' ',
-			list)
-	};
-};
-var $rtfeldman$elm_css$Css$transforms = A2(
-	$elm$core$Basics$composeL,
-	$rtfeldman$elm_css$Css$prop1('transform'),
-	$rtfeldman$elm_css$Css$valuesOrNone);
-var $rtfeldman$elm_css$Css$transform = function (only) {
-	return $rtfeldman$elm_css$Css$transforms(
-		_List_fromArray(
-			[only]));
-};
 var $author$project$Tailwind$Utilities$w_32 = A2($rtfeldman$elm_css$Css$property, 'width', '8rem');
 var $author$project$Main$logo = A2(
 	$rtfeldman$elm_css$Html$Styled$div,
@@ -9767,20 +9734,22 @@ var $author$project$Main$logo = A2(
 		[
 			$rtfeldman$elm_css$Html$Styled$Attributes$css(
 			_List_fromArray(
-				[
-					$rtfeldman$elm_css$Css$transform(
-					$rtfeldman$elm_css$Css$rotate(
-						$rtfeldman$elm_css$Css$deg(270)))
-				])),
-			$rtfeldman$elm_css$Html$Styled$Attributes$css(
-			_List_fromArray(
-				[$author$project$Tailwind$Utilities$w_32, $author$project$Tailwind$Utilities$h_32, $author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_center, $author$project$Tailwind$Utilities$items_center, $author$project$Tailwind$Utilities$text_8xl, $author$project$Tailwind$Utilities$font_bold, $author$project$Tailwind$Utilities$bg_primary, $author$project$Tailwind$Utilities$rounded_bl, $author$project$Tailwind$Utilities$shadow_md, $author$project$Tailwind$Utilities$bg_gradient_to_bl, $author$project$Tailwind$Utilities$from_primary, $author$project$Tailwind$Utilities$to_destruct]))
+				[$author$project$Tailwind$Utilities$w_32, $author$project$Tailwind$Utilities$h_32, $author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_center, $author$project$Tailwind$Utilities$items_center, $author$project$Tailwind$Utilities$text_8xl, $author$project$Tailwind$Utilities$font_bold, $author$project$Tailwind$Utilities$bg_primary, $author$project$Tailwind$Utilities$rounded_bl, $author$project$Tailwind$Utilities$shadow_md, $author$project$Tailwind$Utilities$bg_gradient_to_bl, $author$project$Tailwind$Utilities$from_primary, $author$project$Tailwind$Utilities$to_destruct])),
+			$rtfeldman$elm_css$Html$Styled$Attributes$class('logo-container')
 		]),
 	_List_fromArray(
 		[
-			$rtfeldman$elm_css$Html$Styled$text('𞡥')
+			A2(
+			$rtfeldman$elm_css$Html$Styled$div,
+			_List_fromArray(
+				[
+					$rtfeldman$elm_css$Html$Styled$Attributes$id('logo')
+				]),
+			_List_fromArray(
+				[
+					$rtfeldman$elm_css$Html$Styled$text('𞡥')
+				]))
 		]));
-var $author$project$Tailwind$Utilities$gap_8 = A2($rtfeldman$elm_css$Css$property, 'gap', '2rem');
 var $author$project$Tailwind$Utilities$grid_cols_1 = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', 'repeat(1, minmax(0, 1fr))');
 var $author$project$Tailwind$Utilities$justify_items_center = A2($rtfeldman$elm_css$Css$property, 'justify-items', 'center');
 var $author$project$Main$mainContainer_ = $rtfeldman$elm_css$Html$Styled$div(
@@ -9789,7 +9758,7 @@ var $author$project$Main$mainContainer_ = $rtfeldman$elm_css$Html$Styled$div(
 			$rtfeldman$elm_css$Html$Styled$Attributes$class('main'),
 			$rtfeldman$elm_css$Html$Styled$Attributes$css(
 			_List_fromArray(
-				[$author$project$Tailwind$Utilities$grid, $author$project$Tailwind$Utilities$grid_cols_1, $author$project$Tailwind$Utilities$justify_items_center, $author$project$Tailwind$Utilities$gap_8]))
+				[$author$project$Tailwind$Utilities$grid, $author$project$Tailwind$Utilities$grid_cols_1, $author$project$Tailwind$Utilities$justify_items_center, $author$project$Tailwind$Utilities$gap_4]))
 		]));
 var $TSFoster$elm_tuple_extra$Tuple3$mapAllThree = F4(
 	function (aFn, bFn, cFn, _v0) {
@@ -9801,12 +9770,28 @@ var $TSFoster$elm_tuple_extra$Tuple3$mapAllThree = F4(
 			bFn(b),
 			cFn(c));
 	});
+var $rtfeldman$elm_css$Css$Structure$CustomQuery = function (a) {
+	return {$: 'CustomQuery', a: a};
+};
+var $rtfeldman$elm_css$Css$Preprocess$WithMedia = F2(
+	function (a, b) {
+		return {$: 'WithMedia', a: a, b: b};
+	});
+var $rtfeldman$elm_css$Css$Media$withMediaQuery = function (queries) {
+	return $rtfeldman$elm_css$Css$Preprocess$WithMedia(
+		A2($elm$core$List$map, $rtfeldman$elm_css$Css$Structure$CustomQuery, queries));
+};
+var $author$project$Tailwind$Breakpoints$md = $rtfeldman$elm_css$Css$Media$withMediaQuery(
+	_List_fromArray(
+		['(min-width: 768px)']));
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $rtfeldman$elm_css$Css$ms = function (amount) {
 	return {
 		duration: $rtfeldman$elm_css$Css$Structure$Compatible,
 		value: $elm$core$String$fromFloat(amount) + 'ms'
 	};
 };
+var $author$project$Tailwind$Utilities$mt_4 = A2($rtfeldman$elm_css$Css$property, 'margin-top', '1rem');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -9839,12 +9824,14 @@ var $rtfeldman$elm_css$Css$Animations$opacity = function (_v0) {
 	var value = _v0.value;
 	return $rtfeldman$elm_css$Css$Internal$Property('opacity:' + value);
 };
+var $author$project$Tailwind$Utilities$overflow_auto = A2($rtfeldman$elm_css$Css$property, 'overflow', 'auto');
 var $rtfeldman$elm_css$Html$Styled$p = $rtfeldman$elm_css$Html$Styled$node('p');
 var $TSFoster$elm_tuple_extra$Tuple3$second = function (_v0) {
 	var b = _v0.b;
 	return b;
 };
 var $rtfeldman$elm_css$Html$Styled$span = $rtfeldman$elm_css$Html$Styled$node('span');
+var $author$project$Tailwind$Utilities$gap_8 = A2($rtfeldman$elm_css$Css$property, 'gap', '2rem');
 var $author$project$Tailwind$Utilities$justify_around = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'space-around');
 var $author$project$Tailwind$Utilities$p_4 = A2($rtfeldman$elm_css$Css$property, 'padding', '1rem');
 var $author$project$Tailwind$Utilities$rounded_b = $rtfeldman$elm_css$Css$batch(
@@ -9865,12 +9852,8 @@ var $author$project$Main$stats_ = $rtfeldman$elm_css$Html$Styled$div(
 			$rtfeldman$elm_css$Html$Styled$Attributes$class('stats'),
 			$rtfeldman$elm_css$Html$Styled$Attributes$css(
 			_List_fromArray(
-				[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_around, $author$project$Tailwind$Utilities$p_4, $author$project$Tailwind$Utilities$shadow_sm, $author$project$Tailwind$Utilities$bg_secondary, $author$project$Tailwind$Utilities$rounded_b, $author$project$Tailwind$Utilities$shadow_md, $author$project$Tailwind$Utilities$text_tertiary]))
+				[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_around, $author$project$Tailwind$Utilities$p_4, $author$project$Tailwind$Utilities$shadow_sm, $author$project$Tailwind$Utilities$bg_secondary, $author$project$Tailwind$Utilities$rounded_b, $author$project$Tailwind$Utilities$shadow_md, $author$project$Tailwind$Utilities$text_tertiary, $author$project$Tailwind$Utilities$gap_8]))
 		]));
-var $TSFoster$elm_tuple_extra$Tuple3$third = function (_v0) {
-	var c = _v0.c;
-	return c;
-};
 var $author$project$Try$toString = function (_try) {
 	return function (t) {
 		return $elm$core$String$fromInt(t.a) + (' ' + $elm$core$String$fromInt(t.b));
@@ -9883,33 +9866,37 @@ var $author$project$Tailwind$Utilities$bg_exclaim = $rtfeldman$elm_css$Css$batch
 			A2($rtfeldman$elm_css$Css$property, '--tw-bg-opacity', '1'),
 			A2($rtfeldman$elm_css$Css$property, 'background-color', 'rgba(224, 144, 93, var(--tw-bg-opacity))')
 		]));
-var $author$project$Tailwind$Utilities$bg_tertiary = $rtfeldman$elm_css$Css$batch(
+var $author$project$Tailwind$Utilities$bg_success = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
 		[
 			A2($rtfeldman$elm_css$Css$property, '--tw-bg-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'background-color', 'rgba(161, 159, 187, var(--tw-bg-opacity))')
+			A2($rtfeldman$elm_css$Css$property, 'background-color', 'rgba(78, 208, 182, var(--tw-bg-opacity))')
 		]));
 var $author$project$Tailwind$Utilities$border_b_2 = A2($rtfeldman$elm_css$Css$property, 'border-bottom-width', '2px');
-var $author$project$Tailwind$Utilities$border_success = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-border-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'border-color', 'rgba(78, 208, 182, var(--tw-border-opacity))')
-		]));
-var $author$project$Tailwind$Utilities$h_4 = A2($rtfeldman$elm_css$Css$property, 'height', '1rem');
-var $author$project$Tailwind$Utilities$inline_block = A2($rtfeldman$elm_css$Css$property, 'display', 'inline-block');
+var $author$project$Tailwind$Utilities$flex_1 = A2($rtfeldman$elm_css$Css$property, 'flex', '1 1 0%');
+var $author$project$Tailwind$Utilities$flex_col = A2($rtfeldman$elm_css$Css$property, 'flex-direction', 'column');
+var $author$project$Tailwind$Utilities$gap_2 = A2($rtfeldman$elm_css$Css$property, 'gap', '0.5rem');
+var $author$project$Tailwind$Utilities$grid_cols_player_stats = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', '2fr 1fr');
+var $author$project$Tailwind$Utilities$h_full = A2($rtfeldman$elm_css$Css$property, 'height', '100%');
+var $author$project$Tailwind$Utilities$items_end = A2($rtfeldman$elm_css$Css$property, 'align-items', 'flex-end');
+var $rtfeldman$elm_css$Html$Styled$li = $rtfeldman$elm_css$Html$Styled$node('li');
 var $author$project$Tailwind$Utilities$text_3xl = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
 		[
 			A2($rtfeldman$elm_css$Css$property, 'font-size', '1.875rem'),
 			A2($rtfeldman$elm_css$Css$property, 'line-height', '2.25rem')
 		]));
+var $author$project$Tailwind$Utilities$text_center = A2($rtfeldman$elm_css$Css$property, 'text-align', 'center');
+var $author$project$Tailwind$Utilities$text_success = $rtfeldman$elm_css$Css$batch(
+	_List_fromArray(
+		[
+			A2($rtfeldman$elm_css$Css$property, '--tw-text-opacity', '1'),
+			A2($rtfeldman$elm_css$Css$property, 'color', 'rgba(78, 208, 182, var(--tw-text-opacity))')
+		]));
+var $rtfeldman$elm_css$Html$Styled$ul = $rtfeldman$elm_css$Html$Styled$node('ul');
 var $author$project$Tailwind$Utilities$w_8 = A2($rtfeldman$elm_css$Css$property, 'width', '2rem');
 var $author$project$Player$view = F2(
 	function (currentTurn, player) {
-		var maxHp = $elm$core$String$fromInt(player.maxHp);
-		var hp = $elm$core$String$fromInt(player.hp);
-		var healthPercent = (player.hp / player.maxHp) | 0;
 		var healthDiv = function (bgStyle) {
 			return A2(
 				$rtfeldman$elm_css$Html$Styled$div,
@@ -9917,13 +9904,12 @@ var $author$project$Player$view = F2(
 					[
 						$rtfeldman$elm_css$Html$Styled$Attributes$css(
 						_List_fromArray(
-							[bgStyle, $author$project$Tailwind$Utilities$w_8, $author$project$Tailwind$Utilities$h_4, $author$project$Tailwind$Utilities$border_b_2, $author$project$Tailwind$Utilities$border_success]))
+							[bgStyle, $author$project$Tailwind$Utilities$w_8, $author$project$Tailwind$Utilities$flex_1, $author$project$Tailwind$Utilities$border_b_2, $author$project$Tailwind$Utilities$border_secondary]))
 					]),
 				_List_Nil);
 		};
-		var healthDiff = player.maxHp - player.hp;
 		var healthBg = function (h) {
-			return (_Utils_cmp(h, player.hp) < 1) ? ((_Utils_cmp(h / player.maxHp, 1 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_primary : ((_Utils_cmp(h / player.maxHp, 3 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_exclaim : $author$project$Tailwind$Utilities$bg_tertiary)) : $author$project$Tailwind$Utilities$bg_secondary;
+			return (_Utils_cmp(h, player.hp) < 1) ? ((_Utils_cmp(h / player.maxHp, 1 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_primary : ((_Utils_cmp(h / player.maxHp, 3 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_exclaim : $author$project$Tailwind$Utilities$bg_success)) : $author$project$Tailwind$Utilities$bg_secondary;
 		};
 		var healthStack = A2(
 			$elm$core$List$map,
@@ -9936,21 +9922,63 @@ var $author$project$Player$view = F2(
 				[
 					$rtfeldman$elm_css$Html$Styled$Attributes$css(
 					_List_fromArray(
-						[$author$project$Tailwind$Utilities$inline_block]))
+						[$author$project$Tailwind$Utilities$grid, $author$project$Tailwind$Utilities$grid_cols_2, $author$project$Tailwind$Utilities$gap_2, $author$project$Tailwind$Utilities$grid_cols_player_stats]))
 				]),
 			_List_fromArray(
 				[
 					A2(
-					$rtfeldman$elm_css$Html$Styled$h3,
+					$rtfeldman$elm_css$Html$Styled$div,
+					_List_Nil,
 					_List_fromArray(
 						[
-							$rtfeldman$elm_css$Html$Styled$Attributes$css(
+							A2(
+							$rtfeldman$elm_css$Html$Styled$div,
+							_List_Nil,
 							_List_fromArray(
-								[$author$project$Tailwind$Utilities$text_3xl]))
-						]),
-					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$text(player.name)
+								[
+									A2(
+									$rtfeldman$elm_css$Html$Styled$h3,
+									_List_fromArray(
+										[
+											$rtfeldman$elm_css$Html$Styled$Attributes$css(
+											_List_fromArray(
+												[$author$project$Tailwind$Utilities$text_3xl, $author$project$Tailwind$Utilities$text_center])),
+											$rtfeldman$elm_css$Html$Styled$Attributes$css(
+											_Utils_eq(player.id, currentTurn) ? _List_fromArray(
+												[$author$project$Tailwind$Utilities$text_success]) : _List_Nil)
+										]),
+									_List_fromArray(
+										[
+											$rtfeldman$elm_css$Html$Styled$text(player.name)
+										])),
+									A2(
+									$rtfeldman$elm_css$Html$Styled$ul,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$rtfeldman$elm_css$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$rtfeldman$elm_css$Html$Styled$text('Bonus Dam.: 90')
+												])),
+											A2(
+											$rtfeldman$elm_css$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$rtfeldman$elm_css$Html$Styled$text('Dam. Mit.: 20')
+												])),
+											A2(
+											$rtfeldman$elm_css$Html$Styled$li,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$rtfeldman$elm_css$Html$Styled$text('Exec.: 0')
+												]))
+										]))
+								]))
 						])),
 					A2(
 					$rtfeldman$elm_css$Html$Styled$div,
@@ -9958,7 +9986,7 @@ var $author$project$Player$view = F2(
 						[
 							$rtfeldman$elm_css$Html$Styled$Attributes$css(
 							_List_fromArray(
-								[$author$project$Tailwind$Utilities$inline_block]))
+								[$author$project$Tailwind$Utilities$h_full, $author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$flex_col, $author$project$Tailwind$Utilities$items_end]))
 						]),
 					A2($elm$core$List$map, healthDiv, healthStack))
 				]));
@@ -9975,6 +10003,7 @@ var $author$project$Try$view = function (_try) {
 			$author$project$Try$toString(_try)));
 };
 var $author$project$Tailwind$Utilities$border_4 = A2($rtfeldman$elm_css$Css$property, 'border-width', '4px');
+var $author$project$Tailwind$Utilities$inline_block = A2($rtfeldman$elm_css$Css$property, 'display', 'inline-block');
 var $author$project$Tailwind$Utilities$m_2 = A2($rtfeldman$elm_css$Css$property, 'margin', '0.5rem');
 var $author$project$Tailwind$Utilities$p_2 = A2($rtfeldman$elm_css$Css$property, 'padding', '0.5rem');
 var $author$project$Tailwind$Utilities$rounded_2xl = A2($rtfeldman$elm_css$Css$property, 'border-radius', '1rem');
@@ -9984,8 +10013,12 @@ var $author$project$Tailwind$Utilities$text_9xl = $rtfeldman$elm_css$Css$batch(
 			A2($rtfeldman$elm_css$Css$property, 'font-size', '8rem'),
 			A2($rtfeldman$elm_css$Css$property, 'line-height', '1')
 		]));
-var $author$project$Tailwind$Utilities$text_center = A2($rtfeldman$elm_css$Css$property, 'text-align', 'center');
-var $author$project$Tailwind$Utilities$text_secondary = A2($rtfeldman$elm_css$Css$property, 'color', '#dfeee3ff');
+var $author$project$Tailwind$Utilities$text_secondary = $rtfeldman$elm_css$Css$batch(
+	_List_fromArray(
+		[
+			A2($rtfeldman$elm_css$Css$property, '--tw-text-opacity', '1'),
+			A2($rtfeldman$elm_css$Css$property, 'color', 'rgba(223, 238, 227, var(--tw-text-opacity))')
+		]));
 var $author$project$Tailwind$Utilities$w_40 = A2($rtfeldman$elm_css$Css$property, 'width', '10rem');
 var $author$project$Main$viewDie = function (die) {
 	return A2(
@@ -9993,23 +10026,8 @@ var $author$project$Main$viewDie = function (die) {
 		_List_fromArray(
 			[
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
-				A2(
-					$elm$core$List$cons,
-					$author$project$Tailwind$Utilities$text_center,
-					A2(
-						$elm$core$List$cons,
-						$author$project$Tailwind$Utilities$w_40,
-						A2(
-							$elm$core$List$cons,
-							$author$project$Tailwind$Utilities$inline_block,
-							A2(
-								$elm$core$List$cons,
-								$author$project$Tailwind$Utilities$p_2,
-								A2(
-									$elm$core$List$cons,
-									$author$project$Tailwind$Utilities$m_2,
-									_List_fromArray(
-										[$author$project$Tailwind$Utilities$text_9xl, $author$project$Tailwind$Utilities$border_4, $author$project$Tailwind$Utilities$rounded_2xl]))))))),
+				_List_fromArray(
+					[$author$project$Tailwind$Utilities$text_center, $author$project$Tailwind$Utilities$w_40, $author$project$Tailwind$Utilities$inline_block, $author$project$Tailwind$Utilities$p_2, $author$project$Tailwind$Utilities$m_2, $author$project$Tailwind$Utilities$text_9xl, $author$project$Tailwind$Utilities$border_4, $author$project$Tailwind$Utilities$rounded_2xl])),
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
 				_List_fromArray(
 					[
@@ -10283,24 +10301,7 @@ var $author$project$Main$availTrySelectOpts = F2(
 	});
 var $author$project$Tailwind$Utilities$col_span_2 = A2($rtfeldman$elm_css$Css$property, 'grid-column', 'span 2 / span 2');
 var $rtfeldman$elm_css$Html$Styled$Attributes$for = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('htmlFor');
-var $author$project$Tailwind$Utilities$gap_4 = A2($rtfeldman$elm_css$Css$property, 'gap', '1rem');
-var $author$project$Tailwind$Utilities$grid_cols_2 = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', 'repeat(2, minmax(0, 1fr))');
-var $rtfeldman$elm_css$Html$Styled$Attributes$id = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
 var $rtfeldman$elm_css$Html$Styled$label = $rtfeldman$elm_css$Html$Styled$node('label');
-var $rtfeldman$elm_css$Css$Structure$CustomQuery = function (a) {
-	return {$: 'CustomQuery', a: a};
-};
-var $rtfeldman$elm_css$Css$Preprocess$WithMedia = F2(
-	function (a, b) {
-		return {$: 'WithMedia', a: a, b: b};
-	});
-var $rtfeldman$elm_css$Css$Media$withMediaQuery = function (queries) {
-	return $rtfeldman$elm_css$Css$Preprocess$WithMedia(
-		A2($elm$core$List$map, $rtfeldman$elm_css$Css$Structure$CustomQuery, queries));
-};
-var $author$project$Tailwind$Breakpoints$md = $rtfeldman$elm_css$Css$Media$withMediaQuery(
-	_List_fromArray(
-		['(min-width: 768px)']));
 var $rtfeldman$elm_css$Html$Styled$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -10457,7 +10458,10 @@ var $author$project$Main$view = function (model) {
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_fromArray(
 			[
-				$rtfeldman$elm_css$Html$Styled$Attributes$class('history')
+				$rtfeldman$elm_css$Html$Styled$Attributes$class('history'),
+				$rtfeldman$elm_css$Html$Styled$Attributes$css(
+				_List_fromArray(
+					[$author$project$Tailwind$Utilities$justify_self_center, $author$project$Tailwind$Utilities$mt_4, $author$project$Tailwind$Utilities$overflow_auto]))
 			]),
 		A2(
 			$elm$core$List$map,
@@ -10468,7 +10472,7 @@ var $author$project$Main$view = function (model) {
 					_List_fromArray(
 						[
 							$rtfeldman$elm_css$Html$Styled$text(
-							$TSFoster$elm_tuple_extra$Tuple3$second(tup) + (' -> ' + ($TSFoster$elm_tuple_extra$Tuple3$first(tup) + (' ' + ($TSFoster$elm_tuple_extra$Tuple3$third(tup) + 'hp')))))
+							$TSFoster$elm_tuple_extra$Tuple3$second(tup) + (' -> ' + $TSFoster$elm_tuple_extra$Tuple3$first(tup)))
 						]));
 			},
 			A2(
@@ -10502,7 +10506,7 @@ var $author$project$Main$view = function (model) {
 								]),
 							_List_fromArray(
 								[
-									$rtfeldman$elm_css$Html$Styled$text('Roll')
+									$rtfeldman$elm_css$Html$Styled$text('roll')
 								]));
 					case 'Pulled':
 						return A2(
@@ -10514,7 +10518,7 @@ var $author$project$Main$view = function (model) {
 								]),
 							_List_fromArray(
 								[
-									$rtfeldman$elm_css$Html$Styled$text('Roll')
+									$rtfeldman$elm_css$Html$Styled$text('roll')
 								]));
 					case 'Looked':
 						return A2(
@@ -10526,7 +10530,7 @@ var $author$project$Main$view = function (model) {
 								]),
 							_List_fromArray(
 								[
-									$rtfeldman$elm_css$Html$Styled$text('Re-Roll')
+									$rtfeldman$elm_css$Html$Styled$text('re-roll')
 								]));
 					default:
 						return A2($rtfeldman$elm_css$Html$Styled$span, _List_Nil, _List_Nil);
@@ -10563,7 +10567,20 @@ var $author$project$Main$view = function (model) {
 			]));
 	var cupButtons = A2(
 		$rtfeldman$elm_css$Html$Styled$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				$rtfeldman$elm_css$Html$Styled$Attributes$css(
+				_List_fromArray(
+					[
+						$author$project$Tailwind$Utilities$grid,
+						$author$project$Tailwind$Utilities$grid_cols_2,
+						$author$project$Tailwind$Utilities$gap_4,
+						$author$project$Tailwind$Breakpoints$md(
+						_List_fromArray(
+							[$author$project$Tailwind$Utilities$w_1over4])),
+						$author$project$Tailwind$Utilities$w_full
+					]))
+			]),
 		_List_fromArray(
 			[
 				A2(
@@ -10575,7 +10592,7 @@ var $author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$rtfeldman$elm_css$Html$Styled$text('Pull')
+						$rtfeldman$elm_css$Html$Styled$text('pull')
 					])),
 				A2(
 				$author$project$Main$button_,
@@ -10586,7 +10603,7 @@ var $author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$rtfeldman$elm_css$Html$Styled$text('Look')
+						$rtfeldman$elm_css$Html$Styled$text('look')
 					]))
 			]));
 	var cup = A2(
@@ -10657,8 +10674,7 @@ var $author$project$Main$view = function (model) {
 									$author$project$Main$header_,
 									_List_Nil,
 									_List_fromArray(
-										[$author$project$Main$logo, playerStats])),
-									tryHistory,
+										[$author$project$Main$logo, playerStats, tryHistory])),
 									rollButtons
 								]));
 					case 'Rolled':
@@ -10669,12 +10685,10 @@ var $author$project$Main$view = function (model) {
 									$author$project$Main$header_,
 									_List_Nil,
 									_List_fromArray(
-										[$author$project$Main$logo, playerStats])),
-									tryHistory,
+										[$author$project$Main$logo, playerStats, tryHistory])),
 									tableWilds,
 									cup,
 									rollButtons,
-									currentTry,
 									trySelect
 								]));
 					case 'Pending':
@@ -10685,11 +10699,9 @@ var $author$project$Main$view = function (model) {
 									$author$project$Main$header_,
 									_List_Nil,
 									_List_fromArray(
-										[$author$project$Main$logo, playerStats])),
-									tryHistory,
+										[$author$project$Main$logo, playerStats, tryHistory])),
 									tableWilds,
 									cupButtons,
-									currentTry,
 									trySelect
 								]));
 					case 'Looked':
@@ -10700,12 +10712,10 @@ var $author$project$Main$view = function (model) {
 									$author$project$Main$header_,
 									_List_Nil,
 									_List_fromArray(
-										[$author$project$Main$logo, playerStats])),
-									tryHistory,
+										[$author$project$Main$logo, playerStats, tryHistory])),
 									tableWilds,
 									cup,
 									rollButtons,
-									currentTry,
 									trySelect
 								]));
 					default:
@@ -10736,13 +10746,11 @@ var $author$project$Main$view = function (model) {
 									$author$project$Main$header_,
 									_List_Nil,
 									_List_fromArray(
-										[$author$project$Main$logo, playerStats])),
-									tryHistory,
+										[$author$project$Main$logo, playerStats, tryHistory])),
 									tableWilds,
 									cup,
 									pullResult,
-									rollButtons,
-									currentTry
+									rollButtons
 								]));
 				}
 			}()

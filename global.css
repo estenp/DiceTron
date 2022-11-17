@@ -27,6 +27,17 @@ body {
   font-family: "Space Grotesk", sans-serif;
   font-size: 18px;
 }
+
+#logo {
+  transform: rotateX(1.5turn);
+  transition: transform 400ms ease-in-out 0ms, color 400ms ease-in-out 100ms;
+}
+
+.logo-container:hover #logo {
+  transform: rotate(270deg);
+  color: #A19FBB;
+}
+
 /*
 button {
   color: #907AD6

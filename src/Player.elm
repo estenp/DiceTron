@@ -83,56 +83,70 @@ ko id activePlayers =
 view : PlayerId -> Player -> Html msg
 view currentTurn player =
     let
-        healthPercent =
-            player.hp // player.maxHp
-
-        healthDiff =
-            player.maxHp - player.hp
-
-        hp =
-            String.fromInt player.hp
-
-        maxHp =
-            String.fromInt player.maxHp
-
         healthDiv bgStyle =
-            div [ css [ bgStyle, Tw.w_8, Tw.h_4, Tw.border_b_2, Tw.border_success ] ] []
+            div [ css [ bgStyle, Tw.w_8, Tw.flex_1, Tw.border_b_2, Tw.border_secondary ] ] []
 
-        -- healthStack =
-        --     List.repeat player.maxHp healthDiv
         healthBg h =
             if h <= player.hp then
                 if (toFloat h / toFloat player.maxHp) <= (1 / 5) then
                     Tw.bg_primary
+
                 else if (toFloat h / toFloat player.maxHp) <= (3 / 5) then
                     Tw.bg_exclaim
+
                 else
-                    Tw.bg_tertiary
+                    Tw.bg_success
+
             else
                 Tw.bg_secondary
 
         healthStack =
             List.map healthBg (List.reverse (List.range 1 player.maxHp))
     in
+    {- css
+           [ color
+               (if player.hp <= 0 then
+                   rgb 255 69 0
+
+                else if player.id == currentTurn then
+                   rgb 100 149 237
+
+                else
+                   hex "dfeee3"
+               )
+           ]
+       ,
+    -}
     div
-        [ {- css
-                 [ color
-                     (if player.hp <= 0 then
-                         rgb 255 69 0
-
-                      else if player.id == currentTurn then
-                         rgb 100 149 237
-
-                      else
-                         hex "dfeee3"
-                     )
-                 ]
-             ,
-          -}
-          css [ inline_block ]
+        [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_2, Tw.grid_cols_player_stats ]
         ]
-        [ h3 [css [ Tw.text_3xl ] ] [ text player.name ]
-        , div [ css [ Tw.inline_block ] ] (List.map healthDiv healthStack)
+        [ div []
+            [ div []
+                [ h3
+                    [ css [ Tw.text_3xl, Tw.text_center ]
+                    , css
+                        (if player.id == currentTurn then
+                            [ Tw.text_success ]
+
+                         else
+                            []
+                        )
+                    ]
+                    [ text player.name ]
+                , ul []
+                    [ li
+                        []
+                        [ text "Bonus Dam.: 90" ]
+                    , li
+                        []
+                        [ text "Dam. Mit.: 20" ]
+                    , li
+                        []
+                        [ text "Exec.: 0" ]
+                    ]
+                ]
+            ]
+        , div [ css [ Tw.h_full, Tw.flex, Tw.flex_col, Tw.items_end ] ] (List.map healthDiv healthStack)
 
         -- , text ("( " ++ hp ++ " / " ++ maxHp ++ " ) ")
         ]

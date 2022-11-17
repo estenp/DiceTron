@@ -618,6 +618,7 @@ module Tailwind.Utilities exposing
     , grid_cols_9
     , grid_cols_header
     , grid_cols_none
+    , grid_cols_player_stats
     , grid_flow_col
     , grid_flow_col_dense
     , grid_flow_row
@@ -3612,6 +3613,7 @@ This module contains
 @docs grid_cols_9
 @docs grid_cols_header
 @docs grid_cols_none
+@docs grid_cols_player_stats
 @docs grid_flow_col
 @docs grid_flow_col_dense
 @docs grid_flow_row
@@ -8224,7 +8226,10 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 
 bg_secondary : Css.Style
 bg_secondary =
-    Css.property "background-color" "#dfeee3ff"
+    Css.batch
+        [ Css.property "--tw-bg-opacity" "1"
+        , Css.property "background-color" "rgba(223, 238, 227, var(--tw-bg-opacity))"
+        ]
 
 
 {-| The tailwind class `bg-success`.
@@ -8752,7 +8757,10 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 
 border_secondary : Css.Style
 border_secondary =
-    Css.property "border-color" "#dfeee3ff"
+    Css.batch
+        [ Css.property "--tw-border-opacity" "1"
+        , Css.property "border-color" "rgba(223, 238, 227, var(--tw-border-opacity))"
+        ]
 
 
 {-| The tailwind class `border-separate`.
@@ -10478,7 +10486,8 @@ divide_secondary =
     Css.batch
         [ Css.Global.children
             [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "border-color" "#dfeee3ff"
+                [ Css.property "--tw-divide-opacity" "1"
+                , Css.property "border-color" "rgba(223, 238, 227, var(--tw-divide-opacity))"
                 ]
             ]
         ]
@@ -11579,7 +11588,7 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 from_secondary : Css.Style
 from_secondary =
     Css.batch
-        [ Css.property "--tw-gradient-from" "#dfeee3ff"
+        [ Css.property "--tw-gradient-from" "#dfeee3"
         , Css.property "--tw-gradient-stops" "var(--tw-gradient-from), var(--tw-gradient-to, rgba(223, 238, 227, 0))"
         ]
 
@@ -12809,6 +12818,15 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 grid_cols_none : Css.Style
 grid_cols_none =
     Css.property "grid-template-columns" "none"
+
+
+{-| The tailwind class `grid-cols-player-stats`.
+Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs)!
+-}
+
+grid_cols_player_stats : Css.Style
+grid_cols_player_stats =
+    Css.property "grid-template-columns" "2fr 1fr"
 
 
 {-| The tailwind class `grid-flow-col`.
@@ -29161,10 +29179,12 @@ placeholder_secondary : Css.Style
 placeholder_secondary =
     Css.batch
         [ Css.pseudoElement "placeholder"
-            [ Css.property "color" "#dfeee3ff"
+            [ Css.property "--tw-placeholder-opacity" "1"
+            , Css.property "color" "rgba(223, 238, 227, var(--tw-placeholder-opacity))"
             ]
         , Css.pseudoElement "-moz-placeholder"
-            [ Css.property "color" "#dfeee3ff"
+            [ Css.property "--tw-placeholder-opacity" "1"
+            , Css.property "color" "rgba(223, 238, 227, var(--tw-placeholder-opacity))"
             ]
         ]
 
@@ -32953,7 +32973,7 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 
 ring_offset_secondary : Css.Style
 ring_offset_secondary =
-    Css.property "--tw-ring-offset-color" "#dfeee3ff"
+    Css.property "--tw-ring-offset-color" "#dfeee3"
 
 
 {-| The tailwind class `ring-offset-success`.
@@ -33127,7 +33147,10 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 
 ring_secondary : Css.Style
 ring_secondary =
-    Css.property "--tw-ring-color" "#dfeee3ff"
+    Css.batch
+        [ Css.property "--tw-ring-opacity" "1"
+        , Css.property "--tw-ring-color" "rgba(223, 238, 227, var(--tw-ring-opacity))"
+        ]
 
 
 {-| The tailwind class `ring-success`.
@@ -36749,7 +36772,10 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 
 text_secondary : Css.Style
 text_secondary =
-    Css.property "color" "#dfeee3ff"
+    Css.batch
+        [ Css.property "--tw-text-opacity" "1"
+        , Css.property "color" "rgba(223, 238, 227, var(--tw-text-opacity))"
+        ]
 
 
 {-| The tailwind class `text-sm`.
@@ -36845,7 +36871,7 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 
 to_secondary : Css.Style
 to_secondary =
-    Css.property "--tw-gradient-to" "#dfeee3ff"
+    Css.property "--tw-gradient-to" "#dfeee3"
 
 
 {-| The tailwind class `to-success`.
@@ -38261,7 +38287,7 @@ Make sure to check out the [tailwind documentation](https://tailwindcss.com/docs
 
 via_secondary : Css.Style
 via_secondary =
-    Css.property "--tw-gradient-stops" "var(--tw-gradient-from), #dfeee3ff, var(--tw-gradient-to, rgba(223, 238, 227, 0))"
+    Css.property "--tw-gradient-stops" "var(--tw-gradient-from), #dfeee3, var(--tw-gradient-to, rgba(223, 238, 227, 0))"
 
 
 {-| The tailwind class `via-success`.

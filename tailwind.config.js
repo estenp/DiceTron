@@ -16,7 +16,8 @@ export default {
     },
     extend: {
       gridTemplateColumns: {
-        'header': "1fr 2fr 1fr"
+        'header': "1fr 2fr 1fr",
+        'player-stats': "2fr 1fr"
       }
     },
   },
