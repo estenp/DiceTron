@@ -167,11 +167,6 @@ type Msg
     | GameEvent GameEvent
 
 
-appendHistory : Model -> Try -> List ( Try, Int, String )
-appendHistory model try =
-    List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -664,6 +659,11 @@ availTrySelectOpts try quantity =
 
 
 -- Model Utils
+
+appendHistory : Model -> Try -> List ( Try, Int, String )
+appendHistory model try =
+    List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
+
 -- Misc Utils
 -- MAIN
 
