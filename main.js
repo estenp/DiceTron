@@ -9636,7 +9636,6 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 var $author$project$Tailwind$Utilities$grid = A2($rtfeldman$elm_css$Css$property, 'display', 'grid');
 var $author$project$Tailwind$Utilities$grid_cols_2 = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', 'repeat(2, minmax(0, 1fr))');
 var $rtfeldman$elm_css$Html$Styled$h2 = $rtfeldman$elm_css$Html$Styled$node('h2');
-var $rtfeldman$elm_css$Html$Styled$h3 = $rtfeldman$elm_css$Html$Styled$node('h3');
 var $author$project$Tailwind$Utilities$grid_cols_header = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', '1fr 2fr 1fr');
 var $author$project$Tailwind$Utilities$mb_10 = A2($rtfeldman$elm_css$Css$property, 'margin-bottom', '2.5rem');
 var $author$project$Main$header_ = A2(
@@ -9877,6 +9876,7 @@ var $author$project$Tailwind$Utilities$flex_1 = A2($rtfeldman$elm_css$Css$proper
 var $author$project$Tailwind$Utilities$flex_col = A2($rtfeldman$elm_css$Css$property, 'flex-direction', 'column');
 var $author$project$Tailwind$Utilities$gap_2 = A2($rtfeldman$elm_css$Css$property, 'gap', '0.5rem');
 var $author$project$Tailwind$Utilities$grid_cols_player_stats = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', '2fr 1fr');
+var $rtfeldman$elm_css$Html$Styled$h3 = $rtfeldman$elm_css$Html$Styled$node('h3');
 var $author$project$Tailwind$Utilities$h_full = A2($rtfeldman$elm_css$Css$property, 'height', '100%');
 var $author$project$Tailwind$Utilities$items_end = A2($rtfeldman$elm_css$Css$property, 'align-items', 'flex-end');
 var $rtfeldman$elm_css$Html$Styled$li = $rtfeldman$elm_css$Html$Styled$node('li');
@@ -9991,17 +9991,6 @@ var $author$project$Player$view = F2(
 					A2($elm$core$List$map, healthDiv, healthStack))
 				]));
 	});
-var $author$project$Try$view = function (_try) {
-	return function (node) {
-		return A2(
-			$rtfeldman$elm_css$Html$Styled$div,
-			_List_Nil,
-			_List_fromArray(
-				[node]));
-	}(
-		$rtfeldman$elm_css$Html$Styled$text(
-			$author$project$Try$toString(_try)));
-};
 var $author$project$Tailwind$Utilities$border_4 = A2($rtfeldman$elm_css$Css$property, 'border-width', '4px');
 var $author$project$Tailwind$Utilities$inline_block = A2($rtfeldman$elm_css$Css$property, 'display', 'inline-block');
 var $author$project$Tailwind$Utilities$m_2 = A2($rtfeldman$elm_css$Css$property, 'margin', '0.5rem');
@@ -10545,26 +10534,7 @@ var $author$project$Main$view = function (model) {
 				$elm$core$List$map,
 				$elm$core$Tuple$second,
 				$elm$core$Dict$toList(model.players))));
-	var model_log = A2($elm$core$Debug$log, 'Model', model);
 	var isGameOver = $folkertdev$elm_deque$Deque$length(model.activePlayers) <= 1;
-	var currentTurn = A2(
-		$rtfeldman$elm_css$Html$Styled$h3,
-		_List_Nil,
-		_List_fromArray(
-			[
-				$rtfeldman$elm_css$Html$Styled$text('Current Turn: '),
-				$rtfeldman$elm_css$Html$Styled$text(
-				A2($author$project$Player$getName, model.players, model.whosTurn)),
-				playerStats
-			]));
-	var currentTry = A2(
-		$rtfeldman$elm_css$Html$Styled$h3,
-		_List_Nil,
-		_List_fromArray(
-			[
-				$rtfeldman$elm_css$Html$Styled$text('Try to Beat'),
-				$author$project$Try$view(model.tryToBeat)
-			]));
 	var cupButtons = A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_fromArray(

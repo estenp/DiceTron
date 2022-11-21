@@ -2,13 +2,13 @@ module Main exposing (..)
 
 import Browser
 import Css exposing (..)
-import Css.Animations
+import Css.Animations exposing (..)
 import Css.Global exposing (global)
-import Css.Transitions
+-- import Css.Transitions
 import Deque
 import Dict exposing (..)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (class, classList, css, for, id, style, value)
+import Html.Styled.Attributes exposing (class, css, for, id, style, value)
 import Html.Styled.Events exposing (..)
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
@@ -17,6 +17,8 @@ import Tailwind.Utilities as Tw exposing (..)
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
 import Tuple3
 
+import StyledElements as Styled exposing (select, button, header)
+import Face exposing (view)
 
 
 -- CONSTANTS, DUMMY DATA
@@ -338,18 +340,18 @@ subscriptions _ =
 view : Model -> Html Msg
 view model =
     let
-        model_log =
-            Debug.log "Model" model
+        -- model_log =
+        --     Debug.log "Model" model
 
         -- UI
         isGameOver =
             Deque.length model.activePlayers <= 1
 
-        currentTry =
-            h3 [] [ text "Try to Beat", Try.view model.tryToBeat ]
+        -- currentTry =
+        --     h3 [] [ text "Try to Beat", Try.view model.tryToBeat ]
 
-        currentTurn =
-            h3 [] [ text "Current Turn: ", text (Player.getName model.players model.whosTurn), playerStats ]
+        -- currentTurn =
+        --     h3 [] [ text "Current Turn: ", text (Player.getName model.players model.whosTurn), playerStats ]
 
         playerStats =
             model.players
@@ -386,8 +388,8 @@ view model =
 
         cupButtons =
             div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, md [ Tw.w_1over4 ], Tw.w_full ] ]
-                [ button_ [ onClick (GameEvent Pull) ] [ text "pull" ]
-                , button_ [ onClick (GameEvent Look) ] [ text "look" ]
+                [ Styled.button [ onClick (GameEvent Pull) ] [ text "pull" ]
+                , Styled.button [ onClick (GameEvent Look) ] [ text "look" ]
                 ]
 
         tableWilds =
@@ -397,13 +399,13 @@ view model =
             div []
                 [ case model.turnStatus of
                     Fresh ->
-                        button_ [ onClick (Dice RollClick) ] [ text "roll" ]
+                        Styled.button [ onClick (Dice RollClick) ] [ text "roll" ]
 
                     Pulled _ ->
-                        button_ [ onClick (Dice RollClick) ] [ text "roll" ]
+                        Styled.button [ onClick (Dice RollClick) ] [ text "roll" ]
 
                     Looked ->
-                        button_ [ onClick (Dice RollClick) ] [ text "re-roll" ]
+                        Styled.button [ onClick (Dice RollClick) ] [ text "re-roll" ]
 
                     _ ->
                         span [] []
@@ -421,13 +423,13 @@ view model =
             [ global globalStyles
             , case model.turnStatus of
                 Fresh ->
-                    mainContainer_
+                    mainContainer
                         [ header_ [] [ logo, playerStats, tryHistory ]
                         , rollButtons
                         ]
 
                 Rolled ->
-                    mainContainer_
+                    mainContainer
                         [ header_ [] [ logo, playerStats, tryHistory ]
                         , tableWilds
                         , cup
@@ -436,7 +438,7 @@ view model =
                         ]
 
                 Pending ->
-                    mainContainer_
+                    mainContainer
                         [ header_ [] [ logo, playerStats, tryHistory ]
                         , tableWilds
                         , cupButtons
@@ -444,7 +446,7 @@ view model =
                         ]
 
                 Looked ->
-                    mainContainer_
+                    mainContainer
                         [ header_ [] [ logo, playerStats, tryHistory ]
                         , tableWilds
                         , cup
@@ -462,7 +464,7 @@ view model =
                                 Lie ->
                                     p [] [ text "Previous player lied. They will lose 1 hp." ]
                     in
-                    mainContainer_
+                    mainContainer
                         [ header_ [] [ logo, playerStats, tryHistory ]
                         , tableWilds
                         , cup
@@ -476,23 +478,30 @@ view model =
             [ text ("Game over." ++ Player.getName model.players (Maybe.withDefault 0 (Deque.first model.activePlayers)) ++ " wins!")
             ]
 
-
+inputBaseStyles : List Style
+inputBaseStyles =
+    [ Tw.border_solid
+    , Tw.border_2
+    , Tw.px_4
+    , Tw.py_2
+    , Tw.bg_secondary
+    , Tw.rounded_md
+    , Tw.text_tertiary
+    , Tw.border_secondary
+    , Tw.text_4xl
+    , Tw.w_full
+    ]
 
 -- UTILS
 -- Html Utils
 
 
-mainContainer_ : List (Html msg) -> Html msg
-mainContainer_ =
+mainContainer : List (Html msg) -> Html msg
+mainContainer =
     div
         [ class "main"
         , css [ Tw.grid, Tw.grid_cols_1, Tw.justify_items_center, Tw.gap_4 ]
         ]
-
-
-header_ : List (Attribute msg) -> List (Html msg) -> Html msg
-header_ =
-    styled div [ Tw.grid, Tw.grid_cols_header, Tw.mb_10, Tw.w_full ]
 
 
 logo : Html msg
@@ -521,33 +530,6 @@ logo =
         ]
 
 
-inputBaseStyles : List Style
-inputBaseStyles =
-    [ Tw.border_solid
-    , Tw.border_2
-    , Tw.px_4
-    , Tw.py_2
-    , Tw.bg_secondary
-    , Tw.rounded_md
-    , Tw.text_tertiary
-    , Tw.border_secondary
-    , Tw.text_4xl
-    , Tw.w_full
-    ]
-
-
-button_ : List (Attribute msg) -> List (Html msg) -> Html msg
-button_ =
-    styled button
-        (List.concat [ inputBaseStyles, [] ])
-
-
-select_ : List (Attribute msg) -> List (Html msg) -> Html msg
-select_ =
-    styled select
-        (List.concat [ inputBaseStyles, [] ])
-
-
 stats_ : List (Html msg) -> Html msg
 stats_ =
     div
@@ -566,34 +548,11 @@ stats_ =
         ]
 
 
-viewDie : Face -> Html Msg
-viewDie die =
-    div
-        [ css
-            [ Tw.text_center
-            , Tw.w_40
-            , Tw.inline_block
-            , Tw.p_2
-            , Tw.m_2
-            , Tw.text_9xl
-            , Tw.border_4
-            , Tw.rounded_2xl
-            ]
-        , css
-            [ if Try.decodeFace die == 1 then
-                Tw.bg_exclaim
-
-              else
-                Tw.text_secondary
-            ]
-        ]
-        [ text (String.fromInt (Try.decodeFace die))
-        ]
 
 
 viewCup : Roll -> List (Html Msg)
 viewCup =
-    List.map viewDie
+    List.map Face.view
 
 
 
@@ -615,13 +574,13 @@ viewPassTry quantity val tryToBeat =
     div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, md [ Tw.w_1over4 ], Tw.w_full ] ]
         [ div []
             [ label [ for "quantity" ] [ text "Quantity" ]
-            , select_ [ onInput changeQuantity, id "quantity" ] quantities
+            , Styled.select [ onInput changeQuantity, id "quantity" ] quantities
             ]
         , div []
             [ label [ for "value" ] [ text "Value" ]
-            , select_ [ onInput changeValue, id "value" ] values
+            , Styled.select [ onInput changeValue, id "value" ] values
             ]
-        , button_ [ css [ Tw.col_span_2 ], onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "pass" ]
+        , Styled.button [ css [ Tw.col_span_2 ], onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "pass" ]
         ]
 
 
