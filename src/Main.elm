@@ -12,12 +12,12 @@ import Html.Styled.Attributes exposing (class, css, for, id, style, value)
 import Html.Styled.Events exposing (..)
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
-import Tailwind.Breakpoints as Break exposing (..)
-import Tailwind.Utilities as Tw exposing (..)
+import Tailwind.Breakpoints as Break
+import Tailwind.Utilities as Tw
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
 import Tuple3
 
-import StyledElements as Styled exposing (select, button, header)
+import StyledElements exposing (..)
 import Face exposing (view)
 
 
@@ -387,9 +387,9 @@ view model =
                 (viewCup model.roll)
 
         cupButtons =
-            div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, md [ Tw.w_1over4 ], Tw.w_full ] ]
-                [ Styled.button [ onClick (GameEvent Pull) ] [ text "pull" ]
-                , Styled.button [ onClick (GameEvent Look) ] [ text "look" ]
+            div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Break.md [ Tw.w_1over4 ], Tw.w_full ] ]
+                [ button_ [ onClick (GameEvent Pull) ] [ text "pull" ]
+                , button_ [ onClick (GameEvent Look) ] [ text "look" ]
                 ]
 
         tableWilds =
@@ -399,13 +399,13 @@ view model =
             div []
                 [ case model.turnStatus of
                     Fresh ->
-                        Styled.button [ onClick (Dice RollClick) ] [ text "roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "roll" ]
 
                     Pulled _ ->
-                        Styled.button [ onClick (Dice RollClick) ] [ text "roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "roll" ]
 
                     Looked ->
-                        Styled.button [ onClick (Dice RollClick) ] [ text "re-roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "re-roll" ]
 
                     _ ->
                         span [] []
@@ -420,7 +420,7 @@ view model =
     in
     if not isGameOver then
         div []
-            [ global globalStyles
+            [ global Tw.globalStyles
             , case model.turnStatus of
                 Fresh ->
                     mainContainer
@@ -571,16 +571,16 @@ viewPassTry quantity val tryToBeat =
         changeValue =
             (ViewState << ChangeValue) << Try.encodeFace << Maybe.withDefault 2 << String.toInt
     in
-    div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, md [ Tw.w_1over4 ], Tw.w_full ] ]
+    div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Break.md [ Tw.w_1over4 ], Tw.w_full ] ]
         [ div []
             [ label [ for "quantity" ] [ text "Quantity" ]
-            , Styled.select [ onInput changeQuantity, id "quantity" ] quantities
+            , select [ onInput changeQuantity, id "quantity" ] quantities
             ]
         , div []
             [ label [ for "value" ] [ text "Value" ]
-            , Styled.select [ onInput changeValue, id "value" ] values
+            , select [ onInput changeValue, id "value" ] values
             ]
-        , Styled.button [ css [ Tw.col_span_2 ], onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "pass" ]
+        , button_ [ css [ Tw.col_span_2 ], onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "pass" ]
         ]
 
 

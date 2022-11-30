@@ -7742,9 +7742,6 @@ var $rtfeldman$elm_css$VirtualDom$Styled$Node = F3(
 var $rtfeldman$elm_css$VirtualDom$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$Node;
 var $rtfeldman$elm_css$Html$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$node;
 var $rtfeldman$elm_css$Html$Styled$button = $rtfeldman$elm_css$Html$Styled$node('button');
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
 var $rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
 	return {$: 'ApplyStyles', a: a};
 };
@@ -7789,7 +7786,7 @@ var $author$project$Tailwind$Utilities$text_tertiary = $rtfeldman$elm_css$Css$ba
 			A2($rtfeldman$elm_css$Css$property, 'color', 'rgba(161, 159, 187, var(--tw-text-opacity))')
 		]));
 var $author$project$Tailwind$Utilities$w_full = A2($rtfeldman$elm_css$Css$property, 'width', '100%');
-var $author$project$Main$inputBaseStyles = _List_fromArray(
+var $author$project$StyledElements$inputBaseStyles = _List_fromArray(
 	[$author$project$Tailwind$Utilities$border_solid, $author$project$Tailwind$Utilities$border_2, $author$project$Tailwind$Utilities$px_4, $author$project$Tailwind$Utilities$py_2, $author$project$Tailwind$Utilities$bg_secondary, $author$project$Tailwind$Utilities$rounded_md, $author$project$Tailwind$Utilities$text_tertiary, $author$project$Tailwind$Utilities$border_secondary, $author$project$Tailwind$Utilities$text_4xl, $author$project$Tailwind$Utilities$w_full]);
 var $rtfeldman$elm_css$VirtualDom$Styled$Attribute = F3(
 	function (a, b, c) {
@@ -8188,6 +8185,9 @@ var $rtfeldman$elm_css$Css$Structure$Output$prettyPrint = function (_v0) {
 	var namespaces = _v0.namespaces;
 	var declarations = _v0.declarations;
 	return $rtfeldman$elm_css$Css$Structure$Output$charsetToString(charset) + (A3($rtfeldman$elm_css$Css$String$mapJoin, $rtfeldman$elm_css$Css$Structure$Output$importToString, '\n', imports) + (A3($rtfeldman$elm_css$Css$String$mapJoin, $rtfeldman$elm_css$Css$Structure$Output$namespaceToString, '\n', namespaces) + (A3($rtfeldman$elm_css$Css$String$mapJoin, $rtfeldman$elm_css$Css$Structure$Output$prettyPrintDeclaration, '\n', declarations) + '')));
+};
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
 };
 var $elm$core$List$concatMap = F2(
 	function (f, list) {
@@ -9164,12 +9164,7 @@ var $rtfeldman$elm_css$Html$Styled$styled = F4(
 				attrs),
 			children);
 	});
-var $author$project$Main$button_ = A2(
-	$rtfeldman$elm_css$Html$Styled$styled,
-	$rtfeldman$elm_css$Html$Styled$button,
-	$elm$core$List$concat(
-		_List_fromArray(
-			[$author$project$Main$inputBaseStyles, _List_Nil])));
+var $author$project$StyledElements$button_ = A2($rtfeldman$elm_css$Html$Styled$styled, $rtfeldman$elm_css$Html$Styled$button, $author$project$StyledElements$inputBaseStyles);
 var $rtfeldman$elm_css$VirtualDom$Styled$property = F2(
 	function (key, value) {
 		return A3(
@@ -9638,7 +9633,7 @@ var $author$project$Tailwind$Utilities$grid_cols_2 = A2($rtfeldman$elm_css$Css$p
 var $rtfeldman$elm_css$Html$Styled$h2 = $rtfeldman$elm_css$Html$Styled$node('h2');
 var $author$project$Tailwind$Utilities$grid_cols_header = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', '1fr 2fr 1fr');
 var $author$project$Tailwind$Utilities$mb_10 = A2($rtfeldman$elm_css$Css$property, 'margin-bottom', '2.5rem');
-var $author$project$Main$header_ = A2(
+var $author$project$StyledElements$header_ = A2(
 	$rtfeldman$elm_css$Html$Styled$styled,
 	$rtfeldman$elm_css$Html$Styled$div,
 	_List_fromArray(
@@ -9751,7 +9746,7 @@ var $author$project$Main$logo = A2(
 		]));
 var $author$project$Tailwind$Utilities$grid_cols_1 = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', 'repeat(1, minmax(0, 1fr))');
 var $author$project$Tailwind$Utilities$justify_items_center = A2($rtfeldman$elm_css$Css$property, 'justify-items', 'center');
-var $author$project$Main$mainContainer_ = $rtfeldman$elm_css$Html$Styled$div(
+var $author$project$Main$mainContainer = $rtfeldman$elm_css$Html$Styled$div(
 	_List_fromArray(
 		[
 			$rtfeldman$elm_css$Html$Styled$Attributes$class('main'),
@@ -10009,7 +10004,7 @@ var $author$project$Tailwind$Utilities$text_secondary = $rtfeldman$elm_css$Css$b
 			A2($rtfeldman$elm_css$Css$property, 'color', 'rgba(223, 238, 227, var(--tw-text-opacity))')
 		]));
 var $author$project$Tailwind$Utilities$w_40 = A2($rtfeldman$elm_css$Css$property, 'width', '10rem');
-var $author$project$Main$viewDie = function (die) {
+var $author$project$Face$view = function (die) {
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_fromArray(
@@ -10030,7 +10025,7 @@ var $author$project$Main$viewDie = function (die) {
 					$author$project$Try$decodeFace(die)))
 			]));
 };
-var $author$project$Main$viewCup = $elm$core$List$map($author$project$Main$viewDie);
+var $author$project$Main$viewCup = $elm$core$List$map($author$project$Face$view);
 var $author$project$Main$ChangeQuantity = function (a) {
 	return {$: 'ChangeQuantity', a: a};
 };
@@ -10325,12 +10320,6 @@ var $rtfeldman$elm_css$Html$Styled$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $rtfeldman$elm_css$Html$Styled$Events$targetValue)));
 };
 var $rtfeldman$elm_css$Html$Styled$select = $rtfeldman$elm_css$Html$Styled$node('select');
-var $author$project$Main$select_ = A2(
-	$rtfeldman$elm_css$Html$Styled$styled,
-	$rtfeldman$elm_css$Html$Styled$select,
-	$elm$core$List$concat(
-		_List_fromArray(
-			[$author$project$Main$inputBaseStyles, _List_Nil])));
 var $author$project$Tailwind$Utilities$w_1over4 = A2($rtfeldman$elm_css$Css$property, 'width', '25%');
 var $author$project$Main$viewPassTry = F3(
 	function (quantity, val, tryToBeat) {
@@ -10392,7 +10381,7 @@ var $author$project$Main$viewPassTry = F3(
 									$rtfeldman$elm_css$Html$Styled$text('Quantity')
 								])),
 							A2(
-							$author$project$Main$select_,
+							$rtfeldman$elm_css$Html$Styled$select,
 							_List_fromArray(
 								[
 									$rtfeldman$elm_css$Html$Styled$Events$onInput(changeQuantity),
@@ -10416,7 +10405,7 @@ var $author$project$Main$viewPassTry = F3(
 									$rtfeldman$elm_css$Html$Styled$text('Value')
 								])),
 							A2(
-							$author$project$Main$select_,
+							$rtfeldman$elm_css$Html$Styled$select,
 							_List_fromArray(
 								[
 									$rtfeldman$elm_css$Html$Styled$Events$onInput(changeValue),
@@ -10425,7 +10414,7 @@ var $author$project$Main$viewPassTry = F3(
 							values)
 						])),
 					A2(
-					$author$project$Main$button_,
+					$author$project$StyledElements$button_,
 					_List_fromArray(
 						[
 							$rtfeldman$elm_css$Html$Styled$Attributes$css(
@@ -10487,7 +10476,7 @@ var $author$project$Main$view = function (model) {
 				switch (_v2.$) {
 					case 'Fresh':
 						return A2(
-							$author$project$Main$button_,
+							$author$project$StyledElements$button_,
 							_List_fromArray(
 								[
 									$rtfeldman$elm_css$Html$Styled$Events$onClick(
@@ -10499,7 +10488,7 @@ var $author$project$Main$view = function (model) {
 								]));
 					case 'Pulled':
 						return A2(
-							$author$project$Main$button_,
+							$author$project$StyledElements$button_,
 							_List_fromArray(
 								[
 									$rtfeldman$elm_css$Html$Styled$Events$onClick(
@@ -10511,7 +10500,7 @@ var $author$project$Main$view = function (model) {
 								]));
 					case 'Looked':
 						return A2(
-							$author$project$Main$button_,
+							$author$project$StyledElements$button_,
 							_List_fromArray(
 								[
 									$rtfeldman$elm_css$Html$Styled$Events$onClick(
@@ -10554,7 +10543,7 @@ var $author$project$Main$view = function (model) {
 		_List_fromArray(
 			[
 				A2(
-				$author$project$Main$button_,
+				$author$project$StyledElements$button_,
 				_List_fromArray(
 					[
 						$rtfeldman$elm_css$Html$Styled$Events$onClick(
@@ -10565,7 +10554,7 @@ var $author$project$Main$view = function (model) {
 						$rtfeldman$elm_css$Html$Styled$text('pull')
 					])),
 				A2(
-				$author$project$Main$button_,
+				$author$project$StyledElements$button_,
 				_List_fromArray(
 					[
 						$rtfeldman$elm_css$Html$Styled$Events$onClick(
@@ -10637,22 +10626,22 @@ var $author$project$Main$view = function (model) {
 				var _v0 = model.turnStatus;
 				switch (_v0.$) {
 					case 'Fresh':
-						return $author$project$Main$mainContainer_(
+						return $author$project$Main$mainContainer(
 							_List_fromArray(
 								[
 									A2(
-									$author$project$Main$header_,
+									$author$project$StyledElements$header_,
 									_List_Nil,
 									_List_fromArray(
 										[$author$project$Main$logo, playerStats, tryHistory])),
 									rollButtons
 								]));
 					case 'Rolled':
-						return $author$project$Main$mainContainer_(
+						return $author$project$Main$mainContainer(
 							_List_fromArray(
 								[
 									A2(
-									$author$project$Main$header_,
+									$author$project$StyledElements$header_,
 									_List_Nil,
 									_List_fromArray(
 										[$author$project$Main$logo, playerStats, tryHistory])),
@@ -10662,11 +10651,11 @@ var $author$project$Main$view = function (model) {
 									trySelect
 								]));
 					case 'Pending':
-						return $author$project$Main$mainContainer_(
+						return $author$project$Main$mainContainer(
 							_List_fromArray(
 								[
 									A2(
-									$author$project$Main$header_,
+									$author$project$StyledElements$header_,
 									_List_Nil,
 									_List_fromArray(
 										[$author$project$Main$logo, playerStats, tryHistory])),
@@ -10675,11 +10664,11 @@ var $author$project$Main$view = function (model) {
 									trySelect
 								]));
 					case 'Looked':
-						return $author$project$Main$mainContainer_(
+						return $author$project$Main$mainContainer(
 							_List_fromArray(
 								[
 									A2(
-									$author$project$Main$header_,
+									$author$project$StyledElements$header_,
 									_List_Nil,
 									_List_fromArray(
 										[$author$project$Main$logo, playerStats, tryHistory])),
@@ -10709,11 +10698,11 @@ var $author$project$Main$view = function (model) {
 										]));
 							}
 						}();
-						return $author$project$Main$mainContainer_(
+						return $author$project$Main$mainContainer(
 							_List_fromArray(
 								[
 									A2(
-									$author$project$Main$header_,
+									$author$project$StyledElements$header_,
 									_List_Nil,
 									_List_fromArray(
 										[$author$project$Main$logo, playerStats, tryHistory])),
