@@ -574,11 +574,11 @@ viewPassTry quantity val tryToBeat =
     div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Break.md [ Tw.w_1over4 ], Tw.w_full ] ]
         [ div []
             [ label [ for "quantity" ] [ text "Quantity" ]
-            , select [ onInput changeQuantity, id "quantity" ] quantities
+            , select_ [ onInput changeQuantity, id "quantity" ] quantities
             ]
         , div []
             [ label [ for "value" ] [ text "Value" ]
-            , select [ onInput changeValue, id "value" ] values
+            , select_ [ onInput changeValue, id "value" ] values
             ]
         , button_ [ css [ Tw.col_span_2 ], onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "pass" ]
         ]

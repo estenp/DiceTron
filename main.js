@@ -10320,6 +10320,7 @@ var $rtfeldman$elm_css$Html$Styled$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $rtfeldman$elm_css$Html$Styled$Events$targetValue)));
 };
 var $rtfeldman$elm_css$Html$Styled$select = $rtfeldman$elm_css$Html$Styled$node('select');
+var $author$project$StyledElements$select_ = A2($rtfeldman$elm_css$Html$Styled$styled, $rtfeldman$elm_css$Html$Styled$select, $author$project$StyledElements$inputBaseStyles);
 var $author$project$Tailwind$Utilities$w_1over4 = A2($rtfeldman$elm_css$Css$property, 'width', '25%');
 var $author$project$Main$viewPassTry = F3(
 	function (quantity, val, tryToBeat) {
@@ -10381,7 +10382,7 @@ var $author$project$Main$viewPassTry = F3(
 									$rtfeldman$elm_css$Html$Styled$text('Quantity')
 								])),
 							A2(
-							$rtfeldman$elm_css$Html$Styled$select,
+							$author$project$StyledElements$select_,
 							_List_fromArray(
 								[
 									$rtfeldman$elm_css$Html$Styled$Events$onInput(changeQuantity),
@@ -10405,7 +10406,7 @@ var $author$project$Main$viewPassTry = F3(
 									$rtfeldman$elm_css$Html$Styled$text('Value')
 								])),
 							A2(
-							$rtfeldman$elm_css$Html$Styled$select,
+							$author$project$StyledElements$select_,
 							_List_fromArray(
 								[
 									$rtfeldman$elm_css$Html$Styled$Events$onInput(changeValue),
