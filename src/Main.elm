@@ -1,24 +1,25 @@
 module Main exposing (..)
 
+-- import Css.Transitions
+
 import Browser
 import Css exposing (..)
 import Css.Animations exposing (..)
 import Css.Global exposing (global)
--- import Css.Transitions
 import Deque
 import Dict exposing (..)
+import Face exposing (view)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (class, css, for, id, style, value)
+import Html.Styled.Attributes exposing (class, css, for, id, value)
 import Html.Styled.Events exposing (..)
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
+import StyledElements exposing (..)
 import Tailwind.Breakpoints as Break
 import Tailwind.Utilities as Tw
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
 import Tuple3
 
-import StyledElements exposing (..)
-import Face exposing (view)
 
 
 -- CONSTANTS, DUMMY DATA
@@ -342,16 +343,9 @@ view model =
     let
         -- model_log =
         --     Debug.log "Model" model
-
         -- UI
-        isGameOver =
+        gameIsOver =
             Deque.length model.activePlayers <= 1
-
-        -- currentTry =
-        --     h3 [] [ text "Try to Beat", Try.view model.tryToBeat ]
-
-        -- currentTurn =
-        --     h3 [] [ text "Current Turn: ", text (Player.getName model.players model.whosTurn), playerStats ]
 
         playerStats =
             model.players
@@ -418,7 +412,7 @@ view model =
             else
                 span [] []
     in
-    if not isGameOver then
+    if not gameIsOver then
         div []
             [ global Tw.globalStyles
             , case model.turnStatus of
@@ -478,6 +472,7 @@ view model =
             [ text ("Game over." ++ Player.getName model.players (Maybe.withDefault 0 (Deque.first model.activePlayers)) ++ " wins!")
             ]
 
+
 inputBaseStyles : List Style
 inputBaseStyles =
     [ Tw.border_solid
@@ -491,6 +486,8 @@ inputBaseStyles =
     , Tw.text_4xl
     , Tw.w_full
     ]
+
+
 
 -- UTILS
 -- Html Utils
@@ -519,8 +516,10 @@ logo =
             , Tw.rounded_bl
             , Tw.shadow_md
             , Tw.bg_gradient_to_bl
-            , Tw.from_primary
-            , Tw.to_destruct
+            , Tw.text_secondary
+
+            -- , Tw.from_primary
+            -- , Tw.to_destruct
             ]
         , class "logo-container"
         ]
@@ -530,24 +529,25 @@ logo =
         ]
 
 
+
+
+
 stats_ : List (Html msg) -> Html msg
 stats_ =
     div
         [ class "stats"
         , css
-            [ Tw.flex
-            , Tw.justify_around
-            , Tw.p_4
-            , Tw.shadow_sm
-            , Tw.bg_secondary
-            , Tw.rounded_b
-            , Tw.shadow_md
-            , Tw.text_tertiary
-            , Tw.gap_8
-            ]
+            (List.concat
+                [ [ Tw.flex
+                  , Tw.justify_around
+                  , Tw.p_4
+                  , Tw.text_tertiary
+                  , Tw.gap_8
+                  ]
+                , card
+                ]
+            )
         ]
-
-
 
 
 viewCup : Roll -> List (Html Msg)
@@ -588,6 +588,7 @@ viewPassTry quantity val tryToBeat =
 {- Takes a Try and a Quantity and returns a tuple of a list of Quantity HTML options and a list of Face HTML options -}
 
 
+-- this is kinda dumb -> try and quantity? should decode Quantity from Try instead?
 availTrySelectOpts : Try -> Quantity -> ( List (Html msg1), List (Html msg) )
 availTrySelectOpts try quantity =
     let
@@ -619,9 +620,12 @@ availTrySelectOpts try quantity =
 
 -- Model Utils
 
+
 appendHistory : Model -> Try -> List ( Try, Int, String )
 appendHistory model try =
     List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
+
+
 
 -- Misc Utils
 -- MAIN

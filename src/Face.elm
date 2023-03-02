@@ -2,14 +2,15 @@ module Face exposing (view)
 
 import Css exposing (Style)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (css, href, src, style)
+import Html.Styled.Attributes exposing (css, class, href, src, style)
 import Tailwind.Utilities as Tw exposing (..)
 import Try exposing (Face(..))
 
 view : Face -> Html msg
 view die =
     div
-        [ css
+        [ class "face"
+        , css
             [ Tw.text_center
             , Tw.w_40
             , Tw.inline_block
@@ -20,12 +21,18 @@ view die =
             , Tw.rounded_2xl
             ]
         , css
-            [ if Try.decodeFace die == 1 then
-                Tw.bg_exclaim
-
+            (if Try.decodeFace die == 1 then
+                [ Tw.bg_exclaim
+                , Tw.text_primary
+                ]
               else
-                Tw.text_secondary
-            ]
+                [
+                Tw.bg_secondary
+                , Tw.text_tertiary
+                ])
         ]
-        [ text (String.fromInt (Try.decodeFace die))
+        [ if Try.decodeFace die == 1 then
+            text "𞡥"
+          else
+            text (String.fromInt (Try.decodeFace die))
         ]

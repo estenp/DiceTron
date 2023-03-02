@@ -3,7 +3,7 @@ module StyledElements exposing (..)
 
 import Css exposing (Style)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (css, href, src, style)
+-- import Html.Styled.Attributes exposing (css, href, src, style)
 import Tailwind.Utilities as Tw exposing (..)
 
 
@@ -21,10 +21,17 @@ inputBaseStyles =
     , Tw.w_full
     ]
 
+card : List Style
+card =
+    [ Tw.shadow_sm
+    , Tw.bg_secondary
+    , Tw.rounded_b
+    , Tw.shadow_md
+    ]
 
 button_ : List (Attribute msg) -> List (Html msg) -> Html msg
 button_ =
-    styled button inputBaseStyles
+    styled button (List.concat [inputBaseStyles, card])
 
 
 select_ : List (Attribute msg) -> List (Html msg) -> Html msg

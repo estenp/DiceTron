@@ -38,6 +38,10 @@ body {
   color: #A19FBB;
 }
 
+.face {
+  /* transform: rotate(270deg); */
+}
+
 /*
 button {
   color: #907AD6
