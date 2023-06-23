@@ -10535,7 +10535,7 @@ var $author$project$Main$view = function (model) {
 				$elm$core$List$map,
 				$elm$core$Tuple$second,
 				$elm$core$Dict$toList(model.players))));
-	var isGameOver = $folkertdev$elm_deque$Deque$length(model.activePlayers) <= 1;
+	var gameIsOver = $folkertdev$elm_deque$Deque$length(model.activePlayers) <= 1;
 	var cupButtons = A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_fromArray(
@@ -10628,7 +10628,7 @@ var $author$project$Main$view = function (model) {
 					[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_evenly]))
 			]),
 		$author$project$Main$viewCup(model.roll));
-	return (!isGameOver) ? A2(
+	return (!gameIsOver) ? A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_Nil,
 		_List_fromArray(

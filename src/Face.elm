@@ -1,8 +1,7 @@
 module Face exposing (view)
 
-import Css exposing (Style)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (css, class, href, src, style)
+import Html.Styled.Attributes exposing (css, class)
 import Tailwind.Utilities as Tw exposing (..)
 import Try exposing (Face(..))
 

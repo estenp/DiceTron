@@ -1,8 +1,8 @@
 module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, assessRoll, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, getPassableTrys, mustPass, rollGenerator, toString, view)
 
 import Dict exposing (Dict)
-import Html.Styled exposing (..)
 import Dict.Extra as DictExtra exposing (..)
+import Html.Styled exposing (..)
 import Random
 import Tuple2
 import Tuple3
@@ -301,7 +301,8 @@ getBestOfAKind dict =
             Maybe.withDefault 0 (Dict.get 1 dict)
     in
     if wild_count == 5 then
-        (Five, Sixes)
+        ( Five, Sixes )
+
     else
         dict
             -- Wilds have been counted, remove them from dict
@@ -338,10 +339,8 @@ view try =
         |> (\node -> div [] [ node ])
 
 
-
--- Takes a Try and determines the next highest Try. If the passed Try is the highest possible, return Nothing
-
-
+{-| Takes a Try and determines the next highest Try. If the passed Try is the highest possible, return Nothing
+-}
 mustPass : Try -> Maybe Try
 mustPass receivedTry =
     let
@@ -363,10 +362,8 @@ mustPass receivedTry =
             Nothing
 
 
-
-{- Takes a Try and returns a Dictionary with a key of quantity, and value of a list of faces -}
-
-
+{-| Takes a Try and returns a Dictionary with a key of quantity, and value of a list of faces
+-}
 getPassableTrys : Try -> Dict Int (List Int)
 getPassableTrys try =
     let

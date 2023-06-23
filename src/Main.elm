@@ -529,9 +529,6 @@ logo =
         ]
 
 
-
-
-
 stats_ : List (Html msg) -> Html msg
 stats_ =
     div
@@ -586,9 +583,9 @@ viewPassTry quantity val tryToBeat =
 
 
 {- Takes a Try and a Quantity and returns a tuple of a list of Quantity HTML options and a list of Face HTML options -}
-
-
 -- this is kinda dumb -> try and quantity? should decode Quantity from Try instead?
+
+
 availTrySelectOpts : Try -> Quantity -> ( List (Html msg1), List (Html msg) )
 availTrySelectOpts try quantity =
     let
