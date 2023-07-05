@@ -473,22 +473,6 @@ view model =
             ]
 
 
-inputBaseStyles : List Style
-inputBaseStyles =
-    [ Tw.border_solid
-    , Tw.border_2
-    , Tw.px_4
-    , Tw.py_2
-    , Tw.bg_secondary
-    , Tw.rounded_md
-    , Tw.text_tertiary
-    , Tw.border_secondary
-    , Tw.text_4xl
-    , Tw.w_full
-    ]
-
-
-
 -- UTILS
 -- Html Utils
 
@@ -552,10 +536,8 @@ viewCup =
     List.map Face.view
 
 
-
-{- Takes a Quantity, Face, and a Try to best, and returns HTML for Try HTML `select`'s -}
-
-
+{-| Takes a Quantity, Face, and a Try to best, and returns HTML for Try HTML `select`'s
+-}
 viewPassTry : Quantity -> Face -> Try -> Html Msg
 viewPassTry quantity val tryToBeat =
     let
@@ -581,11 +563,9 @@ viewPassTry quantity val tryToBeat =
         ]
 
 
-
-{- Takes a Try and a Quantity and returns a tuple of a list of Quantity HTML options and a list of Face HTML options -}
--- this is kinda dumb -> try and quantity? should decode Quantity from Try instead?
-
-
+{-| Takes a Try and a Quantity and returns a tuple of a list of Quantity HTML options and a list of Face HTML options
+todo: this is kinda dumb -> try and quantity? should decode Quantity from Try instead?
+-}
 availTrySelectOpts : Try -> Quantity -> ( List (Html msg1), List (Html msg) )
 availTrySelectOpts try quantity =
     let
