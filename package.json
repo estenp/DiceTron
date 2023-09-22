@@ -1,6 +1,5 @@
 {
   "type": "module",
-  "main": "generatetw.js",
   "dependencies": {
     "@tailwindcss/aspect-ratio": "^0.2.0",
     "@tailwindcss/forms": "^0.3.2",
@@ -12,6 +11,8 @@
     "tailwindcss": "^2.1.2"
   },
   "scripts": {
-    "start": "node generatetw.js"
+    "tw:build": "node generatetw.js",
+    "app:build": "elm make src/Main.elm --output=main.js",
+    "build": "npm run tw:build && npm run app:build"
   }
 }
