@@ -5,14 +5,16 @@
     "@tailwindcss/forms": "^0.3.2",
     "@tailwindcss/typography": "^0.4.0",
     "@yarnpkg/lockfile": "^1.1.0",
-    "autoprefixer": "^10.2.5",
-    "elm-tailwind-modules": "^0.4.1",
-    "postcss": "^8.2.13",
-    "tailwindcss": "^2.1.2"
+    "autoprefixer": "^10.2.5"
   },
   "scripts": {
     "tw:build": "node generatetw.js",
     "app:build": "elm make src/Main.elm --output=main.js",
     "build": "npm run tw:build && npm run app:build"
+  },
+  "devDependencies": {
+    "elm-tailwind-modules": "^0.4.0",
+    "postcss": "^8.4.30",
+    "tailwindcss": "^2.0.0"
   }
 }
