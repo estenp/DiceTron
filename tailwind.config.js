@@ -12,7 +12,18 @@ export default {
       tertiary: "#A19FBB",
       destruct: "#8E4A49",
       exclaim: "#E0905D",
-      success: "#4ED0B6"
+      success: "#4ED0B6",
+      black: {
+        100: "#372F3E",
+        200: "#222123",
+      },
+      gray: "#E8E8E8",
+      white: "#F9F4F5",
+      purple: {
+        100: "#C8B8DB",
+        200: "#70587C",
+        300: "#502F4C",
+      }
     },
     extend: {
       gridTemplateColumns: {

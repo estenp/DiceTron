@@ -1,14 +1,28 @@
 module Face exposing (view)
 
+import Css.Animations exposing (..)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (css, class)
+import Html.Styled.Attributes exposing (class, css)
+import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw exposing (..)
 import Try exposing (Face(..))
 
+
 view : Face -> Html msg
 view die =
+    let
+        isWild =
+            Try.decodeFace die == 1
+
+        className =
+            if isWild then
+                "face wild"
+
+            else
+                "face"
+    in
     div
-        [ class "face"
+        [ class className
         , css
             [ Tw.text_center
             , Tw.w_40
@@ -18,20 +32,13 @@ view die =
             , Tw.text_9xl
             , Tw.border_4
             , Tw.rounded_2xl
+            , Tw.bg_color Tw.white
+            , Tw.text_color Tw.black_100
             ]
-        , css
-            (if Try.decodeFace die == 1 then
-                [ Tw.bg_exclaim
-                , Tw.text_primary
-                ]
-              else
-                [
-                Tw.bg_secondary
-                , Tw.text_tertiary
-                ])
         ]
-        [ if Try.decodeFace die == 1 then
-            text "𞡥"
+        [ if isWild then
+            text "•"
+
           else
             text (String.fromInt (Try.decodeFace die))
         ]

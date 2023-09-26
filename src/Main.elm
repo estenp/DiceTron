@@ -10,12 +10,13 @@ import Deque
 import Dict exposing (..)
 import Face exposing (view)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (class, css, for, id, value)
+import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
 import Html.Styled.Events exposing (..)
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
 import StyledElements exposing (..)
 import Tailwind.Breakpoints as Break
+import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
 import Tuple3
@@ -362,32 +363,24 @@ view model =
                 )
 
         cup =
-            h2
+            section
                 [ class "roll"
-                , css
-                    [ Css.animationName
-                        (Css.Animations.keyframes
-                            [ ( 0, [ Css.Animations.opacity (Css.int 0) ] )
-                            , ( 20, [ Css.Animations.opacity (Css.int 30) ] )
-                            , ( 80, [ Css.Animations.opacity (Css.int 70) ] )
-                            , ( 100, [ Css.Animations.opacity (Css.int 100) ] )
-                            ]
-                        )
-                    , Css.animationIterationCount (Css.int 1)
-                    , Css.animationDuration (4000 |> ms)
-                    ]
                 , css [ Tw.flex, Tw.justify_evenly ]
                 ]
                 (viewCup model.roll)
 
         cupButtons =
-            div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Break.md [ Tw.w_1over4 ], Tw.w_full ] ]
+            div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
                 [ button_ [ onClick (GameEvent Pull) ] [ text "pull" ]
                 , button_ [ onClick (GameEvent Look) ] [ text "look" ]
                 ]
 
         tableWilds =
-            h2 [] (viewCup (List.repeat model.tableWilds Wilds))
+            if model.tableWilds > 0 then
+                section [ id "wilds" ] (viewCup (List.repeat model.tableWilds Wilds))
+
+            else
+                span [] []
 
         rollButtons =
             div []
@@ -411,66 +404,102 @@ view model =
 
             else
                 span [] []
+
+        console =
+            label [ class "console", css [ Tw.p_4, Tw.bg_color Tw.black_200, Tw.border_t_4, Tw.border_color Tw.purple_100, Tw.w_full ] ]
+                [ input
+                    [ type_ "text"
+                    , class "console__textarea"
+                    , css
+                        [ Css.backgroundColor transparent
+                        , Tw.w_full
+                        , Tw.h_8
+                        ]
+                    ]
+                    []
+                ]
     in
-    if not gameIsOver then
-        div []
-            [ global Tw.globalStyles
-            , case model.turnStatus of
-                Fresh ->
-                    mainContainer
-                        [ header_ [] [ logo, playerStats, tryHistory ]
-                        , rollButtons
+    span []
+        [ global Tw.globalStyles
+        , div [ class "main" ]
+            (if not gameIsOver then
+                case model.turnStatus of
+                    Fresh ->
+                        [ logo
+                        , playerStats
+                        , tryHistory
+                        , div [ class "play-area" ]
+                            [ rollButtons
+                            ]
+                        , console
                         ]
 
-                Rolled ->
-                    mainContainer
-                        [ header_ [] [ logo, playerStats, tryHistory ]
-                        , tableWilds
-                        , cup
-                        , rollButtons
-                        , trySelect
+                    Rolled ->
+                        [ logo
+                        , playerStats
+                        , tryHistory
+                        , div [ class "play-area" ]
+                            [ tableWilds
+                            , cup
+                            , rollButtons
+                            , trySelect
+                            ]
+                        , console
                         ]
 
-                Pending ->
-                    mainContainer
-                        [ header_ [] [ logo, playerStats, tryHistory ]
-                        , tableWilds
-                        , cupButtons
-                        , trySelect
+                    Pending ->
+                        [ logo
+                        , playerStats
+                        , tryHistory
+                        , div [ class "play-area" ]
+                            [ tableWilds
+                            , cupButtons
+                            , trySelect
+                            ]
+                        , console
                         ]
 
-                Looked ->
-                    mainContainer
-                        [ header_ [] [ logo, playerStats, tryHistory ]
-                        , tableWilds
-                        , cup
-                        , rollButtons
-                        , trySelect
+                    Looked ->
+                        [ logo
+                        , playerStats
+                        , tryHistory
+                        , div [ class "play-area" ]
+                            [ tableWilds
+                            , cup
+                            , rollButtons
+                            , trySelect
+                            ]
+                        , console
                         ]
 
-                Pulled result ->
-                    let
-                        pullResult =
-                            case result of
-                                HadIt ->
-                                    p [] [ text "Previous player had the roll. You will lose 1 hp." ]
+                    Pulled result ->
+                        let
+                            pullResult =
+                                case result of
+                                    HadIt ->
+                                        p [] [ text "Previous player had the roll. You will lose 1 hp." ]
 
-                                Lie ->
-                                    p [] [ text "Previous player lied. They will lose 1 hp." ]
-                    in
-                    mainContainer
-                        [ header_ [] [ logo, playerStats, tryHistory ]
-                        , tableWilds
-                        , cup
-                        , pullResult
-                        , rollButtons
+                                    Lie ->
+                                        p [] [ text "Previous player lied. They will lose 1 hp." ]
+                        in
+                        [ logo
+                        , playerStats
+                        , tryHistory
+                        , div [ class "play-area" ]
+                            [ tableWilds
+                            , cup
+                            , pullResult
+                            , rollButtons
+                            ]
+                        , console
                         ]
-            ]
 
-    else
-        div []
-            [ text ("Game over." ++ Player.getName model.players (Maybe.withDefault 0 (Deque.first model.activePlayers)) ++ " wins!")
-            ]
+             else
+                [ text ("Game over." ++ Player.getName model.players (Maybe.withDefault 0 (Deque.first model.activePlayers)) ++ " wins!")
+                ]
+            )
+        ]
+
 
 
 -- UTILS
@@ -481,7 +510,6 @@ mainContainer : List (Html msg) -> Html msg
 mainContainer =
     div
         [ class "main"
-        , css [ Tw.grid, Tw.grid_cols_1, Tw.justify_items_center, Tw.gap_4 ]
         ]
 
 
@@ -494,22 +522,26 @@ logo =
             , Tw.flex
             , Tw.justify_center
             , Tw.items_center
+            , Tw.m_4
+            , Tw.shadow_color Tw.purple_200
             , Tw.text_8xl
+            , Tw.text_color Tw.black_100
             , Tw.font_bold
-            , Tw.bg_primary
-            , Tw.rounded_bl
-            , Tw.shadow_md
-            , Tw.bg_gradient_to_bl
-            , Tw.text_secondary
+            , Tw.border_4
+            , Tw.border_color Tw.black_100
+            , Tw.bg_gradient_to_br
+            , Tw.from_color Tw.gray
+            , Tw.to_color Tw.white
+            , Tw.rounded_2xl
 
             -- , Tw.from_primary
             -- , Tw.to_destruct
             ]
-        , class "logo-container"
+        , class "logo logo-container"
         ]
         [ div
             [ id "logo" ]
-            [ text "𞡥" ]
+            [ text "D" ]
         ]
 
 
@@ -518,15 +550,14 @@ stats_ =
     div
         [ class "stats"
         , css
-            (List.concat
-                [ [ Tw.flex
-                  , Tw.justify_around
-                  , Tw.p_4
-                  , Tw.text_tertiary
-                  , Tw.gap_8
-                  ]
-                , card
-                ]
+            ([ Tw.flex
+             , Tw.justify_around
+             , Tw.p_4
+             , Tw.text_color Tw.black_100
+             , Tw.gap_8
+             ]
+                ++ card
+                ++ [ Tw.rounded_t_none ]
             )
         ]
 
@@ -550,7 +581,7 @@ viewPassTry quantity val tryToBeat =
         changeValue =
             (ViewState << ChangeValue) << Try.encodeFace << Maybe.withDefault 2 << String.toInt
     in
-    div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Break.md [ Tw.w_1over4 ], Tw.w_full ] ]
+    div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
         [ div []
             [ label [ for "quantity" ] [ text "Quantity" ]
             , select_ [ onInput changeQuantity, id "quantity" ] quantities

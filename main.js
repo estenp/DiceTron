@@ -7719,22 +7719,82 @@ var $rtfeldman$elm_css$Css$property = F2(
 		return $rtfeldman$elm_css$Css$Preprocess$AppendProperty(
 			$rtfeldman$elm_css$Css$Structure$Property(key + (':' + value)));
 	});
-var $rtfeldman$elm_css$Css$prop1 = F2(
-	function (key, arg) {
-		return A2($rtfeldman$elm_css$Css$property, key, arg.value);
+var $rtfeldman$elm_css$Css$backgroundColor = function (c) {
+	return A2($rtfeldman$elm_css$Css$property, 'background-color', c.value);
+};
+var $rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
+	return {$: 'ApplyStyles', a: a};
+};
+var $rtfeldman$elm_css$Css$batch = $rtfeldman$elm_css$Css$Preprocess$ApplyStyles;
+var $matheus23$elm_tailwind_modules_base$Tailwind$Color$propertyWithColor = F4(
+	function (property, embedColor, opacityVarName, color) {
+		if (color.$ === 'Color') {
+			var mode = color.a;
+			var r = color.b;
+			var g = color.c;
+			var b = color.d;
+			var opacity = color.e;
+			var _v1 = _Utils_Tuple2(opacity, opacityVarName);
+			if (_v1.a.$ === 'Opacity') {
+				var op = _v1.a.a;
+				return A2(
+					$rtfeldman$elm_css$Css$property,
+					property,
+					embedColor(mode + ('(' + (r + (' ' + (g + (' ' + (b + (' / ' + (op + ')'))))))))));
+			} else {
+				if (_v1.b.$ === 'Just') {
+					var _v2 = _v1.a;
+					var varName = _v1.b.a;
+					return $rtfeldman$elm_css$Css$batch(
+						_List_fromArray(
+							[
+								A2($rtfeldman$elm_css$Css$property, varName, '1'),
+								A2(
+								$rtfeldman$elm_css$Css$property,
+								property,
+								embedColor(mode + ('(' + (r + (' ' + (g + (' ' + (b + (' / var(' + (varName + '))'))))))))))
+							]));
+				} else {
+					var _v3 = _v1.a;
+					var _v4 = _v1.b;
+					return A2(
+						$rtfeldman$elm_css$Css$property,
+						property,
+						embedColor(mode + ('(' + (r + (' ' + (g + (' ' + (b + ' / 1.0)'))))))));
+				}
+			}
+		} else {
+			var keyword = color.a;
+			return A2($rtfeldman$elm_css$Css$property, property, keyword);
+		}
 	});
-var $rtfeldman$elm_css$Css$animationDuration = function (arg) {
-	return A2($rtfeldman$elm_css$Css$prop1, 'animation-duration', arg);
+var $author$project$Tailwind$Utilities$bg_color = function (color) {
+	return A4(
+		$matheus23$elm_tailwind_modules_base$Tailwind$Color$propertyWithColor,
+		'background-color',
+		function (c) {
+			return c;
+		},
+		$elm$core$Maybe$Just('--tw-bg-opacity'),
+		color);
 };
-var $rtfeldman$elm_css$Css$animationIterationCount = function (arg) {
-	return A2($rtfeldman$elm_css$Css$prop1, 'animation-iteration-count', arg);
+var $matheus23$elm_tailwind_modules_base$Tailwind$Color$Color = F5(
+	function (a, b, c, d, e) {
+		return {$: 'Color', a: a, b: b, c: c, d: d, e: e};
+	});
+var $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable = {$: 'ViaVariable'};
+var $author$project$Tailwind$Theme$black_200 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '34', '33', '35', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
+var $author$project$Tailwind$Utilities$border_color = function (color) {
+	return A4(
+		$matheus23$elm_tailwind_modules_base$Tailwind$Color$propertyWithColor,
+		'border-color',
+		function (c) {
+			return c;
+		},
+		$elm$core$Maybe$Just('--tw-border-opacity'),
+		color);
 };
-var $rtfeldman$elm_css$Css$Preprocess$WithKeyframes = function (a) {
-	return {$: 'WithKeyframes', a: a};
-};
-var $rtfeldman$elm_css$Css$animationName = function (arg) {
-	return ((arg.value === 'none') || ((arg.value === 'inherit') || ((arg.value === 'unset') || (arg.value === 'initial')))) ? A2($rtfeldman$elm_css$Css$prop1, 'animation-name', arg) : $rtfeldman$elm_css$Css$Preprocess$WithKeyframes(arg.value);
-};
+var $author$project$Tailwind$Utilities$border_t_4 = A2($rtfeldman$elm_css$Css$property, 'border-top-width', '4px');
 var $rtfeldman$elm_css$VirtualDom$Styled$Node = F3(
 	function (a, b, c) {
 		return {$: 'Node', a: a, b: b, c: c};
@@ -7742,47 +7802,94 @@ var $rtfeldman$elm_css$VirtualDom$Styled$Node = F3(
 var $rtfeldman$elm_css$VirtualDom$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$Node;
 var $rtfeldman$elm_css$Html$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$node;
 var $rtfeldman$elm_css$Html$Styled$button = $rtfeldman$elm_css$Html$Styled$node('button');
-var $rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
-	return {$: 'ApplyStyles', a: a};
+var $author$project$Tailwind$Utilities$bg_gradient_to_br = A2($rtfeldman$elm_css$Css$property, 'background-image', 'linear-gradient(to bottom right, var(--tw-gradient-stops))');
+var $matheus23$elm_tailwind_modules_base$Tailwind$Color$Opacity = function (a) {
+	return {$: 'Opacity', a: a};
 };
-var $rtfeldman$elm_css$Css$batch = $rtfeldman$elm_css$Css$Preprocess$ApplyStyles;
-var $author$project$Tailwind$Utilities$bg_secondary = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-bg-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'background-color', 'rgba(223, 238, 227, var(--tw-bg-opacity))')
-		]));
-var $author$project$Tailwind$Utilities$rounded_b = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, 'border-bottom-right-radius', '0.25rem'),
-			A2($rtfeldman$elm_css$Css$property, 'border-bottom-left-radius', '0.25rem')
-		]));
+var $matheus23$elm_tailwind_modules_base$Tailwind$Color$Keyword = function (a) {
+	return {$: 'Keyword', a: a};
+};
+var $matheus23$elm_tailwind_modules_base$Tailwind$Color$withOpacity = F2(
+	function (opacity, color) {
+		if (color.$ === 'Keyword') {
+			var k = color.a;
+			return $matheus23$elm_tailwind_modules_base$Tailwind$Color$Keyword(k);
+		} else {
+			var mode = color.a;
+			var r = color.b;
+			var g = color.c;
+			var b = color.d;
+			return A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, mode, r, g, b, opacity);
+		}
+	});
+var $author$project$Tailwind$Utilities$from_color = function (color) {
+	return $rtfeldman$elm_css$Css$batch(
+		_List_fromArray(
+			[
+				A4(
+				$matheus23$elm_tailwind_modules_base$Tailwind$Color$propertyWithColor,
+				'--tw-gradient-from',
+				function (c) {
+					return '' + (c + ' var(--tw-gradient-from-position)');
+				},
+				$elm$core$Maybe$Nothing,
+				color),
+				A4(
+				$matheus23$elm_tailwind_modules_base$Tailwind$Color$propertyWithColor,
+				'--tw-gradient-to',
+				function (c) {
+					return '' + (c + ' var(--tw-gradient-to-position)');
+				},
+				$elm$core$Maybe$Nothing,
+				A2(
+					$matheus23$elm_tailwind_modules_base$Tailwind$Color$withOpacity,
+					$matheus23$elm_tailwind_modules_base$Tailwind$Color$Opacity('0'),
+					color)),
+				A2($rtfeldman$elm_css$Css$property, '--tw-gradient-stops', 'var(--tw-gradient-from), var(--tw-gradient-to)')
+			]));
+};
+var $author$project$Tailwind$Theme$gray = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '232', '232', '232', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
+var $author$project$Tailwind$Utilities$rounded_2xl = A2($rtfeldman$elm_css$Css$property, 'border-radius', '1rem');
 var $author$project$Tailwind$Utilities$shadow_md = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
 		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'),
+			A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'),
+			A2($rtfeldman$elm_css$Css$property, '--tw-shadow-colored', '0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color)'),
 			A2($rtfeldman$elm_css$Css$property, 'box-shadow', 'var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)')
 		]));
 var $author$project$Tailwind$Utilities$shadow_sm = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
 		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 1px 2px 0 rgba(0, 0, 0, 0.05)'),
+			A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 1px 2px 0 rgb(0 0 0 / 0.05)'),
+			A2($rtfeldman$elm_css$Css$property, '--tw-shadow-colored', '0 1px 2px 0 var(--tw-shadow-color)'),
 			A2($rtfeldman$elm_css$Css$property, 'box-shadow', 'var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)')
 		]));
+var $author$project$Tailwind$Utilities$to_color = function (color) {
+	return A4(
+		$matheus23$elm_tailwind_modules_base$Tailwind$Color$propertyWithColor,
+		'--tw-gradient-to',
+		function (c) {
+			return '' + (c + ' var(--tw-gradient-to-position)');
+		},
+		$elm$core$Maybe$Nothing,
+		color);
+};
+var $author$project$Tailwind$Theme$white = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '249', '244', '245', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
 var $author$project$StyledElements$card = _List_fromArray(
-	[$author$project$Tailwind$Utilities$shadow_sm, $author$project$Tailwind$Utilities$bg_secondary, $author$project$Tailwind$Utilities$rounded_b, $author$project$Tailwind$Utilities$shadow_md]);
+	[
+		$author$project$Tailwind$Utilities$shadow_sm,
+		$author$project$Tailwind$Utilities$bg_gradient_to_br,
+		$author$project$Tailwind$Utilities$from_color($author$project$Tailwind$Theme$gray),
+		$author$project$Tailwind$Utilities$to_color($author$project$Tailwind$Theme$white),
+		$author$project$Tailwind$Utilities$rounded_2xl,
+		$author$project$Tailwind$Utilities$shadow_md
+	]);
 var $elm$core$List$concat = function (lists) {
 	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
 };
 var $author$project$Tailwind$Utilities$border_2 = A2($rtfeldman$elm_css$Css$property, 'border-width', '2px');
-var $author$project$Tailwind$Utilities$border_secondary = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-border-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'border-color', 'rgba(223, 238, 227, var(--tw-border-opacity))')
-		]));
 var $author$project$Tailwind$Utilities$border_solid = A2($rtfeldman$elm_css$Css$property, 'border-style', 'solid');
+var $author$project$Tailwind$Theme$purple_300 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '80', '47', '76', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
 var $author$project$Tailwind$Utilities$px_4 = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
 		[
@@ -7802,15 +7909,30 @@ var $author$project$Tailwind$Utilities$text_4xl = $rtfeldman$elm_css$Css$batch(
 			A2($rtfeldman$elm_css$Css$property, 'font-size', '2.25rem'),
 			A2($rtfeldman$elm_css$Css$property, 'line-height', '2.5rem')
 		]));
-var $author$project$Tailwind$Utilities$text_tertiary = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-text-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'color', 'rgba(161, 159, 187, var(--tw-text-opacity))')
-		]));
+var $author$project$Tailwind$Utilities$text_color = function (color) {
+	return A4(
+		$matheus23$elm_tailwind_modules_base$Tailwind$Color$propertyWithColor,
+		'color',
+		function (c) {
+			return c;
+		},
+		$elm$core$Maybe$Just('--tw-text-opacity'),
+		color);
+};
 var $author$project$Tailwind$Utilities$w_full = A2($rtfeldman$elm_css$Css$property, 'width', '100%');
 var $author$project$StyledElements$inputBaseStyles = _List_fromArray(
-	[$author$project$Tailwind$Utilities$border_solid, $author$project$Tailwind$Utilities$border_2, $author$project$Tailwind$Utilities$px_4, $author$project$Tailwind$Utilities$py_2, $author$project$Tailwind$Utilities$bg_secondary, $author$project$Tailwind$Utilities$rounded_md, $author$project$Tailwind$Utilities$text_tertiary, $author$project$Tailwind$Utilities$border_secondary, $author$project$Tailwind$Utilities$text_4xl, $author$project$Tailwind$Utilities$w_full]);
+	[
+		$author$project$Tailwind$Utilities$border_solid,
+		$author$project$Tailwind$Utilities$border_2,
+		$author$project$Tailwind$Utilities$px_4,
+		$author$project$Tailwind$Utilities$py_2,
+		$author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$white),
+		$author$project$Tailwind$Utilities$rounded_md,
+		$author$project$Tailwind$Utilities$text_color($author$project$Tailwind$Theme$purple_300),
+		$author$project$Tailwind$Utilities$border_color($author$project$Tailwind$Theme$purple_300),
+		$author$project$Tailwind$Utilities$text_4xl,
+		$author$project$Tailwind$Utilities$w_full
+	]);
 var $rtfeldman$elm_css$VirtualDom$Styled$Attribute = F3(
 	function (a, b, c) {
 		return {$: 'Attribute', a: a, b: b, c: c};
@@ -9255,38 +9377,39 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 		'*,\n::before,\n::after',
 		_List_fromArray(
 			[
-				A2($rtfeldman$elm_css$Css$property, 'box-sizing', 'border-box')
+				A2($rtfeldman$elm_css$Css$property, 'box-sizing', 'border-box'),
+				A2($rtfeldman$elm_css$Css$property, 'border-width', '0'),
+				A2($rtfeldman$elm_css$Css$property, 'border-style', 'solid'),
+				A2($rtfeldman$elm_css$Css$property, 'border-color', 'currentColor')
+			])),
+		A2(
+		$rtfeldman$elm_css$Css$Global$selector,
+		'::before,\n::after',
+		_List_fromArray(
+			[
+				A2($rtfeldman$elm_css$Css$property, '--tw-content', '\'\'')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
 		'html',
 		_List_fromArray(
 			[
+				A2($rtfeldman$elm_css$Css$property, 'line-height', '1.5'),
+				A2($rtfeldman$elm_css$Css$property, '-webkit-text-size-adjust', '100%'),
 				A2($rtfeldman$elm_css$Css$property, '-moz-tab-size', '4'),
 				A2($rtfeldman$elm_css$Css$property, '-o-tab-size', '4'),
-				A2($rtfeldman$elm_css$Css$property, 'tab-size', '4')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'html',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'line-height', '1.15'),
-				A2($rtfeldman$elm_css$Css$property, '-webkit-text-size-adjust', '100%')
+				A2($rtfeldman$elm_css$Css$property, 'tab-size', '4'),
+				A2($rtfeldman$elm_css$Css$property, 'font-family', '\'Space Grotesk\', sans-serif'),
+				A2($rtfeldman$elm_css$Css$property, 'font-feature-settings', 'normal'),
+				A2($rtfeldman$elm_css$Css$property, 'font-variation-settings', 'normal')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
 		'body',
 		_List_fromArray(
 			[
-				A2($rtfeldman$elm_css$Css$property, 'margin', '0')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'body',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'font-family', 'system-ui,\n\t\t-apple-system, \n\t\t\'Segoe UI\',\n\t\tRoboto,\n\t\tHelvetica,\n\t\tArial,\n\t\tsans-serif,\n\t\t\'Apple Color Emoji\',\n\t\t\'Segoe UI Emoji\'')
+				A2($rtfeldman$elm_css$Css$property, 'margin', '0'),
+				A2($rtfeldman$elm_css$Css$property, 'line-height', 'inherit')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
@@ -9294,15 +9417,32 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 		_List_fromArray(
 			[
 				A2($rtfeldman$elm_css$Css$property, 'height', '0'),
-				A2($rtfeldman$elm_css$Css$property, 'color', 'inherit')
+				A2($rtfeldman$elm_css$Css$property, 'color', 'inherit'),
+				A2($rtfeldman$elm_css$Css$property, 'border-top-width', '1px')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
-		'abbr[title]',
+		'abbr:where([title])',
 		_List_fromArray(
 			[
 				A2($rtfeldman$elm_css$Css$property, '-webkit-text-decoration', 'underline dotted'),
 				A2($rtfeldman$elm_css$Css$property, 'text-decoration', 'underline dotted')
+			])),
+		A2(
+		$rtfeldman$elm_css$Css$Global$selector,
+		'h1,\nh2,\nh3,\nh4,\nh5,\nh6',
+		_List_fromArray(
+			[
+				A2($rtfeldman$elm_css$Css$property, 'font-size', 'inherit'),
+				A2($rtfeldman$elm_css$Css$property, 'font-weight', 'inherit')
+			])),
+		A2(
+		$rtfeldman$elm_css$Css$Global$selector,
+		'a',
+		_List_fromArray(
+			[
+				A2($rtfeldman$elm_css$Css$property, 'color', 'inherit'),
+				A2($rtfeldman$elm_css$Css$property, 'text-decoration', 'inherit')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
@@ -9316,7 +9456,7 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 		'code,\nkbd,\nsamp,\npre',
 		_List_fromArray(
 			[
-				A2($rtfeldman$elm_css$Css$property, 'font-family', 'ui-monospace,\n\t\tSFMono-Regular,\n\t\tConsolas,\n\t\t\'Liberation Mono\',\n\t\tMenlo,\n\t\tmonospace'),
+				A2($rtfeldman$elm_css$Css$property, 'font-family', 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace'),
 				A2($rtfeldman$elm_css$Css$property, 'font-size', '1em')
 			])),
 		A2(
@@ -9356,7 +9496,8 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 		_List_fromArray(
 			[
 				A2($rtfeldman$elm_css$Css$property, 'text-indent', '0'),
-				A2($rtfeldman$elm_css$Css$property, 'border-color', 'inherit')
+				A2($rtfeldman$elm_css$Css$property, 'border-color', 'inherit'),
+				A2($rtfeldman$elm_css$Css$property, 'border-collapse', 'collapse')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
@@ -9364,9 +9505,14 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 		_List_fromArray(
 			[
 				A2($rtfeldman$elm_css$Css$property, 'font-family', 'inherit'),
+				A2($rtfeldman$elm_css$Css$property, 'font-feature-settings', 'inherit'),
+				A2($rtfeldman$elm_css$Css$property, 'font-variation-settings', 'inherit'),
 				A2($rtfeldman$elm_css$Css$property, 'font-size', '100%'),
-				A2($rtfeldman$elm_css$Css$property, 'line-height', '1.15'),
-				A2($rtfeldman$elm_css$Css$property, 'margin', '0')
+				A2($rtfeldman$elm_css$Css$property, 'font-weight', 'inherit'),
+				A2($rtfeldman$elm_css$Css$property, 'line-height', 'inherit'),
+				A2($rtfeldman$elm_css$Css$property, 'color', 'inherit'),
+				A2($rtfeldman$elm_css$Css$property, 'margin', '0'),
+				A2($rtfeldman$elm_css$Css$property, 'padding', '0')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
@@ -9380,22 +9526,16 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 		'button,\n[type=\'button\'],\n[type=\'reset\'],\n[type=\'submit\']',
 		_List_fromArray(
 			[
-				A2($rtfeldman$elm_css$Css$property, '-webkit-appearance', 'button')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'::-moz-focus-inner',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'border-style', 'none'),
-				A2($rtfeldman$elm_css$Css$property, 'padding', '0')
+				A2($rtfeldman$elm_css$Css$property, '-webkit-appearance', 'button'),
+				A2($rtfeldman$elm_css$Css$property, 'background-color', 'transparent'),
+				A2($rtfeldman$elm_css$Css$property, 'background-image', 'none')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
 		':-moz-focusring',
 		_List_fromArray(
 			[
-				A2($rtfeldman$elm_css$Css$property, 'outline', '1px dotted ButtonText')
+				A2($rtfeldman$elm_css$Css$property, 'outline', 'auto')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
@@ -9403,13 +9543,6 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 		_List_fromArray(
 			[
 				A2($rtfeldman$elm_css$Css$property, 'box-shadow', 'none')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'legend',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'padding', '0')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
@@ -9464,14 +9597,6 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
-		'button',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'background-color', 'transparent'),
-				A2($rtfeldman$elm_css$Css$property, 'background-image', 'none')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
 		'fieldset',
 		_List_fromArray(
 			[
@@ -9480,7 +9605,14 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
-		'ol,\nul',
+		'legend',
+		_List_fromArray(
+			[
+				A2($rtfeldman$elm_css$Css$property, 'padding', '0')
+			])),
+		A2(
+		$rtfeldman$elm_css$Css$Global$selector,
+		'ol,\nul,\nmenu',
 		_List_fromArray(
 			[
 				A2($rtfeldman$elm_css$Css$property, 'list-style', 'none'),
@@ -9489,43 +9621,10 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
-		'html',
+		'dialog',
 		_List_fromArray(
 			[
-				A2($rtfeldman$elm_css$Css$property, 'font-family', '\'Space Grotesk\', sans-serif'),
-				A2($rtfeldman$elm_css$Css$property, 'line-height', '1.5')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'body',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'font-family', 'inherit'),
-				A2($rtfeldman$elm_css$Css$property, 'line-height', 'inherit')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'*,\n::before,\n::after',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'box-sizing', 'border-box'),
-				A2($rtfeldman$elm_css$Css$property, 'border-width', '0'),
-				A2($rtfeldman$elm_css$Css$property, 'border-style', 'solid'),
-				A2($rtfeldman$elm_css$Css$property, 'border-color', 'currentColor')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'hr',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'border-top-width', '1px')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'img',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'border-style', 'solid')
+				A2($rtfeldman$elm_css$Css$property, 'padding', '0')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
@@ -9540,7 +9639,7 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 		_List_fromArray(
 			[
 				A2($rtfeldman$elm_css$Css$property, 'opacity', '1'),
-				A2($rtfeldman$elm_css$Css$property, 'color', '#a1a1aa')
+				A2($rtfeldman$elm_css$Css$property, 'color', '#9ca3af')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
@@ -9548,7 +9647,7 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 		_List_fromArray(
 			[
 				A2($rtfeldman$elm_css$Css$property, 'opacity', '1'),
-				A2($rtfeldman$elm_css$Css$property, 'color', '#a1a1aa')
+				A2($rtfeldman$elm_css$Css$property, 'color', '#9ca3af')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
@@ -9559,49 +9658,10 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
-		':-moz-focusring',
+		':disabled',
 		_List_fromArray(
 			[
-				A2($rtfeldman$elm_css$Css$property, 'outline', 'auto')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'table',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'border-collapse', 'collapse')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'h1,\nh2,\nh3,\nh4,\nh5,\nh6',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'font-size', 'inherit'),
-				A2($rtfeldman$elm_css$Css$property, 'font-weight', 'inherit')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'a',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'color', 'inherit'),
-				A2($rtfeldman$elm_css$Css$property, 'text-decoration', 'inherit')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'button,\ninput,\noptgroup,\nselect,\ntextarea',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'padding', '0'),
-				A2($rtfeldman$elm_css$Css$property, 'line-height', 'inherit'),
-				A2($rtfeldman$elm_css$Css$property, 'color', 'inherit')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'pre,\ncode,\nkbd,\nsamp',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, 'font-family', 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace')
+				A2($rtfeldman$elm_css$Css$property, 'cursor', 'default')
 			])),
 		A2(
 		$rtfeldman$elm_css$Css$Global$selector,
@@ -9631,97 +9691,143 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 		'*, ::before, ::after',
 		_List_fromArray(
 			[
-				A2($rtfeldman$elm_css$Css$property, 'border-color', 'currentColor')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'*, ::before, ::after',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 0 #0000')
-			])),
-		A2(
-		$rtfeldman$elm_css$Css$Global$selector,
-		'*, ::before, ::after',
-		_List_fromArray(
-			[
-				A2($rtfeldman$elm_css$Css$property, '--tw-ring-inset', 'var(--tw-empty,/*!*/ /*!*/)'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-border-spacing-x', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-border-spacing-y', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-translate-x', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-translate-y', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-rotate', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-skew-x', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-skew-y', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-scale-x', '1'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-scale-y', '1'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-pan-x', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-pan-y', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-pinch-zoom', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-scroll-snap-strictness', 'proximity'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-gradient-from-position', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-gradient-via-position', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-gradient-to-position', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-ordinal', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-slashed-zero', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-numeric-figure', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-numeric-spacing', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-numeric-fraction', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-ring-inset', ' '),
 				A2($rtfeldman$elm_css$Css$property, '--tw-ring-offset-width', '0px'),
 				A2($rtfeldman$elm_css$Css$property, '--tw-ring-offset-color', '#fff'),
-				A2($rtfeldman$elm_css$Css$property, '--tw-ring-color', 'rgba(59, 130, 246, 0.5)'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-ring-color', 'rgb(59 130 246 / 0.5)'),
 				A2($rtfeldman$elm_css$Css$property, '--tw-ring-offset-shadow', '0 0 #0000'),
-				A2($rtfeldman$elm_css$Css$property, '--tw-ring-shadow', '0 0 #0000')
+				A2($rtfeldman$elm_css$Css$property, '--tw-ring-shadow', '0 0 #0000'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 0 #0000'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-shadow-colored', '0 0 #0000'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-blur', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-brightness', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-contrast', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-grayscale', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-hue-rotate', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-invert', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-saturate', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-sepia', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-drop-shadow', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-blur', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-brightness', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-contrast', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-grayscale', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-hue-rotate', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-invert', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-opacity', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-saturate', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-sepia', ' ')
+			])),
+		A2(
+		$rtfeldman$elm_css$Css$Global$selector,
+		'::backdrop',
+		_List_fromArray(
+			[
+				A2($rtfeldman$elm_css$Css$property, '--tw-border-spacing-x', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-border-spacing-y', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-translate-x', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-translate-y', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-rotate', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-skew-x', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-skew-y', '0'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-scale-x', '1'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-scale-y', '1'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-pan-x', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-pan-y', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-pinch-zoom', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-scroll-snap-strictness', 'proximity'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-gradient-from-position', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-gradient-via-position', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-gradient-to-position', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-ordinal', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-slashed-zero', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-numeric-figure', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-numeric-spacing', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-numeric-fraction', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-ring-inset', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-ring-offset-width', '0px'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-ring-offset-color', '#fff'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-ring-color', 'rgb(59 130 246 / 0.5)'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-ring-offset-shadow', '0 0 #0000'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-ring-shadow', '0 0 #0000'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 0 #0000'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-shadow-colored', '0 0 #0000'),
+				A2($rtfeldman$elm_css$Css$property, '--tw-blur', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-brightness', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-contrast', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-grayscale', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-hue-rotate', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-invert', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-saturate', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-sepia', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-drop-shadow', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-blur', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-brightness', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-contrast', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-grayscale', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-hue-rotate', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-invert', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-opacity', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-saturate', ' '),
+				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-sepia', ' ')
 			]))
 	]);
 var $author$project$Tailwind$Utilities$grid = A2($rtfeldman$elm_css$Css$property, 'display', 'grid');
 var $author$project$Tailwind$Utilities$grid_cols_2 = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', 'repeat(2, minmax(0, 1fr))');
-var $rtfeldman$elm_css$Html$Styled$h2 = $rtfeldman$elm_css$Html$Styled$node('h2');
-var $author$project$Tailwind$Utilities$grid_cols_header = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', '1fr 2fr 1fr');
-var $author$project$Tailwind$Utilities$mb_10 = A2($rtfeldman$elm_css$Css$property, 'margin-bottom', '2.5rem');
-var $author$project$StyledElements$header_ = A2(
-	$rtfeldman$elm_css$Html$Styled$styled,
-	$rtfeldman$elm_css$Html$Styled$div,
-	_List_fromArray(
-		[$author$project$Tailwind$Utilities$grid, $author$project$Tailwind$Utilities$grid_cols_header, $author$project$Tailwind$Utilities$mb_10, $author$project$Tailwind$Utilities$w_full]));
-var $rtfeldman$elm_css$Css$Structure$Compatible = {$: 'Compatible'};
-var $rtfeldman$elm_css$Css$UnitlessInteger = {$: 'UnitlessInteger'};
-var $rtfeldman$elm_css$Css$int = function (val) {
-	return {
-		fontWeight: $rtfeldman$elm_css$Css$Structure$Compatible,
-		intOrAuto: $rtfeldman$elm_css$Css$Structure$Compatible,
-		lengthOrNumber: $rtfeldman$elm_css$Css$Structure$Compatible,
-		lengthOrNumberOrAutoOrNoneOrContent: $rtfeldman$elm_css$Css$Structure$Compatible,
-		number: $rtfeldman$elm_css$Css$Structure$Compatible,
-		numberOrInfinite: $rtfeldman$elm_css$Css$Structure$Compatible,
-		numericValue: val,
-		unitLabel: '',
-		units: $rtfeldman$elm_css$Css$UnitlessInteger,
-		value: $elm$core$String$fromInt(val)
-	};
-};
+var $author$project$Tailwind$Utilities$h_8 = A2($rtfeldman$elm_css$Css$property, 'height', '2rem');
+var $rtfeldman$elm_css$Html$Styled$Attributes$id = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
+var $rtfeldman$elm_css$Html$Styled$input = $rtfeldman$elm_css$Html$Styled$node('input');
 var $author$project$Tailwind$Utilities$justify_evenly = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'space-evenly');
 var $author$project$Tailwind$Utilities$justify_self_center = A2($rtfeldman$elm_css$Css$property, 'justify-self', 'center');
-var $rtfeldman$elm_css$Css$Internal$printKeyframeSelector = function (_v0) {
-	var percentage = _v0.a;
-	var properties = _v0.b;
-	var propertiesStr = A3(
-		$rtfeldman$elm_css$Css$String$mapJoin,
-		function (_v1) {
-			var prop = _v1.a;
-			return prop + ';';
-		},
-		'',
-		properties);
-	var percentageStr = $elm$core$String$fromInt(percentage) + '%';
-	return percentageStr + ('{' + (propertiesStr + '}'));
-};
-var $rtfeldman$elm_css$Css$Internal$compileKeyframes = function (tuples) {
-	return A3($rtfeldman$elm_css$Css$String$mapJoin, $rtfeldman$elm_css$Css$Internal$printKeyframeSelector, '', tuples);
-};
-var $rtfeldman$elm_css$Css$Animations$keyframes = function (tuples) {
-	return $elm$core$List$isEmpty(tuples) ? {keyframes: $rtfeldman$elm_css$Css$Structure$Compatible, none: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'none'} : {
-		keyframes: $rtfeldman$elm_css$Css$Structure$Compatible,
-		none: $rtfeldman$elm_css$Css$Structure$Compatible,
-		value: $rtfeldman$elm_css$Css$Internal$compileKeyframes(tuples)
-	};
-};
+var $rtfeldman$elm_css$Html$Styled$label = $rtfeldman$elm_css$Html$Styled$node('label');
 var $folkertdev$elm_deque$Internal$length = function (deque) {
 	return deque.sizeF + deque.sizeR;
 };
 var $folkertdev$elm_deque$Deque$length = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$length, $folkertdev$elm_deque$Deque$unwrap);
-var $author$project$Tailwind$Utilities$bg_gradient_to_bl = A2($rtfeldman$elm_css$Css$property, 'background-image', 'linear-gradient(to bottom left, var(--tw-gradient-stops))');
-var $author$project$Tailwind$Utilities$bg_primary = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-bg-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'background-color', 'rgba(150, 89, 88, var(--tw-bg-opacity))')
-		]));
+var $author$project$Tailwind$Theme$black_100 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '55', '47', '62', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
+var $author$project$Tailwind$Utilities$border_4 = A2($rtfeldman$elm_css$Css$property, 'border-width', '4px');
 var $author$project$Tailwind$Utilities$font_bold = A2($rtfeldman$elm_css$Css$property, 'font-weight', '700');
 var $author$project$Tailwind$Utilities$h_32 = A2($rtfeldman$elm_css$Css$property, 'height', '8rem');
-var $rtfeldman$elm_css$Html$Styled$Attributes$id = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
 var $author$project$Tailwind$Utilities$items_center = A2($rtfeldman$elm_css$Css$property, 'align-items', 'center');
 var $author$project$Tailwind$Utilities$justify_center = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'center');
-var $author$project$Tailwind$Utilities$rounded_bl = A2($rtfeldman$elm_css$Css$property, 'border-bottom-left-radius', '0.25rem');
+var $author$project$Tailwind$Utilities$m_4 = A2($rtfeldman$elm_css$Css$property, 'margin', '1rem');
+var $author$project$Tailwind$Theme$purple_200 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '112', '88', '124', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
+var $author$project$Tailwind$Utilities$shadow_color = function (color) {
+	return $rtfeldman$elm_css$Css$batch(
+		_List_fromArray(
+			[
+				A4(
+				$matheus23$elm_tailwind_modules_base$Tailwind$Color$propertyWithColor,
+				'--tw-shadow-color',
+				function (c) {
+					return c;
+				},
+				$elm$core$Maybe$Nothing,
+				color),
+				A2($rtfeldman$elm_css$Css$property, '--tw-shadow', 'var(--tw-shadow-colored)')
+			]));
+};
 var $rtfeldman$elm_css$VirtualDom$Styled$text = function (str) {
 	return $rtfeldman$elm_css$VirtualDom$Styled$Unstyled(
 		$elm$virtual_dom$VirtualDom$text(str));
@@ -9733,12 +9839,6 @@ var $author$project$Tailwind$Utilities$text_8xl = $rtfeldman$elm_css$Css$batch(
 			A2($rtfeldman$elm_css$Css$property, 'font-size', '6rem'),
 			A2($rtfeldman$elm_css$Css$property, 'line-height', '1')
 		]));
-var $author$project$Tailwind$Utilities$text_secondary = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-text-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'color', 'rgba(223, 238, 227, var(--tw-text-opacity))')
-		]));
 var $author$project$Tailwind$Utilities$w_32 = A2($rtfeldman$elm_css$Css$property, 'width', '8rem');
 var $author$project$Main$logo = A2(
 	$rtfeldman$elm_css$Html$Styled$div,
@@ -9746,8 +9846,25 @@ var $author$project$Main$logo = A2(
 		[
 			$rtfeldman$elm_css$Html$Styled$Attributes$css(
 			_List_fromArray(
-				[$author$project$Tailwind$Utilities$w_32, $author$project$Tailwind$Utilities$h_32, $author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_center, $author$project$Tailwind$Utilities$items_center, $author$project$Tailwind$Utilities$text_8xl, $author$project$Tailwind$Utilities$font_bold, $author$project$Tailwind$Utilities$bg_primary, $author$project$Tailwind$Utilities$rounded_bl, $author$project$Tailwind$Utilities$shadow_md, $author$project$Tailwind$Utilities$bg_gradient_to_bl, $author$project$Tailwind$Utilities$text_secondary])),
-			$rtfeldman$elm_css$Html$Styled$Attributes$class('logo-container')
+				[
+					$author$project$Tailwind$Utilities$w_32,
+					$author$project$Tailwind$Utilities$h_32,
+					$author$project$Tailwind$Utilities$flex,
+					$author$project$Tailwind$Utilities$justify_center,
+					$author$project$Tailwind$Utilities$items_center,
+					$author$project$Tailwind$Utilities$m_4,
+					$author$project$Tailwind$Utilities$shadow_color($author$project$Tailwind$Theme$purple_200),
+					$author$project$Tailwind$Utilities$text_8xl,
+					$author$project$Tailwind$Utilities$text_color($author$project$Tailwind$Theme$black_100),
+					$author$project$Tailwind$Utilities$font_bold,
+					$author$project$Tailwind$Utilities$border_4,
+					$author$project$Tailwind$Utilities$border_color($author$project$Tailwind$Theme$black_100),
+					$author$project$Tailwind$Utilities$bg_gradient_to_br,
+					$author$project$Tailwind$Utilities$from_color($author$project$Tailwind$Theme$gray),
+					$author$project$Tailwind$Utilities$to_color($author$project$Tailwind$Theme$white),
+					$author$project$Tailwind$Utilities$rounded_2xl
+				])),
+			$rtfeldman$elm_css$Html$Styled$Attributes$class('logo logo-container')
 		]),
 	_List_fromArray(
 		[
@@ -9759,18 +9876,8 @@ var $author$project$Main$logo = A2(
 				]),
 			_List_fromArray(
 				[
-					$rtfeldman$elm_css$Html$Styled$text('𞡥')
+					$rtfeldman$elm_css$Html$Styled$text('D')
 				]))
-		]));
-var $author$project$Tailwind$Utilities$grid_cols_1 = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', 'repeat(1, minmax(0, 1fr))');
-var $author$project$Tailwind$Utilities$justify_items_center = A2($rtfeldman$elm_css$Css$property, 'justify-items', 'center');
-var $author$project$Main$mainContainer = $rtfeldman$elm_css$Html$Styled$div(
-	_List_fromArray(
-		[
-			$rtfeldman$elm_css$Html$Styled$Attributes$class('main'),
-			$rtfeldman$elm_css$Html$Styled$Attributes$css(
-			_List_fromArray(
-				[$author$project$Tailwind$Utilities$grid, $author$project$Tailwind$Utilities$grid_cols_1, $author$project$Tailwind$Utilities$justify_items_center, $author$project$Tailwind$Utilities$gap_4]))
 		]));
 var $TSFoster$elm_tuple_extra$Tuple3$mapAllThree = F4(
 	function (aFn, bFn, cFn, _v0) {
@@ -9782,27 +9889,6 @@ var $TSFoster$elm_tuple_extra$Tuple3$mapAllThree = F4(
 			bFn(b),
 			cFn(c));
 	});
-var $rtfeldman$elm_css$Css$Structure$CustomQuery = function (a) {
-	return {$: 'CustomQuery', a: a};
-};
-var $rtfeldman$elm_css$Css$Preprocess$WithMedia = F2(
-	function (a, b) {
-		return {$: 'WithMedia', a: a, b: b};
-	});
-var $rtfeldman$elm_css$Css$Media$withMediaQuery = function (queries) {
-	return $rtfeldman$elm_css$Css$Preprocess$WithMedia(
-		A2($elm$core$List$map, $rtfeldman$elm_css$Css$Structure$CustomQuery, queries));
-};
-var $author$project$Tailwind$Breakpoints$md = $rtfeldman$elm_css$Css$Media$withMediaQuery(
-	_List_fromArray(
-		['(min-width: 768px)']));
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $rtfeldman$elm_css$Css$ms = function (amount) {
-	return {
-		duration: $rtfeldman$elm_css$Css$Structure$Compatible,
-		value: $elm$core$String$fromFloat(amount) + 'ms'
-	};
-};
 var $author$project$Tailwind$Utilities$mt_4 = A2($rtfeldman$elm_css$Css$property, 'margin-top', '1rem');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -9829,35 +9915,42 @@ var $rtfeldman$elm_css$Html$Styled$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $rtfeldman$elm_css$Css$Internal$Property = function (a) {
-	return {$: 'Property', a: a};
-};
-var $rtfeldman$elm_css$Css$Animations$opacity = function (_v0) {
-	var value = _v0.value;
-	return $rtfeldman$elm_css$Css$Internal$Property('opacity:' + value);
-};
 var $author$project$Tailwind$Utilities$overflow_auto = A2($rtfeldman$elm_css$Css$property, 'overflow', 'auto');
 var $rtfeldman$elm_css$Html$Styled$p = $rtfeldman$elm_css$Html$Styled$node('p');
+var $author$project$Tailwind$Utilities$p_4 = A2($rtfeldman$elm_css$Css$property, 'padding', '1rem');
+var $author$project$Tailwind$Theme$purple_100 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '200', '184', '219', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
 var $TSFoster$elm_tuple_extra$Tuple3$second = function (_v0) {
 	var b = _v0.b;
 	return b;
 };
+var $rtfeldman$elm_css$Html$Styled$section = $rtfeldman$elm_css$Html$Styled$node('section');
 var $rtfeldman$elm_css$Html$Styled$span = $rtfeldman$elm_css$Html$Styled$node('span');
 var $author$project$Tailwind$Utilities$gap_8 = A2($rtfeldman$elm_css$Css$property, 'gap', '2rem');
 var $author$project$Tailwind$Utilities$justify_around = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'space-around');
-var $author$project$Tailwind$Utilities$p_4 = A2($rtfeldman$elm_css$Css$property, 'padding', '1rem');
+var $author$project$Tailwind$Utilities$rounded_t_none = $rtfeldman$elm_css$Css$batch(
+	_List_fromArray(
+		[
+			A2($rtfeldman$elm_css$Css$property, 'border-top-left-radius', '0px'),
+			A2($rtfeldman$elm_css$Css$property, 'border-top-right-radius', '0px')
+		]));
 var $author$project$Main$stats_ = $rtfeldman$elm_css$Html$Styled$div(
 	_List_fromArray(
 		[
 			$rtfeldman$elm_css$Html$Styled$Attributes$class('stats'),
 			$rtfeldman$elm_css$Html$Styled$Attributes$css(
-			$elm$core$List$concat(
+			_Utils_ap(
 				_List_fromArray(
 					[
-						_List_fromArray(
-						[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_around, $author$project$Tailwind$Utilities$p_4, $author$project$Tailwind$Utilities$text_tertiary, $author$project$Tailwind$Utilities$gap_8]),
-						$author$project$StyledElements$card
-					])))
+						$author$project$Tailwind$Utilities$flex,
+						$author$project$Tailwind$Utilities$justify_around,
+						$author$project$Tailwind$Utilities$p_4,
+						$author$project$Tailwind$Utilities$text_color($author$project$Tailwind$Theme$black_100),
+						$author$project$Tailwind$Utilities$gap_8
+					]),
+				_Utils_ap(
+					$author$project$StyledElements$card,
+					_List_fromArray(
+						[$author$project$Tailwind$Utilities$rounded_t_none]))))
 		]));
 var $author$project$Try$toString = function (_try) {
 	return function (t) {
@@ -9865,19 +9958,11 @@ var $author$project$Try$toString = function (_try) {
 	}(
 		$author$project$Try$decode(_try));
 };
-var $author$project$Tailwind$Utilities$bg_exclaim = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-bg-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'background-color', 'rgba(224, 144, 93, var(--tw-bg-opacity))')
-		]));
-var $author$project$Tailwind$Utilities$bg_success = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-bg-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'background-color', 'rgba(78, 208, 182, var(--tw-bg-opacity))')
-		]));
+var $rtfeldman$elm_css$Css$Structure$Compatible = {$: 'Compatible'};
+var $rtfeldman$elm_css$Css$transparent = {color: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'transparent'};
+var $rtfeldman$elm_css$Html$Styled$Attributes$type_ = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('type');
 var $author$project$Tailwind$Utilities$border_b_2 = A2($rtfeldman$elm_css$Css$property, 'border-bottom-width', '2px');
+var $author$project$Tailwind$Theme$exclaim = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '224', '144', '93', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
 var $author$project$Tailwind$Utilities$flex_1 = A2($rtfeldman$elm_css$Css$property, 'flex', '1 1 0%');
 var $author$project$Tailwind$Utilities$flex_col = A2($rtfeldman$elm_css$Css$property, 'flex-direction', 'column');
 var $author$project$Tailwind$Utilities$gap_2 = A2($rtfeldman$elm_css$Css$property, 'gap', '0.5rem');
@@ -9886,6 +9971,14 @@ var $rtfeldman$elm_css$Html$Styled$h3 = $rtfeldman$elm_css$Html$Styled$node('h3'
 var $author$project$Tailwind$Utilities$h_full = A2($rtfeldman$elm_css$Css$property, 'height', '100%');
 var $author$project$Tailwind$Utilities$items_end = A2($rtfeldman$elm_css$Css$property, 'align-items', 'flex-end');
 var $rtfeldman$elm_css$Html$Styled$li = $rtfeldman$elm_css$Html$Styled$node('li');
+var $author$project$Tailwind$Theme$primary = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '150', '89', '88', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
+var $author$project$Tailwind$Theme$secondary = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '223', '238', '227', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
+var $author$project$Tailwind$Theme$success = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '78', '208', '182', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
+var $rtfeldman$elm_css$Css$prop1 = F2(
+	function (key, arg) {
+		return A2($rtfeldman$elm_css$Css$property, key, arg.value);
+	});
+var $rtfeldman$elm_css$Css$textDecoration = $rtfeldman$elm_css$Css$prop1('text-decoration');
 var $author$project$Tailwind$Utilities$text_3xl = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
 		[
@@ -9893,13 +9986,8 @@ var $author$project$Tailwind$Utilities$text_3xl = $rtfeldman$elm_css$Css$batch(
 			A2($rtfeldman$elm_css$Css$property, 'line-height', '2.25rem')
 		]));
 var $author$project$Tailwind$Utilities$text_center = A2($rtfeldman$elm_css$Css$property, 'text-align', 'center');
-var $author$project$Tailwind$Utilities$text_success = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-text-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'color', 'rgba(78, 208, 182, var(--tw-text-opacity))')
-		]));
 var $rtfeldman$elm_css$Html$Styled$ul = $rtfeldman$elm_css$Html$Styled$node('ul');
+var $rtfeldman$elm_css$Css$underline = {textDecorationLine: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'underline'};
 var $author$project$Tailwind$Utilities$w_8 = A2($rtfeldman$elm_css$Css$property, 'width', '2rem');
 var $author$project$Player$view = F2(
 	function (currentTurn, player) {
@@ -9910,12 +9998,18 @@ var $author$project$Player$view = F2(
 					[
 						$rtfeldman$elm_css$Html$Styled$Attributes$css(
 						_List_fromArray(
-							[bgStyle, $author$project$Tailwind$Utilities$w_8, $author$project$Tailwind$Utilities$flex_1, $author$project$Tailwind$Utilities$border_b_2, $author$project$Tailwind$Utilities$border_secondary]))
+							[
+								bgStyle,
+								$author$project$Tailwind$Utilities$w_8,
+								$author$project$Tailwind$Utilities$flex_1,
+								$author$project$Tailwind$Utilities$border_b_2,
+								$author$project$Tailwind$Utilities$border_color($author$project$Tailwind$Theme$secondary)
+							]))
 					]),
 				_List_Nil);
 		};
 		var healthBg = function (h) {
-			return (_Utils_cmp(h, player.hp) < 1) ? ((_Utils_cmp(h / player.maxHp, 1 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_primary : ((_Utils_cmp(h / player.maxHp, 3 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_exclaim : $author$project$Tailwind$Utilities$bg_success)) : $author$project$Tailwind$Utilities$bg_secondary;
+			return (_Utils_cmp(h, player.hp) < 1) ? ((_Utils_cmp(h / player.maxHp, 1 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$primary) : ((_Utils_cmp(h / player.maxHp, 3 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$exclaim) : $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$success))) : $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$secondary);
 		};
 		var healthStack = A2(
 			$elm$core$List$map,
@@ -9951,7 +10045,10 @@ var $author$project$Player$view = F2(
 												[$author$project$Tailwind$Utilities$text_3xl, $author$project$Tailwind$Utilities$text_center])),
 											$rtfeldman$elm_css$Html$Styled$Attributes$css(
 											_Utils_eq(player.id, currentTurn) ? _List_fromArray(
-												[$author$project$Tailwind$Utilities$text_success]) : _List_Nil)
+												[
+													$author$project$Tailwind$Utilities$text_color($author$project$Tailwind$Theme$purple_100),
+													$rtfeldman$elm_css$Css$textDecoration($rtfeldman$elm_css$Css$underline)
+												]) : _List_Nil)
 										]),
 									_List_fromArray(
 										[
@@ -9997,41 +10094,42 @@ var $author$project$Player$view = F2(
 					A2($elm$core$List$map, healthDiv, healthStack))
 				]));
 	});
-var $author$project$Tailwind$Utilities$border_4 = A2($rtfeldman$elm_css$Css$property, 'border-width', '4px');
 var $author$project$Tailwind$Utilities$inline_block = A2($rtfeldman$elm_css$Css$property, 'display', 'inline-block');
 var $author$project$Tailwind$Utilities$m_2 = A2($rtfeldman$elm_css$Css$property, 'margin', '0.5rem');
 var $author$project$Tailwind$Utilities$p_2 = A2($rtfeldman$elm_css$Css$property, 'padding', '0.5rem');
-var $author$project$Tailwind$Utilities$rounded_2xl = A2($rtfeldman$elm_css$Css$property, 'border-radius', '1rem');
 var $author$project$Tailwind$Utilities$text_9xl = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
 		[
 			A2($rtfeldman$elm_css$Css$property, 'font-size', '8rem'),
 			A2($rtfeldman$elm_css$Css$property, 'line-height', '1')
 		]));
-var $author$project$Tailwind$Utilities$text_primary = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-text-opacity', '1'),
-			A2($rtfeldman$elm_css$Css$property, 'color', 'rgba(150, 89, 88, var(--tw-text-opacity))')
-		]));
 var $author$project$Tailwind$Utilities$w_40 = A2($rtfeldman$elm_css$Css$property, 'width', '10rem');
 var $author$project$Face$view = function (die) {
+	var isWild = $author$project$Try$decodeFace(die) === 1;
+	var className = isWild ? 'face wild' : 'face';
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_fromArray(
 			[
-				$rtfeldman$elm_css$Html$Styled$Attributes$class('face'),
+				$rtfeldman$elm_css$Html$Styled$Attributes$class(className),
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
 				_List_fromArray(
-					[$author$project$Tailwind$Utilities$text_center, $author$project$Tailwind$Utilities$w_40, $author$project$Tailwind$Utilities$inline_block, $author$project$Tailwind$Utilities$p_2, $author$project$Tailwind$Utilities$m_2, $author$project$Tailwind$Utilities$text_9xl, $author$project$Tailwind$Utilities$border_4, $author$project$Tailwind$Utilities$rounded_2xl])),
-				$rtfeldman$elm_css$Html$Styled$Attributes$css(
-				($author$project$Try$decodeFace(die) === 1) ? _List_fromArray(
-					[$author$project$Tailwind$Utilities$bg_exclaim, $author$project$Tailwind$Utilities$text_primary]) : _List_fromArray(
-					[$author$project$Tailwind$Utilities$bg_secondary, $author$project$Tailwind$Utilities$text_tertiary]))
+					[
+						$author$project$Tailwind$Utilities$text_center,
+						$author$project$Tailwind$Utilities$w_40,
+						$author$project$Tailwind$Utilities$inline_block,
+						$author$project$Tailwind$Utilities$p_2,
+						$author$project$Tailwind$Utilities$m_2,
+						$author$project$Tailwind$Utilities$text_9xl,
+						$author$project$Tailwind$Utilities$border_4,
+						$author$project$Tailwind$Utilities$rounded_2xl,
+						$author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$white),
+						$author$project$Tailwind$Utilities$text_color($author$project$Tailwind$Theme$black_100)
+					]))
 			]),
 		_List_fromArray(
 			[
-				($author$project$Try$decodeFace(die) === 1) ? $rtfeldman$elm_css$Html$Styled$text('𞡥') : $rtfeldman$elm_css$Html$Styled$text(
+				isWild ? $rtfeldman$elm_css$Html$Styled$text('•') : $rtfeldman$elm_css$Html$Styled$text(
 				$elm$core$String$fromInt(
 					$author$project$Try$decodeFace(die)))
 			]));
@@ -10296,7 +10394,6 @@ var $author$project$Main$availTrySelectOpts = F2(
 	});
 var $author$project$Tailwind$Utilities$col_span_2 = A2($rtfeldman$elm_css$Css$property, 'grid-column', 'span 2 / span 2');
 var $rtfeldman$elm_css$Html$Styled$Attributes$for = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('htmlFor');
-var $rtfeldman$elm_css$Html$Styled$label = $rtfeldman$elm_css$Html$Styled$node('label');
 var $rtfeldman$elm_css$Html$Styled$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -10332,7 +10429,6 @@ var $rtfeldman$elm_css$Html$Styled$Events$onInput = function (tagger) {
 };
 var $rtfeldman$elm_css$Html$Styled$select = $rtfeldman$elm_css$Html$Styled$node('select');
 var $author$project$StyledElements$select_ = A2($rtfeldman$elm_css$Html$Styled$styled, $rtfeldman$elm_css$Html$Styled$select, $author$project$StyledElements$inputBaseStyles);
-var $author$project$Tailwind$Utilities$w_1over4 = A2($rtfeldman$elm_css$Css$property, 'width', '25%');
 var $author$project$Main$viewPassTry = F3(
 	function (quantity, val, tryToBeat) {
 		var changeValue = A2(
@@ -10365,15 +10461,7 @@ var $author$project$Main$viewPassTry = F3(
 					$rtfeldman$elm_css$Html$Styled$Attributes$class('try'),
 					$rtfeldman$elm_css$Html$Styled$Attributes$css(
 					_List_fromArray(
-						[
-							$author$project$Tailwind$Utilities$grid,
-							$author$project$Tailwind$Utilities$grid_cols_2,
-							$author$project$Tailwind$Utilities$gap_4,
-							$author$project$Tailwind$Breakpoints$md(
-							_List_fromArray(
-								[$author$project$Tailwind$Utilities$w_1over4])),
-							$author$project$Tailwind$Utilities$w_full
-						]))
+						[$author$project$Tailwind$Utilities$grid, $author$project$Tailwind$Utilities$grid_cols_2, $author$project$Tailwind$Utilities$gap_4, $author$project$Tailwind$Utilities$w_full]))
 				]),
 			_List_fromArray(
 				[
@@ -10473,11 +10561,14 @@ var $author$project$Main$view = function (model) {
 					$author$project$Player$getName(model.players),
 					$elm$core$Basics$identity),
 				model.tryHistory)));
-	var tableWilds = A2(
-		$rtfeldman$elm_css$Html$Styled$h2,
-		_List_Nil,
+	var tableWilds = (model.tableWilds > 0) ? A2(
+		$rtfeldman$elm_css$Html$Styled$section,
+		_List_fromArray(
+			[
+				$rtfeldman$elm_css$Html$Styled$Attributes$id('wilds')
+			]),
 		$author$project$Main$viewCup(
-			A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
+			A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds))) : A2($rtfeldman$elm_css$Html$Styled$span, _List_Nil, _List_Nil);
 	var rollButtons = A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_Nil,
@@ -10542,15 +10633,7 @@ var $author$project$Main$view = function (model) {
 			[
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
 				_List_fromArray(
-					[
-						$author$project$Tailwind$Utilities$grid,
-						$author$project$Tailwind$Utilities$grid_cols_2,
-						$author$project$Tailwind$Utilities$gap_4,
-						$author$project$Tailwind$Breakpoints$md(
-						_List_fromArray(
-							[$author$project$Tailwind$Utilities$w_1over4])),
-						$author$project$Tailwind$Utilities$w_full
-					]))
+					[$author$project$Tailwind$Utilities$grid, $author$project$Tailwind$Utilities$grid_cols_2, $author$project$Tailwind$Utilities$gap_4, $author$project$Tailwind$Utilities$w_full]))
 			]),
 		_List_fromArray(
 			[
@@ -10578,166 +10661,179 @@ var $author$project$Main$view = function (model) {
 					]))
 			]));
 	var cup = A2(
-		$rtfeldman$elm_css$Html$Styled$h2,
+		$rtfeldman$elm_css$Html$Styled$section,
 		_List_fromArray(
 			[
 				$rtfeldman$elm_css$Html$Styled$Attributes$class('roll'),
 				$rtfeldman$elm_css$Html$Styled$Attributes$css(
 				_List_fromArray(
-					[
-						$rtfeldman$elm_css$Css$animationName(
-						$rtfeldman$elm_css$Css$Animations$keyframes(
-							_List_fromArray(
-								[
-									_Utils_Tuple2(
-									0,
-									_List_fromArray(
-										[
-											$rtfeldman$elm_css$Css$Animations$opacity(
-											$rtfeldman$elm_css$Css$int(0))
-										])),
-									_Utils_Tuple2(
-									20,
-									_List_fromArray(
-										[
-											$rtfeldman$elm_css$Css$Animations$opacity(
-											$rtfeldman$elm_css$Css$int(30))
-										])),
-									_Utils_Tuple2(
-									80,
-									_List_fromArray(
-										[
-											$rtfeldman$elm_css$Css$Animations$opacity(
-											$rtfeldman$elm_css$Css$int(70))
-										])),
-									_Utils_Tuple2(
-									100,
-									_List_fromArray(
-										[
-											$rtfeldman$elm_css$Css$Animations$opacity(
-											$rtfeldman$elm_css$Css$int(100))
-										]))
-								]))),
-						$rtfeldman$elm_css$Css$animationIterationCount(
-						$rtfeldman$elm_css$Css$int(1)),
-						$rtfeldman$elm_css$Css$animationDuration(
-						$rtfeldman$elm_css$Css$ms(4000))
-					])),
-				$rtfeldman$elm_css$Html$Styled$Attributes$css(
-				_List_fromArray(
 					[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_evenly]))
 			]),
 		$author$project$Main$viewCup(model.roll));
-	return (!gameIsOver) ? A2(
-		$rtfeldman$elm_css$Html$Styled$div,
+	var console = A2(
+		$rtfeldman$elm_css$Html$Styled$label,
+		_List_fromArray(
+			[
+				$rtfeldman$elm_css$Html$Styled$Attributes$class('console'),
+				$rtfeldman$elm_css$Html$Styled$Attributes$css(
+				_List_fromArray(
+					[
+						$author$project$Tailwind$Utilities$p_4,
+						$author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$black_200),
+						$author$project$Tailwind$Utilities$border_t_4,
+						$author$project$Tailwind$Utilities$border_color($author$project$Tailwind$Theme$purple_100),
+						$author$project$Tailwind$Utilities$w_full
+					]))
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$rtfeldman$elm_css$Html$Styled$input,
+				_List_fromArray(
+					[
+						$rtfeldman$elm_css$Html$Styled$Attributes$type_('text'),
+						$rtfeldman$elm_css$Html$Styled$Attributes$class('console__textarea'),
+						$rtfeldman$elm_css$Html$Styled$Attributes$css(
+						_List_fromArray(
+							[
+								$rtfeldman$elm_css$Css$backgroundColor($rtfeldman$elm_css$Css$transparent),
+								$author$project$Tailwind$Utilities$w_full,
+								$author$project$Tailwind$Utilities$h_8
+							]))
+					]),
+				_List_Nil)
+			]));
+	return A2(
+		$rtfeldman$elm_css$Html$Styled$span,
 		_List_Nil,
 		_List_fromArray(
 			[
 				$rtfeldman$elm_css$Css$Global$global($author$project$Tailwind$Utilities$globalStyles),
+				A2(
+				$rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[
+						$rtfeldman$elm_css$Html$Styled$Attributes$class('main')
+					]),
 				function () {
-				var _v0 = model.turnStatus;
-				switch (_v0.$) {
-					case 'Fresh':
-						return $author$project$Main$mainContainer(
-							_List_fromArray(
-								[
+					if (!gameIsOver) {
+						var _v0 = model.turnStatus;
+						switch (_v0.$) {
+							case 'Fresh':
+								return _List_fromArray(
+									[
+										$author$project$Main$logo,
+										playerStats,
+										tryHistory,
+										A2(
+										$rtfeldman$elm_css$Html$Styled$div,
+										_List_fromArray(
+											[
+												$rtfeldman$elm_css$Html$Styled$Attributes$class('play-area')
+											]),
+										_List_fromArray(
+											[rollButtons])),
+										console
+									]);
+							case 'Rolled':
+								return _List_fromArray(
+									[
+										$author$project$Main$logo,
+										playerStats,
+										tryHistory,
+										A2(
+										$rtfeldman$elm_css$Html$Styled$div,
+										_List_fromArray(
+											[
+												$rtfeldman$elm_css$Html$Styled$Attributes$class('play-area')
+											]),
+										_List_fromArray(
+											[tableWilds, cup, rollButtons, trySelect])),
+										console
+									]);
+							case 'Pending':
+								return _List_fromArray(
+									[
+										$author$project$Main$logo,
+										playerStats,
+										tryHistory,
+										A2(
+										$rtfeldman$elm_css$Html$Styled$div,
+										_List_fromArray(
+											[
+												$rtfeldman$elm_css$Html$Styled$Attributes$class('play-area')
+											]),
+										_List_fromArray(
+											[tableWilds, cupButtons, trySelect])),
+										console
+									]);
+							case 'Looked':
+								return _List_fromArray(
+									[
+										$author$project$Main$logo,
+										playerStats,
+										tryHistory,
+										A2(
+										$rtfeldman$elm_css$Html$Styled$div,
+										_List_fromArray(
+											[
+												$rtfeldman$elm_css$Html$Styled$Attributes$class('play-area')
+											]),
+										_List_fromArray(
+											[tableWilds, cup, rollButtons, trySelect])),
+										console
+									]);
+							default:
+								var result = _v0.a;
+								var pullResult = function () {
+									if (result.$ === 'HadIt') {
+										return A2(
+											$rtfeldman$elm_css$Html$Styled$p,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$rtfeldman$elm_css$Html$Styled$text('Previous player had the roll. You will lose 1 hp.')
+												]));
+									} else {
+										return A2(
+											$rtfeldman$elm_css$Html$Styled$p,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$rtfeldman$elm_css$Html$Styled$text('Previous player lied. They will lose 1 hp.')
+												]));
+									}
+								}();
+								return _List_fromArray(
+									[
+										$author$project$Main$logo,
+										playerStats,
+										tryHistory,
+										A2(
+										$rtfeldman$elm_css$Html$Styled$div,
+										_List_fromArray(
+											[
+												$rtfeldman$elm_css$Html$Styled$Attributes$class('play-area')
+											]),
+										_List_fromArray(
+											[tableWilds, cup, pullResult, rollButtons])),
+										console
+									]);
+						}
+					} else {
+						return _List_fromArray(
+							[
+								$rtfeldman$elm_css$Html$Styled$text(
+								'Game over.' + (A2(
+									$author$project$Player$getName,
+									model.players,
 									A2(
-									$author$project$StyledElements$header_,
-									_List_Nil,
-									_List_fromArray(
-										[$author$project$Main$logo, playerStats, tryHistory])),
-									rollButtons
-								]));
-					case 'Rolled':
-						return $author$project$Main$mainContainer(
-							_List_fromArray(
-								[
-									A2(
-									$author$project$StyledElements$header_,
-									_List_Nil,
-									_List_fromArray(
-										[$author$project$Main$logo, playerStats, tryHistory])),
-									tableWilds,
-									cup,
-									rollButtons,
-									trySelect
-								]));
-					case 'Pending':
-						return $author$project$Main$mainContainer(
-							_List_fromArray(
-								[
-									A2(
-									$author$project$StyledElements$header_,
-									_List_Nil,
-									_List_fromArray(
-										[$author$project$Main$logo, playerStats, tryHistory])),
-									tableWilds,
-									cupButtons,
-									trySelect
-								]));
-					case 'Looked':
-						return $author$project$Main$mainContainer(
-							_List_fromArray(
-								[
-									A2(
-									$author$project$StyledElements$header_,
-									_List_Nil,
-									_List_fromArray(
-										[$author$project$Main$logo, playerStats, tryHistory])),
-									tableWilds,
-									cup,
-									rollButtons,
-									trySelect
-								]));
-					default:
-						var result = _v0.a;
-						var pullResult = function () {
-							if (result.$ === 'HadIt') {
-								return A2(
-									$rtfeldman$elm_css$Html$Styled$p,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$rtfeldman$elm_css$Html$Styled$text('Previous player had the roll. You will lose 1 hp.')
-										]));
-							} else {
-								return A2(
-									$rtfeldman$elm_css$Html$Styled$p,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$rtfeldman$elm_css$Html$Styled$text('Previous player lied. They will lose 1 hp.')
-										]));
-							}
-						}();
-						return $author$project$Main$mainContainer(
-							_List_fromArray(
-								[
-									A2(
-									$author$project$StyledElements$header_,
-									_List_Nil,
-									_List_fromArray(
-										[$author$project$Main$logo, playerStats, tryHistory])),
-									tableWilds,
-									cup,
-									pullResult,
-									rollButtons
-								]));
-				}
-			}()
-			])) : A2(
-		$rtfeldman$elm_css$Html$Styled$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				$rtfeldman$elm_css$Html$Styled$text(
-				'Game over.' + (A2(
-					$author$project$Player$getName,
-					model.players,
-					A2(
-						$elm$core$Maybe$withDefault,
-						0,
-						$folkertdev$elm_deque$Deque$first(model.activePlayers))) + ' wins!'))
+										$elm$core$Maybe$withDefault,
+										0,
+										$folkertdev$elm_deque$Deque$first(model.activePlayers))) + ' wins!'))
+							]);
+					}
+				}())
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(

@@ -1,14 +1,23 @@
-/* .main {
+body {
+  height: 100vh;
+}
+
+.main {
   display: grid;
   grid-template-areas:
-    "stats stats"
-    "header header"
-    "roll history"
-    "try chat";
-    grid-template-columns: 1fr 1fr;
-} */
+    "logo stats history"
+    ". play history"
+    "console console console";
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 1fr 2fr 1fr;
 
-/* .stats {
+  justify-items: center;
+
+  height: 100%;
+
+}
+
+.stats {
   grid-area: stats;
 }
 .roll {
@@ -16,30 +25,111 @@
 }
 .history {
   grid-area: history;
+  overflow: auto;
 }
 .try {
   grid-area: try;
+}
+
+.play-area {
+  grid-area: play;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#wilds {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.console {
+  background-color: black;
+  grid-area: console;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+:focus-visible {
+  outline: solid 4px pink;
+}
+
+/* :focus {
+  outline: none;
 } */
 
+.console:focus-within {
+  border-top: solid 4px pink;
+}
+
+.console input {
+  appearance: none;
+}
+
+.console input:focus {
+  outline: none;
+}
+
+.console input::before {
+  content: ">";
+  color: #907AD6;
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
 body {
-  background-color: #a19fbb;
-  color: #dfeee3ff;
-  font-family: "Space Grotesk", sans-serif;
+  background-color: #372F3E;
+  color: #F9F4F5;
+  font-family: "JetBrains Mono", sans-serif;
   font-size: 18px;
 }
 
-#logo {
-  transform: rotateX(1.5turn);
-  transition: transform 400ms ease-in-out 0ms, color 400ms ease-in-out 100ms;
+.logo {
+  grid-area: logo;
 }
 
-.logo-container:hover #logo {
-  transform: rotate(270deg);
-  color: #A19FBB;
+.logo-container {
+  transition: border-radius 500ms ease-in-out, box-shadow 900ms ease-in-out, transform 1s linear;
+  box-shadow: 12px 12px 0 #C8B8DB !important;
+  transform: rotate(0deg);
+}
+
+.logo-container:hover {
+  /* transform: rotate(270deg); */
+  border-radius: 100%;
+  box-shadow: 0 0 0 #C8B8DB !important;
+  transform: rotate(360deg);
+}
+
+.roll {
+  animation-name: roll;
+  animation-duration: 500ms;
+  animation-timing-function: ease-in;
+  animation-iteration-count: 1;
+
+
 }
 
 .face {
-  /* transform: rotate(270deg); */
+  /* animation-name: roll;
+  animation-duration: 500ms;
+  animation-timing-function: ease-in;
+  animation-iteration-count: 1; */
+}
+
+@keyframes roll {
+  from {
+    color: white;
+  }
+  to {
+    color: #C8B8DB;
+  }
+}
+
+.face.wild {
+  background-color: #372F3E;
+  color: #C8B8DB;
 }
 
 /*

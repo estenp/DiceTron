@@ -5,6 +5,7 @@ import Deque exposing (Deque)
 import Dict exposing (Dict)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, src, style)
+import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw exposing (..)
 
 
@@ -84,21 +85,21 @@ view : PlayerId -> Player -> Html msg
 view currentTurn player =
     let
         healthDiv bgStyle =
-            div [ css [ bgStyle, Tw.w_8, Tw.flex_1, Tw.border_b_2, Tw.border_secondary ] ] []
+            div [ css [ bgStyle, Tw.w_8, Tw.flex_1, Tw.border_b_2, Tw.border_color Tw.secondary ] ] []
 
         healthBg h =
             if h <= player.hp then
                 if (toFloat h / toFloat player.maxHp) <= (1 / 5) then
-                    Tw.bg_primary
+                    Tw.bg_color Tw.primary
 
                 else if (toFloat h / toFloat player.maxHp) <= (3 / 5) then
-                    Tw.bg_exclaim
+                    Tw.bg_color Tw.exclaim
 
                 else
-                    Tw.bg_success
+                    Tw.bg_color Tw.success
 
             else
-                Tw.bg_secondary
+                Tw.bg_color Tw.secondary
 
         healthStack =
             List.map healthBg (List.reverse (List.range 1 player.maxHp))
@@ -126,7 +127,7 @@ view currentTurn player =
                     [ css [ Tw.text_3xl, Tw.text_center ]
                     , css
                         (if player.id == currentTurn then
-                            [ Tw.text_success ]
+                            [ Tw.text_color Tw.purple_100, Css.textDecoration Css.underline ]
 
                          else
                             []

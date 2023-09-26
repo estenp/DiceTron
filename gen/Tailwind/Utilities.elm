@@ -4,41 +4,57 @@ import Css
 import Css.Animations
 import Css.Global
 import Css.Media
+import Tailwind.Color as Tw
+import Tailwind.Theme exposing (Color)
 
 
 globalStyles : List Css.Global.Snippet
 globalStyles =
     [ Css.Global.selector "*,\n::before,\n::after"
         [ Css.property "box-sizing" "border-box"
+        , Css.property "border-width" "0"
+        , Css.property "border-style" "solid"
+        , Css.property "border-color" "currentColor"
+        ]
+    , Css.Global.selector "::before,\n::after"
+        [ Css.property "--tw-content" "''"
         ]
     , Css.Global.selector "html"
-        [ Css.property "-moz-tab-size" "4"
+        [ Css.property "line-height" "1.5"
+        , Css.property "-webkit-text-size-adjust" "100%"
+        , Css.property "-moz-tab-size" "4"
         , Css.property "-o-tab-size" "4"
         , Css.property "tab-size" "4"
-        ]
-    , Css.Global.selector "html"
-        [ Css.property "line-height" "1.15"
-        , Css.property "-webkit-text-size-adjust" "100%"
+        , Css.property "font-family" "'Space Grotesk', sans-serif"
+        , Css.property "font-feature-settings" "normal"
+        , Css.property "font-variation-settings" "normal"
         ]
     , Css.Global.selector "body"
         [ Css.property "margin" "0"
-        ]
-    , Css.Global.selector "body"
-        [ Css.property "font-family" "system-ui,\n\t\t-apple-system, \n\t\t'Segoe UI',\n\t\tRoboto,\n\t\tHelvetica,\n\t\tArial,\n\t\tsans-serif,\n\t\t'Apple Color Emoji',\n\t\t'Segoe UI Emoji'"
+        , Css.property "line-height" "inherit"
         ]
     , Css.Global.selector "hr"
         [ Css.property "height" "0"
         , Css.property "color" "inherit"
+        , Css.property "border-top-width" "1px"
         ]
-    , Css.Global.selector "abbr[title]"
+    , Css.Global.selector "abbr:where([title])"
         [ Css.property "-webkit-text-decoration" "underline dotted"
         , Css.property "text-decoration" "underline dotted"
+        ]
+    , Css.Global.selector "h1,\nh2,\nh3,\nh4,\nh5,\nh6"
+        [ Css.property "font-size" "inherit"
+        , Css.property "font-weight" "inherit"
+        ]
+    , Css.Global.selector "a"
+        [ Css.property "color" "inherit"
+        , Css.property "text-decoration" "inherit"
         ]
     , Css.Global.selector "b,\nstrong"
         [ Css.property "font-weight" "bolder"
         ]
     , Css.Global.selector "code,\nkbd,\nsamp,\npre"
-        [ Css.property "font-family" "ui-monospace,\n\t\tSFMono-Regular,\n\t\tConsolas,\n\t\t'Liberation Mono',\n\t\tMenlo,\n\t\tmonospace"
+        [ Css.property "font-family" "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
         , Css.property "font-size" "1em"
         ]
     , Css.Global.selector "small"
@@ -59,31 +75,32 @@ globalStyles =
     , Css.Global.selector "table"
         [ Css.property "text-indent" "0"
         , Css.property "border-color" "inherit"
+        , Css.property "border-collapse" "collapse"
         ]
     , Css.Global.selector "button,\ninput,\noptgroup,\nselect,\ntextarea"
         [ Css.property "font-family" "inherit"
+        , Css.property "font-feature-settings" "inherit"
+        , Css.property "font-variation-settings" "inherit"
         , Css.property "font-size" "100%"
-        , Css.property "line-height" "1.15"
+        , Css.property "font-weight" "inherit"
+        , Css.property "line-height" "inherit"
+        , Css.property "color" "inherit"
         , Css.property "margin" "0"
+        , Css.property "padding" "0"
         ]
     , Css.Global.selector "button,\nselect"
         [ Css.property "text-transform" "none"
         ]
     , Css.Global.selector "button,\n[type='button'],\n[type='reset'],\n[type='submit']"
         [ Css.property "-webkit-appearance" "button"
-        ]
-    , Css.Global.selector "::-moz-focus-inner"
-        [ Css.property "border-style" "none"
-        , Css.property "padding" "0"
+        , Css.property "background-color" "transparent"
+        , Css.property "background-image" "none"
         ]
     , Css.Global.selector ":-moz-focusring"
-        [ Css.property "outline" "1px dotted ButtonText"
+        [ Css.property "outline" "auto"
         ]
     , Css.Global.selector ":-moz-ui-invalid"
         [ Css.property "box-shadow" "none"
-        ]
-    , Css.Global.selector "legend"
-        [ Css.property "padding" "0"
         ]
     , Css.Global.selector "progress"
         [ Css.property "vertical-align" "baseline"
@@ -108,74 +125,37 @@ globalStyles =
     , Css.Global.selector "blockquote,\ndl,\ndd,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\nhr,\nfigure,\np,\npre"
         [ Css.property "margin" "0"
         ]
-    , Css.Global.selector "button"
-        [ Css.property "background-color" "transparent"
-        , Css.property "background-image" "none"
-        ]
     , Css.Global.selector "fieldset"
         [ Css.property "margin" "0"
         , Css.property "padding" "0"
         ]
-    , Css.Global.selector "ol,\nul"
+    , Css.Global.selector "legend"
+        [ Css.property "padding" "0"
+        ]
+    , Css.Global.selector "ol,\nul,\nmenu"
         [ Css.property "list-style" "none"
         , Css.property "margin" "0"
         , Css.property "padding" "0"
         ]
-    , Css.Global.selector "html"
-        [ Css.property "font-family" "'Space Grotesk', sans-serif"
-        , Css.property "line-height" "1.5"
-        ]
-    , Css.Global.selector "body"
-        [ Css.property "font-family" "inherit"
-        , Css.property "line-height" "inherit"
-        ]
-    , Css.Global.selector "*,\n::before,\n::after"
-        [ Css.property "box-sizing" "border-box"
-        , Css.property "border-width" "0"
-        , Css.property "border-style" "solid"
-        , Css.property "border-color" "currentColor"
-        ]
-    , Css.Global.selector "hr"
-        [ Css.property "border-top-width" "1px"
-        ]
-    , Css.Global.selector "img"
-        [ Css.property "border-style" "solid"
+    , Css.Global.selector "dialog"
+        [ Css.property "padding" "0"
         ]
     , Css.Global.selector "textarea"
         [ Css.property "resize" "vertical"
         ]
     , Css.Global.selector "input::-moz-placeholder, textarea::-moz-placeholder"
         [ Css.property "opacity" "1"
-        , Css.property "color" "#a1a1aa"
+        , Css.property "color" "#9ca3af"
         ]
     , Css.Global.selector "input::placeholder,\ntextarea::placeholder"
         [ Css.property "opacity" "1"
-        , Css.property "color" "#a1a1aa"
+        , Css.property "color" "#9ca3af"
         ]
     , Css.Global.selector "button,\n[role=\"button\"]"
         [ Css.property "cursor" "pointer"
         ]
-    , Css.Global.selector ":-moz-focusring"
-        [ Css.property "outline" "auto"
-        ]
-    , Css.Global.selector "table"
-        [ Css.property "border-collapse" "collapse"
-        ]
-    , Css.Global.selector "h1,\nh2,\nh3,\nh4,\nh5,\nh6"
-        [ Css.property "font-size" "inherit"
-        , Css.property "font-weight" "inherit"
-        ]
-    , Css.Global.selector "a"
-        [ Css.property "color" "inherit"
-        , Css.property "text-decoration" "inherit"
-        ]
-    , Css.Global.selector "button,\ninput,\noptgroup,\nselect,\ntextarea"
-        [ Css.property "padding" "0"
-        , Css.property "line-height" "inherit"
-        , Css.property "color" "inherit"
-        ]
-    , Css.Global.selector "pre,\ncode,\nkbd,\nsamp"
-        [ Css.property "font-family" "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
+    , Css.Global.selector ":disabled"
+        [ Css.property "cursor" "default"
         ]
     , Css.Global.selector "img,\nsvg,\nvideo,\ncanvas,\naudio,\niframe,\nembed,\nobject"
         [ Css.property "display" "block"
@@ -189,18 +169,102 @@ globalStyles =
         [ Css.property "display" "none"
         ]
     , Css.Global.selector "*, ::before, ::after"
-        [ Css.property "border-color" "currentColor"
-        ]
-    , Css.Global.selector "*, ::before, ::after"
-        [ Css.property "--tw-shadow" "0 0 #0000"
-        ]
-    , Css.Global.selector "*, ::before, ::after"
-        [ Css.property "--tw-ring-inset" "var(--tw-empty,/*!*/ /*!*/)"
+        [ Css.property "--tw-border-spacing-x" "0"
+        , Css.property "--tw-border-spacing-y" "0"
+        , Css.property "--tw-translate-x" "0"
+        , Css.property "--tw-translate-y" "0"
+        , Css.property "--tw-rotate" "0"
+        , Css.property "--tw-skew-x" "0"
+        , Css.property "--tw-skew-y" "0"
+        , Css.property "--tw-scale-x" "1"
+        , Css.property "--tw-scale-y" "1"
+        , Css.property "--tw-pan-x" " "
+        , Css.property "--tw-pan-y" " "
+        , Css.property "--tw-pinch-zoom" " "
+        , Css.property "--tw-scroll-snap-strictness" "proximity"
+        , Css.property "--tw-gradient-from-position" " "
+        , Css.property "--tw-gradient-via-position" " "
+        , Css.property "--tw-gradient-to-position" " "
+        , Css.property "--tw-ordinal" " "
+        , Css.property "--tw-slashed-zero" " "
+        , Css.property "--tw-numeric-figure" " "
+        , Css.property "--tw-numeric-spacing" " "
+        , Css.property "--tw-numeric-fraction" " "
+        , Css.property "--tw-ring-inset" " "
         , Css.property "--tw-ring-offset-width" "0px"
         , Css.property "--tw-ring-offset-color" "#fff"
-        , Css.property "--tw-ring-color" "rgba(59, 130, 246, 0.5)"
+        , Css.property "--tw-ring-color" "rgb(59 130 246 / 0.5)"
         , Css.property "--tw-ring-offset-shadow" "0 0 #0000"
         , Css.property "--tw-ring-shadow" "0 0 #0000"
+        , Css.property "--tw-shadow" "0 0 #0000"
+        , Css.property "--tw-shadow-colored" "0 0 #0000"
+        , Css.property "--tw-blur" " "
+        , Css.property "--tw-brightness" " "
+        , Css.property "--tw-contrast" " "
+        , Css.property "--tw-grayscale" " "
+        , Css.property "--tw-hue-rotate" " "
+        , Css.property "--tw-invert" " "
+        , Css.property "--tw-saturate" " "
+        , Css.property "--tw-sepia" " "
+        , Css.property "--tw-drop-shadow" " "
+        , Css.property "--tw-backdrop-blur" " "
+        , Css.property "--tw-backdrop-brightness" " "
+        , Css.property "--tw-backdrop-contrast" " "
+        , Css.property "--tw-backdrop-grayscale" " "
+        , Css.property "--tw-backdrop-hue-rotate" " "
+        , Css.property "--tw-backdrop-invert" " "
+        , Css.property "--tw-backdrop-opacity" " "
+        , Css.property "--tw-backdrop-saturate" " "
+        , Css.property "--tw-backdrop-sepia" " "
+        ]
+    , Css.Global.selector "::backdrop"
+        [ Css.property "--tw-border-spacing-x" "0"
+        , Css.property "--tw-border-spacing-y" "0"
+        , Css.property "--tw-translate-x" "0"
+        , Css.property "--tw-translate-y" "0"
+        , Css.property "--tw-rotate" "0"
+        , Css.property "--tw-skew-x" "0"
+        , Css.property "--tw-skew-y" "0"
+        , Css.property "--tw-scale-x" "1"
+        , Css.property "--tw-scale-y" "1"
+        , Css.property "--tw-pan-x" " "
+        , Css.property "--tw-pan-y" " "
+        , Css.property "--tw-pinch-zoom" " "
+        , Css.property "--tw-scroll-snap-strictness" "proximity"
+        , Css.property "--tw-gradient-from-position" " "
+        , Css.property "--tw-gradient-via-position" " "
+        , Css.property "--tw-gradient-to-position" " "
+        , Css.property "--tw-ordinal" " "
+        , Css.property "--tw-slashed-zero" " "
+        , Css.property "--tw-numeric-figure" " "
+        , Css.property "--tw-numeric-spacing" " "
+        , Css.property "--tw-numeric-fraction" " "
+        , Css.property "--tw-ring-inset" " "
+        , Css.property "--tw-ring-offset-width" "0px"
+        , Css.property "--tw-ring-offset-color" "#fff"
+        , Css.property "--tw-ring-color" "rgb(59 130 246 / 0.5)"
+        , Css.property "--tw-ring-offset-shadow" "0 0 #0000"
+        , Css.property "--tw-ring-shadow" "0 0 #0000"
+        , Css.property "--tw-shadow" "0 0 #0000"
+        , Css.property "--tw-shadow-colored" "0 0 #0000"
+        , Css.property "--tw-blur" " "
+        , Css.property "--tw-brightness" " "
+        , Css.property "--tw-contrast" " "
+        , Css.property "--tw-grayscale" " "
+        , Css.property "--tw-hue-rotate" " "
+        , Css.property "--tw-invert" " "
+        , Css.property "--tw-saturate" " "
+        , Css.property "--tw-sepia" " "
+        , Css.property "--tw-drop-shadow" " "
+        , Css.property "--tw-backdrop-blur" " "
+        , Css.property "--tw-backdrop-brightness" " "
+        , Css.property "--tw-backdrop-contrast" " "
+        , Css.property "--tw-backdrop-grayscale" " "
+        , Css.property "--tw-backdrop-hue-rotate" " "
+        , Css.property "--tw-backdrop-invert" " "
+        , Css.property "--tw-backdrop-opacity" " "
+        , Css.property "--tw-backdrop-saturate" " "
+        , Css.property "--tw-backdrop-sepia" " "
         ]
     ]
 
@@ -208,6 +272,11 @@ globalStyles =
 absolute : Css.Style
 absolute =
     Css.property "position" "absolute"
+
+
+accent_auto : Css.Style
+accent_auto =
+    Css.property "accent-color" "auto"
 
 
 align_baseline : Css.Style
@@ -223,6 +292,16 @@ align_bottom =
 align_middle : Css.Style
 align_middle =
     Css.property "vertical-align" "middle"
+
+
+align_sub : Css.Style
+align_sub =
+    Css.property "vertical-align" "sub"
+
+
+align_super : Css.Style
+align_super =
+    Css.property "vertical-align" "super"
 
 
 align_text_bottom : Css.Style
@@ -327,6 +406,86 @@ appearance_none =
         , Css.property "-moz-appearance" "none"
         , Css.property "appearance" "none"
         ]
+
+
+aspect_1 : Css.Style
+aspect_1 =
+    Css.property "aspect-ratio" "1"
+
+
+aspect_10 : Css.Style
+aspect_10 =
+    Css.property "aspect-ratio" "10"
+
+
+aspect_11 : Css.Style
+aspect_11 =
+    Css.property "aspect-ratio" "11"
+
+
+aspect_12 : Css.Style
+aspect_12 =
+    Css.property "aspect-ratio" "12"
+
+
+aspect_13 : Css.Style
+aspect_13 =
+    Css.property "aspect-ratio" "13"
+
+
+aspect_14 : Css.Style
+aspect_14 =
+    Css.property "aspect-ratio" "14"
+
+
+aspect_15 : Css.Style
+aspect_15 =
+    Css.property "aspect-ratio" "15"
+
+
+aspect_16 : Css.Style
+aspect_16 =
+    Css.property "aspect-ratio" "16"
+
+
+aspect_2 : Css.Style
+aspect_2 =
+    Css.property "aspect-ratio" "2"
+
+
+aspect_3 : Css.Style
+aspect_3 =
+    Css.property "aspect-ratio" "3"
+
+
+aspect_4 : Css.Style
+aspect_4 =
+    Css.property "aspect-ratio" "4"
+
+
+aspect_5 : Css.Style
+aspect_5 =
+    Css.property "aspect-ratio" "5"
+
+
+aspect_6 : Css.Style
+aspect_6 =
+    Css.property "aspect-ratio" "6"
+
+
+aspect_7 : Css.Style
+aspect_7 =
+    Css.property "aspect-ratio" "7"
+
+
+aspect_8 : Css.Style
+aspect_8 =
+    Css.property "aspect-ratio" "8"
+
+
+aspect_9 : Css.Style
+aspect_9 =
+    Css.property "aspect-ratio" "9"
 
 
 aspect_h_1 : Css.Style
@@ -790,152 +949,251 @@ auto_rows_min =
 
 backdrop_blur : Css.Style
 backdrop_blur =
-    Css.property "--tw-backdrop-blur" "blur(8px)"
+    Css.batch
+        [ Css.property "--tw-backdrop-blur" "blur(8px)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_blur_0 : Css.Style
 backdrop_blur_0 =
-    Css.property "--tw-backdrop-blur" "blur(0)"
+    Css.batch
+        [ Css.property "--tw-backdrop-blur" "blur(0)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_blur_2xl : Css.Style
 backdrop_blur_2xl =
-    Css.property "--tw-backdrop-blur" "blur(40px)"
+    Css.batch
+        [ Css.property "--tw-backdrop-blur" "blur(40px)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_blur_3xl : Css.Style
 backdrop_blur_3xl =
-    Css.property "--tw-backdrop-blur" "blur(64px)"
+    Css.batch
+        [ Css.property "--tw-backdrop-blur" "blur(64px)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_blur_lg : Css.Style
 backdrop_blur_lg =
-    Css.property "--tw-backdrop-blur" "blur(16px)"
+    Css.batch
+        [ Css.property "--tw-backdrop-blur" "blur(16px)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_blur_md : Css.Style
 backdrop_blur_md =
-    Css.property "--tw-backdrop-blur" "blur(12px)"
+    Css.batch
+        [ Css.property "--tw-backdrop-blur" "blur(12px)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_blur_none : Css.Style
 backdrop_blur_none =
-    Css.property "--tw-backdrop-blur" "blur(0)"
+    Css.batch
+        [ Css.property "--tw-backdrop-blur" "blur(0)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_blur_sm : Css.Style
 backdrop_blur_sm =
-    Css.property "--tw-backdrop-blur" "blur(4px)"
+    Css.batch
+        [ Css.property "--tw-backdrop-blur" "blur(4px)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_blur_xl : Css.Style
 backdrop_blur_xl =
-    Css.property "--tw-backdrop-blur" "blur(24px)"
+    Css.batch
+        [ Css.property "--tw-backdrop-blur" "blur(24px)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_0 : Css.Style
 backdrop_brightness_0 =
-    Css.property "--tw-backdrop-brightness" "brightness(0)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(0)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_100 : Css.Style
 backdrop_brightness_100 =
-    Css.property "--tw-backdrop-brightness" "brightness(1)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(1)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_105 : Css.Style
 backdrop_brightness_105 =
-    Css.property "--tw-backdrop-brightness" "brightness(1.05)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(1.05)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_110 : Css.Style
 backdrop_brightness_110 =
-    Css.property "--tw-backdrop-brightness" "brightness(1.1)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(1.1)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_125 : Css.Style
 backdrop_brightness_125 =
-    Css.property "--tw-backdrop-brightness" "brightness(1.25)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(1.25)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_150 : Css.Style
 backdrop_brightness_150 =
-    Css.property "--tw-backdrop-brightness" "brightness(1.5)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(1.5)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_200 : Css.Style
 backdrop_brightness_200 =
-    Css.property "--tw-backdrop-brightness" "brightness(2)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(2)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_50 : Css.Style
 backdrop_brightness_50 =
-    Css.property "--tw-backdrop-brightness" "brightness(.5)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(.5)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_75 : Css.Style
 backdrop_brightness_75 =
-    Css.property "--tw-backdrop-brightness" "brightness(.75)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(.75)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_90 : Css.Style
 backdrop_brightness_90 =
-    Css.property "--tw-backdrop-brightness" "brightness(.9)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(.9)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_brightness_95 : Css.Style
 backdrop_brightness_95 =
-    Css.property "--tw-backdrop-brightness" "brightness(.95)"
+    Css.batch
+        [ Css.property "--tw-backdrop-brightness" "brightness(.95)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_contrast_0 : Css.Style
 backdrop_contrast_0 =
-    Css.property "--tw-backdrop-contrast" "contrast(0)"
+    Css.batch
+        [ Css.property "--tw-backdrop-contrast" "contrast(0)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_contrast_100 : Css.Style
 backdrop_contrast_100 =
-    Css.property "--tw-backdrop-contrast" "contrast(1)"
+    Css.batch
+        [ Css.property "--tw-backdrop-contrast" "contrast(1)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_contrast_125 : Css.Style
 backdrop_contrast_125 =
-    Css.property "--tw-backdrop-contrast" "contrast(1.25)"
+    Css.batch
+        [ Css.property "--tw-backdrop-contrast" "contrast(1.25)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_contrast_150 : Css.Style
 backdrop_contrast_150 =
-    Css.property "--tw-backdrop-contrast" "contrast(1.5)"
+    Css.batch
+        [ Css.property "--tw-backdrop-contrast" "contrast(1.5)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_contrast_200 : Css.Style
 backdrop_contrast_200 =
-    Css.property "--tw-backdrop-contrast" "contrast(2)"
+    Css.batch
+        [ Css.property "--tw-backdrop-contrast" "contrast(2)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_contrast_50 : Css.Style
 backdrop_contrast_50 =
-    Css.property "--tw-backdrop-contrast" "contrast(.5)"
+    Css.batch
+        [ Css.property "--tw-backdrop-contrast" "contrast(.5)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_contrast_75 : Css.Style
 backdrop_contrast_75 =
-    Css.property "--tw-backdrop-contrast" "contrast(.75)"
+    Css.batch
+        [ Css.property "--tw-backdrop-contrast" "contrast(.75)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_filter : Css.Style
 backdrop_filter =
     Css.batch
-        [ Css.property "--tw-backdrop-blur" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-backdrop-brightness" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-backdrop-contrast" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-backdrop-grayscale" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-backdrop-hue-rotate" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-backdrop-invert" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-backdrop-opacity" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-backdrop-saturate" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-backdrop-sepia" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        [ Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
         , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
         ]
 
@@ -950,162 +1208,605 @@ backdrop_filter_none =
 
 backdrop_grayscale : Css.Style
 backdrop_grayscale =
-    Css.property "--tw-backdrop-grayscale" "grayscale(100%)"
+    Css.batch
+        [ Css.property "--tw-backdrop-grayscale" "grayscale(100%)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_grayscale_0 : Css.Style
 backdrop_grayscale_0 =
-    Css.property "--tw-backdrop-grayscale" "grayscale(0)"
+    Css.batch
+        [ Css.property "--tw-backdrop-grayscale" "grayscale(0)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_hue_rotate_0 : Css.Style
 backdrop_hue_rotate_0 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(0deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(0deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_hue_rotate_15 : Css.Style
 backdrop_hue_rotate_15 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(15deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(15deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_hue_rotate_180 : Css.Style
 backdrop_hue_rotate_180 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(180deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(180deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_hue_rotate_30 : Css.Style
 backdrop_hue_rotate_30 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(30deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(30deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_hue_rotate_60 : Css.Style
 backdrop_hue_rotate_60 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(60deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(60deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_hue_rotate_90 : Css.Style
 backdrop_hue_rotate_90 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(90deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(90deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_invert : Css.Style
 backdrop_invert =
-    Css.property "--tw-backdrop-invert" "invert(100%)"
+    Css.batch
+        [ Css.property "--tw-backdrop-invert" "invert(100%)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_invert_0 : Css.Style
 backdrop_invert_0 =
-    Css.property "--tw-backdrop-invert" "invert(0)"
+    Css.batch
+        [ Css.property "--tw-backdrop-invert" "invert(0)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_0 : Css.Style
 backdrop_opacity_0 =
-    Css.property "--tw-backdrop-opacity" "opacity(0)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_10 : Css.Style
 backdrop_opacity_10 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.1)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.1)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_100 : Css.Style
 backdrop_opacity_100 =
-    Css.property "--tw-backdrop-opacity" "opacity(1)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(1)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_20 : Css.Style
 backdrop_opacity_20 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.2)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.2)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_25 : Css.Style
 backdrop_opacity_25 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.25)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.25)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_30 : Css.Style
 backdrop_opacity_30 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.3)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.3)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_40 : Css.Style
 backdrop_opacity_40 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.4)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.4)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_5 : Css.Style
 backdrop_opacity_5 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.05)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.05)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_50 : Css.Style
 backdrop_opacity_50 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.5)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.5)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_60 : Css.Style
 backdrop_opacity_60 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.6)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.6)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_70 : Css.Style
 backdrop_opacity_70 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.7)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.7)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_75 : Css.Style
 backdrop_opacity_75 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.75)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.75)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_80 : Css.Style
 backdrop_opacity_80 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.8)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.8)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_90 : Css.Style
 backdrop_opacity_90 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.9)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.9)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_opacity_95 : Css.Style
 backdrop_opacity_95 =
-    Css.property "--tw-backdrop-opacity" "opacity(0.95)"
+    Css.batch
+        [ Css.property "--tw-backdrop-opacity" "opacity(0.95)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_saturate_0 : Css.Style
 backdrop_saturate_0 =
-    Css.property "--tw-backdrop-saturate" "saturate(0)"
+    Css.batch
+        [ Css.property "--tw-backdrop-saturate" "saturate(0)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_saturate_100 : Css.Style
 backdrop_saturate_100 =
-    Css.property "--tw-backdrop-saturate" "saturate(1)"
+    Css.batch
+        [ Css.property "--tw-backdrop-saturate" "saturate(1)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_saturate_150 : Css.Style
 backdrop_saturate_150 =
-    Css.property "--tw-backdrop-saturate" "saturate(1.5)"
+    Css.batch
+        [ Css.property "--tw-backdrop-saturate" "saturate(1.5)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_saturate_200 : Css.Style
 backdrop_saturate_200 =
-    Css.property "--tw-backdrop-saturate" "saturate(2)"
+    Css.batch
+        [ Css.property "--tw-backdrop-saturate" "saturate(2)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_saturate_50 : Css.Style
 backdrop_saturate_50 =
-    Css.property "--tw-backdrop-saturate" "saturate(.5)"
+    Css.batch
+        [ Css.property "--tw-backdrop-saturate" "saturate(.5)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_sepia : Css.Style
 backdrop_sepia =
-    Css.property "--tw-backdrop-sepia" "sepia(100%)"
+    Css.batch
+        [ Css.property "--tw-backdrop-sepia" "sepia(100%)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 backdrop_sepia_0 : Css.Style
 backdrop_sepia_0 =
-    Css.property "--tw-backdrop-sepia" "sepia(0)"
+    Css.batch
+        [ Css.property "--tw-backdrop-sepia" "sepia(0)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
+
+
+basis_0 : Css.Style
+basis_0 =
+    Css.property "flex-basis" "0px"
+
+
+basis_0_dot_5 : Css.Style
+basis_0_dot_5 =
+    Css.property "flex-basis" "0.125rem"
+
+
+basis_1 : Css.Style
+basis_1 =
+    Css.property "flex-basis" "0.25rem"
+
+
+basis_10 : Css.Style
+basis_10 =
+    Css.property "flex-basis" "2.5rem"
+
+
+basis_10over12 : Css.Style
+basis_10over12 =
+    Css.property "flex-basis" "83.333333%"
+
+
+basis_11 : Css.Style
+basis_11 =
+    Css.property "flex-basis" "2.75rem"
+
+
+basis_11over12 : Css.Style
+basis_11over12 =
+    Css.property "flex-basis" "91.666667%"
+
+
+basis_12 : Css.Style
+basis_12 =
+    Css.property "flex-basis" "3rem"
+
+
+basis_14 : Css.Style
+basis_14 =
+    Css.property "flex-basis" "3.5rem"
+
+
+basis_16 : Css.Style
+basis_16 =
+    Css.property "flex-basis" "4rem"
+
+
+basis_1_dot_5 : Css.Style
+basis_1_dot_5 =
+    Css.property "flex-basis" "0.375rem"
+
+
+basis_1over12 : Css.Style
+basis_1over12 =
+    Css.property "flex-basis" "8.333333%"
+
+
+basis_1over2 : Css.Style
+basis_1over2 =
+    Css.property "flex-basis" "50%"
+
+
+basis_1over3 : Css.Style
+basis_1over3 =
+    Css.property "flex-basis" "33.333333%"
+
+
+basis_1over4 : Css.Style
+basis_1over4 =
+    Css.property "flex-basis" "25%"
+
+
+basis_1over5 : Css.Style
+basis_1over5 =
+    Css.property "flex-basis" "20%"
+
+
+basis_1over6 : Css.Style
+basis_1over6 =
+    Css.property "flex-basis" "16.666667%"
+
+
+basis_2 : Css.Style
+basis_2 =
+    Css.property "flex-basis" "0.5rem"
+
+
+basis_20 : Css.Style
+basis_20 =
+    Css.property "flex-basis" "5rem"
+
+
+basis_24 : Css.Style
+basis_24 =
+    Css.property "flex-basis" "6rem"
+
+
+basis_28 : Css.Style
+basis_28 =
+    Css.property "flex-basis" "7rem"
+
+
+basis_2_dot_5 : Css.Style
+basis_2_dot_5 =
+    Css.property "flex-basis" "0.625rem"
+
+
+basis_2over12 : Css.Style
+basis_2over12 =
+    Css.property "flex-basis" "16.666667%"
+
+
+basis_2over3 : Css.Style
+basis_2over3 =
+    Css.property "flex-basis" "66.666667%"
+
+
+basis_2over4 : Css.Style
+basis_2over4 =
+    Css.property "flex-basis" "50%"
+
+
+basis_2over5 : Css.Style
+basis_2over5 =
+    Css.property "flex-basis" "40%"
+
+
+basis_2over6 : Css.Style
+basis_2over6 =
+    Css.property "flex-basis" "33.333333%"
+
+
+basis_3 : Css.Style
+basis_3 =
+    Css.property "flex-basis" "0.75rem"
+
+
+basis_32 : Css.Style
+basis_32 =
+    Css.property "flex-basis" "8rem"
+
+
+basis_36 : Css.Style
+basis_36 =
+    Css.property "flex-basis" "9rem"
+
+
+basis_3_dot_5 : Css.Style
+basis_3_dot_5 =
+    Css.property "flex-basis" "0.875rem"
+
+
+basis_3over12 : Css.Style
+basis_3over12 =
+    Css.property "flex-basis" "25%"
+
+
+basis_3over4 : Css.Style
+basis_3over4 =
+    Css.property "flex-basis" "75%"
+
+
+basis_3over5 : Css.Style
+basis_3over5 =
+    Css.property "flex-basis" "60%"
+
+
+basis_3over6 : Css.Style
+basis_3over6 =
+    Css.property "flex-basis" "50%"
+
+
+basis_4 : Css.Style
+basis_4 =
+    Css.property "flex-basis" "1rem"
+
+
+basis_40 : Css.Style
+basis_40 =
+    Css.property "flex-basis" "10rem"
+
+
+basis_44 : Css.Style
+basis_44 =
+    Css.property "flex-basis" "11rem"
+
+
+basis_48 : Css.Style
+basis_48 =
+    Css.property "flex-basis" "12rem"
+
+
+basis_4over12 : Css.Style
+basis_4over12 =
+    Css.property "flex-basis" "33.333333%"
+
+
+basis_4over5 : Css.Style
+basis_4over5 =
+    Css.property "flex-basis" "80%"
+
+
+basis_4over6 : Css.Style
+basis_4over6 =
+    Css.property "flex-basis" "66.666667%"
+
+
+basis_5 : Css.Style
+basis_5 =
+    Css.property "flex-basis" "1.25rem"
+
+
+basis_52 : Css.Style
+basis_52 =
+    Css.property "flex-basis" "13rem"
+
+
+basis_56 : Css.Style
+basis_56 =
+    Css.property "flex-basis" "14rem"
+
+
+basis_5over12 : Css.Style
+basis_5over12 =
+    Css.property "flex-basis" "41.666667%"
+
+
+basis_5over6 : Css.Style
+basis_5over6 =
+    Css.property "flex-basis" "83.333333%"
+
+
+basis_6 : Css.Style
+basis_6 =
+    Css.property "flex-basis" "1.5rem"
+
+
+basis_60 : Css.Style
+basis_60 =
+    Css.property "flex-basis" "15rem"
+
+
+basis_64 : Css.Style
+basis_64 =
+    Css.property "flex-basis" "16rem"
+
+
+basis_6over12 : Css.Style
+basis_6over12 =
+    Css.property "flex-basis" "50%"
+
+
+basis_7 : Css.Style
+basis_7 =
+    Css.property "flex-basis" "1.75rem"
+
+
+basis_72 : Css.Style
+basis_72 =
+    Css.property "flex-basis" "18rem"
+
+
+basis_7over12 : Css.Style
+basis_7over12 =
+    Css.property "flex-basis" "58.333333%"
+
+
+basis_8 : Css.Style
+basis_8 =
+    Css.property "flex-basis" "2rem"
+
+
+basis_80 : Css.Style
+basis_80 =
+    Css.property "flex-basis" "20rem"
+
+
+basis_8over12 : Css.Style
+basis_8over12 =
+    Css.property "flex-basis" "66.666667%"
+
+
+basis_9 : Css.Style
+basis_9 =
+    Css.property "flex-basis" "2.25rem"
+
+
+basis_96 : Css.Style
+basis_96 =
+    Css.property "flex-basis" "24rem"
+
+
+basis_9over12 : Css.Style
+basis_9over12 =
+    Css.property "flex-basis" "75%"
+
+
+basis_auto : Css.Style
+basis_auto =
+    Css.property "flex-basis" "auto"
+
+
+basis_full : Css.Style
+basis_full =
+    Css.property "flex-basis" "100%"
+
+
+basis_px : Css.Style
+basis_px =
+    Css.property "flex-basis" "1px"
 
 
 bg_auto : Css.Style
@@ -1234,22 +1935,6 @@ bg_contain =
 bg_cover : Css.Style
 bg_cover =
     Css.property "background-size" "cover"
-
-
-bg_destruct : Css.Style
-bg_destruct =
-    Css.batch
-        [ Css.property "--tw-bg-opacity" "1"
-        , Css.property "background-color" "rgba(142, 74, 73, var(--tw-bg-opacity))"
-        ]
-
-
-bg_exclaim : Css.Style
-bg_exclaim =
-    Css.batch
-        [ Css.property "--tw-bg-opacity" "1"
-        , Css.property "background-color" "rgba(224, 144, 93, var(--tw-bg-opacity))"
-        ]
 
 
 bg_fixed : Css.Style
@@ -1417,14 +2102,6 @@ bg_origin_padding =
     Css.property "background-origin" "padding-box"
 
 
-bg_primary : Css.Style
-bg_primary =
-    Css.batch
-        [ Css.property "--tw-bg-opacity" "1"
-        , Css.property "background-color" "rgba(150, 89, 88, var(--tw-bg-opacity))"
-        ]
-
-
 bg_repeat : Css.Style
 bg_repeat =
     Css.property "background-repeat" "repeat"
@@ -1470,30 +2147,6 @@ bg_scroll =
     Css.property "background-attachment" "scroll"
 
 
-bg_secondary : Css.Style
-bg_secondary =
-    Css.batch
-        [ Css.property "--tw-bg-opacity" "1"
-        , Css.property "background-color" "rgba(223, 238, 227, var(--tw-bg-opacity))"
-        ]
-
-
-bg_success : Css.Style
-bg_success =
-    Css.batch
-        [ Css.property "--tw-bg-opacity" "1"
-        , Css.property "background-color" "rgba(78, 208, 182, var(--tw-bg-opacity))"
-        ]
-
-
-bg_tertiary : Css.Style
-bg_tertiary =
-    Css.batch
-        [ Css.property "--tw-bg-opacity" "1"
-        , Css.property "background-color" "rgba(161, 159, 187, var(--tw-bg-opacity))"
-        ]
-
-
 bg_top : Css.Style
 bg_top =
     Css.property "background-position" "top"
@@ -1506,47 +2159,74 @@ block =
 
 blur : Css.Style
 blur =
-    Css.property "--tw-blur" "blur(8px)"
+    Css.batch
+        [ Css.property "--tw-blur" "blur(8px)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 blur_0 : Css.Style
 blur_0 =
-    Css.property "--tw-blur" "blur(0)"
+    Css.batch
+        [ Css.property "--tw-blur" "blur(0)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 blur_2xl : Css.Style
 blur_2xl =
-    Css.property "--tw-blur" "blur(40px)"
+    Css.batch
+        [ Css.property "--tw-blur" "blur(40px)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 blur_3xl : Css.Style
 blur_3xl =
-    Css.property "--tw-blur" "blur(64px)"
+    Css.batch
+        [ Css.property "--tw-blur" "blur(64px)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 blur_lg : Css.Style
 blur_lg =
-    Css.property "--tw-blur" "blur(16px)"
+    Css.batch
+        [ Css.property "--tw-blur" "blur(16px)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 blur_md : Css.Style
 blur_md =
-    Css.property "--tw-blur" "blur(12px)"
+    Css.batch
+        [ Css.property "--tw-blur" "blur(12px)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 blur_none : Css.Style
 blur_none =
-    Css.property "--tw-blur" "blur(0)"
+    Css.batch
+        [ Css.property "--tw-blur" "blur(0)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 blur_sm : Css.Style
 blur_sm =
-    Css.property "--tw-blur" "blur(4px)"
+    Css.batch
+        [ Css.property "--tw-blur" "blur(4px)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 blur_xl : Css.Style
 blur_xl =
-    Css.property "--tw-blur" "blur(24px)"
+    Css.batch
+        [ Css.property "--tw-blur" "blur(24px)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 border : Css.Style
@@ -1609,14 +2289,6 @@ border_dashed =
     Css.property "border-style" "dashed"
 
 
-border_destruct : Css.Style
-border_destruct =
-    Css.batch
-        [ Css.property "--tw-border-opacity" "1"
-        , Css.property "border-color" "rgba(142, 74, 73, var(--tw-border-opacity))"
-        ]
-
-
 border_dotted : Css.Style
 border_dotted =
     Css.property "border-style" "dotted"
@@ -1627,12 +2299,34 @@ border_double =
     Css.property "border-style" "double"
 
 
-border_exclaim : Css.Style
-border_exclaim =
-    Css.batch
-        [ Css.property "--tw-border-opacity" "1"
-        , Css.property "border-color" "rgba(224, 144, 93, var(--tw-border-opacity))"
-        ]
+border_e : Css.Style
+border_e =
+    Css.property "border-inline-end-width" "1px"
+
+
+border_e_0 : Css.Style
+border_e_0 =
+    Css.property "border-inline-end-width" "0px"
+
+
+border_e_2 : Css.Style
+border_e_2 =
+    Css.property "border-inline-end-width" "2px"
+
+
+border_e_4 : Css.Style
+border_e_4 =
+    Css.property "border-inline-end-width" "4px"
+
+
+border_e_8 : Css.Style
+border_e_8 =
+    Css.property "border-inline-end-width" "8px"
+
+
+border_hidden : Css.Style
+border_hidden =
+    Css.property "border-style" "hidden"
 
 
 border_l : Css.Style
@@ -1740,14 +2434,6 @@ border_opacity_95 =
     Css.property "--tw-border-opacity" "0.95"
 
 
-border_primary : Css.Style
-border_primary =
-    Css.batch
-        [ Css.property "--tw-border-opacity" "1"
-        , Css.property "border-color" "rgba(150, 89, 88, var(--tw-border-opacity))"
-        ]
-
-
 border_r : Css.Style
 border_r =
     Css.property "border-right-width" "1px"
@@ -1773,12 +2459,29 @@ border_r_8 =
     Css.property "border-right-width" "8px"
 
 
-border_secondary : Css.Style
-border_secondary =
-    Css.batch
-        [ Css.property "--tw-border-opacity" "1"
-        , Css.property "border-color" "rgba(223, 238, 227, var(--tw-border-opacity))"
-        ]
+border_s : Css.Style
+border_s =
+    Css.property "border-inline-start-width" "1px"
+
+
+border_s_0 : Css.Style
+border_s_0 =
+    Css.property "border-inline-start-width" "0px"
+
+
+border_s_2 : Css.Style
+border_s_2 =
+    Css.property "border-inline-start-width" "2px"
+
+
+border_s_4 : Css.Style
+border_s_4 =
+    Css.property "border-inline-start-width" "4px"
+
+
+border_s_8 : Css.Style
+border_s_8 =
+    Css.property "border-inline-start-width" "8px"
 
 
 border_separate : Css.Style
@@ -1791,11 +2494,878 @@ border_solid =
     Css.property "border-style" "solid"
 
 
-border_success : Css.Style
-border_success =
+border_spacing_0 : Css.Style
+border_spacing_0 =
     Css.batch
-        [ Css.property "--tw-border-opacity" "1"
-        , Css.property "border-color" "rgba(78, 208, 182, var(--tw-border-opacity))"
+        [ Css.property "--tw-border-spacing-x" "0px"
+        , Css.property "--tw-border-spacing-y" "0px"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_0_dot_5 : Css.Style
+border_spacing_0_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.125rem"
+        , Css.property "--tw-border-spacing-y" "0.125rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_1 : Css.Style
+border_spacing_1 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.25rem"
+        , Css.property "--tw-border-spacing-y" "0.25rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_10 : Css.Style
+border_spacing_10 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "2.5rem"
+        , Css.property "--tw-border-spacing-y" "2.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_11 : Css.Style
+border_spacing_11 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "2.75rem"
+        , Css.property "--tw-border-spacing-y" "2.75rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_12 : Css.Style
+border_spacing_12 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "3rem"
+        , Css.property "--tw-border-spacing-y" "3rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_14 : Css.Style
+border_spacing_14 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "3.5rem"
+        , Css.property "--tw-border-spacing-y" "3.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_16 : Css.Style
+border_spacing_16 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "4rem"
+        , Css.property "--tw-border-spacing-y" "4rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_1_dot_5 : Css.Style
+border_spacing_1_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.375rem"
+        , Css.property "--tw-border-spacing-y" "0.375rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_2 : Css.Style
+border_spacing_2 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.5rem"
+        , Css.property "--tw-border-spacing-y" "0.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_20 : Css.Style
+border_spacing_20 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "5rem"
+        , Css.property "--tw-border-spacing-y" "5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_24 : Css.Style
+border_spacing_24 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "6rem"
+        , Css.property "--tw-border-spacing-y" "6rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_28 : Css.Style
+border_spacing_28 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "7rem"
+        , Css.property "--tw-border-spacing-y" "7rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_2_dot_5 : Css.Style
+border_spacing_2_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.625rem"
+        , Css.property "--tw-border-spacing-y" "0.625rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_3 : Css.Style
+border_spacing_3 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.75rem"
+        , Css.property "--tw-border-spacing-y" "0.75rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_32 : Css.Style
+border_spacing_32 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "8rem"
+        , Css.property "--tw-border-spacing-y" "8rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_36 : Css.Style
+border_spacing_36 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "9rem"
+        , Css.property "--tw-border-spacing-y" "9rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_3_dot_5 : Css.Style
+border_spacing_3_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.875rem"
+        , Css.property "--tw-border-spacing-y" "0.875rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_4 : Css.Style
+border_spacing_4 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "1rem"
+        , Css.property "--tw-border-spacing-y" "1rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_40 : Css.Style
+border_spacing_40 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "10rem"
+        , Css.property "--tw-border-spacing-y" "10rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_44 : Css.Style
+border_spacing_44 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "11rem"
+        , Css.property "--tw-border-spacing-y" "11rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_48 : Css.Style
+border_spacing_48 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "12rem"
+        , Css.property "--tw-border-spacing-y" "12rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_5 : Css.Style
+border_spacing_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "1.25rem"
+        , Css.property "--tw-border-spacing-y" "1.25rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_52 : Css.Style
+border_spacing_52 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "13rem"
+        , Css.property "--tw-border-spacing-y" "13rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_56 : Css.Style
+border_spacing_56 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "14rem"
+        , Css.property "--tw-border-spacing-y" "14rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_6 : Css.Style
+border_spacing_6 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "1.5rem"
+        , Css.property "--tw-border-spacing-y" "1.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_60 : Css.Style
+border_spacing_60 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "15rem"
+        , Css.property "--tw-border-spacing-y" "15rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_64 : Css.Style
+border_spacing_64 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "16rem"
+        , Css.property "--tw-border-spacing-y" "16rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_7 : Css.Style
+border_spacing_7 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "1.75rem"
+        , Css.property "--tw-border-spacing-y" "1.75rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_72 : Css.Style
+border_spacing_72 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "18rem"
+        , Css.property "--tw-border-spacing-y" "18rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_8 : Css.Style
+border_spacing_8 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "2rem"
+        , Css.property "--tw-border-spacing-y" "2rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_80 : Css.Style
+border_spacing_80 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "20rem"
+        , Css.property "--tw-border-spacing-y" "20rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_9 : Css.Style
+border_spacing_9 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "2.25rem"
+        , Css.property "--tw-border-spacing-y" "2.25rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_96 : Css.Style
+border_spacing_96 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "24rem"
+        , Css.property "--tw-border-spacing-y" "24rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_px : Css.Style
+border_spacing_px =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "1px"
+        , Css.property "--tw-border-spacing-y" "1px"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_0 : Css.Style
+border_spacing_x_0 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0px"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_0_dot_5 : Css.Style
+border_spacing_x_0_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.125rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_1 : Css.Style
+border_spacing_x_1 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.25rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_10 : Css.Style
+border_spacing_x_10 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "2.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_11 : Css.Style
+border_spacing_x_11 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "2.75rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_12 : Css.Style
+border_spacing_x_12 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "3rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_14 : Css.Style
+border_spacing_x_14 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "3.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_16 : Css.Style
+border_spacing_x_16 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "4rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_1_dot_5 : Css.Style
+border_spacing_x_1_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.375rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_2 : Css.Style
+border_spacing_x_2 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_20 : Css.Style
+border_spacing_x_20 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_24 : Css.Style
+border_spacing_x_24 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "6rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_28 : Css.Style
+border_spacing_x_28 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "7rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_2_dot_5 : Css.Style
+border_spacing_x_2_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.625rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_3 : Css.Style
+border_spacing_x_3 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.75rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_32 : Css.Style
+border_spacing_x_32 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "8rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_36 : Css.Style
+border_spacing_x_36 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "9rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_3_dot_5 : Css.Style
+border_spacing_x_3_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "0.875rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_4 : Css.Style
+border_spacing_x_4 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "1rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_40 : Css.Style
+border_spacing_x_40 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "10rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_44 : Css.Style
+border_spacing_x_44 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "11rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_48 : Css.Style
+border_spacing_x_48 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "12rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_5 : Css.Style
+border_spacing_x_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "1.25rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_52 : Css.Style
+border_spacing_x_52 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "13rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_56 : Css.Style
+border_spacing_x_56 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "14rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_6 : Css.Style
+border_spacing_x_6 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "1.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_60 : Css.Style
+border_spacing_x_60 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "15rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_64 : Css.Style
+border_spacing_x_64 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "16rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_7 : Css.Style
+border_spacing_x_7 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "1.75rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_72 : Css.Style
+border_spacing_x_72 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "18rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_8 : Css.Style
+border_spacing_x_8 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "2rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_80 : Css.Style
+border_spacing_x_80 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "20rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_9 : Css.Style
+border_spacing_x_9 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "2.25rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_96 : Css.Style
+border_spacing_x_96 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "24rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_x_px : Css.Style
+border_spacing_x_px =
+    Css.batch
+        [ Css.property "--tw-border-spacing-x" "1px"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_0 : Css.Style
+border_spacing_y_0 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "0px"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_0_dot_5 : Css.Style
+border_spacing_y_0_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "0.125rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_1 : Css.Style
+border_spacing_y_1 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "0.25rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_10 : Css.Style
+border_spacing_y_10 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "2.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_11 : Css.Style
+border_spacing_y_11 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "2.75rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_12 : Css.Style
+border_spacing_y_12 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "3rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_14 : Css.Style
+border_spacing_y_14 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "3.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_16 : Css.Style
+border_spacing_y_16 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "4rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_1_dot_5 : Css.Style
+border_spacing_y_1_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "0.375rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_2 : Css.Style
+border_spacing_y_2 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "0.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_20 : Css.Style
+border_spacing_y_20 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_24 : Css.Style
+border_spacing_y_24 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "6rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_28 : Css.Style
+border_spacing_y_28 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "7rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_2_dot_5 : Css.Style
+border_spacing_y_2_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "0.625rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_3 : Css.Style
+border_spacing_y_3 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "0.75rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_32 : Css.Style
+border_spacing_y_32 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "8rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_36 : Css.Style
+border_spacing_y_36 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "9rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_3_dot_5 : Css.Style
+border_spacing_y_3_dot_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "0.875rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_4 : Css.Style
+border_spacing_y_4 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "1rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_40 : Css.Style
+border_spacing_y_40 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "10rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_44 : Css.Style
+border_spacing_y_44 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "11rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_48 : Css.Style
+border_spacing_y_48 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "12rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_5 : Css.Style
+border_spacing_y_5 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "1.25rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_52 : Css.Style
+border_spacing_y_52 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "13rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_56 : Css.Style
+border_spacing_y_56 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "14rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_6 : Css.Style
+border_spacing_y_6 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "1.5rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_60 : Css.Style
+border_spacing_y_60 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "15rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_64 : Css.Style
+border_spacing_y_64 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "16rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_7 : Css.Style
+border_spacing_y_7 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "1.75rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_72 : Css.Style
+border_spacing_y_72 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "18rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_8 : Css.Style
+border_spacing_y_8 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "2rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_80 : Css.Style
+border_spacing_y_80 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "20rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_9 : Css.Style
+border_spacing_y_9 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "2.25rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_96 : Css.Style
+border_spacing_y_96 =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "24rem"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
+        ]
+
+
+border_spacing_y_px : Css.Style
+border_spacing_y_px =
+    Css.batch
+        [ Css.property "--tw-border-spacing-y" "1px"
+        , Css.property "border-spacing" "var(--tw-border-spacing-x) var(--tw-border-spacing-y)"
         ]
 
 
@@ -1824,11 +3394,83 @@ border_t_8 =
     Css.property "border-top-width" "8px"
 
 
-border_tertiary : Css.Style
-border_tertiary =
+border_x : Css.Style
+border_x =
     Css.batch
-        [ Css.property "--tw-border-opacity" "1"
-        , Css.property "border-color" "rgba(161, 159, 187, var(--tw-border-opacity))"
+        [ Css.property "border-left-width" "1px"
+        , Css.property "border-right-width" "1px"
+        ]
+
+
+border_x_0 : Css.Style
+border_x_0 =
+    Css.batch
+        [ Css.property "border-left-width" "0px"
+        , Css.property "border-right-width" "0px"
+        ]
+
+
+border_x_2 : Css.Style
+border_x_2 =
+    Css.batch
+        [ Css.property "border-left-width" "2px"
+        , Css.property "border-right-width" "2px"
+        ]
+
+
+border_x_4 : Css.Style
+border_x_4 =
+    Css.batch
+        [ Css.property "border-left-width" "4px"
+        , Css.property "border-right-width" "4px"
+        ]
+
+
+border_x_8 : Css.Style
+border_x_8 =
+    Css.batch
+        [ Css.property "border-left-width" "8px"
+        , Css.property "border-right-width" "8px"
+        ]
+
+
+border_y : Css.Style
+border_y =
+    Css.batch
+        [ Css.property "border-top-width" "1px"
+        , Css.property "border-bottom-width" "1px"
+        ]
+
+
+border_y_0 : Css.Style
+border_y_0 =
+    Css.batch
+        [ Css.property "border-top-width" "0px"
+        , Css.property "border-bottom-width" "0px"
+        ]
+
+
+border_y_2 : Css.Style
+border_y_2 =
+    Css.batch
+        [ Css.property "border-top-width" "2px"
+        , Css.property "border-bottom-width" "2px"
+        ]
+
+
+border_y_4 : Css.Style
+border_y_4 =
+    Css.batch
+        [ Css.property "border-top-width" "4px"
+        , Css.property "border-bottom-width" "4px"
+        ]
+
+
+border_y_8 : Css.Style
+border_y_8 =
+    Css.batch
+        [ Css.property "border-top-width" "8px"
+        , Css.property "border-bottom-width" "8px"
         ]
 
 
@@ -2057,9 +3699,187 @@ box_content =
     Css.property "box-sizing" "content-box"
 
 
+box_decoration_clone : Css.Style
+box_decoration_clone =
+    Css.batch
+        [ Css.property "-webkit-box-decoration-break" "clone"
+        , Css.property "box-decoration-break" "clone"
+        ]
+
+
+box_decoration_slice : Css.Style
+box_decoration_slice =
+    Css.batch
+        [ Css.property "-webkit-box-decoration-break" "slice"
+        , Css.property "box-decoration-break" "slice"
+        ]
+
+
+break_after_all : Css.Style
+break_after_all =
+    Css.batch
+        [ Css.property "-moz-column-break-after" "all"
+        , Css.property "break-after" "all"
+        ]
+
+
+break_after_auto : Css.Style
+break_after_auto =
+    Css.batch
+        [ Css.property "-moz-column-break-after" "auto"
+        , Css.property "break-after" "auto"
+        ]
+
+
+break_after_avoid : Css.Style
+break_after_avoid =
+    Css.batch
+        [ Css.property "-moz-column-break-after" "avoid"
+        , Css.property "break-after" "avoid"
+        ]
+
+
+break_after_avoid_page : Css.Style
+break_after_avoid_page =
+    Css.batch
+        [ Css.property "-moz-column-break-after" "avoid"
+        , Css.property "break-after" "avoid-page"
+        ]
+
+
+break_after_column : Css.Style
+break_after_column =
+    Css.batch
+        [ Css.property "-moz-column-break-after" "column"
+        , Css.property "break-after" "column"
+        ]
+
+
+break_after_left : Css.Style
+break_after_left =
+    Css.batch
+        [ Css.property "-moz-column-break-after" "left"
+        , Css.property "break-after" "left"
+        ]
+
+
+break_after_page : Css.Style
+break_after_page =
+    Css.batch
+        [ Css.property "-moz-column-break-after" "page"
+        , Css.property "break-after" "page"
+        ]
+
+
+break_after_right : Css.Style
+break_after_right =
+    Css.batch
+        [ Css.property "-moz-column-break-after" "right"
+        , Css.property "break-after" "right"
+        ]
+
+
 break_all : Css.Style
 break_all =
     Css.property "word-break" "break-all"
+
+
+break_before_all : Css.Style
+break_before_all =
+    Css.batch
+        [ Css.property "-moz-column-break-before" "all"
+        , Css.property "break-before" "all"
+        ]
+
+
+break_before_auto : Css.Style
+break_before_auto =
+    Css.batch
+        [ Css.property "-moz-column-break-before" "auto"
+        , Css.property "break-before" "auto"
+        ]
+
+
+break_before_avoid : Css.Style
+break_before_avoid =
+    Css.batch
+        [ Css.property "-moz-column-break-before" "avoid"
+        , Css.property "break-before" "avoid"
+        ]
+
+
+break_before_avoid_page : Css.Style
+break_before_avoid_page =
+    Css.batch
+        [ Css.property "-moz-column-break-before" "avoid"
+        , Css.property "break-before" "avoid-page"
+        ]
+
+
+break_before_column : Css.Style
+break_before_column =
+    Css.batch
+        [ Css.property "-moz-column-break-before" "column"
+        , Css.property "break-before" "column"
+        ]
+
+
+break_before_left : Css.Style
+break_before_left =
+    Css.batch
+        [ Css.property "-moz-column-break-before" "left"
+        , Css.property "break-before" "left"
+        ]
+
+
+break_before_page : Css.Style
+break_before_page =
+    Css.batch
+        [ Css.property "-moz-column-break-before" "page"
+        , Css.property "break-before" "page"
+        ]
+
+
+break_before_right : Css.Style
+break_before_right =
+    Css.batch
+        [ Css.property "-moz-column-break-before" "right"
+        , Css.property "break-before" "right"
+        ]
+
+
+break_inside_auto : Css.Style
+break_inside_auto =
+    Css.batch
+        [ Css.property "-moz-column-break-inside" "auto"
+        , Css.property "break-inside" "auto"
+        ]
+
+
+break_inside_avoid : Css.Style
+break_inside_avoid =
+    Css.batch
+        [ Css.property "-moz-column-break-inside" "avoid"
+        , Css.property "break-inside" "avoid"
+        ]
+
+
+break_inside_avoid_column : Css.Style
+break_inside_avoid_column =
+    Css.batch
+        [ Css.property "-moz-column-break-inside" "avoid"
+        , Css.property "break-inside" "avoid-column"
+        ]
+
+
+break_inside_avoid_page : Css.Style
+break_inside_avoid_page =
+    Css.property "break-inside" "avoid-page"
+
+
+break_keep : Css.Style
+break_keep =
+    Css.property "word-break" "keep-all"
 
 
 break_normal : Css.Style
@@ -2077,62 +3897,105 @@ break_words =
 
 brightness_0 : Css.Style
 brightness_0 =
-    Css.property "--tw-brightness" "brightness(0)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(0)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 brightness_100 : Css.Style
 brightness_100 =
-    Css.property "--tw-brightness" "brightness(1)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(1)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 brightness_105 : Css.Style
 brightness_105 =
-    Css.property "--tw-brightness" "brightness(1.05)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(1.05)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 brightness_110 : Css.Style
 brightness_110 =
-    Css.property "--tw-brightness" "brightness(1.1)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(1.1)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 brightness_125 : Css.Style
 brightness_125 =
-    Css.property "--tw-brightness" "brightness(1.25)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(1.25)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 brightness_150 : Css.Style
 brightness_150 =
-    Css.property "--tw-brightness" "brightness(1.5)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(1.5)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 brightness_200 : Css.Style
 brightness_200 =
-    Css.property "--tw-brightness" "brightness(2)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(2)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 brightness_50 : Css.Style
 brightness_50 =
-    Css.property "--tw-brightness" "brightness(.5)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(.5)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 brightness_75 : Css.Style
 brightness_75 =
-    Css.property "--tw-brightness" "brightness(.75)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(.75)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 brightness_90 : Css.Style
 brightness_90 =
-    Css.property "--tw-brightness" "brightness(.9)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(.9)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 brightness_95 : Css.Style
 brightness_95 =
-    Css.property "--tw-brightness" "brightness(.95)"
+    Css.batch
+        [ Css.property "--tw-brightness" "brightness(.95)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 capitalize : Css.Style
 capitalize =
     Css.property "text-transform" "capitalize"
+
+
+caption_bottom : Css.Style
+caption_bottom =
+    Css.property "caption-side" "bottom"
+
+
+caption_top : Css.Style
+caption_top =
+    Css.property "caption-side" "top"
 
 
 clear_both : Css.Style
@@ -2365,6 +4228,219 @@ col_start_auto =
     Css.property "grid-column-start" "auto"
 
 
+collapse : Css.Style
+collapse =
+    Css.property "visibility" "collapse"
+
+
+columns_1 : Css.Style
+columns_1 =
+    Css.batch
+        [ Css.property "-moz-columns" "1"
+        , Css.property "columns" "1"
+        ]
+
+
+columns_10 : Css.Style
+columns_10 =
+    Css.batch
+        [ Css.property "-moz-columns" "10"
+        , Css.property "columns" "10"
+        ]
+
+
+columns_11 : Css.Style
+columns_11 =
+    Css.batch
+        [ Css.property "-moz-columns" "11"
+        , Css.property "columns" "11"
+        ]
+
+
+columns_12 : Css.Style
+columns_12 =
+    Css.batch
+        [ Css.property "-moz-columns" "12"
+        , Css.property "columns" "12"
+        ]
+
+
+columns_2 : Css.Style
+columns_2 =
+    Css.batch
+        [ Css.property "-moz-columns" "2"
+        , Css.property "columns" "2"
+        ]
+
+
+columns_2xl : Css.Style
+columns_2xl =
+    Css.batch
+        [ Css.property "-moz-columns" "42rem"
+        , Css.property "columns" "42rem"
+        ]
+
+
+columns_2xs : Css.Style
+columns_2xs =
+    Css.batch
+        [ Css.property "-moz-columns" "18rem"
+        , Css.property "columns" "18rem"
+        ]
+
+
+columns_3 : Css.Style
+columns_3 =
+    Css.batch
+        [ Css.property "-moz-columns" "3"
+        , Css.property "columns" "3"
+        ]
+
+
+columns_3xl : Css.Style
+columns_3xl =
+    Css.batch
+        [ Css.property "-moz-columns" "48rem"
+        , Css.property "columns" "48rem"
+        ]
+
+
+columns_3xs : Css.Style
+columns_3xs =
+    Css.batch
+        [ Css.property "-moz-columns" "16rem"
+        , Css.property "columns" "16rem"
+        ]
+
+
+columns_4 : Css.Style
+columns_4 =
+    Css.batch
+        [ Css.property "-moz-columns" "4"
+        , Css.property "columns" "4"
+        ]
+
+
+columns_4xl : Css.Style
+columns_4xl =
+    Css.batch
+        [ Css.property "-moz-columns" "56rem"
+        , Css.property "columns" "56rem"
+        ]
+
+
+columns_5 : Css.Style
+columns_5 =
+    Css.batch
+        [ Css.property "-moz-columns" "5"
+        , Css.property "columns" "5"
+        ]
+
+
+columns_5xl : Css.Style
+columns_5xl =
+    Css.batch
+        [ Css.property "-moz-columns" "64rem"
+        , Css.property "columns" "64rem"
+        ]
+
+
+columns_6 : Css.Style
+columns_6 =
+    Css.batch
+        [ Css.property "-moz-columns" "6"
+        , Css.property "columns" "6"
+        ]
+
+
+columns_6xl : Css.Style
+columns_6xl =
+    Css.batch
+        [ Css.property "-moz-columns" "72rem"
+        , Css.property "columns" "72rem"
+        ]
+
+
+columns_7 : Css.Style
+columns_7 =
+    Css.batch
+        [ Css.property "-moz-columns" "7"
+        , Css.property "columns" "7"
+        ]
+
+
+columns_7xl : Css.Style
+columns_7xl =
+    Css.batch
+        [ Css.property "-moz-columns" "80rem"
+        , Css.property "columns" "80rem"
+        ]
+
+
+columns_8 : Css.Style
+columns_8 =
+    Css.batch
+        [ Css.property "-moz-columns" "8"
+        , Css.property "columns" "8"
+        ]
+
+
+columns_9 : Css.Style
+columns_9 =
+    Css.batch
+        [ Css.property "-moz-columns" "9"
+        , Css.property "columns" "9"
+        ]
+
+
+columns_auto : Css.Style
+columns_auto =
+    Css.batch
+        [ Css.property "-moz-columns" "auto"
+        , Css.property "columns" "auto"
+        ]
+
+
+columns_lg : Css.Style
+columns_lg =
+    Css.batch
+        [ Css.property "-moz-columns" "32rem"
+        , Css.property "columns" "32rem"
+        ]
+
+
+columns_md : Css.Style
+columns_md =
+    Css.batch
+        [ Css.property "-moz-columns" "28rem"
+        , Css.property "columns" "28rem"
+        ]
+
+
+columns_sm : Css.Style
+columns_sm =
+    Css.batch
+        [ Css.property "-moz-columns" "24rem"
+        , Css.property "columns" "24rem"
+        ]
+
+
+columns_xl : Css.Style
+columns_xl =
+    Css.batch
+        [ Css.property "-moz-columns" "36rem"
+        , Css.property "columns" "36rem"
+        ]
+
+
+columns_xs : Css.Style
+columns_xs =
+    Css.batch
+        [ Css.property "-moz-columns" "20rem"
+        , Css.property "columns" "20rem"
+        ]
+
+
 container : Css.Style
 container =
     Css.batch
@@ -2392,6 +4468,11 @@ content_around =
     Css.property "align-content" "space-around"
 
 
+content_baseline : Css.Style
+content_baseline =
+    Css.property "align-content" "baseline"
+
+
 content_between : Css.Style
 content_between =
     Css.property "align-content" "space-between"
@@ -2412,9 +4493,27 @@ content_evenly =
     Css.property "align-content" "space-evenly"
 
 
+content_none : Css.Style
+content_none =
+    Css.batch
+        [ Css.property "--tw-content" "none"
+        , Css.property "content" "var(--tw-content)"
+        ]
+
+
+content_normal : Css.Style
+content_normal =
+    Css.property "align-content" "normal"
+
+
 content_start : Css.Style
 content_start =
     Css.property "align-content" "flex-start"
+
+
+content_stretch : Css.Style
+content_stretch =
+    Css.property "align-content" "stretch"
 
 
 contents : Css.Style
@@ -2424,37 +4523,68 @@ contents =
 
 contrast_0 : Css.Style
 contrast_0 =
-    Css.property "--tw-contrast" "contrast(0)"
+    Css.batch
+        [ Css.property "--tw-contrast" "contrast(0)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 contrast_100 : Css.Style
 contrast_100 =
-    Css.property "--tw-contrast" "contrast(1)"
+    Css.batch
+        [ Css.property "--tw-contrast" "contrast(1)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 contrast_125 : Css.Style
 contrast_125 =
-    Css.property "--tw-contrast" "contrast(1.25)"
+    Css.batch
+        [ Css.property "--tw-contrast" "contrast(1.25)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 contrast_150 : Css.Style
 contrast_150 =
-    Css.property "--tw-contrast" "contrast(1.5)"
+    Css.batch
+        [ Css.property "--tw-contrast" "contrast(1.5)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 contrast_200 : Css.Style
 contrast_200 =
-    Css.property "--tw-contrast" "contrast(2)"
+    Css.batch
+        [ Css.property "--tw-contrast" "contrast(2)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 contrast_50 : Css.Style
 contrast_50 =
-    Css.property "--tw-contrast" "contrast(.5)"
+    Css.batch
+        [ Css.property "--tw-contrast" "contrast(.5)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 contrast_75 : Css.Style
 contrast_75 =
-    Css.property "--tw-contrast" "contrast(.75)"
+    Css.batch
+        [ Css.property "--tw-contrast" "contrast(.75)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
+
+
+cursor_alias : Css.Style
+cursor_alias =
+    Css.property "cursor" "alias"
+
+
+cursor_all_scroll : Css.Style
+cursor_all_scroll =
+    Css.property "cursor" "all-scroll"
 
 
 cursor_auto : Css.Style
@@ -2462,9 +4592,54 @@ cursor_auto =
     Css.property "cursor" "auto"
 
 
+cursor_cell : Css.Style
+cursor_cell =
+    Css.property "cursor" "cell"
+
+
+cursor_col_resize : Css.Style
+cursor_col_resize =
+    Css.property "cursor" "col-resize"
+
+
+cursor_context_menu : Css.Style
+cursor_context_menu =
+    Css.property "cursor" "context-menu"
+
+
+cursor_copy : Css.Style
+cursor_copy =
+    Css.property "cursor" "copy"
+
+
+cursor_crosshair : Css.Style
+cursor_crosshair =
+    Css.property "cursor" "crosshair"
+
+
 cursor_default : Css.Style
 cursor_default =
     Css.property "cursor" "default"
+
+
+cursor_e_resize : Css.Style
+cursor_e_resize =
+    Css.property "cursor" "e-resize"
+
+
+cursor_ew_resize : Css.Style
+cursor_ew_resize =
+    Css.property "cursor" "ew-resize"
+
+
+cursor_grab : Css.Style
+cursor_grab =
+    Css.property "cursor" "grab"
+
+
+cursor_grabbing : Css.Style
+cursor_grabbing =
+    Css.property "cursor" "grabbing"
 
 
 cursor_help : Css.Style
@@ -2477,9 +4652,49 @@ cursor_move =
     Css.property "cursor" "move"
 
 
+cursor_n_resize : Css.Style
+cursor_n_resize =
+    Css.property "cursor" "n-resize"
+
+
+cursor_ne_resize : Css.Style
+cursor_ne_resize =
+    Css.property "cursor" "ne-resize"
+
+
+cursor_nesw_resize : Css.Style
+cursor_nesw_resize =
+    Css.property "cursor" "nesw-resize"
+
+
+cursor_no_drop : Css.Style
+cursor_no_drop =
+    Css.property "cursor" "no-drop"
+
+
+cursor_none : Css.Style
+cursor_none =
+    Css.property "cursor" "none"
+
+
 cursor_not_allowed : Css.Style
 cursor_not_allowed =
     Css.property "cursor" "not-allowed"
+
+
+cursor_ns_resize : Css.Style
+cursor_ns_resize =
+    Css.property "cursor" "ns-resize"
+
+
+cursor_nw_resize : Css.Style
+cursor_nw_resize =
+    Css.property "cursor" "nw-resize"
+
+
+cursor_nwse_resize : Css.Style
+cursor_nwse_resize =
+    Css.property "cursor" "nwse-resize"
 
 
 cursor_pointer : Css.Style
@@ -2487,14 +4702,89 @@ cursor_pointer =
     Css.property "cursor" "pointer"
 
 
+cursor_progress : Css.Style
+cursor_progress =
+    Css.property "cursor" "progress"
+
+
+cursor_row_resize : Css.Style
+cursor_row_resize =
+    Css.property "cursor" "row-resize"
+
+
+cursor_s_resize : Css.Style
+cursor_s_resize =
+    Css.property "cursor" "s-resize"
+
+
+cursor_se_resize : Css.Style
+cursor_se_resize =
+    Css.property "cursor" "se-resize"
+
+
+cursor_sw_resize : Css.Style
+cursor_sw_resize =
+    Css.property "cursor" "sw-resize"
+
+
 cursor_text : Css.Style
 cursor_text =
     Css.property "cursor" "text"
 
 
+cursor_vertical_text : Css.Style
+cursor_vertical_text =
+    Css.property "cursor" "vertical-text"
+
+
+cursor_w_resize : Css.Style
+cursor_w_resize =
+    Css.property "cursor" "w-resize"
+
+
 cursor_wait : Css.Style
 cursor_wait =
     Css.property "cursor" "wait"
+
+
+cursor_zoom_in : Css.Style
+cursor_zoom_in =
+    Css.property "cursor" "zoom-in"
+
+
+cursor_zoom_out : Css.Style
+cursor_zoom_out =
+    Css.property "cursor" "zoom-out"
+
+
+decoration_0 : Css.Style
+decoration_0 =
+    Css.property "text-decoration-thickness" "0px"
+
+
+decoration_1 : Css.Style
+decoration_1 =
+    Css.property "text-decoration-thickness" "1px"
+
+
+decoration_2 : Css.Style
+decoration_2 =
+    Css.property "text-decoration-thickness" "2px"
+
+
+decoration_4 : Css.Style
+decoration_4 =
+    Css.property "text-decoration-thickness" "4px"
+
+
+decoration_8 : Css.Style
+decoration_8 =
+    Css.property "text-decoration-thickness" "8px"
+
+
+decoration_auto : Css.Style
+decoration_auto =
+    Css.property "text-decoration-thickness" "auto"
 
 
 decoration_clone : Css.Style
@@ -2505,12 +4795,47 @@ decoration_clone =
         ]
 
 
+decoration_dashed : Css.Style
+decoration_dashed =
+    Css.property "text-decoration-style" "dashed"
+
+
+decoration_dotted : Css.Style
+decoration_dotted =
+    Css.property "text-decoration-style" "dotted"
+
+
+decoration_double : Css.Style
+decoration_double =
+    Css.property "text-decoration-style" "double"
+
+
+decoration_from_font : Css.Style
+decoration_from_font =
+    Css.property "text-decoration-thickness" "from-font"
+
+
 decoration_slice : Css.Style
 decoration_slice =
     Css.batch
         [ Css.property "-webkit-box-decoration-break" "slice"
         , Css.property "box-decoration-break" "slice"
         ]
+
+
+decoration_solid : Css.Style
+decoration_solid =
+    Css.property "text-decoration-style" "solid"
+
+
+decoration_wavy : Css.Style
+decoration_wavy =
+    Css.property "text-decoration-style" "wavy"
+
+
+delay_0 : Css.Style
+delay_0 =
+    Css.property "transition-delay" "0s"
 
 
 delay_100 : Css.Style
@@ -2556,493 +4881,378 @@ delay_75 =
 diagonal_fractions : Css.Style
 diagonal_fractions =
     Css.batch
-        [ Css.property "--tw-ordinal" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-slashed-zero" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-figure" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-spacing" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-fraction" "var(--tw-empty,/*!*/ /*!*/)"
+        [ Css.property "--tw-numeric-fraction" "diagonal-fractions"
         , Css.property "font-variant-numeric" "var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)"
-        , Css.property "--tw-numeric-fraction" "diagonal-fractions"
         ]
 
 
 divide_dashed : Css.Style
 divide_dashed =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "border-style" "dashed"
-                ]
-            ]
-        ]
-
-
-divide_destruct : Css.Style
-divide_destruct =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "1"
-                , Css.property "border-color" "rgba(142, 74, 73, var(--tw-divide-opacity))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "border-style" "dashed"
             ]
         ]
 
 
 divide_dotted : Css.Style
 divide_dotted =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "border-style" "dotted"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "border-style" "dotted"
             ]
         ]
 
 
 divide_double : Css.Style
 divide_double =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "border-style" "double"
-                ]
-            ]
-        ]
-
-
-divide_exclaim : Css.Style
-divide_exclaim =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "1"
-                , Css.property "border-color" "rgba(224, 144, 93, var(--tw-divide-opacity))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "border-style" "double"
             ]
         ]
 
 
 divide_none : Css.Style
 divide_none =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "border-style" "none"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "border-style" "none"
             ]
         ]
 
 
 divide_opacity_0 : Css.Style
 divide_opacity_0 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0"
             ]
         ]
 
 
 divide_opacity_10 : Css.Style
 divide_opacity_10 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.1"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.1"
             ]
         ]
 
 
 divide_opacity_100 : Css.Style
 divide_opacity_100 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "1"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "1"
             ]
         ]
 
 
 divide_opacity_20 : Css.Style
 divide_opacity_20 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.2"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.2"
             ]
         ]
 
 
 divide_opacity_25 : Css.Style
 divide_opacity_25 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.25"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.25"
             ]
         ]
 
 
 divide_opacity_30 : Css.Style
 divide_opacity_30 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.3"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.3"
             ]
         ]
 
 
 divide_opacity_40 : Css.Style
 divide_opacity_40 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.4"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.4"
             ]
         ]
 
 
 divide_opacity_5 : Css.Style
 divide_opacity_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.05"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.05"
             ]
         ]
 
 
 divide_opacity_50 : Css.Style
 divide_opacity_50 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.5"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.5"
             ]
         ]
 
 
 divide_opacity_60 : Css.Style
 divide_opacity_60 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.6"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.6"
             ]
         ]
 
 
 divide_opacity_70 : Css.Style
 divide_opacity_70 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.7"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.7"
             ]
         ]
 
 
 divide_opacity_75 : Css.Style
 divide_opacity_75 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.75"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.75"
             ]
         ]
 
 
 divide_opacity_80 : Css.Style
 divide_opacity_80 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.8"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.8"
             ]
         ]
 
 
 divide_opacity_90 : Css.Style
 divide_opacity_90 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.9"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.9"
             ]
         ]
 
 
 divide_opacity_95 : Css.Style
 divide_opacity_95 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "0.95"
-                ]
-            ]
-        ]
-
-
-divide_primary : Css.Style
-divide_primary =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "1"
-                , Css.property "border-color" "rgba(150, 89, 88, var(--tw-divide-opacity))"
-                ]
-            ]
-        ]
-
-
-divide_secondary : Css.Style
-divide_secondary =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "1"
-                , Css.property "border-color" "rgba(223, 238, 227, var(--tw-divide-opacity))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-opacity" "0.95"
             ]
         ]
 
 
 divide_solid : Css.Style
 divide_solid =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "border-style" "solid"
-                ]
-            ]
-        ]
-
-
-divide_success : Css.Style
-divide_success =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "1"
-                , Css.property "border-color" "rgba(78, 208, 182, var(--tw-divide-opacity))"
-                ]
-            ]
-        ]
-
-
-divide_tertiary : Css.Style
-divide_tertiary =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-opacity" "1"
-                , Css.property "border-color" "rgba(161, 159, 187, var(--tw-divide-opacity))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "border-style" "solid"
             ]
         ]
 
 
 divide_x : Css.Style
 divide_x =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-x-reverse" "0"
-                , Css.property "border-right-width" "calc(1px * var(--tw-divide-x-reverse))"
-                , Css.property "border-left-width" "calc(1px * calc(1 - var(--tw-divide-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-x-reverse" "0"
+            , Css.property "border-right-width" "calc(1px * var(--tw-divide-x-reverse))"
+            , Css.property "border-left-width" "calc(1px * calc(1 - var(--tw-divide-x-reverse)))"
             ]
         ]
 
 
 divide_x_0 : Css.Style
 divide_x_0 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-x-reverse" "0"
-                , Css.property "border-right-width" "calc(0px * var(--tw-divide-x-reverse))"
-                , Css.property "border-left-width" "calc(0px * calc(1 - var(--tw-divide-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-x-reverse" "0"
+            , Css.property "border-right-width" "calc(0px * var(--tw-divide-x-reverse))"
+            , Css.property "border-left-width" "calc(0px * calc(1 - var(--tw-divide-x-reverse)))"
             ]
         ]
 
 
 divide_x_2 : Css.Style
 divide_x_2 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-x-reverse" "0"
-                , Css.property "border-right-width" "calc(2px * var(--tw-divide-x-reverse))"
-                , Css.property "border-left-width" "calc(2px * calc(1 - var(--tw-divide-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-x-reverse" "0"
+            , Css.property "border-right-width" "calc(2px * var(--tw-divide-x-reverse))"
+            , Css.property "border-left-width" "calc(2px * calc(1 - var(--tw-divide-x-reverse)))"
             ]
         ]
 
 
 divide_x_4 : Css.Style
 divide_x_4 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-x-reverse" "0"
-                , Css.property "border-right-width" "calc(4px * var(--tw-divide-x-reverse))"
-                , Css.property "border-left-width" "calc(4px * calc(1 - var(--tw-divide-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-x-reverse" "0"
+            , Css.property "border-right-width" "calc(4px * var(--tw-divide-x-reverse))"
+            , Css.property "border-left-width" "calc(4px * calc(1 - var(--tw-divide-x-reverse)))"
             ]
         ]
 
 
 divide_x_8 : Css.Style
 divide_x_8 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-x-reverse" "0"
-                , Css.property "border-right-width" "calc(8px * var(--tw-divide-x-reverse))"
-                , Css.property "border-left-width" "calc(8px * calc(1 - var(--tw-divide-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-x-reverse" "0"
+            , Css.property "border-right-width" "calc(8px * var(--tw-divide-x-reverse))"
+            , Css.property "border-left-width" "calc(8px * calc(1 - var(--tw-divide-x-reverse)))"
             ]
         ]
 
 
 divide_x_reverse : Css.Style
 divide_x_reverse =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-x-reverse" "1"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-x-reverse" "1"
             ]
         ]
 
 
 divide_y : Css.Style
 divide_y =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-y-reverse" "0"
-                , Css.property "border-top-width" "calc(1px * calc(1 - var(--tw-divide-y-reverse)))"
-                , Css.property "border-bottom-width" "calc(1px * var(--tw-divide-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-y-reverse" "0"
+            , Css.property "border-top-width" "calc(1px * calc(1 - var(--tw-divide-y-reverse)))"
+            , Css.property "border-bottom-width" "calc(1px * var(--tw-divide-y-reverse))"
             ]
         ]
 
 
 divide_y_0 : Css.Style
 divide_y_0 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-y-reverse" "0"
-                , Css.property "border-top-width" "calc(0px * calc(1 - var(--tw-divide-y-reverse)))"
-                , Css.property "border-bottom-width" "calc(0px * var(--tw-divide-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-y-reverse" "0"
+            , Css.property "border-top-width" "calc(0px * calc(1 - var(--tw-divide-y-reverse)))"
+            , Css.property "border-bottom-width" "calc(0px * var(--tw-divide-y-reverse))"
             ]
         ]
 
 
 divide_y_2 : Css.Style
 divide_y_2 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-y-reverse" "0"
-                , Css.property "border-top-width" "calc(2px * calc(1 - var(--tw-divide-y-reverse)))"
-                , Css.property "border-bottom-width" "calc(2px * var(--tw-divide-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-y-reverse" "0"
+            , Css.property "border-top-width" "calc(2px * calc(1 - var(--tw-divide-y-reverse)))"
+            , Css.property "border-bottom-width" "calc(2px * var(--tw-divide-y-reverse))"
             ]
         ]
 
 
 divide_y_4 : Css.Style
 divide_y_4 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-y-reverse" "0"
-                , Css.property "border-top-width" "calc(4px * calc(1 - var(--tw-divide-y-reverse)))"
-                , Css.property "border-bottom-width" "calc(4px * var(--tw-divide-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-y-reverse" "0"
+            , Css.property "border-top-width" "calc(4px * calc(1 - var(--tw-divide-y-reverse)))"
+            , Css.property "border-bottom-width" "calc(4px * var(--tw-divide-y-reverse))"
             ]
         ]
 
 
 divide_y_8 : Css.Style
 divide_y_8 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-y-reverse" "0"
-                , Css.property "border-top-width" "calc(8px * calc(1 - var(--tw-divide-y-reverse)))"
-                , Css.property "border-bottom-width" "calc(8px * var(--tw-divide-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-y-reverse" "0"
+            , Css.property "border-top-width" "calc(8px * calc(1 - var(--tw-divide-y-reverse)))"
+            , Css.property "border-bottom-width" "calc(8px * var(--tw-divide-y-reverse))"
             ]
         ]
 
 
 divide_y_reverse : Css.Style
 divide_y_reverse =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-divide-y-reverse" "1"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-divide-y-reverse" "1"
             ]
         ]
 
 
 drop_shadow : Css.Style
 drop_shadow =
-    Css.property "--tw-drop-shadow" "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.06))"
+    Css.batch
+        [ Css.property "--tw-drop-shadow" "drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06))"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 drop_shadow_2xl : Css.Style
 drop_shadow_2xl =
-    Css.property "--tw-drop-shadow" "drop-shadow(0 25px 25px rgba(0, 0, 0, 0.15))"
+    Css.batch
+        [ Css.property "--tw-drop-shadow" "drop-shadow(0 25px 25px rgb(0 0 0 / 0.15))"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 drop_shadow_lg : Css.Style
 drop_shadow_lg =
-    Css.property "--tw-drop-shadow" "drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1))"
+    Css.batch
+        [ Css.property "--tw-drop-shadow" "drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1))"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 drop_shadow_md : Css.Style
 drop_shadow_md =
-    Css.property "--tw-drop-shadow" "drop-shadow(0 4px 3px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.06))"
+    Css.batch
+        [ Css.property "--tw-drop-shadow" "drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 drop_shadow_none : Css.Style
 drop_shadow_none =
-    Css.property "--tw-drop-shadow" "drop-shadow(0 0 #0000)"
+    Css.batch
+        [ Css.property "--tw-drop-shadow" "drop-shadow(0 0 #0000)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 drop_shadow_sm : Css.Style
 drop_shadow_sm =
-    Css.property "--tw-drop-shadow" "drop-shadow(0 1px 1px rgba(0,0,0,0.05))"
+    Css.batch
+        [ Css.property "--tw-drop-shadow" "drop-shadow(0 1px 1px rgb(0 0 0 / 0.05))"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 drop_shadow_xl : Css.Style
 drop_shadow_xl =
-    Css.property "--tw-drop-shadow" "drop-shadow(0 20px 13px rgba(0, 0, 0, 0.03)) drop-shadow(0 8px 5px rgba(0, 0, 0, 0.08))"
+    Css.batch
+        [ Css.property "--tw-drop-shadow" "drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08))"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
+
+
+duration_0 : Css.Style
+duration_0 =
+    Css.property "transition-duration" "0s"
 
 
 duration_100 : Css.Style
@@ -3105,25 +5315,229 @@ ease_out =
     Css.property "transition-timing-function" "cubic-bezier(0, 0, 0.2, 1)"
 
 
-fill_current : Css.Style
-fill_current =
-    Css.property "fill" "currentColor"
+end_0 : Css.Style
+end_0 =
+    Css.property "inset-inline-end" "0px"
+
+
+end_0_dot_5 : Css.Style
+end_0_dot_5 =
+    Css.property "inset-inline-end" "0.125rem"
+
+
+end_1 : Css.Style
+end_1 =
+    Css.property "inset-inline-end" "0.25rem"
+
+
+end_10 : Css.Style
+end_10 =
+    Css.property "inset-inline-end" "2.5rem"
+
+
+end_11 : Css.Style
+end_11 =
+    Css.property "inset-inline-end" "2.75rem"
+
+
+end_12 : Css.Style
+end_12 =
+    Css.property "inset-inline-end" "3rem"
+
+
+end_14 : Css.Style
+end_14 =
+    Css.property "inset-inline-end" "3.5rem"
+
+
+end_16 : Css.Style
+end_16 =
+    Css.property "inset-inline-end" "4rem"
+
+
+end_1_dot_5 : Css.Style
+end_1_dot_5 =
+    Css.property "inset-inline-end" "0.375rem"
+
+
+end_1over2 : Css.Style
+end_1over2 =
+    Css.property "inset-inline-end" "50%"
+
+
+end_1over3 : Css.Style
+end_1over3 =
+    Css.property "inset-inline-end" "33.333333%"
+
+
+end_1over4 : Css.Style
+end_1over4 =
+    Css.property "inset-inline-end" "25%"
+
+
+end_2 : Css.Style
+end_2 =
+    Css.property "inset-inline-end" "0.5rem"
+
+
+end_20 : Css.Style
+end_20 =
+    Css.property "inset-inline-end" "5rem"
+
+
+end_24 : Css.Style
+end_24 =
+    Css.property "inset-inline-end" "6rem"
+
+
+end_28 : Css.Style
+end_28 =
+    Css.property "inset-inline-end" "7rem"
+
+
+end_2_dot_5 : Css.Style
+end_2_dot_5 =
+    Css.property "inset-inline-end" "0.625rem"
+
+
+end_2over3 : Css.Style
+end_2over3 =
+    Css.property "inset-inline-end" "66.666667%"
+
+
+end_2over4 : Css.Style
+end_2over4 =
+    Css.property "inset-inline-end" "50%"
+
+
+end_3 : Css.Style
+end_3 =
+    Css.property "inset-inline-end" "0.75rem"
+
+
+end_32 : Css.Style
+end_32 =
+    Css.property "inset-inline-end" "8rem"
+
+
+end_36 : Css.Style
+end_36 =
+    Css.property "inset-inline-end" "9rem"
+
+
+end_3_dot_5 : Css.Style
+end_3_dot_5 =
+    Css.property "inset-inline-end" "0.875rem"
+
+
+end_3over4 : Css.Style
+end_3over4 =
+    Css.property "inset-inline-end" "75%"
+
+
+end_4 : Css.Style
+end_4 =
+    Css.property "inset-inline-end" "1rem"
+
+
+end_40 : Css.Style
+end_40 =
+    Css.property "inset-inline-end" "10rem"
+
+
+end_44 : Css.Style
+end_44 =
+    Css.property "inset-inline-end" "11rem"
+
+
+end_48 : Css.Style
+end_48 =
+    Css.property "inset-inline-end" "12rem"
+
+
+end_5 : Css.Style
+end_5 =
+    Css.property "inset-inline-end" "1.25rem"
+
+
+end_52 : Css.Style
+end_52 =
+    Css.property "inset-inline-end" "13rem"
+
+
+end_56 : Css.Style
+end_56 =
+    Css.property "inset-inline-end" "14rem"
+
+
+end_6 : Css.Style
+end_6 =
+    Css.property "inset-inline-end" "1.5rem"
+
+
+end_60 : Css.Style
+end_60 =
+    Css.property "inset-inline-end" "15rem"
+
+
+end_64 : Css.Style
+end_64 =
+    Css.property "inset-inline-end" "16rem"
+
+
+end_7 : Css.Style
+end_7 =
+    Css.property "inset-inline-end" "1.75rem"
+
+
+end_72 : Css.Style
+end_72 =
+    Css.property "inset-inline-end" "18rem"
+
+
+end_8 : Css.Style
+end_8 =
+    Css.property "inset-inline-end" "2rem"
+
+
+end_80 : Css.Style
+end_80 =
+    Css.property "inset-inline-end" "20rem"
+
+
+end_9 : Css.Style
+end_9 =
+    Css.property "inset-inline-end" "2.25rem"
+
+
+end_96 : Css.Style
+end_96 =
+    Css.property "inset-inline-end" "24rem"
+
+
+end_auto : Css.Style
+end_auto =
+    Css.property "inset-inline-end" "auto"
+
+
+end_full : Css.Style
+end_full =
+    Css.property "inset-inline-end" "100%"
+
+
+end_px : Css.Style
+end_px =
+    Css.property "inset-inline-end" "1px"
+
+
+fill_none : Css.Style
+fill_none =
+    Css.property "fill" "none"
 
 
 filter : Css.Style
 filter =
-    Css.batch
-        [ Css.property "--tw-blur" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-brightness" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-contrast" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-grayscale" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-hue-rotate" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-invert" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-saturate" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-sepia" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-drop-shadow" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
-        ]
+    Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
 
 
 filter_none : Css.Style
@@ -3294,7 +5708,7 @@ form_checkbox =
         , Css.property "appearance" "none"
         , Css.property "padding" "0"
         , Css.property "-webkit-print-color-adjust" "exact"
-        , Css.property "color-adjust" "exact"
+        , Css.property "print-color-adjust" "exact"
         , Css.property "display" "inline-block"
         , Css.property "vertical-align" "middle"
         , Css.property "background-origin" "border-box"
@@ -3381,8 +5795,46 @@ form_input =
         , Css.property "font-size" "1rem"
         , Css.property "line-height" "1.5rem"
         , Css.property "--tw-shadow" "0 0 #0000"
+        , Css.pseudoElement "-webkit-datetime-edit-meridiem-field"
+            [ Css.property "padding-top" "0"
+            , Css.property "padding-bottom" "0"
+            ]
+        , Css.pseudoElement "-webkit-datetime-edit-millisecond-field"
+            [ Css.property "padding-top" "0"
+            , Css.property "padding-bottom" "0"
+            ]
+        , Css.pseudoElement "-webkit-datetime-edit-second-field"
+            [ Css.property "padding-top" "0"
+            , Css.property "padding-bottom" "0"
+            ]
+        , Css.pseudoElement "-webkit-datetime-edit-minute-field"
+            [ Css.property "padding-top" "0"
+            , Css.property "padding-bottom" "0"
+            ]
+        , Css.pseudoElement "-webkit-datetime-edit-hour-field"
+            [ Css.property "padding-top" "0"
+            , Css.property "padding-bottom" "0"
+            ]
+        , Css.pseudoElement "-webkit-datetime-edit-day-field"
+            [ Css.property "padding-top" "0"
+            , Css.property "padding-bottom" "0"
+            ]
+        , Css.pseudoElement "-webkit-datetime-edit-month-field"
+            [ Css.property "padding-top" "0"
+            , Css.property "padding-bottom" "0"
+            ]
+        , Css.pseudoElement "-webkit-datetime-edit-year-field"
+            [ Css.property "padding-top" "0"
+            , Css.property "padding-bottom" "0"
+            ]
+        , Css.pseudoElement "-webkit-datetime-edit"
+            [ Css.property "display" "inline-flex"
+            , Css.property "padding-top" "0"
+            , Css.property "padding-bottom" "0"
+            ]
         , Css.pseudoElement "-webkit-date-and-time-value"
             [ Css.property "min-height" "1.5em"
+            , Css.property "text-align" "inherit"
             ]
         , Css.pseudoElement "-webkit-datetime-edit-fields-wrapper"
             [ Css.property "padding" "0"
@@ -3450,7 +5902,7 @@ form_radio =
         , Css.property "appearance" "none"
         , Css.property "padding" "0"
         , Css.property "-webkit-print-color-adjust" "exact"
-        , Css.property "color-adjust" "exact"
+        , Css.property "print-color-adjust" "exact"
         , Css.property "display" "inline-block"
         , Css.property "vertical-align" "middle"
         , Css.property "background-origin" "border-box"
@@ -3523,7 +5975,16 @@ form_select =
         , Css.property "background-size" "1.5em 1.5em"
         , Css.property "padding-right" "2.5rem"
         , Css.property "-webkit-print-color-adjust" "exact"
-        , Css.property "color-adjust" "exact"
+        , Css.property "print-color-adjust" "exact"
+        , Css.pseudoClass "where"
+            [ Css.property "background-image" "initial"
+            , Css.property "background-position" "initial"
+            , Css.property "background-repeat" "unset"
+            , Css.property "background-size" "initial"
+            , Css.property "padding-right" "0.75rem"
+            , Css.property "-webkit-print-color-adjust" "unset"
+            , Css.property "print-color-adjust" "unset"
+            ]
         , Css.pseudoClass "focus"
             [ Css.property "outline" "2px solid transparent"
             , Css.property "outline-offset" "2px"
@@ -3579,52 +6040,109 @@ form_textarea =
         ]
 
 
-from_destruct : Css.Style
-from_destruct =
-    Css.batch
-        [ Css.property "--tw-gradient-from" "#8E4A49"
-        , Css.property "--tw-gradient-stops" "var(--tw-gradient-from), var(--tw-gradient-to, rgba(142, 74, 73, 0))"
-        ]
+from_0pct : Css.Style
+from_0pct =
+    Css.property "--tw-gradient-from-position" "0%"
 
 
-from_exclaim : Css.Style
-from_exclaim =
-    Css.batch
-        [ Css.property "--tw-gradient-from" "#E0905D"
-        , Css.property "--tw-gradient-stops" "var(--tw-gradient-from), var(--tw-gradient-to, rgba(224, 144, 93, 0))"
-        ]
+from_100pct : Css.Style
+from_100pct =
+    Css.property "--tw-gradient-from-position" "100%"
 
 
-from_primary : Css.Style
-from_primary =
-    Css.batch
-        [ Css.property "--tw-gradient-from" "#965958"
-        , Css.property "--tw-gradient-stops" "var(--tw-gradient-from), var(--tw-gradient-to, rgba(150, 89, 88, 0))"
-        ]
+from_10pct : Css.Style
+from_10pct =
+    Css.property "--tw-gradient-from-position" "10%"
 
 
-from_secondary : Css.Style
-from_secondary =
-    Css.batch
-        [ Css.property "--tw-gradient-from" "#dfeee3"
-        , Css.property "--tw-gradient-stops" "var(--tw-gradient-from), var(--tw-gradient-to, rgba(223, 238, 227, 0))"
-        ]
+from_15pct : Css.Style
+from_15pct =
+    Css.property "--tw-gradient-from-position" "15%"
 
 
-from_success : Css.Style
-from_success =
-    Css.batch
-        [ Css.property "--tw-gradient-from" "#4ED0B6"
-        , Css.property "--tw-gradient-stops" "var(--tw-gradient-from), var(--tw-gradient-to, rgba(78, 208, 182, 0))"
-        ]
+from_20pct : Css.Style
+from_20pct =
+    Css.property "--tw-gradient-from-position" "20%"
 
 
-from_tertiary : Css.Style
-from_tertiary =
-    Css.batch
-        [ Css.property "--tw-gradient-from" "#A19FBB"
-        , Css.property "--tw-gradient-stops" "var(--tw-gradient-from), var(--tw-gradient-to, rgba(161, 159, 187, 0))"
-        ]
+from_25pct : Css.Style
+from_25pct =
+    Css.property "--tw-gradient-from-position" "25%"
+
+
+from_30pct : Css.Style
+from_30pct =
+    Css.property "--tw-gradient-from-position" "30%"
+
+
+from_35pct : Css.Style
+from_35pct =
+    Css.property "--tw-gradient-from-position" "35%"
+
+
+from_40pct : Css.Style
+from_40pct =
+    Css.property "--tw-gradient-from-position" "40%"
+
+
+from_45pct : Css.Style
+from_45pct =
+    Css.property "--tw-gradient-from-position" "45%"
+
+
+from_50pct : Css.Style
+from_50pct =
+    Css.property "--tw-gradient-from-position" "50%"
+
+
+from_55pct : Css.Style
+from_55pct =
+    Css.property "--tw-gradient-from-position" "55%"
+
+
+from_5pct : Css.Style
+from_5pct =
+    Css.property "--tw-gradient-from-position" "5%"
+
+
+from_60pct : Css.Style
+from_60pct =
+    Css.property "--tw-gradient-from-position" "60%"
+
+
+from_65pct : Css.Style
+from_65pct =
+    Css.property "--tw-gradient-from-position" "65%"
+
+
+from_70pct : Css.Style
+from_70pct =
+    Css.property "--tw-gradient-from-position" "70%"
+
+
+from_75pct : Css.Style
+from_75pct =
+    Css.property "--tw-gradient-from-position" "75%"
+
+
+from_80pct : Css.Style
+from_80pct =
+    Css.property "--tw-gradient-from-position" "80%"
+
+
+from_85pct : Css.Style
+from_85pct =
+    Css.property "--tw-gradient-from-position" "85%"
+
+
+from_90pct : Css.Style
+from_90pct =
+    Css.property "--tw-gradient-from-position" "90%"
+
+
+from_95pct : Css.Style
+from_95pct =
+    Css.property "--tw-gradient-from-position" "95%"
 
 
 gap_0 : Css.Style
@@ -4259,12 +6777,18 @@ gap_y_px =
 
 grayscale : Css.Style
 grayscale =
-    Css.property "--tw-grayscale" "grayscale(100%)"
+    Css.batch
+        [ Css.property "--tw-grayscale" "grayscale(100%)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 grayscale_0 : Css.Style
 grayscale_0 =
-    Css.property "--tw-grayscale" "grayscale(0)"
+    Css.batch
+        [ Css.property "--tw-grayscale" "grayscale(0)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 grid : Css.Style
@@ -4357,6 +6881,11 @@ grid_flow_col_dense =
     Css.property "grid-auto-flow" "column dense"
 
 
+grid_flow_dense : Css.Style
+grid_flow_dense =
+    Css.property "grid-auto-flow" "dense"
+
+
 grid_flow_row : Css.Style
 grid_flow_row =
     Css.property "grid-auto-flow" "row"
@@ -4400,6 +6929,16 @@ grid_rows_6 =
 grid_rows_none : Css.Style
 grid_rows_none =
     Css.property "grid-template-rows" "none"
+
+
+grow : Css.Style
+grow =
+    Css.property "flex-grow" "1"
+
+
+grow_0 : Css.Style
+grow_0 =
+    Css.property "flex-grow" "0"
 
 
 h_0 : Css.Style
@@ -4652,9 +7191,33 @@ h_auto =
     Css.property "height" "auto"
 
 
+h_fit : Css.Style
+h_fit =
+    Css.batch
+        [ Css.property "height" "-moz-fit-content"
+        , Css.property "height" "fit-content"
+        ]
+
+
 h_full : Css.Style
 h_full =
     Css.property "height" "100%"
+
+
+h_max : Css.Style
+h_max =
+    Css.batch
+        [ Css.property "height" "-moz-max-content"
+        , Css.property "height" "max-content"
+        ]
+
+
+h_min : Css.Style
+h_min =
+    Css.batch
+        [ Css.property "height" "-moz-min-content"
+        , Css.property "height" "min-content"
+        ]
 
 
 h_px : Css.Style
@@ -4674,32 +7237,249 @@ hidden =
 
 hue_rotate_0 : Css.Style
 hue_rotate_0 =
-    Css.property "--tw-hue-rotate" "hue-rotate(0deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(0deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 hue_rotate_15 : Css.Style
 hue_rotate_15 =
-    Css.property "--tw-hue-rotate" "hue-rotate(15deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(15deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 hue_rotate_180 : Css.Style
 hue_rotate_180 =
-    Css.property "--tw-hue-rotate" "hue-rotate(180deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(180deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 hue_rotate_30 : Css.Style
 hue_rotate_30 =
-    Css.property "--tw-hue-rotate" "hue-rotate(30deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(30deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 hue_rotate_60 : Css.Style
 hue_rotate_60 =
-    Css.property "--tw-hue-rotate" "hue-rotate(60deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(60deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 hue_rotate_90 : Css.Style
 hue_rotate_90 =
-    Css.property "--tw-hue-rotate" "hue-rotate(90deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(90deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
+
+
+hyphens_auto : Css.Style
+hyphens_auto =
+    Css.batch
+        [ Css.property "-webkit-hyphens" "auto"
+        , Css.property "hyphens" "auto"
+        ]
+
+
+hyphens_manual : Css.Style
+hyphens_manual =
+    Css.batch
+        [ Css.property "-webkit-hyphens" "manual"
+        , Css.property "hyphens" "manual"
+        ]
+
+
+hyphens_none : Css.Style
+hyphens_none =
+    Css.batch
+        [ Css.property "-webkit-hyphens" "none"
+        , Css.property "hyphens" "none"
+        ]
+
+
+indent_0 : Css.Style
+indent_0 =
+    Css.property "text-indent" "0px"
+
+
+indent_0_dot_5 : Css.Style
+indent_0_dot_5 =
+    Css.property "text-indent" "0.125rem"
+
+
+indent_1 : Css.Style
+indent_1 =
+    Css.property "text-indent" "0.25rem"
+
+
+indent_10 : Css.Style
+indent_10 =
+    Css.property "text-indent" "2.5rem"
+
+
+indent_11 : Css.Style
+indent_11 =
+    Css.property "text-indent" "2.75rem"
+
+
+indent_12 : Css.Style
+indent_12 =
+    Css.property "text-indent" "3rem"
+
+
+indent_14 : Css.Style
+indent_14 =
+    Css.property "text-indent" "3.5rem"
+
+
+indent_16 : Css.Style
+indent_16 =
+    Css.property "text-indent" "4rem"
+
+
+indent_1_dot_5 : Css.Style
+indent_1_dot_5 =
+    Css.property "text-indent" "0.375rem"
+
+
+indent_2 : Css.Style
+indent_2 =
+    Css.property "text-indent" "0.5rem"
+
+
+indent_20 : Css.Style
+indent_20 =
+    Css.property "text-indent" "5rem"
+
+
+indent_24 : Css.Style
+indent_24 =
+    Css.property "text-indent" "6rem"
+
+
+indent_28 : Css.Style
+indent_28 =
+    Css.property "text-indent" "7rem"
+
+
+indent_2_dot_5 : Css.Style
+indent_2_dot_5 =
+    Css.property "text-indent" "0.625rem"
+
+
+indent_3 : Css.Style
+indent_3 =
+    Css.property "text-indent" "0.75rem"
+
+
+indent_32 : Css.Style
+indent_32 =
+    Css.property "text-indent" "8rem"
+
+
+indent_36 : Css.Style
+indent_36 =
+    Css.property "text-indent" "9rem"
+
+
+indent_3_dot_5 : Css.Style
+indent_3_dot_5 =
+    Css.property "text-indent" "0.875rem"
+
+
+indent_4 : Css.Style
+indent_4 =
+    Css.property "text-indent" "1rem"
+
+
+indent_40 : Css.Style
+indent_40 =
+    Css.property "text-indent" "10rem"
+
+
+indent_44 : Css.Style
+indent_44 =
+    Css.property "text-indent" "11rem"
+
+
+indent_48 : Css.Style
+indent_48 =
+    Css.property "text-indent" "12rem"
+
+
+indent_5 : Css.Style
+indent_5 =
+    Css.property "text-indent" "1.25rem"
+
+
+indent_52 : Css.Style
+indent_52 =
+    Css.property "text-indent" "13rem"
+
+
+indent_56 : Css.Style
+indent_56 =
+    Css.property "text-indent" "14rem"
+
+
+indent_6 : Css.Style
+indent_6 =
+    Css.property "text-indent" "1.5rem"
+
+
+indent_60 : Css.Style
+indent_60 =
+    Css.property "text-indent" "15rem"
+
+
+indent_64 : Css.Style
+indent_64 =
+    Css.property "text-indent" "16rem"
+
+
+indent_7 : Css.Style
+indent_7 =
+    Css.property "text-indent" "1.75rem"
+
+
+indent_72 : Css.Style
+indent_72 =
+    Css.property "text-indent" "18rem"
+
+
+indent_8 : Css.Style
+indent_8 =
+    Css.property "text-indent" "2rem"
+
+
+indent_80 : Css.Style
+indent_80 =
+    Css.property "text-indent" "20rem"
+
+
+indent_9 : Css.Style
+indent_9 =
+    Css.property "text-indent" "2.25rem"
+
+
+indent_96 : Css.Style
+indent_96 =
+    Css.property "text-indent" "24rem"
+
+
+indent_px : Css.Style
+indent_px =
+    Css.property "text-indent" "1px"
 
 
 inline : Css.Style
@@ -4729,432 +7509,217 @@ inline_table =
 
 inset_0 : Css.Style
 inset_0 =
-    Css.batch
-        [ Css.property "top" "0px"
-        , Css.property "right" "0px"
-        , Css.property "bottom" "0px"
-        , Css.property "left" "0px"
-        ]
+    Css.property "inset" "0px"
 
 
 inset_0_dot_5 : Css.Style
 inset_0_dot_5 =
-    Css.batch
-        [ Css.property "top" "0.125rem"
-        , Css.property "right" "0.125rem"
-        , Css.property "bottom" "0.125rem"
-        , Css.property "left" "0.125rem"
-        ]
+    Css.property "inset" "0.125rem"
 
 
 inset_1 : Css.Style
 inset_1 =
-    Css.batch
-        [ Css.property "top" "0.25rem"
-        , Css.property "right" "0.25rem"
-        , Css.property "bottom" "0.25rem"
-        , Css.property "left" "0.25rem"
-        ]
+    Css.property "inset" "0.25rem"
 
 
 inset_10 : Css.Style
 inset_10 =
-    Css.batch
-        [ Css.property "top" "2.5rem"
-        , Css.property "right" "2.5rem"
-        , Css.property "bottom" "2.5rem"
-        , Css.property "left" "2.5rem"
-        ]
+    Css.property "inset" "2.5rem"
 
 
 inset_11 : Css.Style
 inset_11 =
-    Css.batch
-        [ Css.property "top" "2.75rem"
-        , Css.property "right" "2.75rem"
-        , Css.property "bottom" "2.75rem"
-        , Css.property "left" "2.75rem"
-        ]
+    Css.property "inset" "2.75rem"
 
 
 inset_12 : Css.Style
 inset_12 =
-    Css.batch
-        [ Css.property "top" "3rem"
-        , Css.property "right" "3rem"
-        , Css.property "bottom" "3rem"
-        , Css.property "left" "3rem"
-        ]
+    Css.property "inset" "3rem"
 
 
 inset_14 : Css.Style
 inset_14 =
-    Css.batch
-        [ Css.property "top" "3.5rem"
-        , Css.property "right" "3.5rem"
-        , Css.property "bottom" "3.5rem"
-        , Css.property "left" "3.5rem"
-        ]
+    Css.property "inset" "3.5rem"
 
 
 inset_16 : Css.Style
 inset_16 =
-    Css.batch
-        [ Css.property "top" "4rem"
-        , Css.property "right" "4rem"
-        , Css.property "bottom" "4rem"
-        , Css.property "left" "4rem"
-        ]
+    Css.property "inset" "4rem"
 
 
 inset_1_dot_5 : Css.Style
 inset_1_dot_5 =
-    Css.batch
-        [ Css.property "top" "0.375rem"
-        , Css.property "right" "0.375rem"
-        , Css.property "bottom" "0.375rem"
-        , Css.property "left" "0.375rem"
-        ]
+    Css.property "inset" "0.375rem"
 
 
 inset_1over2 : Css.Style
 inset_1over2 =
-    Css.batch
-        [ Css.property "top" "50%"
-        , Css.property "right" "50%"
-        , Css.property "bottom" "50%"
-        , Css.property "left" "50%"
-        ]
+    Css.property "inset" "50%"
 
 
 inset_1over3 : Css.Style
 inset_1over3 =
-    Css.batch
-        [ Css.property "top" "33.333333%"
-        , Css.property "right" "33.333333%"
-        , Css.property "bottom" "33.333333%"
-        , Css.property "left" "33.333333%"
-        ]
+    Css.property "inset" "33.333333%"
 
 
 inset_1over4 : Css.Style
 inset_1over4 =
-    Css.batch
-        [ Css.property "top" "25%"
-        , Css.property "right" "25%"
-        , Css.property "bottom" "25%"
-        , Css.property "left" "25%"
-        ]
+    Css.property "inset" "25%"
 
 
 inset_2 : Css.Style
 inset_2 =
-    Css.batch
-        [ Css.property "top" "0.5rem"
-        , Css.property "right" "0.5rem"
-        , Css.property "bottom" "0.5rem"
-        , Css.property "left" "0.5rem"
-        ]
+    Css.property "inset" "0.5rem"
 
 
 inset_20 : Css.Style
 inset_20 =
-    Css.batch
-        [ Css.property "top" "5rem"
-        , Css.property "right" "5rem"
-        , Css.property "bottom" "5rem"
-        , Css.property "left" "5rem"
-        ]
+    Css.property "inset" "5rem"
 
 
 inset_24 : Css.Style
 inset_24 =
-    Css.batch
-        [ Css.property "top" "6rem"
-        , Css.property "right" "6rem"
-        , Css.property "bottom" "6rem"
-        , Css.property "left" "6rem"
-        ]
+    Css.property "inset" "6rem"
 
 
 inset_28 : Css.Style
 inset_28 =
-    Css.batch
-        [ Css.property "top" "7rem"
-        , Css.property "right" "7rem"
-        , Css.property "bottom" "7rem"
-        , Css.property "left" "7rem"
-        ]
+    Css.property "inset" "7rem"
 
 
 inset_2_dot_5 : Css.Style
 inset_2_dot_5 =
-    Css.batch
-        [ Css.property "top" "0.625rem"
-        , Css.property "right" "0.625rem"
-        , Css.property "bottom" "0.625rem"
-        , Css.property "left" "0.625rem"
-        ]
+    Css.property "inset" "0.625rem"
 
 
 inset_2over3 : Css.Style
 inset_2over3 =
-    Css.batch
-        [ Css.property "top" "66.666667%"
-        , Css.property "right" "66.666667%"
-        , Css.property "bottom" "66.666667%"
-        , Css.property "left" "66.666667%"
-        ]
+    Css.property "inset" "66.666667%"
 
 
 inset_2over4 : Css.Style
 inset_2over4 =
-    Css.batch
-        [ Css.property "top" "50%"
-        , Css.property "right" "50%"
-        , Css.property "bottom" "50%"
-        , Css.property "left" "50%"
-        ]
+    Css.property "inset" "50%"
 
 
 inset_3 : Css.Style
 inset_3 =
-    Css.batch
-        [ Css.property "top" "0.75rem"
-        , Css.property "right" "0.75rem"
-        , Css.property "bottom" "0.75rem"
-        , Css.property "left" "0.75rem"
-        ]
+    Css.property "inset" "0.75rem"
 
 
 inset_32 : Css.Style
 inset_32 =
-    Css.batch
-        [ Css.property "top" "8rem"
-        , Css.property "right" "8rem"
-        , Css.property "bottom" "8rem"
-        , Css.property "left" "8rem"
-        ]
+    Css.property "inset" "8rem"
 
 
 inset_36 : Css.Style
 inset_36 =
-    Css.batch
-        [ Css.property "top" "9rem"
-        , Css.property "right" "9rem"
-        , Css.property "bottom" "9rem"
-        , Css.property "left" "9rem"
-        ]
+    Css.property "inset" "9rem"
 
 
 inset_3_dot_5 : Css.Style
 inset_3_dot_5 =
-    Css.batch
-        [ Css.property "top" "0.875rem"
-        , Css.property "right" "0.875rem"
-        , Css.property "bottom" "0.875rem"
-        , Css.property "left" "0.875rem"
-        ]
+    Css.property "inset" "0.875rem"
 
 
 inset_3over4 : Css.Style
 inset_3over4 =
-    Css.batch
-        [ Css.property "top" "75%"
-        , Css.property "right" "75%"
-        , Css.property "bottom" "75%"
-        , Css.property "left" "75%"
-        ]
+    Css.property "inset" "75%"
 
 
 inset_4 : Css.Style
 inset_4 =
-    Css.batch
-        [ Css.property "top" "1rem"
-        , Css.property "right" "1rem"
-        , Css.property "bottom" "1rem"
-        , Css.property "left" "1rem"
-        ]
+    Css.property "inset" "1rem"
 
 
 inset_40 : Css.Style
 inset_40 =
-    Css.batch
-        [ Css.property "top" "10rem"
-        , Css.property "right" "10rem"
-        , Css.property "bottom" "10rem"
-        , Css.property "left" "10rem"
-        ]
+    Css.property "inset" "10rem"
 
 
 inset_44 : Css.Style
 inset_44 =
-    Css.batch
-        [ Css.property "top" "11rem"
-        , Css.property "right" "11rem"
-        , Css.property "bottom" "11rem"
-        , Css.property "left" "11rem"
-        ]
+    Css.property "inset" "11rem"
 
 
 inset_48 : Css.Style
 inset_48 =
-    Css.batch
-        [ Css.property "top" "12rem"
-        , Css.property "right" "12rem"
-        , Css.property "bottom" "12rem"
-        , Css.property "left" "12rem"
-        ]
+    Css.property "inset" "12rem"
 
 
 inset_5 : Css.Style
 inset_5 =
-    Css.batch
-        [ Css.property "top" "1.25rem"
-        , Css.property "right" "1.25rem"
-        , Css.property "bottom" "1.25rem"
-        , Css.property "left" "1.25rem"
-        ]
+    Css.property "inset" "1.25rem"
 
 
 inset_52 : Css.Style
 inset_52 =
-    Css.batch
-        [ Css.property "top" "13rem"
-        , Css.property "right" "13rem"
-        , Css.property "bottom" "13rem"
-        , Css.property "left" "13rem"
-        ]
+    Css.property "inset" "13rem"
 
 
 inset_56 : Css.Style
 inset_56 =
-    Css.batch
-        [ Css.property "top" "14rem"
-        , Css.property "right" "14rem"
-        , Css.property "bottom" "14rem"
-        , Css.property "left" "14rem"
-        ]
+    Css.property "inset" "14rem"
 
 
 inset_6 : Css.Style
 inset_6 =
-    Css.batch
-        [ Css.property "top" "1.5rem"
-        , Css.property "right" "1.5rem"
-        , Css.property "bottom" "1.5rem"
-        , Css.property "left" "1.5rem"
-        ]
+    Css.property "inset" "1.5rem"
 
 
 inset_60 : Css.Style
 inset_60 =
-    Css.batch
-        [ Css.property "top" "15rem"
-        , Css.property "right" "15rem"
-        , Css.property "bottom" "15rem"
-        , Css.property "left" "15rem"
-        ]
+    Css.property "inset" "15rem"
 
 
 inset_64 : Css.Style
 inset_64 =
-    Css.batch
-        [ Css.property "top" "16rem"
-        , Css.property "right" "16rem"
-        , Css.property "bottom" "16rem"
-        , Css.property "left" "16rem"
-        ]
+    Css.property "inset" "16rem"
 
 
 inset_7 : Css.Style
 inset_7 =
-    Css.batch
-        [ Css.property "top" "1.75rem"
-        , Css.property "right" "1.75rem"
-        , Css.property "bottom" "1.75rem"
-        , Css.property "left" "1.75rem"
-        ]
+    Css.property "inset" "1.75rem"
 
 
 inset_72 : Css.Style
 inset_72 =
-    Css.batch
-        [ Css.property "top" "18rem"
-        , Css.property "right" "18rem"
-        , Css.property "bottom" "18rem"
-        , Css.property "left" "18rem"
-        ]
+    Css.property "inset" "18rem"
 
 
 inset_8 : Css.Style
 inset_8 =
-    Css.batch
-        [ Css.property "top" "2rem"
-        , Css.property "right" "2rem"
-        , Css.property "bottom" "2rem"
-        , Css.property "left" "2rem"
-        ]
+    Css.property "inset" "2rem"
 
 
 inset_80 : Css.Style
 inset_80 =
-    Css.batch
-        [ Css.property "top" "20rem"
-        , Css.property "right" "20rem"
-        , Css.property "bottom" "20rem"
-        , Css.property "left" "20rem"
-        ]
+    Css.property "inset" "20rem"
 
 
 inset_9 : Css.Style
 inset_9 =
-    Css.batch
-        [ Css.property "top" "2.25rem"
-        , Css.property "right" "2.25rem"
-        , Css.property "bottom" "2.25rem"
-        , Css.property "left" "2.25rem"
-        ]
+    Css.property "inset" "2.25rem"
 
 
 inset_96 : Css.Style
 inset_96 =
-    Css.batch
-        [ Css.property "top" "24rem"
-        , Css.property "right" "24rem"
-        , Css.property "bottom" "24rem"
-        , Css.property "left" "24rem"
-        ]
+    Css.property "inset" "24rem"
 
 
 inset_auto : Css.Style
 inset_auto =
-    Css.batch
-        [ Css.property "top" "auto"
-        , Css.property "right" "auto"
-        , Css.property "bottom" "auto"
-        , Css.property "left" "auto"
-        ]
+    Css.property "inset" "auto"
 
 
 inset_full : Css.Style
 inset_full =
-    Css.batch
-        [ Css.property "top" "100%"
-        , Css.property "right" "100%"
-        , Css.property "bottom" "100%"
-        , Css.property "left" "100%"
-        ]
+    Css.property "inset" "100%"
 
 
 inset_px : Css.Style
 inset_px =
-    Css.batch
-        [ Css.property "top" "1px"
-        , Css.property "right" "1px"
-        , Css.property "bottom" "1px"
-        , Css.property "left" "1px"
-        ]
+    Css.property "inset" "1px"
 
 
 inset_x_0 : Css.Style
@@ -5847,12 +8412,18 @@ inset_y_px =
 
 invert : Css.Style
 invert =
-    Css.property "--tw-invert" "invert(100%)"
+    Css.batch
+        [ Css.property "--tw-invert" "invert(100%)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 invert_0 : Css.Style
 invert_0 =
-    Css.property "--tw-invert" "invert(0)"
+    Css.batch
+        [ Css.property "--tw-invert" "invert(0)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 invisible : Css.Style
@@ -5945,6 +8516,11 @@ justify_items_stretch =
     Css.property "justify-items" "stretch"
 
 
+justify_normal : Css.Style
+justify_normal =
+    Css.property "justify-content" "normal"
+
+
 justify_self_auto : Css.Style
 justify_self_auto =
     Css.property "justify-self" "auto"
@@ -5973,6 +8549,11 @@ justify_self_stretch =
 justify_start : Css.Style
 justify_start =
     Css.property "justify-content" "flex-start"
+
+
+justify_stretch : Css.Style
+justify_stretch =
+    Css.property "justify-content" "stretch"
 
 
 leading_10 : Css.Style
@@ -6260,21 +8841,86 @@ left_px =
     Css.property "left" "1px"
 
 
+line_clamp_1 : Css.Style
+line_clamp_1 =
+    Css.batch
+        [ Css.property "overflow" "hidden"
+        , Css.property "display" "-webkit-box"
+        , Css.property "-webkit-box-orient" "vertical"
+        , Css.property "-webkit-line-clamp" "1"
+        ]
+
+
+line_clamp_2 : Css.Style
+line_clamp_2 =
+    Css.batch
+        [ Css.property "overflow" "hidden"
+        , Css.property "display" "-webkit-box"
+        , Css.property "-webkit-box-orient" "vertical"
+        , Css.property "-webkit-line-clamp" "2"
+        ]
+
+
+line_clamp_3 : Css.Style
+line_clamp_3 =
+    Css.batch
+        [ Css.property "overflow" "hidden"
+        , Css.property "display" "-webkit-box"
+        , Css.property "-webkit-box-orient" "vertical"
+        , Css.property "-webkit-line-clamp" "3"
+        ]
+
+
+line_clamp_4 : Css.Style
+line_clamp_4 =
+    Css.batch
+        [ Css.property "overflow" "hidden"
+        , Css.property "display" "-webkit-box"
+        , Css.property "-webkit-box-orient" "vertical"
+        , Css.property "-webkit-line-clamp" "4"
+        ]
+
+
+line_clamp_5 : Css.Style
+line_clamp_5 =
+    Css.batch
+        [ Css.property "overflow" "hidden"
+        , Css.property "display" "-webkit-box"
+        , Css.property "-webkit-box-orient" "vertical"
+        , Css.property "-webkit-line-clamp" "5"
+        ]
+
+
+line_clamp_6 : Css.Style
+line_clamp_6 =
+    Css.batch
+        [ Css.property "overflow" "hidden"
+        , Css.property "display" "-webkit-box"
+        , Css.property "-webkit-box-orient" "vertical"
+        , Css.property "-webkit-line-clamp" "6"
+        ]
+
+
+line_clamp_none : Css.Style
+line_clamp_none =
+    Css.batch
+        [ Css.property "overflow" "visible"
+        , Css.property "display" "block"
+        , Css.property "-webkit-box-orient" "horizontal"
+        , Css.property "-webkit-line-clamp" "none"
+        ]
+
+
 line_through : Css.Style
 line_through =
-    Css.property "text-decoration" "line-through"
+    Css.property "text-decoration-line" "line-through"
 
 
 lining_nums : Css.Style
 lining_nums =
     Css.batch
-        [ Css.property "--tw-ordinal" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-slashed-zero" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-figure" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-spacing" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-fraction" "var(--tw-empty,/*!*/ /*!*/)"
+        [ Css.property "--tw-numeric-figure" "lining-nums"
         , Css.property "font-variant-numeric" "var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)"
-        , Css.property "--tw-numeric-figure" "lining-nums"
         ]
 
 
@@ -6286,6 +8932,11 @@ list_decimal =
 list_disc : Css.Style
 list_disc =
     Css.property "list-style-type" "disc"
+
+
+list_image_none : Css.Style
+list_image_none =
+    Css.property "list-style-image" "none"
 
 
 list_inside : Css.Style
@@ -6663,9 +9314,38 @@ max_h_96 =
     Css.property "max-height" "24rem"
 
 
+max_h_fit : Css.Style
+max_h_fit =
+    Css.batch
+        [ Css.property "max-height" "-moz-fit-content"
+        , Css.property "max-height" "fit-content"
+        ]
+
+
 max_h_full : Css.Style
 max_h_full =
     Css.property "max-height" "100%"
+
+
+max_h_max : Css.Style
+max_h_max =
+    Css.batch
+        [ Css.property "max-height" "-moz-max-content"
+        , Css.property "max-height" "max-content"
+        ]
+
+
+max_h_min : Css.Style
+max_h_min =
+    Css.batch
+        [ Css.property "max-height" "-moz-min-content"
+        , Css.property "max-height" "min-content"
+        ]
+
+
+max_h_none : Css.Style
+max_h_none =
+    Css.property "max-height" "none"
 
 
 max_h_px : Css.Style
@@ -6711,6 +9391,14 @@ max_w_6xl =
 max_w_7xl : Css.Style
 max_w_7xl =
     Css.property "max-width" "80rem"
+
+
+max_w_fit : Css.Style
+max_w_fit =
+    Css.batch
+        [ Css.property "max-width" "-moz-fit-content"
+        , Css.property "max-width" "fit-content"
+        ]
 
 
 max_w_full : Css.Style
@@ -6974,14 +9662,218 @@ mb_px =
     Css.property "margin-bottom" "1px"
 
 
+me_0 : Css.Style
+me_0 =
+    Css.property "margin-inline-end" "0px"
+
+
+me_0_dot_5 : Css.Style
+me_0_dot_5 =
+    Css.property "margin-inline-end" "0.125rem"
+
+
+me_1 : Css.Style
+me_1 =
+    Css.property "margin-inline-end" "0.25rem"
+
+
+me_10 : Css.Style
+me_10 =
+    Css.property "margin-inline-end" "2.5rem"
+
+
+me_11 : Css.Style
+me_11 =
+    Css.property "margin-inline-end" "2.75rem"
+
+
+me_12 : Css.Style
+me_12 =
+    Css.property "margin-inline-end" "3rem"
+
+
+me_14 : Css.Style
+me_14 =
+    Css.property "margin-inline-end" "3.5rem"
+
+
+me_16 : Css.Style
+me_16 =
+    Css.property "margin-inline-end" "4rem"
+
+
+me_1_dot_5 : Css.Style
+me_1_dot_5 =
+    Css.property "margin-inline-end" "0.375rem"
+
+
+me_2 : Css.Style
+me_2 =
+    Css.property "margin-inline-end" "0.5rem"
+
+
+me_20 : Css.Style
+me_20 =
+    Css.property "margin-inline-end" "5rem"
+
+
+me_24 : Css.Style
+me_24 =
+    Css.property "margin-inline-end" "6rem"
+
+
+me_28 : Css.Style
+me_28 =
+    Css.property "margin-inline-end" "7rem"
+
+
+me_2_dot_5 : Css.Style
+me_2_dot_5 =
+    Css.property "margin-inline-end" "0.625rem"
+
+
+me_3 : Css.Style
+me_3 =
+    Css.property "margin-inline-end" "0.75rem"
+
+
+me_32 : Css.Style
+me_32 =
+    Css.property "margin-inline-end" "8rem"
+
+
+me_36 : Css.Style
+me_36 =
+    Css.property "margin-inline-end" "9rem"
+
+
+me_3_dot_5 : Css.Style
+me_3_dot_5 =
+    Css.property "margin-inline-end" "0.875rem"
+
+
+me_4 : Css.Style
+me_4 =
+    Css.property "margin-inline-end" "1rem"
+
+
+me_40 : Css.Style
+me_40 =
+    Css.property "margin-inline-end" "10rem"
+
+
+me_44 : Css.Style
+me_44 =
+    Css.property "margin-inline-end" "11rem"
+
+
+me_48 : Css.Style
+me_48 =
+    Css.property "margin-inline-end" "12rem"
+
+
+me_5 : Css.Style
+me_5 =
+    Css.property "margin-inline-end" "1.25rem"
+
+
+me_52 : Css.Style
+me_52 =
+    Css.property "margin-inline-end" "13rem"
+
+
+me_56 : Css.Style
+me_56 =
+    Css.property "margin-inline-end" "14rem"
+
+
+me_6 : Css.Style
+me_6 =
+    Css.property "margin-inline-end" "1.5rem"
+
+
+me_60 : Css.Style
+me_60 =
+    Css.property "margin-inline-end" "15rem"
+
+
+me_64 : Css.Style
+me_64 =
+    Css.property "margin-inline-end" "16rem"
+
+
+me_7 : Css.Style
+me_7 =
+    Css.property "margin-inline-end" "1.75rem"
+
+
+me_72 : Css.Style
+me_72 =
+    Css.property "margin-inline-end" "18rem"
+
+
+me_8 : Css.Style
+me_8 =
+    Css.property "margin-inline-end" "2rem"
+
+
+me_80 : Css.Style
+me_80 =
+    Css.property "margin-inline-end" "20rem"
+
+
+me_9 : Css.Style
+me_9 =
+    Css.property "margin-inline-end" "2.25rem"
+
+
+me_96 : Css.Style
+me_96 =
+    Css.property "margin-inline-end" "24rem"
+
+
+me_auto : Css.Style
+me_auto =
+    Css.property "margin-inline-end" "auto"
+
+
+me_px : Css.Style
+me_px =
+    Css.property "margin-inline-end" "1px"
+
+
 min_h_0 : Css.Style
 min_h_0 =
     Css.property "min-height" "0px"
 
 
+min_h_fit : Css.Style
+min_h_fit =
+    Css.batch
+        [ Css.property "min-height" "-moz-fit-content"
+        , Css.property "min-height" "fit-content"
+        ]
+
+
 min_h_full : Css.Style
 min_h_full =
     Css.property "min-height" "100%"
+
+
+min_h_max : Css.Style
+min_h_max =
+    Css.batch
+        [ Css.property "min-height" "-moz-max-content"
+        , Css.property "min-height" "max-content"
+        ]
+
+
+min_h_min : Css.Style
+min_h_min =
+    Css.batch
+        [ Css.property "min-height" "-moz-min-content"
+        , Css.property "min-height" "min-content"
+        ]
 
 
 min_h_screen : Css.Style
@@ -6992,6 +9884,14 @@ min_h_screen =
 min_w_0 : Css.Style
 min_w_0 =
     Css.property "min-width" "0px"
+
+
+min_w_fit : Css.Style
+min_w_fit =
+    Css.batch
+        [ Css.property "min-width" "-moz-fit-content"
+        , Css.property "min-width" "fit-content"
+        ]
 
 
 min_w_full : Css.Style
@@ -7078,6 +9978,11 @@ mix_blend_normal =
 mix_blend_overlay : Css.Style
 mix_blend_overlay =
     Css.property "mix-blend-mode" "overlay"
+
+
+mix_blend_plus_lighter : Css.Style
+mix_blend_plus_lighter =
+    Css.property "mix-blend-mode" "plus-lighter"
 
 
 mix_blend_saturation : Css.Style
@@ -7453,6 +10358,186 @@ mr_auto =
 mr_px : Css.Style
 mr_px =
     Css.property "margin-right" "1px"
+
+
+ms_0 : Css.Style
+ms_0 =
+    Css.property "margin-inline-start" "0px"
+
+
+ms_0_dot_5 : Css.Style
+ms_0_dot_5 =
+    Css.property "margin-inline-start" "0.125rem"
+
+
+ms_1 : Css.Style
+ms_1 =
+    Css.property "margin-inline-start" "0.25rem"
+
+
+ms_10 : Css.Style
+ms_10 =
+    Css.property "margin-inline-start" "2.5rem"
+
+
+ms_11 : Css.Style
+ms_11 =
+    Css.property "margin-inline-start" "2.75rem"
+
+
+ms_12 : Css.Style
+ms_12 =
+    Css.property "margin-inline-start" "3rem"
+
+
+ms_14 : Css.Style
+ms_14 =
+    Css.property "margin-inline-start" "3.5rem"
+
+
+ms_16 : Css.Style
+ms_16 =
+    Css.property "margin-inline-start" "4rem"
+
+
+ms_1_dot_5 : Css.Style
+ms_1_dot_5 =
+    Css.property "margin-inline-start" "0.375rem"
+
+
+ms_2 : Css.Style
+ms_2 =
+    Css.property "margin-inline-start" "0.5rem"
+
+
+ms_20 : Css.Style
+ms_20 =
+    Css.property "margin-inline-start" "5rem"
+
+
+ms_24 : Css.Style
+ms_24 =
+    Css.property "margin-inline-start" "6rem"
+
+
+ms_28 : Css.Style
+ms_28 =
+    Css.property "margin-inline-start" "7rem"
+
+
+ms_2_dot_5 : Css.Style
+ms_2_dot_5 =
+    Css.property "margin-inline-start" "0.625rem"
+
+
+ms_3 : Css.Style
+ms_3 =
+    Css.property "margin-inline-start" "0.75rem"
+
+
+ms_32 : Css.Style
+ms_32 =
+    Css.property "margin-inline-start" "8rem"
+
+
+ms_36 : Css.Style
+ms_36 =
+    Css.property "margin-inline-start" "9rem"
+
+
+ms_3_dot_5 : Css.Style
+ms_3_dot_5 =
+    Css.property "margin-inline-start" "0.875rem"
+
+
+ms_4 : Css.Style
+ms_4 =
+    Css.property "margin-inline-start" "1rem"
+
+
+ms_40 : Css.Style
+ms_40 =
+    Css.property "margin-inline-start" "10rem"
+
+
+ms_44 : Css.Style
+ms_44 =
+    Css.property "margin-inline-start" "11rem"
+
+
+ms_48 : Css.Style
+ms_48 =
+    Css.property "margin-inline-start" "12rem"
+
+
+ms_5 : Css.Style
+ms_5 =
+    Css.property "margin-inline-start" "1.25rem"
+
+
+ms_52 : Css.Style
+ms_52 =
+    Css.property "margin-inline-start" "13rem"
+
+
+ms_56 : Css.Style
+ms_56 =
+    Css.property "margin-inline-start" "14rem"
+
+
+ms_6 : Css.Style
+ms_6 =
+    Css.property "margin-inline-start" "1.5rem"
+
+
+ms_60 : Css.Style
+ms_60 =
+    Css.property "margin-inline-start" "15rem"
+
+
+ms_64 : Css.Style
+ms_64 =
+    Css.property "margin-inline-start" "16rem"
+
+
+ms_7 : Css.Style
+ms_7 =
+    Css.property "margin-inline-start" "1.75rem"
+
+
+ms_72 : Css.Style
+ms_72 =
+    Css.property "margin-inline-start" "18rem"
+
+
+ms_8 : Css.Style
+ms_8 =
+    Css.property "margin-inline-start" "2rem"
+
+
+ms_80 : Css.Style
+ms_80 =
+    Css.property "margin-inline-start" "20rem"
+
+
+ms_9 : Css.Style
+ms_9 =
+    Css.property "margin-inline-start" "2.25rem"
+
+
+ms_96 : Css.Style
+ms_96 =
+    Css.property "margin-inline-start" "24rem"
+
+
+ms_auto : Css.Style
+ms_auto =
+    Css.property "margin-inline-start" "auto"
+
+
+ms_px : Css.Style
+ms_px =
+    Css.property "margin-inline-start" "1px"
 
 
 mt_0 : Css.Style
@@ -8211,34 +11296,63 @@ my_px =
         ]
 
 
+neg_backdrop_hue_rotate_0 : Css.Style
+neg_backdrop_hue_rotate_0 =
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-0deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
+
+
 neg_backdrop_hue_rotate_15 : Css.Style
 neg_backdrop_hue_rotate_15 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-15deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-15deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 neg_backdrop_hue_rotate_180 : Css.Style
 neg_backdrop_hue_rotate_180 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-180deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-180deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 neg_backdrop_hue_rotate_30 : Css.Style
 neg_backdrop_hue_rotate_30 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-30deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-30deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 neg_backdrop_hue_rotate_60 : Css.Style
 neg_backdrop_hue_rotate_60 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-60deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-60deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 neg_backdrop_hue_rotate_90 : Css.Style
 neg_backdrop_hue_rotate_90 =
-    Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-90deg)"
+    Css.batch
+        [ Css.property "--tw-backdrop-hue-rotate" "hue-rotate(-90deg)"
+        , Css.property "-webkit-backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        , Css.property "backdrop-filter" "var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)"
+        ]
 
 
 neg_bottom_0 : Css.Style
 neg_bottom_0 =
-    Css.property "bottom" "0px"
+    Css.property "bottom" "-0px"
 
 
 neg_bottom_0_dot_5 : Css.Style
@@ -8446,456 +11560,654 @@ neg_bottom_px =
     Css.property "bottom" "-1px"
 
 
+neg_end_0 : Css.Style
+neg_end_0 =
+    Css.property "inset-inline-end" "-0px"
+
+
+neg_end_0_dot_5 : Css.Style
+neg_end_0_dot_5 =
+    Css.property "inset-inline-end" "-0.125rem"
+
+
+neg_end_1 : Css.Style
+neg_end_1 =
+    Css.property "inset-inline-end" "-0.25rem"
+
+
+neg_end_10 : Css.Style
+neg_end_10 =
+    Css.property "inset-inline-end" "-2.5rem"
+
+
+neg_end_11 : Css.Style
+neg_end_11 =
+    Css.property "inset-inline-end" "-2.75rem"
+
+
+neg_end_12 : Css.Style
+neg_end_12 =
+    Css.property "inset-inline-end" "-3rem"
+
+
+neg_end_14 : Css.Style
+neg_end_14 =
+    Css.property "inset-inline-end" "-3.5rem"
+
+
+neg_end_16 : Css.Style
+neg_end_16 =
+    Css.property "inset-inline-end" "-4rem"
+
+
+neg_end_1_dot_5 : Css.Style
+neg_end_1_dot_5 =
+    Css.property "inset-inline-end" "-0.375rem"
+
+
+neg_end_1over2 : Css.Style
+neg_end_1over2 =
+    Css.property "inset-inline-end" "-50%"
+
+
+neg_end_1over3 : Css.Style
+neg_end_1over3 =
+    Css.property "inset-inline-end" "-33.333333%"
+
+
+neg_end_1over4 : Css.Style
+neg_end_1over4 =
+    Css.property "inset-inline-end" "-25%"
+
+
+neg_end_2 : Css.Style
+neg_end_2 =
+    Css.property "inset-inline-end" "-0.5rem"
+
+
+neg_end_20 : Css.Style
+neg_end_20 =
+    Css.property "inset-inline-end" "-5rem"
+
+
+neg_end_24 : Css.Style
+neg_end_24 =
+    Css.property "inset-inline-end" "-6rem"
+
+
+neg_end_28 : Css.Style
+neg_end_28 =
+    Css.property "inset-inline-end" "-7rem"
+
+
+neg_end_2_dot_5 : Css.Style
+neg_end_2_dot_5 =
+    Css.property "inset-inline-end" "-0.625rem"
+
+
+neg_end_2over3 : Css.Style
+neg_end_2over3 =
+    Css.property "inset-inline-end" "-66.666667%"
+
+
+neg_end_2over4 : Css.Style
+neg_end_2over4 =
+    Css.property "inset-inline-end" "-50%"
+
+
+neg_end_3 : Css.Style
+neg_end_3 =
+    Css.property "inset-inline-end" "-0.75rem"
+
+
+neg_end_32 : Css.Style
+neg_end_32 =
+    Css.property "inset-inline-end" "-8rem"
+
+
+neg_end_36 : Css.Style
+neg_end_36 =
+    Css.property "inset-inline-end" "-9rem"
+
+
+neg_end_3_dot_5 : Css.Style
+neg_end_3_dot_5 =
+    Css.property "inset-inline-end" "-0.875rem"
+
+
+neg_end_3over4 : Css.Style
+neg_end_3over4 =
+    Css.property "inset-inline-end" "-75%"
+
+
+neg_end_4 : Css.Style
+neg_end_4 =
+    Css.property "inset-inline-end" "-1rem"
+
+
+neg_end_40 : Css.Style
+neg_end_40 =
+    Css.property "inset-inline-end" "-10rem"
+
+
+neg_end_44 : Css.Style
+neg_end_44 =
+    Css.property "inset-inline-end" "-11rem"
+
+
+neg_end_48 : Css.Style
+neg_end_48 =
+    Css.property "inset-inline-end" "-12rem"
+
+
+neg_end_5 : Css.Style
+neg_end_5 =
+    Css.property "inset-inline-end" "-1.25rem"
+
+
+neg_end_52 : Css.Style
+neg_end_52 =
+    Css.property "inset-inline-end" "-13rem"
+
+
+neg_end_56 : Css.Style
+neg_end_56 =
+    Css.property "inset-inline-end" "-14rem"
+
+
+neg_end_6 : Css.Style
+neg_end_6 =
+    Css.property "inset-inline-end" "-1.5rem"
+
+
+neg_end_60 : Css.Style
+neg_end_60 =
+    Css.property "inset-inline-end" "-15rem"
+
+
+neg_end_64 : Css.Style
+neg_end_64 =
+    Css.property "inset-inline-end" "-16rem"
+
+
+neg_end_7 : Css.Style
+neg_end_7 =
+    Css.property "inset-inline-end" "-1.75rem"
+
+
+neg_end_72 : Css.Style
+neg_end_72 =
+    Css.property "inset-inline-end" "-18rem"
+
+
+neg_end_8 : Css.Style
+neg_end_8 =
+    Css.property "inset-inline-end" "-2rem"
+
+
+neg_end_80 : Css.Style
+neg_end_80 =
+    Css.property "inset-inline-end" "-20rem"
+
+
+neg_end_9 : Css.Style
+neg_end_9 =
+    Css.property "inset-inline-end" "-2.25rem"
+
+
+neg_end_96 : Css.Style
+neg_end_96 =
+    Css.property "inset-inline-end" "-24rem"
+
+
+neg_end_full : Css.Style
+neg_end_full =
+    Css.property "inset-inline-end" "-100%"
+
+
+neg_end_px : Css.Style
+neg_end_px =
+    Css.property "inset-inline-end" "-1px"
+
+
+neg_hue_rotate_0 : Css.Style
+neg_hue_rotate_0 =
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(-0deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
+
+
 neg_hue_rotate_15 : Css.Style
 neg_hue_rotate_15 =
-    Css.property "--tw-hue-rotate" "hue-rotate(-15deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(-15deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 neg_hue_rotate_180 : Css.Style
 neg_hue_rotate_180 =
-    Css.property "--tw-hue-rotate" "hue-rotate(-180deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(-180deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 neg_hue_rotate_30 : Css.Style
 neg_hue_rotate_30 =
-    Css.property "--tw-hue-rotate" "hue-rotate(-30deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(-30deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 neg_hue_rotate_60 : Css.Style
 neg_hue_rotate_60 =
-    Css.property "--tw-hue-rotate" "hue-rotate(-60deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(-60deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 neg_hue_rotate_90 : Css.Style
 neg_hue_rotate_90 =
-    Css.property "--tw-hue-rotate" "hue-rotate(-90deg)"
+    Css.batch
+        [ Css.property "--tw-hue-rotate" "hue-rotate(-90deg)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
+
+
+neg_indent_0 : Css.Style
+neg_indent_0 =
+    Css.property "text-indent" "-0px"
+
+
+neg_indent_0_dot_5 : Css.Style
+neg_indent_0_dot_5 =
+    Css.property "text-indent" "-0.125rem"
+
+
+neg_indent_1 : Css.Style
+neg_indent_1 =
+    Css.property "text-indent" "-0.25rem"
+
+
+neg_indent_10 : Css.Style
+neg_indent_10 =
+    Css.property "text-indent" "-2.5rem"
+
+
+neg_indent_11 : Css.Style
+neg_indent_11 =
+    Css.property "text-indent" "-2.75rem"
+
+
+neg_indent_12 : Css.Style
+neg_indent_12 =
+    Css.property "text-indent" "-3rem"
+
+
+neg_indent_14 : Css.Style
+neg_indent_14 =
+    Css.property "text-indent" "-3.5rem"
+
+
+neg_indent_16 : Css.Style
+neg_indent_16 =
+    Css.property "text-indent" "-4rem"
+
+
+neg_indent_1_dot_5 : Css.Style
+neg_indent_1_dot_5 =
+    Css.property "text-indent" "-0.375rem"
+
+
+neg_indent_2 : Css.Style
+neg_indent_2 =
+    Css.property "text-indent" "-0.5rem"
+
+
+neg_indent_20 : Css.Style
+neg_indent_20 =
+    Css.property "text-indent" "-5rem"
+
+
+neg_indent_24 : Css.Style
+neg_indent_24 =
+    Css.property "text-indent" "-6rem"
+
+
+neg_indent_28 : Css.Style
+neg_indent_28 =
+    Css.property "text-indent" "-7rem"
+
+
+neg_indent_2_dot_5 : Css.Style
+neg_indent_2_dot_5 =
+    Css.property "text-indent" "-0.625rem"
+
+
+neg_indent_3 : Css.Style
+neg_indent_3 =
+    Css.property "text-indent" "-0.75rem"
+
+
+neg_indent_32 : Css.Style
+neg_indent_32 =
+    Css.property "text-indent" "-8rem"
+
+
+neg_indent_36 : Css.Style
+neg_indent_36 =
+    Css.property "text-indent" "-9rem"
+
+
+neg_indent_3_dot_5 : Css.Style
+neg_indent_3_dot_5 =
+    Css.property "text-indent" "-0.875rem"
+
+
+neg_indent_4 : Css.Style
+neg_indent_4 =
+    Css.property "text-indent" "-1rem"
+
+
+neg_indent_40 : Css.Style
+neg_indent_40 =
+    Css.property "text-indent" "-10rem"
+
+
+neg_indent_44 : Css.Style
+neg_indent_44 =
+    Css.property "text-indent" "-11rem"
+
+
+neg_indent_48 : Css.Style
+neg_indent_48 =
+    Css.property "text-indent" "-12rem"
+
+
+neg_indent_5 : Css.Style
+neg_indent_5 =
+    Css.property "text-indent" "-1.25rem"
+
+
+neg_indent_52 : Css.Style
+neg_indent_52 =
+    Css.property "text-indent" "-13rem"
+
+
+neg_indent_56 : Css.Style
+neg_indent_56 =
+    Css.property "text-indent" "-14rem"
+
+
+neg_indent_6 : Css.Style
+neg_indent_6 =
+    Css.property "text-indent" "-1.5rem"
+
+
+neg_indent_60 : Css.Style
+neg_indent_60 =
+    Css.property "text-indent" "-15rem"
+
+
+neg_indent_64 : Css.Style
+neg_indent_64 =
+    Css.property "text-indent" "-16rem"
+
+
+neg_indent_7 : Css.Style
+neg_indent_7 =
+    Css.property "text-indent" "-1.75rem"
+
+
+neg_indent_72 : Css.Style
+neg_indent_72 =
+    Css.property "text-indent" "-18rem"
+
+
+neg_indent_8 : Css.Style
+neg_indent_8 =
+    Css.property "text-indent" "-2rem"
+
+
+neg_indent_80 : Css.Style
+neg_indent_80 =
+    Css.property "text-indent" "-20rem"
+
+
+neg_indent_9 : Css.Style
+neg_indent_9 =
+    Css.property "text-indent" "-2.25rem"
+
+
+neg_indent_96 : Css.Style
+neg_indent_96 =
+    Css.property "text-indent" "-24rem"
+
+
+neg_indent_px : Css.Style
+neg_indent_px =
+    Css.property "text-indent" "-1px"
 
 
 neg_inset_0 : Css.Style
 neg_inset_0 =
-    Css.batch
-        [ Css.property "top" "0px"
-        , Css.property "right" "0px"
-        , Css.property "bottom" "0px"
-        , Css.property "left" "0px"
-        ]
+    Css.property "inset" "-0px"
 
 
 neg_inset_0_dot_5 : Css.Style
 neg_inset_0_dot_5 =
-    Css.batch
-        [ Css.property "top" "-0.125rem"
-        , Css.property "right" "-0.125rem"
-        , Css.property "bottom" "-0.125rem"
-        , Css.property "left" "-0.125rem"
-        ]
+    Css.property "inset" "-0.125rem"
 
 
 neg_inset_1 : Css.Style
 neg_inset_1 =
-    Css.batch
-        [ Css.property "top" "-0.25rem"
-        , Css.property "right" "-0.25rem"
-        , Css.property "bottom" "-0.25rem"
-        , Css.property "left" "-0.25rem"
-        ]
+    Css.property "inset" "-0.25rem"
 
 
 neg_inset_10 : Css.Style
 neg_inset_10 =
-    Css.batch
-        [ Css.property "top" "-2.5rem"
-        , Css.property "right" "-2.5rem"
-        , Css.property "bottom" "-2.5rem"
-        , Css.property "left" "-2.5rem"
-        ]
+    Css.property "inset" "-2.5rem"
 
 
 neg_inset_11 : Css.Style
 neg_inset_11 =
-    Css.batch
-        [ Css.property "top" "-2.75rem"
-        , Css.property "right" "-2.75rem"
-        , Css.property "bottom" "-2.75rem"
-        , Css.property "left" "-2.75rem"
-        ]
+    Css.property "inset" "-2.75rem"
 
 
 neg_inset_12 : Css.Style
 neg_inset_12 =
-    Css.batch
-        [ Css.property "top" "-3rem"
-        , Css.property "right" "-3rem"
-        , Css.property "bottom" "-3rem"
-        , Css.property "left" "-3rem"
-        ]
+    Css.property "inset" "-3rem"
 
 
 neg_inset_14 : Css.Style
 neg_inset_14 =
-    Css.batch
-        [ Css.property "top" "-3.5rem"
-        , Css.property "right" "-3.5rem"
-        , Css.property "bottom" "-3.5rem"
-        , Css.property "left" "-3.5rem"
-        ]
+    Css.property "inset" "-3.5rem"
 
 
 neg_inset_16 : Css.Style
 neg_inset_16 =
-    Css.batch
-        [ Css.property "top" "-4rem"
-        , Css.property "right" "-4rem"
-        , Css.property "bottom" "-4rem"
-        , Css.property "left" "-4rem"
-        ]
+    Css.property "inset" "-4rem"
 
 
 neg_inset_1_dot_5 : Css.Style
 neg_inset_1_dot_5 =
-    Css.batch
-        [ Css.property "top" "-0.375rem"
-        , Css.property "right" "-0.375rem"
-        , Css.property "bottom" "-0.375rem"
-        , Css.property "left" "-0.375rem"
-        ]
+    Css.property "inset" "-0.375rem"
 
 
 neg_inset_1over2 : Css.Style
 neg_inset_1over2 =
-    Css.batch
-        [ Css.property "top" "-50%"
-        , Css.property "right" "-50%"
-        , Css.property "bottom" "-50%"
-        , Css.property "left" "-50%"
-        ]
+    Css.property "inset" "-50%"
 
 
 neg_inset_1over3 : Css.Style
 neg_inset_1over3 =
-    Css.batch
-        [ Css.property "top" "-33.333333%"
-        , Css.property "right" "-33.333333%"
-        , Css.property "bottom" "-33.333333%"
-        , Css.property "left" "-33.333333%"
-        ]
+    Css.property "inset" "-33.333333%"
 
 
 neg_inset_1over4 : Css.Style
 neg_inset_1over4 =
-    Css.batch
-        [ Css.property "top" "-25%"
-        , Css.property "right" "-25%"
-        , Css.property "bottom" "-25%"
-        , Css.property "left" "-25%"
-        ]
+    Css.property "inset" "-25%"
 
 
 neg_inset_2 : Css.Style
 neg_inset_2 =
-    Css.batch
-        [ Css.property "top" "-0.5rem"
-        , Css.property "right" "-0.5rem"
-        , Css.property "bottom" "-0.5rem"
-        , Css.property "left" "-0.5rem"
-        ]
+    Css.property "inset" "-0.5rem"
 
 
 neg_inset_20 : Css.Style
 neg_inset_20 =
-    Css.batch
-        [ Css.property "top" "-5rem"
-        , Css.property "right" "-5rem"
-        , Css.property "bottom" "-5rem"
-        , Css.property "left" "-5rem"
-        ]
+    Css.property "inset" "-5rem"
 
 
 neg_inset_24 : Css.Style
 neg_inset_24 =
-    Css.batch
-        [ Css.property "top" "-6rem"
-        , Css.property "right" "-6rem"
-        , Css.property "bottom" "-6rem"
-        , Css.property "left" "-6rem"
-        ]
+    Css.property "inset" "-6rem"
 
 
 neg_inset_28 : Css.Style
 neg_inset_28 =
-    Css.batch
-        [ Css.property "top" "-7rem"
-        , Css.property "right" "-7rem"
-        , Css.property "bottom" "-7rem"
-        , Css.property "left" "-7rem"
-        ]
+    Css.property "inset" "-7rem"
 
 
 neg_inset_2_dot_5 : Css.Style
 neg_inset_2_dot_5 =
-    Css.batch
-        [ Css.property "top" "-0.625rem"
-        , Css.property "right" "-0.625rem"
-        , Css.property "bottom" "-0.625rem"
-        , Css.property "left" "-0.625rem"
-        ]
+    Css.property "inset" "-0.625rem"
 
 
 neg_inset_2over3 : Css.Style
 neg_inset_2over3 =
-    Css.batch
-        [ Css.property "top" "-66.666667%"
-        , Css.property "right" "-66.666667%"
-        , Css.property "bottom" "-66.666667%"
-        , Css.property "left" "-66.666667%"
-        ]
+    Css.property "inset" "-66.666667%"
 
 
 neg_inset_2over4 : Css.Style
 neg_inset_2over4 =
-    Css.batch
-        [ Css.property "top" "-50%"
-        , Css.property "right" "-50%"
-        , Css.property "bottom" "-50%"
-        , Css.property "left" "-50%"
-        ]
+    Css.property "inset" "-50%"
 
 
 neg_inset_3 : Css.Style
 neg_inset_3 =
-    Css.batch
-        [ Css.property "top" "-0.75rem"
-        , Css.property "right" "-0.75rem"
-        , Css.property "bottom" "-0.75rem"
-        , Css.property "left" "-0.75rem"
-        ]
+    Css.property "inset" "-0.75rem"
 
 
 neg_inset_32 : Css.Style
 neg_inset_32 =
-    Css.batch
-        [ Css.property "top" "-8rem"
-        , Css.property "right" "-8rem"
-        , Css.property "bottom" "-8rem"
-        , Css.property "left" "-8rem"
-        ]
+    Css.property "inset" "-8rem"
 
 
 neg_inset_36 : Css.Style
 neg_inset_36 =
-    Css.batch
-        [ Css.property "top" "-9rem"
-        , Css.property "right" "-9rem"
-        , Css.property "bottom" "-9rem"
-        , Css.property "left" "-9rem"
-        ]
+    Css.property "inset" "-9rem"
 
 
 neg_inset_3_dot_5 : Css.Style
 neg_inset_3_dot_5 =
-    Css.batch
-        [ Css.property "top" "-0.875rem"
-        , Css.property "right" "-0.875rem"
-        , Css.property "bottom" "-0.875rem"
-        , Css.property "left" "-0.875rem"
-        ]
+    Css.property "inset" "-0.875rem"
 
 
 neg_inset_3over4 : Css.Style
 neg_inset_3over4 =
-    Css.batch
-        [ Css.property "top" "-75%"
-        , Css.property "right" "-75%"
-        , Css.property "bottom" "-75%"
-        , Css.property "left" "-75%"
-        ]
+    Css.property "inset" "-75%"
 
 
 neg_inset_4 : Css.Style
 neg_inset_4 =
-    Css.batch
-        [ Css.property "top" "-1rem"
-        , Css.property "right" "-1rem"
-        , Css.property "bottom" "-1rem"
-        , Css.property "left" "-1rem"
-        ]
+    Css.property "inset" "-1rem"
 
 
 neg_inset_40 : Css.Style
 neg_inset_40 =
-    Css.batch
-        [ Css.property "top" "-10rem"
-        , Css.property "right" "-10rem"
-        , Css.property "bottom" "-10rem"
-        , Css.property "left" "-10rem"
-        ]
+    Css.property "inset" "-10rem"
 
 
 neg_inset_44 : Css.Style
 neg_inset_44 =
-    Css.batch
-        [ Css.property "top" "-11rem"
-        , Css.property "right" "-11rem"
-        , Css.property "bottom" "-11rem"
-        , Css.property "left" "-11rem"
-        ]
+    Css.property "inset" "-11rem"
 
 
 neg_inset_48 : Css.Style
 neg_inset_48 =
-    Css.batch
-        [ Css.property "top" "-12rem"
-        , Css.property "right" "-12rem"
-        , Css.property "bottom" "-12rem"
-        , Css.property "left" "-12rem"
-        ]
+    Css.property "inset" "-12rem"
 
 
 neg_inset_5 : Css.Style
 neg_inset_5 =
-    Css.batch
-        [ Css.property "top" "-1.25rem"
-        , Css.property "right" "-1.25rem"
-        , Css.property "bottom" "-1.25rem"
-        , Css.property "left" "-1.25rem"
-        ]
+    Css.property "inset" "-1.25rem"
 
 
 neg_inset_52 : Css.Style
 neg_inset_52 =
-    Css.batch
-        [ Css.property "top" "-13rem"
-        , Css.property "right" "-13rem"
-        , Css.property "bottom" "-13rem"
-        , Css.property "left" "-13rem"
-        ]
+    Css.property "inset" "-13rem"
 
 
 neg_inset_56 : Css.Style
 neg_inset_56 =
-    Css.batch
-        [ Css.property "top" "-14rem"
-        , Css.property "right" "-14rem"
-        , Css.property "bottom" "-14rem"
-        , Css.property "left" "-14rem"
-        ]
+    Css.property "inset" "-14rem"
 
 
 neg_inset_6 : Css.Style
 neg_inset_6 =
-    Css.batch
-        [ Css.property "top" "-1.5rem"
-        , Css.property "right" "-1.5rem"
-        , Css.property "bottom" "-1.5rem"
-        , Css.property "left" "-1.5rem"
-        ]
+    Css.property "inset" "-1.5rem"
 
 
 neg_inset_60 : Css.Style
 neg_inset_60 =
-    Css.batch
-        [ Css.property "top" "-15rem"
-        , Css.property "right" "-15rem"
-        , Css.property "bottom" "-15rem"
-        , Css.property "left" "-15rem"
-        ]
+    Css.property "inset" "-15rem"
 
 
 neg_inset_64 : Css.Style
 neg_inset_64 =
-    Css.batch
-        [ Css.property "top" "-16rem"
-        , Css.property "right" "-16rem"
-        , Css.property "bottom" "-16rem"
-        , Css.property "left" "-16rem"
-        ]
+    Css.property "inset" "-16rem"
 
 
 neg_inset_7 : Css.Style
 neg_inset_7 =
-    Css.batch
-        [ Css.property "top" "-1.75rem"
-        , Css.property "right" "-1.75rem"
-        , Css.property "bottom" "-1.75rem"
-        , Css.property "left" "-1.75rem"
-        ]
+    Css.property "inset" "-1.75rem"
 
 
 neg_inset_72 : Css.Style
 neg_inset_72 =
-    Css.batch
-        [ Css.property "top" "-18rem"
-        , Css.property "right" "-18rem"
-        , Css.property "bottom" "-18rem"
-        , Css.property "left" "-18rem"
-        ]
+    Css.property "inset" "-18rem"
 
 
 neg_inset_8 : Css.Style
 neg_inset_8 =
-    Css.batch
-        [ Css.property "top" "-2rem"
-        , Css.property "right" "-2rem"
-        , Css.property "bottom" "-2rem"
-        , Css.property "left" "-2rem"
-        ]
+    Css.property "inset" "-2rem"
 
 
 neg_inset_80 : Css.Style
 neg_inset_80 =
-    Css.batch
-        [ Css.property "top" "-20rem"
-        , Css.property "right" "-20rem"
-        , Css.property "bottom" "-20rem"
-        , Css.property "left" "-20rem"
-        ]
+    Css.property "inset" "-20rem"
 
 
 neg_inset_9 : Css.Style
 neg_inset_9 =
-    Css.batch
-        [ Css.property "top" "-2.25rem"
-        , Css.property "right" "-2.25rem"
-        , Css.property "bottom" "-2.25rem"
-        , Css.property "left" "-2.25rem"
-        ]
+    Css.property "inset" "-2.25rem"
 
 
 neg_inset_96 : Css.Style
 neg_inset_96 =
-    Css.batch
-        [ Css.property "top" "-24rem"
-        , Css.property "right" "-24rem"
-        , Css.property "bottom" "-24rem"
-        , Css.property "left" "-24rem"
-        ]
+    Css.property "inset" "-24rem"
 
 
 neg_inset_full : Css.Style
 neg_inset_full =
-    Css.batch
-        [ Css.property "top" "-100%"
-        , Css.property "right" "-100%"
-        , Css.property "bottom" "-100%"
-        , Css.property "left" "-100%"
-        ]
+    Css.property "inset" "-100%"
 
 
 neg_inset_px : Css.Style
 neg_inset_px =
-    Css.batch
-        [ Css.property "top" "-1px"
-        , Css.property "right" "-1px"
-        , Css.property "bottom" "-1px"
-        , Css.property "left" "-1px"
-        ]
+    Css.property "inset" "-1px"
 
 
 neg_inset_x_0 : Css.Style
 neg_inset_x_0 =
     Css.batch
-        [ Css.property "left" "0px"
-        , Css.property "right" "0px"
+        [ Css.property "left" "-0px"
+        , Css.property "right" "-0px"
         ]
 
 
@@ -9230,8 +12542,8 @@ neg_inset_x_px =
 neg_inset_y_0 : Css.Style
 neg_inset_y_0 =
     Css.batch
-        [ Css.property "top" "0px"
-        , Css.property "bottom" "0px"
+        [ Css.property "top" "-0px"
+        , Css.property "bottom" "-0px"
         ]
 
 
@@ -9565,7 +12877,7 @@ neg_inset_y_px =
 
 neg_left_0 : Css.Style
 neg_left_0 =
-    Css.property "left" "0px"
+    Css.property "left" "-0px"
 
 
 neg_left_0_dot_5 : Css.Style
@@ -9775,7 +13087,7 @@ neg_left_px =
 
 neg_m_0 : Css.Style
 neg_m_0 =
-    Css.property "margin" "0px"
+    Css.property "margin" "-0px"
 
 
 neg_m_0_dot_5 : Css.Style
@@ -9950,7 +13262,7 @@ neg_m_px =
 
 neg_mb_0 : Css.Style
 neg_mb_0 =
-    Css.property "margin-bottom" "0px"
+    Css.property "margin-bottom" "-0px"
 
 
 neg_mb_0_dot_5 : Css.Style
@@ -10123,9 +13435,184 @@ neg_mb_px =
     Css.property "margin-bottom" "-1px"
 
 
+neg_me_0 : Css.Style
+neg_me_0 =
+    Css.property "margin-inline-end" "-0px"
+
+
+neg_me_0_dot_5 : Css.Style
+neg_me_0_dot_5 =
+    Css.property "margin-inline-end" "-0.125rem"
+
+
+neg_me_1 : Css.Style
+neg_me_1 =
+    Css.property "margin-inline-end" "-0.25rem"
+
+
+neg_me_10 : Css.Style
+neg_me_10 =
+    Css.property "margin-inline-end" "-2.5rem"
+
+
+neg_me_11 : Css.Style
+neg_me_11 =
+    Css.property "margin-inline-end" "-2.75rem"
+
+
+neg_me_12 : Css.Style
+neg_me_12 =
+    Css.property "margin-inline-end" "-3rem"
+
+
+neg_me_14 : Css.Style
+neg_me_14 =
+    Css.property "margin-inline-end" "-3.5rem"
+
+
+neg_me_16 : Css.Style
+neg_me_16 =
+    Css.property "margin-inline-end" "-4rem"
+
+
+neg_me_1_dot_5 : Css.Style
+neg_me_1_dot_5 =
+    Css.property "margin-inline-end" "-0.375rem"
+
+
+neg_me_2 : Css.Style
+neg_me_2 =
+    Css.property "margin-inline-end" "-0.5rem"
+
+
+neg_me_20 : Css.Style
+neg_me_20 =
+    Css.property "margin-inline-end" "-5rem"
+
+
+neg_me_24 : Css.Style
+neg_me_24 =
+    Css.property "margin-inline-end" "-6rem"
+
+
+neg_me_28 : Css.Style
+neg_me_28 =
+    Css.property "margin-inline-end" "-7rem"
+
+
+neg_me_2_dot_5 : Css.Style
+neg_me_2_dot_5 =
+    Css.property "margin-inline-end" "-0.625rem"
+
+
+neg_me_3 : Css.Style
+neg_me_3 =
+    Css.property "margin-inline-end" "-0.75rem"
+
+
+neg_me_32 : Css.Style
+neg_me_32 =
+    Css.property "margin-inline-end" "-8rem"
+
+
+neg_me_36 : Css.Style
+neg_me_36 =
+    Css.property "margin-inline-end" "-9rem"
+
+
+neg_me_3_dot_5 : Css.Style
+neg_me_3_dot_5 =
+    Css.property "margin-inline-end" "-0.875rem"
+
+
+neg_me_4 : Css.Style
+neg_me_4 =
+    Css.property "margin-inline-end" "-1rem"
+
+
+neg_me_40 : Css.Style
+neg_me_40 =
+    Css.property "margin-inline-end" "-10rem"
+
+
+neg_me_44 : Css.Style
+neg_me_44 =
+    Css.property "margin-inline-end" "-11rem"
+
+
+neg_me_48 : Css.Style
+neg_me_48 =
+    Css.property "margin-inline-end" "-12rem"
+
+
+neg_me_5 : Css.Style
+neg_me_5 =
+    Css.property "margin-inline-end" "-1.25rem"
+
+
+neg_me_52 : Css.Style
+neg_me_52 =
+    Css.property "margin-inline-end" "-13rem"
+
+
+neg_me_56 : Css.Style
+neg_me_56 =
+    Css.property "margin-inline-end" "-14rem"
+
+
+neg_me_6 : Css.Style
+neg_me_6 =
+    Css.property "margin-inline-end" "-1.5rem"
+
+
+neg_me_60 : Css.Style
+neg_me_60 =
+    Css.property "margin-inline-end" "-15rem"
+
+
+neg_me_64 : Css.Style
+neg_me_64 =
+    Css.property "margin-inline-end" "-16rem"
+
+
+neg_me_7 : Css.Style
+neg_me_7 =
+    Css.property "margin-inline-end" "-1.75rem"
+
+
+neg_me_72 : Css.Style
+neg_me_72 =
+    Css.property "margin-inline-end" "-18rem"
+
+
+neg_me_8 : Css.Style
+neg_me_8 =
+    Css.property "margin-inline-end" "-2rem"
+
+
+neg_me_80 : Css.Style
+neg_me_80 =
+    Css.property "margin-inline-end" "-20rem"
+
+
+neg_me_9 : Css.Style
+neg_me_9 =
+    Css.property "margin-inline-end" "-2.25rem"
+
+
+neg_me_96 : Css.Style
+neg_me_96 =
+    Css.property "margin-inline-end" "-24rem"
+
+
+neg_me_px : Css.Style
+neg_me_px =
+    Css.property "margin-inline-end" "-1px"
+
+
 neg_ml_0 : Css.Style
 neg_ml_0 =
-    Css.property "margin-left" "0px"
+    Css.property "margin-left" "-0px"
 
 
 neg_ml_0_dot_5 : Css.Style
@@ -10300,7 +13787,7 @@ neg_ml_px =
 
 neg_mr_0 : Css.Style
 neg_mr_0 =
-    Css.property "margin-right" "0px"
+    Css.property "margin-right" "-0px"
 
 
 neg_mr_0_dot_5 : Css.Style
@@ -10473,9 +13960,184 @@ neg_mr_px =
     Css.property "margin-right" "-1px"
 
 
+neg_ms_0 : Css.Style
+neg_ms_0 =
+    Css.property "margin-inline-start" "-0px"
+
+
+neg_ms_0_dot_5 : Css.Style
+neg_ms_0_dot_5 =
+    Css.property "margin-inline-start" "-0.125rem"
+
+
+neg_ms_1 : Css.Style
+neg_ms_1 =
+    Css.property "margin-inline-start" "-0.25rem"
+
+
+neg_ms_10 : Css.Style
+neg_ms_10 =
+    Css.property "margin-inline-start" "-2.5rem"
+
+
+neg_ms_11 : Css.Style
+neg_ms_11 =
+    Css.property "margin-inline-start" "-2.75rem"
+
+
+neg_ms_12 : Css.Style
+neg_ms_12 =
+    Css.property "margin-inline-start" "-3rem"
+
+
+neg_ms_14 : Css.Style
+neg_ms_14 =
+    Css.property "margin-inline-start" "-3.5rem"
+
+
+neg_ms_16 : Css.Style
+neg_ms_16 =
+    Css.property "margin-inline-start" "-4rem"
+
+
+neg_ms_1_dot_5 : Css.Style
+neg_ms_1_dot_5 =
+    Css.property "margin-inline-start" "-0.375rem"
+
+
+neg_ms_2 : Css.Style
+neg_ms_2 =
+    Css.property "margin-inline-start" "-0.5rem"
+
+
+neg_ms_20 : Css.Style
+neg_ms_20 =
+    Css.property "margin-inline-start" "-5rem"
+
+
+neg_ms_24 : Css.Style
+neg_ms_24 =
+    Css.property "margin-inline-start" "-6rem"
+
+
+neg_ms_28 : Css.Style
+neg_ms_28 =
+    Css.property "margin-inline-start" "-7rem"
+
+
+neg_ms_2_dot_5 : Css.Style
+neg_ms_2_dot_5 =
+    Css.property "margin-inline-start" "-0.625rem"
+
+
+neg_ms_3 : Css.Style
+neg_ms_3 =
+    Css.property "margin-inline-start" "-0.75rem"
+
+
+neg_ms_32 : Css.Style
+neg_ms_32 =
+    Css.property "margin-inline-start" "-8rem"
+
+
+neg_ms_36 : Css.Style
+neg_ms_36 =
+    Css.property "margin-inline-start" "-9rem"
+
+
+neg_ms_3_dot_5 : Css.Style
+neg_ms_3_dot_5 =
+    Css.property "margin-inline-start" "-0.875rem"
+
+
+neg_ms_4 : Css.Style
+neg_ms_4 =
+    Css.property "margin-inline-start" "-1rem"
+
+
+neg_ms_40 : Css.Style
+neg_ms_40 =
+    Css.property "margin-inline-start" "-10rem"
+
+
+neg_ms_44 : Css.Style
+neg_ms_44 =
+    Css.property "margin-inline-start" "-11rem"
+
+
+neg_ms_48 : Css.Style
+neg_ms_48 =
+    Css.property "margin-inline-start" "-12rem"
+
+
+neg_ms_5 : Css.Style
+neg_ms_5 =
+    Css.property "margin-inline-start" "-1.25rem"
+
+
+neg_ms_52 : Css.Style
+neg_ms_52 =
+    Css.property "margin-inline-start" "-13rem"
+
+
+neg_ms_56 : Css.Style
+neg_ms_56 =
+    Css.property "margin-inline-start" "-14rem"
+
+
+neg_ms_6 : Css.Style
+neg_ms_6 =
+    Css.property "margin-inline-start" "-1.5rem"
+
+
+neg_ms_60 : Css.Style
+neg_ms_60 =
+    Css.property "margin-inline-start" "-15rem"
+
+
+neg_ms_64 : Css.Style
+neg_ms_64 =
+    Css.property "margin-inline-start" "-16rem"
+
+
+neg_ms_7 : Css.Style
+neg_ms_7 =
+    Css.property "margin-inline-start" "-1.75rem"
+
+
+neg_ms_72 : Css.Style
+neg_ms_72 =
+    Css.property "margin-inline-start" "-18rem"
+
+
+neg_ms_8 : Css.Style
+neg_ms_8 =
+    Css.property "margin-inline-start" "-2rem"
+
+
+neg_ms_80 : Css.Style
+neg_ms_80 =
+    Css.property "margin-inline-start" "-20rem"
+
+
+neg_ms_9 : Css.Style
+neg_ms_9 =
+    Css.property "margin-inline-start" "-2.25rem"
+
+
+neg_ms_96 : Css.Style
+neg_ms_96 =
+    Css.property "margin-inline-start" "-24rem"
+
+
+neg_ms_px : Css.Style
+neg_ms_px =
+    Css.property "margin-inline-start" "-1px"
+
+
 neg_mt_0 : Css.Style
 neg_mt_0 =
-    Css.property "margin-top" "0px"
+    Css.property "margin-top" "-0px"
 
 
 neg_mt_0_dot_5 : Css.Style
@@ -10651,8 +14313,8 @@ neg_mt_px =
 neg_mx_0 : Css.Style
 neg_mx_0 =
     Css.batch
-        [ Css.property "margin-left" "0px"
-        , Css.property "margin-right" "0px"
+        [ Css.property "margin-left" "-0px"
+        , Css.property "margin-right" "-0px"
         ]
 
 
@@ -10931,8 +14593,8 @@ neg_mx_px =
 neg_my_0 : Css.Style
 neg_my_0 =
     Css.batch
-        [ Css.property "margin-top" "0px"
-        , Css.property "margin-bottom" "0px"
+        [ Css.property "margin-top" "-0px"
+        , Css.property "margin-bottom" "-0px"
         ]
 
 
@@ -11208,9 +14870,109 @@ neg_my_px =
         ]
 
 
+neg_order_1 : Css.Style
+neg_order_1 =
+    Css.property "order" "-1"
+
+
+neg_order_10 : Css.Style
+neg_order_10 =
+    Css.property "order" "-10"
+
+
+neg_order_11 : Css.Style
+neg_order_11 =
+    Css.property "order" "-11"
+
+
+neg_order_12 : Css.Style
+neg_order_12 =
+    Css.property "order" "-12"
+
+
+neg_order_2 : Css.Style
+neg_order_2 =
+    Css.property "order" "-2"
+
+
+neg_order_3 : Css.Style
+neg_order_3 =
+    Css.property "order" "-3"
+
+
+neg_order_4 : Css.Style
+neg_order_4 =
+    Css.property "order" "-4"
+
+
+neg_order_5 : Css.Style
+neg_order_5 =
+    Css.property "order" "-5"
+
+
+neg_order_6 : Css.Style
+neg_order_6 =
+    Css.property "order" "-6"
+
+
+neg_order_7 : Css.Style
+neg_order_7 =
+    Css.property "order" "-7"
+
+
+neg_order_8 : Css.Style
+neg_order_8 =
+    Css.property "order" "-8"
+
+
+neg_order_9 : Css.Style
+neg_order_9 =
+    Css.property "order" "-9"
+
+
+neg_order_first : Css.Style
+neg_order_first =
+    Css.property "order" "9999"
+
+
+neg_order_last : Css.Style
+neg_order_last =
+    Css.property "order" "-9999"
+
+
+neg_order_none : Css.Style
+neg_order_none =
+    Css.property "order" "0"
+
+
+neg_outline_offset_0 : Css.Style
+neg_outline_offset_0 =
+    Css.property "outline-offset" "-0px"
+
+
+neg_outline_offset_1 : Css.Style
+neg_outline_offset_1 =
+    Css.property "outline-offset" "-1px"
+
+
+neg_outline_offset_2 : Css.Style
+neg_outline_offset_2 =
+    Css.property "outline-offset" "-2px"
+
+
+neg_outline_offset_4 : Css.Style
+neg_outline_offset_4 =
+    Css.property "outline-offset" "-4px"
+
+
+neg_outline_offset_8 : Css.Style
+neg_outline_offset_8 =
+    Css.property "outline-offset" "-8px"
+
+
 neg_right_0 : Css.Style
 neg_right_0 =
-    Css.property "right" "0px"
+    Css.property "right" "-0px"
 
 
 neg_right_0_dot_5 : Css.Style
@@ -11418,1009 +15180,3192 @@ neg_right_px =
     Css.property "right" "-1px"
 
 
+neg_rotate_0 : Css.Style
+neg_rotate_0 =
+    Css.batch
+        [ Css.property "--tw-rotate" "-0deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
 neg_rotate_1 : Css.Style
 neg_rotate_1 =
-    Css.property "--tw-rotate" "-1deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "-1deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_rotate_12 : Css.Style
 neg_rotate_12 =
-    Css.property "--tw-rotate" "-12deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "-12deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_rotate_180 : Css.Style
 neg_rotate_180 =
-    Css.property "--tw-rotate" "-180deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "-180deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_rotate_2 : Css.Style
 neg_rotate_2 =
-    Css.property "--tw-rotate" "-2deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "-2deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_rotate_3 : Css.Style
 neg_rotate_3 =
-    Css.property "--tw-rotate" "-3deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "-3deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_rotate_45 : Css.Style
 neg_rotate_45 =
-    Css.property "--tw-rotate" "-45deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "-45deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_rotate_6 : Css.Style
 neg_rotate_6 =
-    Css.property "--tw-rotate" "-6deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "-6deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_rotate_90 : Css.Style
 neg_rotate_90 =
-    Css.property "--tw-rotate" "-90deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "-90deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_0 : Css.Style
+neg_scale_0 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "0"
+        , Css.property "--tw-scale-y" "0"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_100 : Css.Style
+neg_scale_100 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-1"
+        , Css.property "--tw-scale-y" "-1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_105 : Css.Style
+neg_scale_105 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-1.05"
+        , Css.property "--tw-scale-y" "-1.05"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_110 : Css.Style
+neg_scale_110 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-1.1"
+        , Css.property "--tw-scale-y" "-1.1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_125 : Css.Style
+neg_scale_125 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-1.25"
+        , Css.property "--tw-scale-y" "-1.25"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_150 : Css.Style
+neg_scale_150 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-1.5"
+        , Css.property "--tw-scale-y" "-1.5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_50 : Css.Style
+neg_scale_50 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-.5"
+        , Css.property "--tw-scale-y" "-.5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_75 : Css.Style
+neg_scale_75 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-.75"
+        , Css.property "--tw-scale-y" "-.75"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_90 : Css.Style
+neg_scale_90 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-.9"
+        , Css.property "--tw-scale-y" "-.9"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_95 : Css.Style
+neg_scale_95 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-.95"
+        , Css.property "--tw-scale-y" "-.95"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_x_0 : Css.Style
+neg_scale_x_0 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "0"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_x_100 : Css.Style
+neg_scale_x_100 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_x_105 : Css.Style
+neg_scale_x_105 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-1.05"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_x_110 : Css.Style
+neg_scale_x_110 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-1.1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_x_125 : Css.Style
+neg_scale_x_125 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-1.25"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_x_150 : Css.Style
+neg_scale_x_150 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-1.5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_x_50 : Css.Style
+neg_scale_x_50 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-.5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_x_75 : Css.Style
+neg_scale_x_75 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-.75"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_x_90 : Css.Style
+neg_scale_x_90 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-.9"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_x_95 : Css.Style
+neg_scale_x_95 =
+    Css.batch
+        [ Css.property "--tw-scale-x" "-.95"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_y_0 : Css.Style
+neg_scale_y_0 =
+    Css.batch
+        [ Css.property "--tw-scale-y" "0"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_y_100 : Css.Style
+neg_scale_y_100 =
+    Css.batch
+        [ Css.property "--tw-scale-y" "-1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_y_105 : Css.Style
+neg_scale_y_105 =
+    Css.batch
+        [ Css.property "--tw-scale-y" "-1.05"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_y_110 : Css.Style
+neg_scale_y_110 =
+    Css.batch
+        [ Css.property "--tw-scale-y" "-1.1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_y_125 : Css.Style
+neg_scale_y_125 =
+    Css.batch
+        [ Css.property "--tw-scale-y" "-1.25"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_y_150 : Css.Style
+neg_scale_y_150 =
+    Css.batch
+        [ Css.property "--tw-scale-y" "-1.5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_y_50 : Css.Style
+neg_scale_y_50 =
+    Css.batch
+        [ Css.property "--tw-scale-y" "-.5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_y_75 : Css.Style
+neg_scale_y_75 =
+    Css.batch
+        [ Css.property "--tw-scale-y" "-.75"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_y_90 : Css.Style
+neg_scale_y_90 =
+    Css.batch
+        [ Css.property "--tw-scale-y" "-.9"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scale_y_95 : Css.Style
+neg_scale_y_95 =
+    Css.batch
+        [ Css.property "--tw-scale-y" "-.95"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_scroll_m_0 : Css.Style
+neg_scroll_m_0 =
+    Css.property "scroll-margin" "-0px"
+
+
+neg_scroll_m_0_dot_5 : Css.Style
+neg_scroll_m_0_dot_5 =
+    Css.property "scroll-margin" "-0.125rem"
+
+
+neg_scroll_m_1 : Css.Style
+neg_scroll_m_1 =
+    Css.property "scroll-margin" "-0.25rem"
+
+
+neg_scroll_m_10 : Css.Style
+neg_scroll_m_10 =
+    Css.property "scroll-margin" "-2.5rem"
+
+
+neg_scroll_m_11 : Css.Style
+neg_scroll_m_11 =
+    Css.property "scroll-margin" "-2.75rem"
+
+
+neg_scroll_m_12 : Css.Style
+neg_scroll_m_12 =
+    Css.property "scroll-margin" "-3rem"
+
+
+neg_scroll_m_14 : Css.Style
+neg_scroll_m_14 =
+    Css.property "scroll-margin" "-3.5rem"
+
+
+neg_scroll_m_16 : Css.Style
+neg_scroll_m_16 =
+    Css.property "scroll-margin" "-4rem"
+
+
+neg_scroll_m_1_dot_5 : Css.Style
+neg_scroll_m_1_dot_5 =
+    Css.property "scroll-margin" "-0.375rem"
+
+
+neg_scroll_m_2 : Css.Style
+neg_scroll_m_2 =
+    Css.property "scroll-margin" "-0.5rem"
+
+
+neg_scroll_m_20 : Css.Style
+neg_scroll_m_20 =
+    Css.property "scroll-margin" "-5rem"
+
+
+neg_scroll_m_24 : Css.Style
+neg_scroll_m_24 =
+    Css.property "scroll-margin" "-6rem"
+
+
+neg_scroll_m_28 : Css.Style
+neg_scroll_m_28 =
+    Css.property "scroll-margin" "-7rem"
+
+
+neg_scroll_m_2_dot_5 : Css.Style
+neg_scroll_m_2_dot_5 =
+    Css.property "scroll-margin" "-0.625rem"
+
+
+neg_scroll_m_3 : Css.Style
+neg_scroll_m_3 =
+    Css.property "scroll-margin" "-0.75rem"
+
+
+neg_scroll_m_32 : Css.Style
+neg_scroll_m_32 =
+    Css.property "scroll-margin" "-8rem"
+
+
+neg_scroll_m_36 : Css.Style
+neg_scroll_m_36 =
+    Css.property "scroll-margin" "-9rem"
+
+
+neg_scroll_m_3_dot_5 : Css.Style
+neg_scroll_m_3_dot_5 =
+    Css.property "scroll-margin" "-0.875rem"
+
+
+neg_scroll_m_4 : Css.Style
+neg_scroll_m_4 =
+    Css.property "scroll-margin" "-1rem"
+
+
+neg_scroll_m_40 : Css.Style
+neg_scroll_m_40 =
+    Css.property "scroll-margin" "-10rem"
+
+
+neg_scroll_m_44 : Css.Style
+neg_scroll_m_44 =
+    Css.property "scroll-margin" "-11rem"
+
+
+neg_scroll_m_48 : Css.Style
+neg_scroll_m_48 =
+    Css.property "scroll-margin" "-12rem"
+
+
+neg_scroll_m_5 : Css.Style
+neg_scroll_m_5 =
+    Css.property "scroll-margin" "-1.25rem"
+
+
+neg_scroll_m_52 : Css.Style
+neg_scroll_m_52 =
+    Css.property "scroll-margin" "-13rem"
+
+
+neg_scroll_m_56 : Css.Style
+neg_scroll_m_56 =
+    Css.property "scroll-margin" "-14rem"
+
+
+neg_scroll_m_6 : Css.Style
+neg_scroll_m_6 =
+    Css.property "scroll-margin" "-1.5rem"
+
+
+neg_scroll_m_60 : Css.Style
+neg_scroll_m_60 =
+    Css.property "scroll-margin" "-15rem"
+
+
+neg_scroll_m_64 : Css.Style
+neg_scroll_m_64 =
+    Css.property "scroll-margin" "-16rem"
+
+
+neg_scroll_m_7 : Css.Style
+neg_scroll_m_7 =
+    Css.property "scroll-margin" "-1.75rem"
+
+
+neg_scroll_m_72 : Css.Style
+neg_scroll_m_72 =
+    Css.property "scroll-margin" "-18rem"
+
+
+neg_scroll_m_8 : Css.Style
+neg_scroll_m_8 =
+    Css.property "scroll-margin" "-2rem"
+
+
+neg_scroll_m_80 : Css.Style
+neg_scroll_m_80 =
+    Css.property "scroll-margin" "-20rem"
+
+
+neg_scroll_m_9 : Css.Style
+neg_scroll_m_9 =
+    Css.property "scroll-margin" "-2.25rem"
+
+
+neg_scroll_m_96 : Css.Style
+neg_scroll_m_96 =
+    Css.property "scroll-margin" "-24rem"
+
+
+neg_scroll_m_px : Css.Style
+neg_scroll_m_px =
+    Css.property "scroll-margin" "-1px"
+
+
+neg_scroll_mb_0 : Css.Style
+neg_scroll_mb_0 =
+    Css.property "scroll-margin-bottom" "-0px"
+
+
+neg_scroll_mb_0_dot_5 : Css.Style
+neg_scroll_mb_0_dot_5 =
+    Css.property "scroll-margin-bottom" "-0.125rem"
+
+
+neg_scroll_mb_1 : Css.Style
+neg_scroll_mb_1 =
+    Css.property "scroll-margin-bottom" "-0.25rem"
+
+
+neg_scroll_mb_10 : Css.Style
+neg_scroll_mb_10 =
+    Css.property "scroll-margin-bottom" "-2.5rem"
+
+
+neg_scroll_mb_11 : Css.Style
+neg_scroll_mb_11 =
+    Css.property "scroll-margin-bottom" "-2.75rem"
+
+
+neg_scroll_mb_12 : Css.Style
+neg_scroll_mb_12 =
+    Css.property "scroll-margin-bottom" "-3rem"
+
+
+neg_scroll_mb_14 : Css.Style
+neg_scroll_mb_14 =
+    Css.property "scroll-margin-bottom" "-3.5rem"
+
+
+neg_scroll_mb_16 : Css.Style
+neg_scroll_mb_16 =
+    Css.property "scroll-margin-bottom" "-4rem"
+
+
+neg_scroll_mb_1_dot_5 : Css.Style
+neg_scroll_mb_1_dot_5 =
+    Css.property "scroll-margin-bottom" "-0.375rem"
+
+
+neg_scroll_mb_2 : Css.Style
+neg_scroll_mb_2 =
+    Css.property "scroll-margin-bottom" "-0.5rem"
+
+
+neg_scroll_mb_20 : Css.Style
+neg_scroll_mb_20 =
+    Css.property "scroll-margin-bottom" "-5rem"
+
+
+neg_scroll_mb_24 : Css.Style
+neg_scroll_mb_24 =
+    Css.property "scroll-margin-bottom" "-6rem"
+
+
+neg_scroll_mb_28 : Css.Style
+neg_scroll_mb_28 =
+    Css.property "scroll-margin-bottom" "-7rem"
+
+
+neg_scroll_mb_2_dot_5 : Css.Style
+neg_scroll_mb_2_dot_5 =
+    Css.property "scroll-margin-bottom" "-0.625rem"
+
+
+neg_scroll_mb_3 : Css.Style
+neg_scroll_mb_3 =
+    Css.property "scroll-margin-bottom" "-0.75rem"
+
+
+neg_scroll_mb_32 : Css.Style
+neg_scroll_mb_32 =
+    Css.property "scroll-margin-bottom" "-8rem"
+
+
+neg_scroll_mb_36 : Css.Style
+neg_scroll_mb_36 =
+    Css.property "scroll-margin-bottom" "-9rem"
+
+
+neg_scroll_mb_3_dot_5 : Css.Style
+neg_scroll_mb_3_dot_5 =
+    Css.property "scroll-margin-bottom" "-0.875rem"
+
+
+neg_scroll_mb_4 : Css.Style
+neg_scroll_mb_4 =
+    Css.property "scroll-margin-bottom" "-1rem"
+
+
+neg_scroll_mb_40 : Css.Style
+neg_scroll_mb_40 =
+    Css.property "scroll-margin-bottom" "-10rem"
+
+
+neg_scroll_mb_44 : Css.Style
+neg_scroll_mb_44 =
+    Css.property "scroll-margin-bottom" "-11rem"
+
+
+neg_scroll_mb_48 : Css.Style
+neg_scroll_mb_48 =
+    Css.property "scroll-margin-bottom" "-12rem"
+
+
+neg_scroll_mb_5 : Css.Style
+neg_scroll_mb_5 =
+    Css.property "scroll-margin-bottom" "-1.25rem"
+
+
+neg_scroll_mb_52 : Css.Style
+neg_scroll_mb_52 =
+    Css.property "scroll-margin-bottom" "-13rem"
+
+
+neg_scroll_mb_56 : Css.Style
+neg_scroll_mb_56 =
+    Css.property "scroll-margin-bottom" "-14rem"
+
+
+neg_scroll_mb_6 : Css.Style
+neg_scroll_mb_6 =
+    Css.property "scroll-margin-bottom" "-1.5rem"
+
+
+neg_scroll_mb_60 : Css.Style
+neg_scroll_mb_60 =
+    Css.property "scroll-margin-bottom" "-15rem"
+
+
+neg_scroll_mb_64 : Css.Style
+neg_scroll_mb_64 =
+    Css.property "scroll-margin-bottom" "-16rem"
+
+
+neg_scroll_mb_7 : Css.Style
+neg_scroll_mb_7 =
+    Css.property "scroll-margin-bottom" "-1.75rem"
+
+
+neg_scroll_mb_72 : Css.Style
+neg_scroll_mb_72 =
+    Css.property "scroll-margin-bottom" "-18rem"
+
+
+neg_scroll_mb_8 : Css.Style
+neg_scroll_mb_8 =
+    Css.property "scroll-margin-bottom" "-2rem"
+
+
+neg_scroll_mb_80 : Css.Style
+neg_scroll_mb_80 =
+    Css.property "scroll-margin-bottom" "-20rem"
+
+
+neg_scroll_mb_9 : Css.Style
+neg_scroll_mb_9 =
+    Css.property "scroll-margin-bottom" "-2.25rem"
+
+
+neg_scroll_mb_96 : Css.Style
+neg_scroll_mb_96 =
+    Css.property "scroll-margin-bottom" "-24rem"
+
+
+neg_scroll_mb_px : Css.Style
+neg_scroll_mb_px =
+    Css.property "scroll-margin-bottom" "-1px"
+
+
+neg_scroll_me_0 : Css.Style
+neg_scroll_me_0 =
+    Css.property "scroll-margin-inline-end" "-0px"
+
+
+neg_scroll_me_0_dot_5 : Css.Style
+neg_scroll_me_0_dot_5 =
+    Css.property "scroll-margin-inline-end" "-0.125rem"
+
+
+neg_scroll_me_1 : Css.Style
+neg_scroll_me_1 =
+    Css.property "scroll-margin-inline-end" "-0.25rem"
+
+
+neg_scroll_me_10 : Css.Style
+neg_scroll_me_10 =
+    Css.property "scroll-margin-inline-end" "-2.5rem"
+
+
+neg_scroll_me_11 : Css.Style
+neg_scroll_me_11 =
+    Css.property "scroll-margin-inline-end" "-2.75rem"
+
+
+neg_scroll_me_12 : Css.Style
+neg_scroll_me_12 =
+    Css.property "scroll-margin-inline-end" "-3rem"
+
+
+neg_scroll_me_14 : Css.Style
+neg_scroll_me_14 =
+    Css.property "scroll-margin-inline-end" "-3.5rem"
+
+
+neg_scroll_me_16 : Css.Style
+neg_scroll_me_16 =
+    Css.property "scroll-margin-inline-end" "-4rem"
+
+
+neg_scroll_me_1_dot_5 : Css.Style
+neg_scroll_me_1_dot_5 =
+    Css.property "scroll-margin-inline-end" "-0.375rem"
+
+
+neg_scroll_me_2 : Css.Style
+neg_scroll_me_2 =
+    Css.property "scroll-margin-inline-end" "-0.5rem"
+
+
+neg_scroll_me_20 : Css.Style
+neg_scroll_me_20 =
+    Css.property "scroll-margin-inline-end" "-5rem"
+
+
+neg_scroll_me_24 : Css.Style
+neg_scroll_me_24 =
+    Css.property "scroll-margin-inline-end" "-6rem"
+
+
+neg_scroll_me_28 : Css.Style
+neg_scroll_me_28 =
+    Css.property "scroll-margin-inline-end" "-7rem"
+
+
+neg_scroll_me_2_dot_5 : Css.Style
+neg_scroll_me_2_dot_5 =
+    Css.property "scroll-margin-inline-end" "-0.625rem"
+
+
+neg_scroll_me_3 : Css.Style
+neg_scroll_me_3 =
+    Css.property "scroll-margin-inline-end" "-0.75rem"
+
+
+neg_scroll_me_32 : Css.Style
+neg_scroll_me_32 =
+    Css.property "scroll-margin-inline-end" "-8rem"
+
+
+neg_scroll_me_36 : Css.Style
+neg_scroll_me_36 =
+    Css.property "scroll-margin-inline-end" "-9rem"
+
+
+neg_scroll_me_3_dot_5 : Css.Style
+neg_scroll_me_3_dot_5 =
+    Css.property "scroll-margin-inline-end" "-0.875rem"
+
+
+neg_scroll_me_4 : Css.Style
+neg_scroll_me_4 =
+    Css.property "scroll-margin-inline-end" "-1rem"
+
+
+neg_scroll_me_40 : Css.Style
+neg_scroll_me_40 =
+    Css.property "scroll-margin-inline-end" "-10rem"
+
+
+neg_scroll_me_44 : Css.Style
+neg_scroll_me_44 =
+    Css.property "scroll-margin-inline-end" "-11rem"
+
+
+neg_scroll_me_48 : Css.Style
+neg_scroll_me_48 =
+    Css.property "scroll-margin-inline-end" "-12rem"
+
+
+neg_scroll_me_5 : Css.Style
+neg_scroll_me_5 =
+    Css.property "scroll-margin-inline-end" "-1.25rem"
+
+
+neg_scroll_me_52 : Css.Style
+neg_scroll_me_52 =
+    Css.property "scroll-margin-inline-end" "-13rem"
+
+
+neg_scroll_me_56 : Css.Style
+neg_scroll_me_56 =
+    Css.property "scroll-margin-inline-end" "-14rem"
+
+
+neg_scroll_me_6 : Css.Style
+neg_scroll_me_6 =
+    Css.property "scroll-margin-inline-end" "-1.5rem"
+
+
+neg_scroll_me_60 : Css.Style
+neg_scroll_me_60 =
+    Css.property "scroll-margin-inline-end" "-15rem"
+
+
+neg_scroll_me_64 : Css.Style
+neg_scroll_me_64 =
+    Css.property "scroll-margin-inline-end" "-16rem"
+
+
+neg_scroll_me_7 : Css.Style
+neg_scroll_me_7 =
+    Css.property "scroll-margin-inline-end" "-1.75rem"
+
+
+neg_scroll_me_72 : Css.Style
+neg_scroll_me_72 =
+    Css.property "scroll-margin-inline-end" "-18rem"
+
+
+neg_scroll_me_8 : Css.Style
+neg_scroll_me_8 =
+    Css.property "scroll-margin-inline-end" "-2rem"
+
+
+neg_scroll_me_80 : Css.Style
+neg_scroll_me_80 =
+    Css.property "scroll-margin-inline-end" "-20rem"
+
+
+neg_scroll_me_9 : Css.Style
+neg_scroll_me_9 =
+    Css.property "scroll-margin-inline-end" "-2.25rem"
+
+
+neg_scroll_me_96 : Css.Style
+neg_scroll_me_96 =
+    Css.property "scroll-margin-inline-end" "-24rem"
+
+
+neg_scroll_me_px : Css.Style
+neg_scroll_me_px =
+    Css.property "scroll-margin-inline-end" "-1px"
+
+
+neg_scroll_ml_0 : Css.Style
+neg_scroll_ml_0 =
+    Css.property "scroll-margin-left" "-0px"
+
+
+neg_scroll_ml_0_dot_5 : Css.Style
+neg_scroll_ml_0_dot_5 =
+    Css.property "scroll-margin-left" "-0.125rem"
+
+
+neg_scroll_ml_1 : Css.Style
+neg_scroll_ml_1 =
+    Css.property "scroll-margin-left" "-0.25rem"
+
+
+neg_scroll_ml_10 : Css.Style
+neg_scroll_ml_10 =
+    Css.property "scroll-margin-left" "-2.5rem"
+
+
+neg_scroll_ml_11 : Css.Style
+neg_scroll_ml_11 =
+    Css.property "scroll-margin-left" "-2.75rem"
+
+
+neg_scroll_ml_12 : Css.Style
+neg_scroll_ml_12 =
+    Css.property "scroll-margin-left" "-3rem"
+
+
+neg_scroll_ml_14 : Css.Style
+neg_scroll_ml_14 =
+    Css.property "scroll-margin-left" "-3.5rem"
+
+
+neg_scroll_ml_16 : Css.Style
+neg_scroll_ml_16 =
+    Css.property "scroll-margin-left" "-4rem"
+
+
+neg_scroll_ml_1_dot_5 : Css.Style
+neg_scroll_ml_1_dot_5 =
+    Css.property "scroll-margin-left" "-0.375rem"
+
+
+neg_scroll_ml_2 : Css.Style
+neg_scroll_ml_2 =
+    Css.property "scroll-margin-left" "-0.5rem"
+
+
+neg_scroll_ml_20 : Css.Style
+neg_scroll_ml_20 =
+    Css.property "scroll-margin-left" "-5rem"
+
+
+neg_scroll_ml_24 : Css.Style
+neg_scroll_ml_24 =
+    Css.property "scroll-margin-left" "-6rem"
+
+
+neg_scroll_ml_28 : Css.Style
+neg_scroll_ml_28 =
+    Css.property "scroll-margin-left" "-7rem"
+
+
+neg_scroll_ml_2_dot_5 : Css.Style
+neg_scroll_ml_2_dot_5 =
+    Css.property "scroll-margin-left" "-0.625rem"
+
+
+neg_scroll_ml_3 : Css.Style
+neg_scroll_ml_3 =
+    Css.property "scroll-margin-left" "-0.75rem"
+
+
+neg_scroll_ml_32 : Css.Style
+neg_scroll_ml_32 =
+    Css.property "scroll-margin-left" "-8rem"
+
+
+neg_scroll_ml_36 : Css.Style
+neg_scroll_ml_36 =
+    Css.property "scroll-margin-left" "-9rem"
+
+
+neg_scroll_ml_3_dot_5 : Css.Style
+neg_scroll_ml_3_dot_5 =
+    Css.property "scroll-margin-left" "-0.875rem"
+
+
+neg_scroll_ml_4 : Css.Style
+neg_scroll_ml_4 =
+    Css.property "scroll-margin-left" "-1rem"
+
+
+neg_scroll_ml_40 : Css.Style
+neg_scroll_ml_40 =
+    Css.property "scroll-margin-left" "-10rem"
+
+
+neg_scroll_ml_44 : Css.Style
+neg_scroll_ml_44 =
+    Css.property "scroll-margin-left" "-11rem"
+
+
+neg_scroll_ml_48 : Css.Style
+neg_scroll_ml_48 =
+    Css.property "scroll-margin-left" "-12rem"
+
+
+neg_scroll_ml_5 : Css.Style
+neg_scroll_ml_5 =
+    Css.property "scroll-margin-left" "-1.25rem"
+
+
+neg_scroll_ml_52 : Css.Style
+neg_scroll_ml_52 =
+    Css.property "scroll-margin-left" "-13rem"
+
+
+neg_scroll_ml_56 : Css.Style
+neg_scroll_ml_56 =
+    Css.property "scroll-margin-left" "-14rem"
+
+
+neg_scroll_ml_6 : Css.Style
+neg_scroll_ml_6 =
+    Css.property "scroll-margin-left" "-1.5rem"
+
+
+neg_scroll_ml_60 : Css.Style
+neg_scroll_ml_60 =
+    Css.property "scroll-margin-left" "-15rem"
+
+
+neg_scroll_ml_64 : Css.Style
+neg_scroll_ml_64 =
+    Css.property "scroll-margin-left" "-16rem"
+
+
+neg_scroll_ml_7 : Css.Style
+neg_scroll_ml_7 =
+    Css.property "scroll-margin-left" "-1.75rem"
+
+
+neg_scroll_ml_72 : Css.Style
+neg_scroll_ml_72 =
+    Css.property "scroll-margin-left" "-18rem"
+
+
+neg_scroll_ml_8 : Css.Style
+neg_scroll_ml_8 =
+    Css.property "scroll-margin-left" "-2rem"
+
+
+neg_scroll_ml_80 : Css.Style
+neg_scroll_ml_80 =
+    Css.property "scroll-margin-left" "-20rem"
+
+
+neg_scroll_ml_9 : Css.Style
+neg_scroll_ml_9 =
+    Css.property "scroll-margin-left" "-2.25rem"
+
+
+neg_scroll_ml_96 : Css.Style
+neg_scroll_ml_96 =
+    Css.property "scroll-margin-left" "-24rem"
+
+
+neg_scroll_ml_px : Css.Style
+neg_scroll_ml_px =
+    Css.property "scroll-margin-left" "-1px"
+
+
+neg_scroll_mr_0 : Css.Style
+neg_scroll_mr_0 =
+    Css.property "scroll-margin-right" "-0px"
+
+
+neg_scroll_mr_0_dot_5 : Css.Style
+neg_scroll_mr_0_dot_5 =
+    Css.property "scroll-margin-right" "-0.125rem"
+
+
+neg_scroll_mr_1 : Css.Style
+neg_scroll_mr_1 =
+    Css.property "scroll-margin-right" "-0.25rem"
+
+
+neg_scroll_mr_10 : Css.Style
+neg_scroll_mr_10 =
+    Css.property "scroll-margin-right" "-2.5rem"
+
+
+neg_scroll_mr_11 : Css.Style
+neg_scroll_mr_11 =
+    Css.property "scroll-margin-right" "-2.75rem"
+
+
+neg_scroll_mr_12 : Css.Style
+neg_scroll_mr_12 =
+    Css.property "scroll-margin-right" "-3rem"
+
+
+neg_scroll_mr_14 : Css.Style
+neg_scroll_mr_14 =
+    Css.property "scroll-margin-right" "-3.5rem"
+
+
+neg_scroll_mr_16 : Css.Style
+neg_scroll_mr_16 =
+    Css.property "scroll-margin-right" "-4rem"
+
+
+neg_scroll_mr_1_dot_5 : Css.Style
+neg_scroll_mr_1_dot_5 =
+    Css.property "scroll-margin-right" "-0.375rem"
+
+
+neg_scroll_mr_2 : Css.Style
+neg_scroll_mr_2 =
+    Css.property "scroll-margin-right" "-0.5rem"
+
+
+neg_scroll_mr_20 : Css.Style
+neg_scroll_mr_20 =
+    Css.property "scroll-margin-right" "-5rem"
+
+
+neg_scroll_mr_24 : Css.Style
+neg_scroll_mr_24 =
+    Css.property "scroll-margin-right" "-6rem"
+
+
+neg_scroll_mr_28 : Css.Style
+neg_scroll_mr_28 =
+    Css.property "scroll-margin-right" "-7rem"
+
+
+neg_scroll_mr_2_dot_5 : Css.Style
+neg_scroll_mr_2_dot_5 =
+    Css.property "scroll-margin-right" "-0.625rem"
+
+
+neg_scroll_mr_3 : Css.Style
+neg_scroll_mr_3 =
+    Css.property "scroll-margin-right" "-0.75rem"
+
+
+neg_scroll_mr_32 : Css.Style
+neg_scroll_mr_32 =
+    Css.property "scroll-margin-right" "-8rem"
+
+
+neg_scroll_mr_36 : Css.Style
+neg_scroll_mr_36 =
+    Css.property "scroll-margin-right" "-9rem"
+
+
+neg_scroll_mr_3_dot_5 : Css.Style
+neg_scroll_mr_3_dot_5 =
+    Css.property "scroll-margin-right" "-0.875rem"
+
+
+neg_scroll_mr_4 : Css.Style
+neg_scroll_mr_4 =
+    Css.property "scroll-margin-right" "-1rem"
+
+
+neg_scroll_mr_40 : Css.Style
+neg_scroll_mr_40 =
+    Css.property "scroll-margin-right" "-10rem"
+
+
+neg_scroll_mr_44 : Css.Style
+neg_scroll_mr_44 =
+    Css.property "scroll-margin-right" "-11rem"
+
+
+neg_scroll_mr_48 : Css.Style
+neg_scroll_mr_48 =
+    Css.property "scroll-margin-right" "-12rem"
+
+
+neg_scroll_mr_5 : Css.Style
+neg_scroll_mr_5 =
+    Css.property "scroll-margin-right" "-1.25rem"
+
+
+neg_scroll_mr_52 : Css.Style
+neg_scroll_mr_52 =
+    Css.property "scroll-margin-right" "-13rem"
+
+
+neg_scroll_mr_56 : Css.Style
+neg_scroll_mr_56 =
+    Css.property "scroll-margin-right" "-14rem"
+
+
+neg_scroll_mr_6 : Css.Style
+neg_scroll_mr_6 =
+    Css.property "scroll-margin-right" "-1.5rem"
+
+
+neg_scroll_mr_60 : Css.Style
+neg_scroll_mr_60 =
+    Css.property "scroll-margin-right" "-15rem"
+
+
+neg_scroll_mr_64 : Css.Style
+neg_scroll_mr_64 =
+    Css.property "scroll-margin-right" "-16rem"
+
+
+neg_scroll_mr_7 : Css.Style
+neg_scroll_mr_7 =
+    Css.property "scroll-margin-right" "-1.75rem"
+
+
+neg_scroll_mr_72 : Css.Style
+neg_scroll_mr_72 =
+    Css.property "scroll-margin-right" "-18rem"
+
+
+neg_scroll_mr_8 : Css.Style
+neg_scroll_mr_8 =
+    Css.property "scroll-margin-right" "-2rem"
+
+
+neg_scroll_mr_80 : Css.Style
+neg_scroll_mr_80 =
+    Css.property "scroll-margin-right" "-20rem"
+
+
+neg_scroll_mr_9 : Css.Style
+neg_scroll_mr_9 =
+    Css.property "scroll-margin-right" "-2.25rem"
+
+
+neg_scroll_mr_96 : Css.Style
+neg_scroll_mr_96 =
+    Css.property "scroll-margin-right" "-24rem"
+
+
+neg_scroll_mr_px : Css.Style
+neg_scroll_mr_px =
+    Css.property "scroll-margin-right" "-1px"
+
+
+neg_scroll_ms_0 : Css.Style
+neg_scroll_ms_0 =
+    Css.property "scroll-margin-inline-start" "-0px"
+
+
+neg_scroll_ms_0_dot_5 : Css.Style
+neg_scroll_ms_0_dot_5 =
+    Css.property "scroll-margin-inline-start" "-0.125rem"
+
+
+neg_scroll_ms_1 : Css.Style
+neg_scroll_ms_1 =
+    Css.property "scroll-margin-inline-start" "-0.25rem"
+
+
+neg_scroll_ms_10 : Css.Style
+neg_scroll_ms_10 =
+    Css.property "scroll-margin-inline-start" "-2.5rem"
+
+
+neg_scroll_ms_11 : Css.Style
+neg_scroll_ms_11 =
+    Css.property "scroll-margin-inline-start" "-2.75rem"
+
+
+neg_scroll_ms_12 : Css.Style
+neg_scroll_ms_12 =
+    Css.property "scroll-margin-inline-start" "-3rem"
+
+
+neg_scroll_ms_14 : Css.Style
+neg_scroll_ms_14 =
+    Css.property "scroll-margin-inline-start" "-3.5rem"
+
+
+neg_scroll_ms_16 : Css.Style
+neg_scroll_ms_16 =
+    Css.property "scroll-margin-inline-start" "-4rem"
+
+
+neg_scroll_ms_1_dot_5 : Css.Style
+neg_scroll_ms_1_dot_5 =
+    Css.property "scroll-margin-inline-start" "-0.375rem"
+
+
+neg_scroll_ms_2 : Css.Style
+neg_scroll_ms_2 =
+    Css.property "scroll-margin-inline-start" "-0.5rem"
+
+
+neg_scroll_ms_20 : Css.Style
+neg_scroll_ms_20 =
+    Css.property "scroll-margin-inline-start" "-5rem"
+
+
+neg_scroll_ms_24 : Css.Style
+neg_scroll_ms_24 =
+    Css.property "scroll-margin-inline-start" "-6rem"
+
+
+neg_scroll_ms_28 : Css.Style
+neg_scroll_ms_28 =
+    Css.property "scroll-margin-inline-start" "-7rem"
+
+
+neg_scroll_ms_2_dot_5 : Css.Style
+neg_scroll_ms_2_dot_5 =
+    Css.property "scroll-margin-inline-start" "-0.625rem"
+
+
+neg_scroll_ms_3 : Css.Style
+neg_scroll_ms_3 =
+    Css.property "scroll-margin-inline-start" "-0.75rem"
+
+
+neg_scroll_ms_32 : Css.Style
+neg_scroll_ms_32 =
+    Css.property "scroll-margin-inline-start" "-8rem"
+
+
+neg_scroll_ms_36 : Css.Style
+neg_scroll_ms_36 =
+    Css.property "scroll-margin-inline-start" "-9rem"
+
+
+neg_scroll_ms_3_dot_5 : Css.Style
+neg_scroll_ms_3_dot_5 =
+    Css.property "scroll-margin-inline-start" "-0.875rem"
+
+
+neg_scroll_ms_4 : Css.Style
+neg_scroll_ms_4 =
+    Css.property "scroll-margin-inline-start" "-1rem"
+
+
+neg_scroll_ms_40 : Css.Style
+neg_scroll_ms_40 =
+    Css.property "scroll-margin-inline-start" "-10rem"
+
+
+neg_scroll_ms_44 : Css.Style
+neg_scroll_ms_44 =
+    Css.property "scroll-margin-inline-start" "-11rem"
+
+
+neg_scroll_ms_48 : Css.Style
+neg_scroll_ms_48 =
+    Css.property "scroll-margin-inline-start" "-12rem"
+
+
+neg_scroll_ms_5 : Css.Style
+neg_scroll_ms_5 =
+    Css.property "scroll-margin-inline-start" "-1.25rem"
+
+
+neg_scroll_ms_52 : Css.Style
+neg_scroll_ms_52 =
+    Css.property "scroll-margin-inline-start" "-13rem"
+
+
+neg_scroll_ms_56 : Css.Style
+neg_scroll_ms_56 =
+    Css.property "scroll-margin-inline-start" "-14rem"
+
+
+neg_scroll_ms_6 : Css.Style
+neg_scroll_ms_6 =
+    Css.property "scroll-margin-inline-start" "-1.5rem"
+
+
+neg_scroll_ms_60 : Css.Style
+neg_scroll_ms_60 =
+    Css.property "scroll-margin-inline-start" "-15rem"
+
+
+neg_scroll_ms_64 : Css.Style
+neg_scroll_ms_64 =
+    Css.property "scroll-margin-inline-start" "-16rem"
+
+
+neg_scroll_ms_7 : Css.Style
+neg_scroll_ms_7 =
+    Css.property "scroll-margin-inline-start" "-1.75rem"
+
+
+neg_scroll_ms_72 : Css.Style
+neg_scroll_ms_72 =
+    Css.property "scroll-margin-inline-start" "-18rem"
+
+
+neg_scroll_ms_8 : Css.Style
+neg_scroll_ms_8 =
+    Css.property "scroll-margin-inline-start" "-2rem"
+
+
+neg_scroll_ms_80 : Css.Style
+neg_scroll_ms_80 =
+    Css.property "scroll-margin-inline-start" "-20rem"
+
+
+neg_scroll_ms_9 : Css.Style
+neg_scroll_ms_9 =
+    Css.property "scroll-margin-inline-start" "-2.25rem"
+
+
+neg_scroll_ms_96 : Css.Style
+neg_scroll_ms_96 =
+    Css.property "scroll-margin-inline-start" "-24rem"
+
+
+neg_scroll_ms_px : Css.Style
+neg_scroll_ms_px =
+    Css.property "scroll-margin-inline-start" "-1px"
+
+
+neg_scroll_mt_0 : Css.Style
+neg_scroll_mt_0 =
+    Css.property "scroll-margin-top" "-0px"
+
+
+neg_scroll_mt_0_dot_5 : Css.Style
+neg_scroll_mt_0_dot_5 =
+    Css.property "scroll-margin-top" "-0.125rem"
+
+
+neg_scroll_mt_1 : Css.Style
+neg_scroll_mt_1 =
+    Css.property "scroll-margin-top" "-0.25rem"
+
+
+neg_scroll_mt_10 : Css.Style
+neg_scroll_mt_10 =
+    Css.property "scroll-margin-top" "-2.5rem"
+
+
+neg_scroll_mt_11 : Css.Style
+neg_scroll_mt_11 =
+    Css.property "scroll-margin-top" "-2.75rem"
+
+
+neg_scroll_mt_12 : Css.Style
+neg_scroll_mt_12 =
+    Css.property "scroll-margin-top" "-3rem"
+
+
+neg_scroll_mt_14 : Css.Style
+neg_scroll_mt_14 =
+    Css.property "scroll-margin-top" "-3.5rem"
+
+
+neg_scroll_mt_16 : Css.Style
+neg_scroll_mt_16 =
+    Css.property "scroll-margin-top" "-4rem"
+
+
+neg_scroll_mt_1_dot_5 : Css.Style
+neg_scroll_mt_1_dot_5 =
+    Css.property "scroll-margin-top" "-0.375rem"
+
+
+neg_scroll_mt_2 : Css.Style
+neg_scroll_mt_2 =
+    Css.property "scroll-margin-top" "-0.5rem"
+
+
+neg_scroll_mt_20 : Css.Style
+neg_scroll_mt_20 =
+    Css.property "scroll-margin-top" "-5rem"
+
+
+neg_scroll_mt_24 : Css.Style
+neg_scroll_mt_24 =
+    Css.property "scroll-margin-top" "-6rem"
+
+
+neg_scroll_mt_28 : Css.Style
+neg_scroll_mt_28 =
+    Css.property "scroll-margin-top" "-7rem"
+
+
+neg_scroll_mt_2_dot_5 : Css.Style
+neg_scroll_mt_2_dot_5 =
+    Css.property "scroll-margin-top" "-0.625rem"
+
+
+neg_scroll_mt_3 : Css.Style
+neg_scroll_mt_3 =
+    Css.property "scroll-margin-top" "-0.75rem"
+
+
+neg_scroll_mt_32 : Css.Style
+neg_scroll_mt_32 =
+    Css.property "scroll-margin-top" "-8rem"
+
+
+neg_scroll_mt_36 : Css.Style
+neg_scroll_mt_36 =
+    Css.property "scroll-margin-top" "-9rem"
+
+
+neg_scroll_mt_3_dot_5 : Css.Style
+neg_scroll_mt_3_dot_5 =
+    Css.property "scroll-margin-top" "-0.875rem"
+
+
+neg_scroll_mt_4 : Css.Style
+neg_scroll_mt_4 =
+    Css.property "scroll-margin-top" "-1rem"
+
+
+neg_scroll_mt_40 : Css.Style
+neg_scroll_mt_40 =
+    Css.property "scroll-margin-top" "-10rem"
+
+
+neg_scroll_mt_44 : Css.Style
+neg_scroll_mt_44 =
+    Css.property "scroll-margin-top" "-11rem"
+
+
+neg_scroll_mt_48 : Css.Style
+neg_scroll_mt_48 =
+    Css.property "scroll-margin-top" "-12rem"
+
+
+neg_scroll_mt_5 : Css.Style
+neg_scroll_mt_5 =
+    Css.property "scroll-margin-top" "-1.25rem"
+
+
+neg_scroll_mt_52 : Css.Style
+neg_scroll_mt_52 =
+    Css.property "scroll-margin-top" "-13rem"
+
+
+neg_scroll_mt_56 : Css.Style
+neg_scroll_mt_56 =
+    Css.property "scroll-margin-top" "-14rem"
+
+
+neg_scroll_mt_6 : Css.Style
+neg_scroll_mt_6 =
+    Css.property "scroll-margin-top" "-1.5rem"
+
+
+neg_scroll_mt_60 : Css.Style
+neg_scroll_mt_60 =
+    Css.property "scroll-margin-top" "-15rem"
+
+
+neg_scroll_mt_64 : Css.Style
+neg_scroll_mt_64 =
+    Css.property "scroll-margin-top" "-16rem"
+
+
+neg_scroll_mt_7 : Css.Style
+neg_scroll_mt_7 =
+    Css.property "scroll-margin-top" "-1.75rem"
+
+
+neg_scroll_mt_72 : Css.Style
+neg_scroll_mt_72 =
+    Css.property "scroll-margin-top" "-18rem"
+
+
+neg_scroll_mt_8 : Css.Style
+neg_scroll_mt_8 =
+    Css.property "scroll-margin-top" "-2rem"
+
+
+neg_scroll_mt_80 : Css.Style
+neg_scroll_mt_80 =
+    Css.property "scroll-margin-top" "-20rem"
+
+
+neg_scroll_mt_9 : Css.Style
+neg_scroll_mt_9 =
+    Css.property "scroll-margin-top" "-2.25rem"
+
+
+neg_scroll_mt_96 : Css.Style
+neg_scroll_mt_96 =
+    Css.property "scroll-margin-top" "-24rem"
+
+
+neg_scroll_mt_px : Css.Style
+neg_scroll_mt_px =
+    Css.property "scroll-margin-top" "-1px"
+
+
+neg_scroll_mx_0 : Css.Style
+neg_scroll_mx_0 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-0px"
+        , Css.property "scroll-margin-right" "-0px"
+        ]
+
+
+neg_scroll_mx_0_dot_5 : Css.Style
+neg_scroll_mx_0_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-0.125rem"
+        , Css.property "scroll-margin-right" "-0.125rem"
+        ]
+
+
+neg_scroll_mx_1 : Css.Style
+neg_scroll_mx_1 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-0.25rem"
+        , Css.property "scroll-margin-right" "-0.25rem"
+        ]
+
+
+neg_scroll_mx_10 : Css.Style
+neg_scroll_mx_10 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-2.5rem"
+        , Css.property "scroll-margin-right" "-2.5rem"
+        ]
+
+
+neg_scroll_mx_11 : Css.Style
+neg_scroll_mx_11 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-2.75rem"
+        , Css.property "scroll-margin-right" "-2.75rem"
+        ]
+
+
+neg_scroll_mx_12 : Css.Style
+neg_scroll_mx_12 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-3rem"
+        , Css.property "scroll-margin-right" "-3rem"
+        ]
+
+
+neg_scroll_mx_14 : Css.Style
+neg_scroll_mx_14 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-3.5rem"
+        , Css.property "scroll-margin-right" "-3.5rem"
+        ]
+
+
+neg_scroll_mx_16 : Css.Style
+neg_scroll_mx_16 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-4rem"
+        , Css.property "scroll-margin-right" "-4rem"
+        ]
+
+
+neg_scroll_mx_1_dot_5 : Css.Style
+neg_scroll_mx_1_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-0.375rem"
+        , Css.property "scroll-margin-right" "-0.375rem"
+        ]
+
+
+neg_scroll_mx_2 : Css.Style
+neg_scroll_mx_2 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-0.5rem"
+        , Css.property "scroll-margin-right" "-0.5rem"
+        ]
+
+
+neg_scroll_mx_20 : Css.Style
+neg_scroll_mx_20 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-5rem"
+        , Css.property "scroll-margin-right" "-5rem"
+        ]
+
+
+neg_scroll_mx_24 : Css.Style
+neg_scroll_mx_24 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-6rem"
+        , Css.property "scroll-margin-right" "-6rem"
+        ]
+
+
+neg_scroll_mx_28 : Css.Style
+neg_scroll_mx_28 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-7rem"
+        , Css.property "scroll-margin-right" "-7rem"
+        ]
+
+
+neg_scroll_mx_2_dot_5 : Css.Style
+neg_scroll_mx_2_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-0.625rem"
+        , Css.property "scroll-margin-right" "-0.625rem"
+        ]
+
+
+neg_scroll_mx_3 : Css.Style
+neg_scroll_mx_3 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-0.75rem"
+        , Css.property "scroll-margin-right" "-0.75rem"
+        ]
+
+
+neg_scroll_mx_32 : Css.Style
+neg_scroll_mx_32 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-8rem"
+        , Css.property "scroll-margin-right" "-8rem"
+        ]
+
+
+neg_scroll_mx_36 : Css.Style
+neg_scroll_mx_36 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-9rem"
+        , Css.property "scroll-margin-right" "-9rem"
+        ]
+
+
+neg_scroll_mx_3_dot_5 : Css.Style
+neg_scroll_mx_3_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-0.875rem"
+        , Css.property "scroll-margin-right" "-0.875rem"
+        ]
+
+
+neg_scroll_mx_4 : Css.Style
+neg_scroll_mx_4 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-1rem"
+        , Css.property "scroll-margin-right" "-1rem"
+        ]
+
+
+neg_scroll_mx_40 : Css.Style
+neg_scroll_mx_40 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-10rem"
+        , Css.property "scroll-margin-right" "-10rem"
+        ]
+
+
+neg_scroll_mx_44 : Css.Style
+neg_scroll_mx_44 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-11rem"
+        , Css.property "scroll-margin-right" "-11rem"
+        ]
+
+
+neg_scroll_mx_48 : Css.Style
+neg_scroll_mx_48 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-12rem"
+        , Css.property "scroll-margin-right" "-12rem"
+        ]
+
+
+neg_scroll_mx_5 : Css.Style
+neg_scroll_mx_5 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-1.25rem"
+        , Css.property "scroll-margin-right" "-1.25rem"
+        ]
+
+
+neg_scroll_mx_52 : Css.Style
+neg_scroll_mx_52 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-13rem"
+        , Css.property "scroll-margin-right" "-13rem"
+        ]
+
+
+neg_scroll_mx_56 : Css.Style
+neg_scroll_mx_56 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-14rem"
+        , Css.property "scroll-margin-right" "-14rem"
+        ]
+
+
+neg_scroll_mx_6 : Css.Style
+neg_scroll_mx_6 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-1.5rem"
+        , Css.property "scroll-margin-right" "-1.5rem"
+        ]
+
+
+neg_scroll_mx_60 : Css.Style
+neg_scroll_mx_60 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-15rem"
+        , Css.property "scroll-margin-right" "-15rem"
+        ]
+
+
+neg_scroll_mx_64 : Css.Style
+neg_scroll_mx_64 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-16rem"
+        , Css.property "scroll-margin-right" "-16rem"
+        ]
+
+
+neg_scroll_mx_7 : Css.Style
+neg_scroll_mx_7 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-1.75rem"
+        , Css.property "scroll-margin-right" "-1.75rem"
+        ]
+
+
+neg_scroll_mx_72 : Css.Style
+neg_scroll_mx_72 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-18rem"
+        , Css.property "scroll-margin-right" "-18rem"
+        ]
+
+
+neg_scroll_mx_8 : Css.Style
+neg_scroll_mx_8 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-2rem"
+        , Css.property "scroll-margin-right" "-2rem"
+        ]
+
+
+neg_scroll_mx_80 : Css.Style
+neg_scroll_mx_80 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-20rem"
+        , Css.property "scroll-margin-right" "-20rem"
+        ]
+
+
+neg_scroll_mx_9 : Css.Style
+neg_scroll_mx_9 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-2.25rem"
+        , Css.property "scroll-margin-right" "-2.25rem"
+        ]
+
+
+neg_scroll_mx_96 : Css.Style
+neg_scroll_mx_96 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-24rem"
+        , Css.property "scroll-margin-right" "-24rem"
+        ]
+
+
+neg_scroll_mx_px : Css.Style
+neg_scroll_mx_px =
+    Css.batch
+        [ Css.property "scroll-margin-left" "-1px"
+        , Css.property "scroll-margin-right" "-1px"
+        ]
+
+
+neg_scroll_my_0 : Css.Style
+neg_scroll_my_0 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-0px"
+        , Css.property "scroll-margin-bottom" "-0px"
+        ]
+
+
+neg_scroll_my_0_dot_5 : Css.Style
+neg_scroll_my_0_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-0.125rem"
+        , Css.property "scroll-margin-bottom" "-0.125rem"
+        ]
+
+
+neg_scroll_my_1 : Css.Style
+neg_scroll_my_1 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-0.25rem"
+        , Css.property "scroll-margin-bottom" "-0.25rem"
+        ]
+
+
+neg_scroll_my_10 : Css.Style
+neg_scroll_my_10 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-2.5rem"
+        , Css.property "scroll-margin-bottom" "-2.5rem"
+        ]
+
+
+neg_scroll_my_11 : Css.Style
+neg_scroll_my_11 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-2.75rem"
+        , Css.property "scroll-margin-bottom" "-2.75rem"
+        ]
+
+
+neg_scroll_my_12 : Css.Style
+neg_scroll_my_12 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-3rem"
+        , Css.property "scroll-margin-bottom" "-3rem"
+        ]
+
+
+neg_scroll_my_14 : Css.Style
+neg_scroll_my_14 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-3.5rem"
+        , Css.property "scroll-margin-bottom" "-3.5rem"
+        ]
+
+
+neg_scroll_my_16 : Css.Style
+neg_scroll_my_16 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-4rem"
+        , Css.property "scroll-margin-bottom" "-4rem"
+        ]
+
+
+neg_scroll_my_1_dot_5 : Css.Style
+neg_scroll_my_1_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-0.375rem"
+        , Css.property "scroll-margin-bottom" "-0.375rem"
+        ]
+
+
+neg_scroll_my_2 : Css.Style
+neg_scroll_my_2 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-0.5rem"
+        , Css.property "scroll-margin-bottom" "-0.5rem"
+        ]
+
+
+neg_scroll_my_20 : Css.Style
+neg_scroll_my_20 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-5rem"
+        , Css.property "scroll-margin-bottom" "-5rem"
+        ]
+
+
+neg_scroll_my_24 : Css.Style
+neg_scroll_my_24 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-6rem"
+        , Css.property "scroll-margin-bottom" "-6rem"
+        ]
+
+
+neg_scroll_my_28 : Css.Style
+neg_scroll_my_28 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-7rem"
+        , Css.property "scroll-margin-bottom" "-7rem"
+        ]
+
+
+neg_scroll_my_2_dot_5 : Css.Style
+neg_scroll_my_2_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-0.625rem"
+        , Css.property "scroll-margin-bottom" "-0.625rem"
+        ]
+
+
+neg_scroll_my_3 : Css.Style
+neg_scroll_my_3 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-0.75rem"
+        , Css.property "scroll-margin-bottom" "-0.75rem"
+        ]
+
+
+neg_scroll_my_32 : Css.Style
+neg_scroll_my_32 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-8rem"
+        , Css.property "scroll-margin-bottom" "-8rem"
+        ]
+
+
+neg_scroll_my_36 : Css.Style
+neg_scroll_my_36 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-9rem"
+        , Css.property "scroll-margin-bottom" "-9rem"
+        ]
+
+
+neg_scroll_my_3_dot_5 : Css.Style
+neg_scroll_my_3_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-0.875rem"
+        , Css.property "scroll-margin-bottom" "-0.875rem"
+        ]
+
+
+neg_scroll_my_4 : Css.Style
+neg_scroll_my_4 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-1rem"
+        , Css.property "scroll-margin-bottom" "-1rem"
+        ]
+
+
+neg_scroll_my_40 : Css.Style
+neg_scroll_my_40 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-10rem"
+        , Css.property "scroll-margin-bottom" "-10rem"
+        ]
+
+
+neg_scroll_my_44 : Css.Style
+neg_scroll_my_44 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-11rem"
+        , Css.property "scroll-margin-bottom" "-11rem"
+        ]
+
+
+neg_scroll_my_48 : Css.Style
+neg_scroll_my_48 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-12rem"
+        , Css.property "scroll-margin-bottom" "-12rem"
+        ]
+
+
+neg_scroll_my_5 : Css.Style
+neg_scroll_my_5 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-1.25rem"
+        , Css.property "scroll-margin-bottom" "-1.25rem"
+        ]
+
+
+neg_scroll_my_52 : Css.Style
+neg_scroll_my_52 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-13rem"
+        , Css.property "scroll-margin-bottom" "-13rem"
+        ]
+
+
+neg_scroll_my_56 : Css.Style
+neg_scroll_my_56 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-14rem"
+        , Css.property "scroll-margin-bottom" "-14rem"
+        ]
+
+
+neg_scroll_my_6 : Css.Style
+neg_scroll_my_6 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-1.5rem"
+        , Css.property "scroll-margin-bottom" "-1.5rem"
+        ]
+
+
+neg_scroll_my_60 : Css.Style
+neg_scroll_my_60 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-15rem"
+        , Css.property "scroll-margin-bottom" "-15rem"
+        ]
+
+
+neg_scroll_my_64 : Css.Style
+neg_scroll_my_64 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-16rem"
+        , Css.property "scroll-margin-bottom" "-16rem"
+        ]
+
+
+neg_scroll_my_7 : Css.Style
+neg_scroll_my_7 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-1.75rem"
+        , Css.property "scroll-margin-bottom" "-1.75rem"
+        ]
+
+
+neg_scroll_my_72 : Css.Style
+neg_scroll_my_72 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-18rem"
+        , Css.property "scroll-margin-bottom" "-18rem"
+        ]
+
+
+neg_scroll_my_8 : Css.Style
+neg_scroll_my_8 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-2rem"
+        , Css.property "scroll-margin-bottom" "-2rem"
+        ]
+
+
+neg_scroll_my_80 : Css.Style
+neg_scroll_my_80 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-20rem"
+        , Css.property "scroll-margin-bottom" "-20rem"
+        ]
+
+
+neg_scroll_my_9 : Css.Style
+neg_scroll_my_9 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-2.25rem"
+        , Css.property "scroll-margin-bottom" "-2.25rem"
+        ]
+
+
+neg_scroll_my_96 : Css.Style
+neg_scroll_my_96 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-24rem"
+        , Css.property "scroll-margin-bottom" "-24rem"
+        ]
+
+
+neg_scroll_my_px : Css.Style
+neg_scroll_my_px =
+    Css.batch
+        [ Css.property "scroll-margin-top" "-1px"
+        , Css.property "scroll-margin-bottom" "-1px"
+        ]
+
+
+neg_skew_x_0 : Css.Style
+neg_skew_x_0 =
+    Css.batch
+        [ Css.property "--tw-skew-x" "-0deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_skew_x_1 : Css.Style
 neg_skew_x_1 =
-    Css.property "--tw-skew-x" "-1deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "-1deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_skew_x_12 : Css.Style
 neg_skew_x_12 =
-    Css.property "--tw-skew-x" "-12deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "-12deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_skew_x_2 : Css.Style
 neg_skew_x_2 =
-    Css.property "--tw-skew-x" "-2deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "-2deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_skew_x_3 : Css.Style
 neg_skew_x_3 =
-    Css.property "--tw-skew-x" "-3deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "-3deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_skew_x_6 : Css.Style
 neg_skew_x_6 =
-    Css.property "--tw-skew-x" "-6deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "-6deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_skew_y_0 : Css.Style
+neg_skew_y_0 =
+    Css.batch
+        [ Css.property "--tw-skew-y" "-0deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_skew_y_1 : Css.Style
 neg_skew_y_1 =
-    Css.property "--tw-skew-y" "-1deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "-1deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_skew_y_12 : Css.Style
 neg_skew_y_12 =
-    Css.property "--tw-skew-y" "-12deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "-12deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_skew_y_2 : Css.Style
 neg_skew_y_2 =
-    Css.property "--tw-skew-y" "-2deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "-2deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_skew_y_3 : Css.Style
 neg_skew_y_3 =
-    Css.property "--tw-skew-y" "-3deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "-3deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_skew_y_6 : Css.Style
 neg_skew_y_6 =
-    Css.property "--tw-skew-y" "-6deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "-6deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_space_x_0 : Css.Style
 neg_space_x_0 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(0px * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(0px * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-0px * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-0px * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_0_dot_5 : Css.Style
 neg_space_x_0_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-0.125rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-0.125rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-0.125rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-0.125rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_1 : Css.Style
 neg_space_x_1 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-0.25rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-0.25rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-0.25rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-0.25rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_10 : Css.Style
 neg_space_x_10 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-2.5rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-2.5rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-2.5rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-2.5rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_11 : Css.Style
 neg_space_x_11 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-2.75rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-2.75rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-2.75rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-2.75rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_12 : Css.Style
 neg_space_x_12 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-3rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-3rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-3rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-3rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_14 : Css.Style
 neg_space_x_14 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-3.5rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-3.5rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-3.5rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-3.5rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_16 : Css.Style
 neg_space_x_16 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-4rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-4rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-4rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-4rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_1_dot_5 : Css.Style
 neg_space_x_1_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-0.375rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-0.375rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-0.375rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-0.375rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_2 : Css.Style
 neg_space_x_2 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-0.5rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-0.5rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-0.5rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-0.5rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_20 : Css.Style
 neg_space_x_20 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-5rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-5rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-5rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-5rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_24 : Css.Style
 neg_space_x_24 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-6rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-6rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-6rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-6rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_28 : Css.Style
 neg_space_x_28 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-7rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-7rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-7rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-7rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_2_dot_5 : Css.Style
 neg_space_x_2_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-0.625rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-0.625rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-0.625rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-0.625rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_3 : Css.Style
 neg_space_x_3 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-0.75rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-0.75rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-0.75rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-0.75rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_32 : Css.Style
 neg_space_x_32 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-8rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-8rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-8rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-8rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_36 : Css.Style
 neg_space_x_36 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-9rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-9rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-9rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-9rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_3_dot_5 : Css.Style
 neg_space_x_3_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-0.875rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-0.875rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-0.875rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-0.875rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_4 : Css.Style
 neg_space_x_4 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-1rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-1rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-1rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-1rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_40 : Css.Style
 neg_space_x_40 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-10rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-10rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-10rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-10rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_44 : Css.Style
 neg_space_x_44 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-11rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-11rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-11rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-11rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_48 : Css.Style
 neg_space_x_48 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-12rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-12rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-12rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-12rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_5 : Css.Style
 neg_space_x_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-1.25rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-1.25rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-1.25rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-1.25rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_52 : Css.Style
 neg_space_x_52 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-13rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-13rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-13rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-13rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_56 : Css.Style
 neg_space_x_56 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-14rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-14rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-14rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-14rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_6 : Css.Style
 neg_space_x_6 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-1.5rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-1.5rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-1.5rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-1.5rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_60 : Css.Style
 neg_space_x_60 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-15rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-15rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-15rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-15rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_64 : Css.Style
 neg_space_x_64 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-16rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-16rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-16rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-16rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_7 : Css.Style
 neg_space_x_7 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-1.75rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-1.75rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-1.75rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-1.75rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_72 : Css.Style
 neg_space_x_72 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-18rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-18rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-18rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-18rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_8 : Css.Style
 neg_space_x_8 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-2rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-2rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-2rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-2rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_80 : Css.Style
 neg_space_x_80 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-20rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-20rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-20rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-20rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_9 : Css.Style
 neg_space_x_9 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-2.25rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-2.25rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-2.25rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-2.25rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_96 : Css.Style
 neg_space_x_96 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-24rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-24rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-24rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-24rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_x_px : Css.Style
 neg_space_x_px =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(-1px * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(-1px * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(-1px * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(-1px * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 neg_space_y_0 : Css.Style
 neg_space_y_0 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(0px * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(0px * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-0px * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-0px * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_0_dot_5 : Css.Style
 neg_space_y_0_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-0.125rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-0.125rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-0.125rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-0.125rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_1 : Css.Style
 neg_space_y_1 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-0.25rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-0.25rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-0.25rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-0.25rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_10 : Css.Style
 neg_space_y_10 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-2.5rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-2.5rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-2.5rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-2.5rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_11 : Css.Style
 neg_space_y_11 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-2.75rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-2.75rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-2.75rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-2.75rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_12 : Css.Style
 neg_space_y_12 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-3rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-3rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-3rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-3rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_14 : Css.Style
 neg_space_y_14 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-3.5rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-3.5rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-3.5rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-3.5rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_16 : Css.Style
 neg_space_y_16 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-4rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-4rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-4rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-4rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_1_dot_5 : Css.Style
 neg_space_y_1_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-0.375rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-0.375rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-0.375rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-0.375rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_2 : Css.Style
 neg_space_y_2 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-0.5rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-0.5rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-0.5rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-0.5rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_20 : Css.Style
 neg_space_y_20 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-5rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-5rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-5rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-5rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_24 : Css.Style
 neg_space_y_24 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-6rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-6rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-6rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-6rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_28 : Css.Style
 neg_space_y_28 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-7rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-7rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-7rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-7rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_2_dot_5 : Css.Style
 neg_space_y_2_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-0.625rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-0.625rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-0.625rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-0.625rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_3 : Css.Style
 neg_space_y_3 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-0.75rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-0.75rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-0.75rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-0.75rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_32 : Css.Style
 neg_space_y_32 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-8rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-8rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-8rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-8rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_36 : Css.Style
 neg_space_y_36 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-9rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-9rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-9rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-9rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_3_dot_5 : Css.Style
 neg_space_y_3_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-0.875rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-0.875rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-0.875rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-0.875rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_4 : Css.Style
 neg_space_y_4 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-1rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-1rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-1rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-1rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_40 : Css.Style
 neg_space_y_40 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-10rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-10rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-10rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-10rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_44 : Css.Style
 neg_space_y_44 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-11rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-11rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-11rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-11rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_48 : Css.Style
 neg_space_y_48 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-12rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-12rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-12rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-12rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_5 : Css.Style
 neg_space_y_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-1.25rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-1.25rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-1.25rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-1.25rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_52 : Css.Style
 neg_space_y_52 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-13rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-13rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-13rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-13rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_56 : Css.Style
 neg_space_y_56 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-14rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-14rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-14rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-14rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_6 : Css.Style
 neg_space_y_6 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-1.5rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-1.5rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-1.5rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-1.5rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_60 : Css.Style
 neg_space_y_60 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-15rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-15rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-15rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-15rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_64 : Css.Style
 neg_space_y_64 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-16rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-16rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-16rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-16rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_7 : Css.Style
 neg_space_y_7 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-1.75rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-1.75rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-1.75rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-1.75rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_72 : Css.Style
 neg_space_y_72 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-18rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-18rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-18rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-18rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_8 : Css.Style
 neg_space_y_8 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-2rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-2rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-2rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-2rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_80 : Css.Style
 neg_space_y_80 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-20rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-20rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-20rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-20rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_9 : Css.Style
 neg_space_y_9 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-2.25rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-2.25rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-2.25rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-2.25rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_96 : Css.Style
 neg_space_y_96 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-24rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-24rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-24rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-24rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 neg_space_y_px : Css.Style
 neg_space_y_px =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(-1px * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(-1px * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(-1px * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(-1px * var(--tw-space-y-reverse))"
             ]
         ]
 
 
+neg_start_0 : Css.Style
+neg_start_0 =
+    Css.property "inset-inline-start" "-0px"
+
+
+neg_start_0_dot_5 : Css.Style
+neg_start_0_dot_5 =
+    Css.property "inset-inline-start" "-0.125rem"
+
+
+neg_start_1 : Css.Style
+neg_start_1 =
+    Css.property "inset-inline-start" "-0.25rem"
+
+
+neg_start_10 : Css.Style
+neg_start_10 =
+    Css.property "inset-inline-start" "-2.5rem"
+
+
+neg_start_11 : Css.Style
+neg_start_11 =
+    Css.property "inset-inline-start" "-2.75rem"
+
+
+neg_start_12 : Css.Style
+neg_start_12 =
+    Css.property "inset-inline-start" "-3rem"
+
+
+neg_start_14 : Css.Style
+neg_start_14 =
+    Css.property "inset-inline-start" "-3.5rem"
+
+
+neg_start_16 : Css.Style
+neg_start_16 =
+    Css.property "inset-inline-start" "-4rem"
+
+
+neg_start_1_dot_5 : Css.Style
+neg_start_1_dot_5 =
+    Css.property "inset-inline-start" "-0.375rem"
+
+
+neg_start_1over2 : Css.Style
+neg_start_1over2 =
+    Css.property "inset-inline-start" "-50%"
+
+
+neg_start_1over3 : Css.Style
+neg_start_1over3 =
+    Css.property "inset-inline-start" "-33.333333%"
+
+
+neg_start_1over4 : Css.Style
+neg_start_1over4 =
+    Css.property "inset-inline-start" "-25%"
+
+
+neg_start_2 : Css.Style
+neg_start_2 =
+    Css.property "inset-inline-start" "-0.5rem"
+
+
+neg_start_20 : Css.Style
+neg_start_20 =
+    Css.property "inset-inline-start" "-5rem"
+
+
+neg_start_24 : Css.Style
+neg_start_24 =
+    Css.property "inset-inline-start" "-6rem"
+
+
+neg_start_28 : Css.Style
+neg_start_28 =
+    Css.property "inset-inline-start" "-7rem"
+
+
+neg_start_2_dot_5 : Css.Style
+neg_start_2_dot_5 =
+    Css.property "inset-inline-start" "-0.625rem"
+
+
+neg_start_2over3 : Css.Style
+neg_start_2over3 =
+    Css.property "inset-inline-start" "-66.666667%"
+
+
+neg_start_2over4 : Css.Style
+neg_start_2over4 =
+    Css.property "inset-inline-start" "-50%"
+
+
+neg_start_3 : Css.Style
+neg_start_3 =
+    Css.property "inset-inline-start" "-0.75rem"
+
+
+neg_start_32 : Css.Style
+neg_start_32 =
+    Css.property "inset-inline-start" "-8rem"
+
+
+neg_start_36 : Css.Style
+neg_start_36 =
+    Css.property "inset-inline-start" "-9rem"
+
+
+neg_start_3_dot_5 : Css.Style
+neg_start_3_dot_5 =
+    Css.property "inset-inline-start" "-0.875rem"
+
+
+neg_start_3over4 : Css.Style
+neg_start_3over4 =
+    Css.property "inset-inline-start" "-75%"
+
+
+neg_start_4 : Css.Style
+neg_start_4 =
+    Css.property "inset-inline-start" "-1rem"
+
+
+neg_start_40 : Css.Style
+neg_start_40 =
+    Css.property "inset-inline-start" "-10rem"
+
+
+neg_start_44 : Css.Style
+neg_start_44 =
+    Css.property "inset-inline-start" "-11rem"
+
+
+neg_start_48 : Css.Style
+neg_start_48 =
+    Css.property "inset-inline-start" "-12rem"
+
+
+neg_start_5 : Css.Style
+neg_start_5 =
+    Css.property "inset-inline-start" "-1.25rem"
+
+
+neg_start_52 : Css.Style
+neg_start_52 =
+    Css.property "inset-inline-start" "-13rem"
+
+
+neg_start_56 : Css.Style
+neg_start_56 =
+    Css.property "inset-inline-start" "-14rem"
+
+
+neg_start_6 : Css.Style
+neg_start_6 =
+    Css.property "inset-inline-start" "-1.5rem"
+
+
+neg_start_60 : Css.Style
+neg_start_60 =
+    Css.property "inset-inline-start" "-15rem"
+
+
+neg_start_64 : Css.Style
+neg_start_64 =
+    Css.property "inset-inline-start" "-16rem"
+
+
+neg_start_7 : Css.Style
+neg_start_7 =
+    Css.property "inset-inline-start" "-1.75rem"
+
+
+neg_start_72 : Css.Style
+neg_start_72 =
+    Css.property "inset-inline-start" "-18rem"
+
+
+neg_start_8 : Css.Style
+neg_start_8 =
+    Css.property "inset-inline-start" "-2rem"
+
+
+neg_start_80 : Css.Style
+neg_start_80 =
+    Css.property "inset-inline-start" "-20rem"
+
+
+neg_start_9 : Css.Style
+neg_start_9 =
+    Css.property "inset-inline-start" "-2.25rem"
+
+
+neg_start_96 : Css.Style
+neg_start_96 =
+    Css.property "inset-inline-start" "-24rem"
+
+
+neg_start_full : Css.Style
+neg_start_full =
+    Css.property "inset-inline-start" "-100%"
+
+
+neg_start_px : Css.Style
+neg_start_px =
+    Css.property "inset-inline-start" "-1px"
+
+
 neg_top_0 : Css.Style
 neg_top_0 =
-    Css.property "top" "0px"
+    Css.property "top" "-0px"
 
 
 neg_top_0_dot_5 : Css.Style
@@ -12628,429 +18573,741 @@ neg_top_px =
     Css.property "top" "-1px"
 
 
+neg_tracking_normal : Css.Style
+neg_tracking_normal =
+    Css.property "letter-spacing" "-0em"
+
+
+neg_tracking_tight : Css.Style
+neg_tracking_tight =
+    Css.property "letter-spacing" "0.025em"
+
+
+neg_tracking_tighter : Css.Style
+neg_tracking_tighter =
+    Css.property "letter-spacing" "0.05em"
+
+
+neg_tracking_wide : Css.Style
+neg_tracking_wide =
+    Css.property "letter-spacing" "-0.025em"
+
+
+neg_tracking_wider : Css.Style
+neg_tracking_wider =
+    Css.property "letter-spacing" "-0.05em"
+
+
+neg_tracking_widest : Css.Style
+neg_tracking_widest =
+    Css.property "letter-spacing" "-0.1em"
+
+
 neg_translate_x_0 : Css.Style
 neg_translate_x_0 =
-    Css.property "--tw-translate-x" "0px"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-0px"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_0_dot_5 : Css.Style
 neg_translate_x_0_dot_5 =
-    Css.property "--tw-translate-x" "-0.125rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-0.125rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_1 : Css.Style
 neg_translate_x_1 =
-    Css.property "--tw-translate-x" "-0.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-0.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_10 : Css.Style
 neg_translate_x_10 =
-    Css.property "--tw-translate-x" "-2.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-2.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_11 : Css.Style
 neg_translate_x_11 =
-    Css.property "--tw-translate-x" "-2.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-2.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_12 : Css.Style
 neg_translate_x_12 =
-    Css.property "--tw-translate-x" "-3rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-3rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_14 : Css.Style
 neg_translate_x_14 =
-    Css.property "--tw-translate-x" "-3.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-3.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_16 : Css.Style
 neg_translate_x_16 =
-    Css.property "--tw-translate-x" "-4rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-4rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_1_dot_5 : Css.Style
 neg_translate_x_1_dot_5 =
-    Css.property "--tw-translate-x" "-0.375rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-0.375rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_1over2 : Css.Style
 neg_translate_x_1over2 =
-    Css.property "--tw-translate-x" "-50%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-50%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_1over3 : Css.Style
 neg_translate_x_1over3 =
-    Css.property "--tw-translate-x" "-33.333333%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-33.333333%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_1over4 : Css.Style
 neg_translate_x_1over4 =
-    Css.property "--tw-translate-x" "-25%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-25%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_2 : Css.Style
 neg_translate_x_2 =
-    Css.property "--tw-translate-x" "-0.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-0.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_20 : Css.Style
 neg_translate_x_20 =
-    Css.property "--tw-translate-x" "-5rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_24 : Css.Style
 neg_translate_x_24 =
-    Css.property "--tw-translate-x" "-6rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-6rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_28 : Css.Style
 neg_translate_x_28 =
-    Css.property "--tw-translate-x" "-7rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-7rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_2_dot_5 : Css.Style
 neg_translate_x_2_dot_5 =
-    Css.property "--tw-translate-x" "-0.625rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-0.625rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_2over3 : Css.Style
 neg_translate_x_2over3 =
-    Css.property "--tw-translate-x" "-66.666667%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-66.666667%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_2over4 : Css.Style
 neg_translate_x_2over4 =
-    Css.property "--tw-translate-x" "-50%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-50%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_3 : Css.Style
 neg_translate_x_3 =
-    Css.property "--tw-translate-x" "-0.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-0.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_32 : Css.Style
 neg_translate_x_32 =
-    Css.property "--tw-translate-x" "-8rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-8rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_36 : Css.Style
 neg_translate_x_36 =
-    Css.property "--tw-translate-x" "-9rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-9rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_3_dot_5 : Css.Style
 neg_translate_x_3_dot_5 =
-    Css.property "--tw-translate-x" "-0.875rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-0.875rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_3over4 : Css.Style
 neg_translate_x_3over4 =
-    Css.property "--tw-translate-x" "-75%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-75%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_4 : Css.Style
 neg_translate_x_4 =
-    Css.property "--tw-translate-x" "-1rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-1rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_40 : Css.Style
 neg_translate_x_40 =
-    Css.property "--tw-translate-x" "-10rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-10rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_44 : Css.Style
 neg_translate_x_44 =
-    Css.property "--tw-translate-x" "-11rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-11rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_48 : Css.Style
 neg_translate_x_48 =
-    Css.property "--tw-translate-x" "-12rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-12rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_5 : Css.Style
 neg_translate_x_5 =
-    Css.property "--tw-translate-x" "-1.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-1.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_52 : Css.Style
 neg_translate_x_52 =
-    Css.property "--tw-translate-x" "-13rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-13rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_56 : Css.Style
 neg_translate_x_56 =
-    Css.property "--tw-translate-x" "-14rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-14rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_6 : Css.Style
 neg_translate_x_6 =
-    Css.property "--tw-translate-x" "-1.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-1.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_60 : Css.Style
 neg_translate_x_60 =
-    Css.property "--tw-translate-x" "-15rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-15rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_64 : Css.Style
 neg_translate_x_64 =
-    Css.property "--tw-translate-x" "-16rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-16rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_7 : Css.Style
 neg_translate_x_7 =
-    Css.property "--tw-translate-x" "-1.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-1.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_72 : Css.Style
 neg_translate_x_72 =
-    Css.property "--tw-translate-x" "-18rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-18rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_8 : Css.Style
 neg_translate_x_8 =
-    Css.property "--tw-translate-x" "-2rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-2rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_80 : Css.Style
 neg_translate_x_80 =
-    Css.property "--tw-translate-x" "-20rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-20rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_9 : Css.Style
 neg_translate_x_9 =
-    Css.property "--tw-translate-x" "-2.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-2.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_96 : Css.Style
 neg_translate_x_96 =
-    Css.property "--tw-translate-x" "-24rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-24rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_full : Css.Style
 neg_translate_x_full =
-    Css.property "--tw-translate-x" "-100%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-100%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_x_px : Css.Style
 neg_translate_x_px =
-    Css.property "--tw-translate-x" "-1px"
+    Css.batch
+        [ Css.property "--tw-translate-x" "-1px"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_0 : Css.Style
 neg_translate_y_0 =
-    Css.property "--tw-translate-y" "0px"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-0px"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_0_dot_5 : Css.Style
 neg_translate_y_0_dot_5 =
-    Css.property "--tw-translate-y" "-0.125rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-0.125rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_1 : Css.Style
 neg_translate_y_1 =
-    Css.property "--tw-translate-y" "-0.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-0.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_10 : Css.Style
 neg_translate_y_10 =
-    Css.property "--tw-translate-y" "-2.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-2.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_11 : Css.Style
 neg_translate_y_11 =
-    Css.property "--tw-translate-y" "-2.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-2.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_12 : Css.Style
 neg_translate_y_12 =
-    Css.property "--tw-translate-y" "-3rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-3rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_14 : Css.Style
 neg_translate_y_14 =
-    Css.property "--tw-translate-y" "-3.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-3.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_16 : Css.Style
 neg_translate_y_16 =
-    Css.property "--tw-translate-y" "-4rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-4rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_1_dot_5 : Css.Style
 neg_translate_y_1_dot_5 =
-    Css.property "--tw-translate-y" "-0.375rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-0.375rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_1over2 : Css.Style
 neg_translate_y_1over2 =
-    Css.property "--tw-translate-y" "-50%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-50%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_1over3 : Css.Style
 neg_translate_y_1over3 =
-    Css.property "--tw-translate-y" "-33.333333%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-33.333333%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_1over4 : Css.Style
 neg_translate_y_1over4 =
-    Css.property "--tw-translate-y" "-25%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-25%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_2 : Css.Style
 neg_translate_y_2 =
-    Css.property "--tw-translate-y" "-0.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-0.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_20 : Css.Style
 neg_translate_y_20 =
-    Css.property "--tw-translate-y" "-5rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_24 : Css.Style
 neg_translate_y_24 =
-    Css.property "--tw-translate-y" "-6rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-6rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_28 : Css.Style
 neg_translate_y_28 =
-    Css.property "--tw-translate-y" "-7rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-7rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_2_dot_5 : Css.Style
 neg_translate_y_2_dot_5 =
-    Css.property "--tw-translate-y" "-0.625rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-0.625rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_2over3 : Css.Style
 neg_translate_y_2over3 =
-    Css.property "--tw-translate-y" "-66.666667%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-66.666667%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_2over4 : Css.Style
 neg_translate_y_2over4 =
-    Css.property "--tw-translate-y" "-50%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-50%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_3 : Css.Style
 neg_translate_y_3 =
-    Css.property "--tw-translate-y" "-0.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-0.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_32 : Css.Style
 neg_translate_y_32 =
-    Css.property "--tw-translate-y" "-8rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-8rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_36 : Css.Style
 neg_translate_y_36 =
-    Css.property "--tw-translate-y" "-9rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-9rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_3_dot_5 : Css.Style
 neg_translate_y_3_dot_5 =
-    Css.property "--tw-translate-y" "-0.875rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-0.875rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_3over4 : Css.Style
 neg_translate_y_3over4 =
-    Css.property "--tw-translate-y" "-75%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-75%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_4 : Css.Style
 neg_translate_y_4 =
-    Css.property "--tw-translate-y" "-1rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-1rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_40 : Css.Style
 neg_translate_y_40 =
-    Css.property "--tw-translate-y" "-10rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-10rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_44 : Css.Style
 neg_translate_y_44 =
-    Css.property "--tw-translate-y" "-11rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-11rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_48 : Css.Style
 neg_translate_y_48 =
-    Css.property "--tw-translate-y" "-12rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-12rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_5 : Css.Style
 neg_translate_y_5 =
-    Css.property "--tw-translate-y" "-1.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-1.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_52 : Css.Style
 neg_translate_y_52 =
-    Css.property "--tw-translate-y" "-13rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-13rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_56 : Css.Style
 neg_translate_y_56 =
-    Css.property "--tw-translate-y" "-14rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-14rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_6 : Css.Style
 neg_translate_y_6 =
-    Css.property "--tw-translate-y" "-1.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-1.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_60 : Css.Style
 neg_translate_y_60 =
-    Css.property "--tw-translate-y" "-15rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-15rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_64 : Css.Style
 neg_translate_y_64 =
-    Css.property "--tw-translate-y" "-16rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-16rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_7 : Css.Style
 neg_translate_y_7 =
-    Css.property "--tw-translate-y" "-1.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-1.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_72 : Css.Style
 neg_translate_y_72 =
-    Css.property "--tw-translate-y" "-18rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-18rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_8 : Css.Style
 neg_translate_y_8 =
-    Css.property "--tw-translate-y" "-2rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-2rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_80 : Css.Style
 neg_translate_y_80 =
-    Css.property "--tw-translate-y" "-20rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-20rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_9 : Css.Style
 neg_translate_y_9 =
-    Css.property "--tw-translate-y" "-2.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-2.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_96 : Css.Style
 neg_translate_y_96 =
-    Css.property "--tw-translate-y" "-24rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-24rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_full : Css.Style
 neg_translate_y_full =
-    Css.property "--tw-translate-y" "-100%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-100%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 neg_translate_y_px : Css.Style
 neg_translate_y_px =
-    Css.property "--tw-translate-y" "-1px"
+    Css.batch
+        [ Css.property "--tw-translate-y" "-1px"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+neg_z_0 : Css.Style
+neg_z_0 =
+    Css.property "z-index" "0"
+
+
+neg_z_10 : Css.Style
+neg_z_10 =
+    Css.property "z-index" "-10"
+
+
+neg_z_20 : Css.Style
+neg_z_20 =
+    Css.property "z-index" "-20"
+
+
+neg_z_30 : Css.Style
+neg_z_30 =
+    Css.property "z-index" "-30"
+
+
+neg_z_40 : Css.Style
+neg_z_40 =
+    Css.property "z-index" "-40"
+
+
+neg_z_50 : Css.Style
+neg_z_50 =
+    Css.property "z-index" "-50"
 
 
 no_underline : Css.Style
 no_underline =
-    Css.property "text-decoration" "none"
+    Css.property "text-decoration-line" "none"
 
 
 normal_case : Css.Style
@@ -13197,13 +19454,8 @@ object_top =
 oldstyle_nums : Css.Style
 oldstyle_nums =
     Css.batch
-        [ Css.property "--tw-ordinal" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-slashed-zero" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-figure" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-spacing" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-fraction" "var(--tw-empty,/*!*/ /*!*/)"
+        [ Css.property "--tw-numeric-figure" "oldstyle-nums"
         , Css.property "font-variant-numeric" "var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)"
-        , Css.property "--tw-numeric-figure" "oldstyle-nums"
         ]
 
 
@@ -13360,13 +19612,8 @@ order_none =
 ordinal : Css.Style
 ordinal =
     Css.batch
-        [ Css.property "--tw-ordinal" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-slashed-zero" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-figure" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-spacing" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-fraction" "var(--tw-empty,/*!*/ /*!*/)"
+        [ Css.property "--tw-ordinal" "ordinal"
         , Css.property "font-variant-numeric" "var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)"
-        , Css.property "--tw-ordinal" "ordinal"
         ]
 
 
@@ -13415,12 +19662,49 @@ origin_top_right =
     Css.property "transform-origin" "top right"
 
 
-outline_black : Css.Style
-outline_black =
-    Css.batch
-        [ Css.property "outline" "2px dotted black"
-        , Css.property "outline-offset" "2px"
-        ]
+outline : Css.Style
+outline =
+    Css.property "outline-style" "solid"
+
+
+outline_0 : Css.Style
+outline_0 =
+    Css.property "outline-width" "0px"
+
+
+outline_1 : Css.Style
+outline_1 =
+    Css.property "outline-width" "1px"
+
+
+outline_2 : Css.Style
+outline_2 =
+    Css.property "outline-width" "2px"
+
+
+outline_4 : Css.Style
+outline_4 =
+    Css.property "outline-width" "4px"
+
+
+outline_8 : Css.Style
+outline_8 =
+    Css.property "outline-width" "8px"
+
+
+outline_dashed : Css.Style
+outline_dashed =
+    Css.property "outline-style" "dashed"
+
+
+outline_dotted : Css.Style
+outline_dotted =
+    Css.property "outline-style" "dotted"
+
+
+outline_double : Css.Style
+outline_double =
+    Css.property "outline-style" "double"
 
 
 outline_none : Css.Style
@@ -13431,12 +19715,29 @@ outline_none =
         ]
 
 
-outline_white : Css.Style
-outline_white =
-    Css.batch
-        [ Css.property "outline" "2px dotted white"
-        , Css.property "outline-offset" "2px"
-        ]
+outline_offset_0 : Css.Style
+outline_offset_0 =
+    Css.property "outline-offset" "0px"
+
+
+outline_offset_1 : Css.Style
+outline_offset_1 =
+    Css.property "outline-offset" "1px"
+
+
+outline_offset_2 : Css.Style
+outline_offset_2 =
+    Css.property "outline-offset" "2px"
+
+
+outline_offset_4 : Css.Style
+outline_offset_4 =
+    Css.property "outline-offset" "4px"
+
+
+outline_offset_8 : Css.Style
+outline_offset_8 =
+    Css.property "outline-offset" "8px"
 
 
 overflow_auto : Css.Style
@@ -13446,7 +19747,7 @@ overflow_auto =
 
 overflow_clip : Css.Style
 overflow_clip =
-    Css.property "text-overflow" "clip"
+    Css.property "overflow" "clip"
 
 
 overflow_ellipsis : Css.Style
@@ -13474,6 +19775,11 @@ overflow_x_auto =
     Css.property "overflow-x" "auto"
 
 
+overflow_x_clip : Css.Style
+overflow_x_clip =
+    Css.property "overflow-x" "clip"
+
+
 overflow_x_hidden : Css.Style
 overflow_x_hidden =
     Css.property "overflow-x" "hidden"
@@ -13494,6 +19800,11 @@ overflow_y_auto =
     Css.property "overflow-y" "auto"
 
 
+overflow_y_clip : Css.Style
+overflow_y_clip =
+    Css.property "overflow-y" "clip"
+
+
 overflow_y_hidden : Css.Style
 overflow_y_hidden =
     Css.property "overflow-y" "hidden"
@@ -13507,6 +19818,11 @@ overflow_y_scroll =
 overflow_y_visible : Css.Style
 overflow_y_visible =
     Css.property "overflow-y" "visible"
+
+
+overline : Css.Style
+overline =
+    Css.property "text-decoration-line" "overline"
 
 
 overscroll_auto : Css.Style
@@ -13904,6 +20220,181 @@ pb_px =
     Css.property "padding-bottom" "1px"
 
 
+pe_0 : Css.Style
+pe_0 =
+    Css.property "padding-inline-end" "0px"
+
+
+pe_0_dot_5 : Css.Style
+pe_0_dot_5 =
+    Css.property "padding-inline-end" "0.125rem"
+
+
+pe_1 : Css.Style
+pe_1 =
+    Css.property "padding-inline-end" "0.25rem"
+
+
+pe_10 : Css.Style
+pe_10 =
+    Css.property "padding-inline-end" "2.5rem"
+
+
+pe_11 : Css.Style
+pe_11 =
+    Css.property "padding-inline-end" "2.75rem"
+
+
+pe_12 : Css.Style
+pe_12 =
+    Css.property "padding-inline-end" "3rem"
+
+
+pe_14 : Css.Style
+pe_14 =
+    Css.property "padding-inline-end" "3.5rem"
+
+
+pe_16 : Css.Style
+pe_16 =
+    Css.property "padding-inline-end" "4rem"
+
+
+pe_1_dot_5 : Css.Style
+pe_1_dot_5 =
+    Css.property "padding-inline-end" "0.375rem"
+
+
+pe_2 : Css.Style
+pe_2 =
+    Css.property "padding-inline-end" "0.5rem"
+
+
+pe_20 : Css.Style
+pe_20 =
+    Css.property "padding-inline-end" "5rem"
+
+
+pe_24 : Css.Style
+pe_24 =
+    Css.property "padding-inline-end" "6rem"
+
+
+pe_28 : Css.Style
+pe_28 =
+    Css.property "padding-inline-end" "7rem"
+
+
+pe_2_dot_5 : Css.Style
+pe_2_dot_5 =
+    Css.property "padding-inline-end" "0.625rem"
+
+
+pe_3 : Css.Style
+pe_3 =
+    Css.property "padding-inline-end" "0.75rem"
+
+
+pe_32 : Css.Style
+pe_32 =
+    Css.property "padding-inline-end" "8rem"
+
+
+pe_36 : Css.Style
+pe_36 =
+    Css.property "padding-inline-end" "9rem"
+
+
+pe_3_dot_5 : Css.Style
+pe_3_dot_5 =
+    Css.property "padding-inline-end" "0.875rem"
+
+
+pe_4 : Css.Style
+pe_4 =
+    Css.property "padding-inline-end" "1rem"
+
+
+pe_40 : Css.Style
+pe_40 =
+    Css.property "padding-inline-end" "10rem"
+
+
+pe_44 : Css.Style
+pe_44 =
+    Css.property "padding-inline-end" "11rem"
+
+
+pe_48 : Css.Style
+pe_48 =
+    Css.property "padding-inline-end" "12rem"
+
+
+pe_5 : Css.Style
+pe_5 =
+    Css.property "padding-inline-end" "1.25rem"
+
+
+pe_52 : Css.Style
+pe_52 =
+    Css.property "padding-inline-end" "13rem"
+
+
+pe_56 : Css.Style
+pe_56 =
+    Css.property "padding-inline-end" "14rem"
+
+
+pe_6 : Css.Style
+pe_6 =
+    Css.property "padding-inline-end" "1.5rem"
+
+
+pe_60 : Css.Style
+pe_60 =
+    Css.property "padding-inline-end" "15rem"
+
+
+pe_64 : Css.Style
+pe_64 =
+    Css.property "padding-inline-end" "16rem"
+
+
+pe_7 : Css.Style
+pe_7 =
+    Css.property "padding-inline-end" "1.75rem"
+
+
+pe_72 : Css.Style
+pe_72 =
+    Css.property "padding-inline-end" "18rem"
+
+
+pe_8 : Css.Style
+pe_8 =
+    Css.property "padding-inline-end" "2rem"
+
+
+pe_80 : Css.Style
+pe_80 =
+    Css.property "padding-inline-end" "20rem"
+
+
+pe_9 : Css.Style
+pe_9 =
+    Css.property "padding-inline-end" "2.25rem"
+
+
+pe_96 : Css.Style
+pe_96 =
+    Css.property "padding-inline-end" "24rem"
+
+
+pe_px : Css.Style
+pe_px =
+    Css.property "padding-inline-end" "1px"
+
+
 pl_0 : Css.Style
 pl_0 =
     Css.property "padding-left" "0px"
@@ -14084,6 +20575,11 @@ place_content_around =
     Css.property "place-content" "space-around"
 
 
+place_content_baseline : Css.Style
+place_content_baseline =
+    Css.property "place-content" "baseline"
+
+
 place_content_between : Css.Style
 place_content_between =
     Css.property "place-content" "space-between"
@@ -14112,6 +20608,11 @@ place_content_start =
 place_content_stretch : Css.Style
 place_content_stretch =
     Css.property "place-content" "stretch"
+
+
+place_items_baseline : Css.Style
+place_items_baseline =
+    Css.property "place-items" "baseline"
 
 
 place_items_center : Css.Style
@@ -14157,34 +20658,6 @@ place_self_start =
 place_self_stretch : Css.Style
 place_self_stretch =
     Css.property "place-self" "stretch"
-
-
-placeholder_destruct : Css.Style
-placeholder_destruct =
-    Css.batch
-        [ Css.pseudoElement "placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(142, 74, 73, var(--tw-placeholder-opacity))"
-            ]
-        , Css.pseudoElement "-moz-placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(142, 74, 73, var(--tw-placeholder-opacity))"
-            ]
-        ]
-
-
-placeholder_exclaim : Css.Style
-placeholder_exclaim =
-    Css.batch
-        [ Css.pseudoElement "placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(224, 144, 93, var(--tw-placeholder-opacity))"
-            ]
-        , Css.pseudoElement "-moz-placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(224, 144, 93, var(--tw-placeholder-opacity))"
-            ]
-        ]
 
 
 placeholder_opacity_0 : Css.Style
@@ -14363,62 +20836,6 @@ placeholder_opacity_95 =
             ]
         , Css.pseudoElement "-moz-placeholder"
             [ Css.property "--tw-placeholder-opacity" "0.95"
-            ]
-        ]
-
-
-placeholder_primary : Css.Style
-placeholder_primary =
-    Css.batch
-        [ Css.pseudoElement "placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(150, 89, 88, var(--tw-placeholder-opacity))"
-            ]
-        , Css.pseudoElement "-moz-placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(150, 89, 88, var(--tw-placeholder-opacity))"
-            ]
-        ]
-
-
-placeholder_secondary : Css.Style
-placeholder_secondary =
-    Css.batch
-        [ Css.pseudoElement "placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(223, 238, 227, var(--tw-placeholder-opacity))"
-            ]
-        , Css.pseudoElement "-moz-placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(223, 238, 227, var(--tw-placeholder-opacity))"
-            ]
-        ]
-
-
-placeholder_success : Css.Style
-placeholder_success =
-    Css.batch
-        [ Css.pseudoElement "placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(78, 208, 182, var(--tw-placeholder-opacity))"
-            ]
-        , Css.pseudoElement "-moz-placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(78, 208, 182, var(--tw-placeholder-opacity))"
-            ]
-        ]
-
-
-placeholder_tertiary : Css.Style
-placeholder_tertiary =
-    Css.batch
-        [ Css.pseudoElement "placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(161, 159, 187, var(--tw-placeholder-opacity))"
-            ]
-        , Css.pseudoElement "-moz-placeholder"
-            [ Css.property "--tw-placeholder-opacity" "1"
-            , Css.property "color" "rgba(161, 159, 187, var(--tw-placeholder-opacity))"
             ]
         ]
 
@@ -14611,219 +21028,249 @@ pr_px =
 proportional_nums : Css.Style
 proportional_nums =
     Css.batch
-        [ Css.property "--tw-ordinal" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-slashed-zero" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-figure" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-spacing" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-fraction" "var(--tw-empty,/*!*/ /*!*/)"
+        [ Css.property "--tw-numeric-spacing" "proportional-nums"
         , Css.property "font-variant-numeric" "var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)"
-        , Css.property "--tw-numeric-spacing" "proportional-nums"
         ]
 
 
 prose : Css.Style
 prose =
     Css.batch
-        [ Css.property "color" "#374151"
+        [ Css.property "color" "var(--tw-prose-body)"
         , Css.property "max-width" "65ch"
+        , Css.property "--tw-prose-body" "#374151"
+        , Css.property "--tw-prose-headings" "#111827"
+        , Css.property "--tw-prose-lead" "#4b5563"
+        , Css.property "--tw-prose-links" "#111827"
+        , Css.property "--tw-prose-bold" "#111827"
+        , Css.property "--tw-prose-counters" "#6b7280"
+        , Css.property "--tw-prose-bullets" "#d1d5db"
+        , Css.property "--tw-prose-hr" "#e5e7eb"
+        , Css.property "--tw-prose-quotes" "#111827"
+        , Css.property "--tw-prose-quote-borders" "#e5e7eb"
+        , Css.property "--tw-prose-captions" "#6b7280"
+        , Css.property "--tw-prose-kbd" "#111827"
+        , Css.property "--tw-prose-kbd-shadows" "17 24 39"
+        , Css.property "--tw-prose-code" "#111827"
+        , Css.property "--tw-prose-pre-code" "#e5e7eb"
+        , Css.property "--tw-prose-pre-bg" "#1f2937"
+        , Css.property "--tw-prose-th-borders" "#d1d5db"
+        , Css.property "--tw-prose-td-borders" "#e5e7eb"
+        , Css.property "--tw-prose-invert-body" "#d1d5db"
+        , Css.property "--tw-prose-invert-headings" "#fff"
+        , Css.property "--tw-prose-invert-lead" "#9ca3af"
+        , Css.property "--tw-prose-invert-links" "#fff"
+        , Css.property "--tw-prose-invert-bold" "#fff"
+        , Css.property "--tw-prose-invert-counters" "#9ca3af"
+        , Css.property "--tw-prose-invert-bullets" "#4b5563"
+        , Css.property "--tw-prose-invert-hr" "#374151"
+        , Css.property "--tw-prose-invert-quotes" "#f3f4f6"
+        , Css.property "--tw-prose-invert-quote-borders" "#374151"
+        , Css.property "--tw-prose-invert-captions" "#9ca3af"
+        , Css.property "--tw-prose-invert-kbd" "#fff"
+        , Css.property "--tw-prose-invert-kbd-shadows" "255 255 255"
+        , Css.property "--tw-prose-invert-code" "#fff"
+        , Css.property "--tw-prose-invert-pre-code" "#d1d5db"
+        , Css.property "--tw-prose-invert-pre-bg" "rgb(0 0 0 / 50%)"
+        , Css.property "--tw-prose-invert-th-borders" "#4b5563"
+        , Css.property "--tw-prose-invert-td-borders" "#374151"
         , Css.property "font-size" "1rem"
         , Css.property "line-height" "1.75"
-        , Css.Global.children
-            [ Css.Global.selector ":last-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose > :last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-bottom" "0"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector ":first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose > :first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td:last-child"
+            [ Css.Global.selector ":where(figure):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(tbody td:last-child, tfoot td:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td:first-child"
+            [ Css.Global.selector ":where(tbody td:first-child, tfoot td:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-left" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th:last-child"
+            [ Css.Global.selector ":where(tbody td, tfoot td):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-top" "0.5714286em"
+                , Css.property "padding-right" "0.5714286em"
+                , Css.property "padding-bottom" "0.5714286em"
+                , Css.property "padding-left" "0.5714286em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(thead th:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th:first-child"
+            [ Css.Global.selector ":where(thead th:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-left" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h4 + *"
+            [ Css.Global.selector ":where(h4 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3 + *"
+            [ Css.Global.selector ":where(h3 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2 + *"
+            [ Css.Global.selector ":where(h2 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "hr + *"
+            [ Css.Global.selector ":where(hr + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol ol"
+            [ Css.Global.selector ":where(dd):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.5em"
+                , Css.property "padding-left" "1.625em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(dl):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.25em"
+                , Css.property "margin-bottom" "1.25em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul ul, ul ol, ol ul, ol ol):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.75em"
                 , Css.property "margin-bottom" "0.75em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol ul"
-                [ Css.property "margin-top" "0.75em"
-                , Css.property "margin-bottom" "0.75em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ul ol"
-                [ Css.property "margin-top" "0.75em"
-                , Css.property "margin-bottom" "0.75em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ul ul"
-                [ Css.property "margin-top" "0.75em"
-                , Css.property "margin-bottom" "0.75em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ol > li > *:last-child"
+            [ Css.Global.selector ":where(.prose > ol > li > *:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-bottom" "1.25em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ol > li > *:first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose > ol > li > *:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.25em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li > *:last-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose > ul > li > *:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-bottom" "1.25em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li > *:first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose > ul > li > *:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.25em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li p"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose > ul > li p):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.75em"
                 , Css.property "margin-bottom" "0.75em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "li"
+            [ Css.Global.selector ":where(ul > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.375em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ol > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.375em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(li):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.5em"
                 , Css.property "margin-bottom" "0.5em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul"
-                [ Css.property "margin-top" "1.25em"
-                , Css.property "margin-bottom" "1.25em"
+            [ Css.Global.selector ":where(video):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol"
-                [ Css.property "margin-top" "1.25em"
-                , Css.property "margin-bottom" "1.25em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "h3 code"
-                [ Css.property "font-size" "0.9em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "h2 code"
-                [ Css.property "font-size" "0.875em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "figure > *"
+            [ Css.Global.selector ":where(picture > img):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 , Css.property "margin-bottom" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure"
-                [ Css.property "margin-top" "2em"
-                , Css.property "margin-bottom" "2em"
+            [ Css.Global.selector ":where(figcaption):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-captions)"
+                , Css.property "font-size" "0.875em"
+                , Css.property "line-height" "1.4285714"
+                , Css.property "margin-top" "0.8571429em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "video"
-                [ Css.property "margin-top" "2em"
-                , Css.property "margin-bottom" "2em"
+            [ Css.Global.selector ":where(figure > *):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                , Css.property "margin-bottom" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "img"
-                [ Css.property "margin-top" "2em"
-                , Css.property "margin-bottom" "2em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "p"
-                [ Css.property "margin-top" "1.25em"
-                , Css.property "margin-bottom" "1.25em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "tbody td"
+            [ Css.Global.selector ":where(tfoot td):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "vertical-align" "top"
-                , Css.property "padding-top" "0.5714286em"
-                , Css.property "padding-right" "0.5714286em"
-                , Css.property "padding-bottom" "0.5714286em"
-                , Css.property "padding-left" "0.5714286em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody tr:last-child"
+            [ Css.Global.selector ":where(tfoot):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "border-top-width" "1px"
+                , Css.property "border-top-color" "var(--tw-prose-th-borders)"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(tbody td):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "vertical-align" "baseline"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(tbody tr:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "border-bottom-width" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody tr"
+            [ Css.Global.selector ":where(tbody tr):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "border-bottom-width" "1px"
-                , Css.property "border-bottom-color" "#e5e7eb"
+                , Css.property "border-bottom-color" "var(--tw-prose-td-borders)"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th"
-                [ Css.property "vertical-align" "bottom"
+            [ Css.Global.selector ":where(thead th):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-headings)"
+                , Css.property "font-weight" "600"
+                , Css.property "vertical-align" "bottom"
                 , Css.property "padding-right" "0.5714286em"
                 , Css.property "padding-bottom" "0.5714286em"
                 , Css.property "padding-left" "0.5714286em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead"
-                [ Css.property "color" "#111827"
-                , Css.property "font-weight" "600"
-                , Css.property "border-bottom-width" "1px"
-                , Css.property "border-bottom-color" "#d1d5db"
+            [ Css.Global.selector ":where(thead):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "border-bottom-width" "1px"
+                , Css.property "border-bottom-color" "var(--tw-prose-th-borders)"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "table"
+            [ Css.Global.selector ":where(table):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "width" "100%"
                 , Css.property "table-layout" "auto"
                 , Css.property "text-align" "left"
@@ -14834,22 +21281,22 @@ prose =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "pre code::after"
+            [ Css.Global.selector ":where(pre code):not(:where(.not-prose, .not-prose *))::after"
                 [ Css.property "content" "none"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "pre code::before"
+            [ Css.Global.selector ":where(pre code):not(:where(.not-prose, .not-prose *))::before"
                 [ Css.property "content" "none"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "pre code"
+            [ Css.Global.selector ":where(pre code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "background-color" "transparent"
                 , Css.property "border-width" "0"
                 , Css.property "border-radius" "0"
                 , Css.property "padding" "0"
-                , Css.property "font-weight" "400"
+                , Css.property "font-weight" "inherit"
                 , Css.property "color" "inherit"
                 , Css.property "font-size" "inherit"
                 , Css.property "font-family" "inherit"
@@ -14857,10 +21304,11 @@ prose =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "pre"
-                [ Css.property "color" "#e5e7eb"
-                , Css.property "background-color" "#1f2937"
+            [ Css.Global.selector ":where(pre):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-pre-code)"
+                , Css.property "background-color" "var(--tw-prose-pre-bg)"
                 , Css.property "overflow-x" "auto"
+                , Css.property "font-weight" "400"
                 , Css.property "font-size" "0.875em"
                 , Css.property "line-height" "1.7142857"
                 , Css.property "margin-top" "1.7142857em"
@@ -14873,38 +21321,95 @@ prose =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "a code"
-                [ Css.property "color" "#111827"
+            [ Css.Global.selector ":where(thead th code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "inherit"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "code::after"
+            [ Css.Global.selector ":where(blockquote code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h4 code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h3 code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "inherit"
+                , Css.property "font-size" "0.9em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h2 code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "inherit"
+                , Css.property "font-size" "0.875em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h1 code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(a code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(code):not(:where(.not-prose, .not-prose *))::after"
                 [ Css.property "content" "\"`\""
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "code::before"
+            [ Css.Global.selector ":where(code):not(:where(.not-prose, .not-prose *))::before"
                 [ Css.property "content" "\"`\""
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "code"
-                [ Css.property "color" "#111827"
+            [ Css.Global.selector ":where(code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-code)"
                 , Css.property "font-weight" "600"
                 , Css.property "font-size" "0.875em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure figcaption"
-                [ Css.property "color" "#6b7280"
+            [ Css.Global.selector ":where(kbd):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-weight" "500"
+                , Css.property "font-family" "inherit"
+                , Css.property "color" "var(--tw-prose-kbd)"
+                , Css.property "box-shadow" "0 0 0 1px rgb(var(--tw-prose-kbd-shadows) / 10%), 0 3px 0 rgb(var(--tw-prose-kbd-shadows) / 10%)"
                 , Css.property "font-size" "0.875em"
-                , Css.property "line-height" "1.4285714"
-                , Css.property "margin-top" "0.8571429em"
+                , Css.property "border-radius" "0.3125rem"
+                , Css.property "padding-top" "0.1875em"
+                , Css.property "padding-right" "0.375em"
+                , Css.property "padding-bottom" "0.1875em"
+                , Css.property "padding-left" "0.375em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h4"
-                [ Css.property "color" "#111827"
+            [ Css.Global.selector ":where(picture):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "display" "block"
+                , Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(img):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h4 strong):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-weight" "700"
+                , Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h4):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-headings)"
                 , Css.property "font-weight" "600"
                 , Css.property "margin-top" "1.5em"
                 , Css.property "margin-bottom" "0.5em"
@@ -14912,8 +21417,14 @@ prose =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3"
-                [ Css.property "color" "#111827"
+            [ Css.Global.selector ":where(h3 strong):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-weight" "700"
+                , Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h3):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-headings)"
                 , Css.property "font-weight" "600"
                 , Css.property "font-size" "1.25em"
                 , Css.property "margin-top" "1.6em"
@@ -14922,8 +21433,14 @@ prose =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2"
-                [ Css.property "color" "#111827"
+            [ Css.Global.selector ":where(h2 strong):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-weight" "800"
+                , Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h2):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-headings)"
                 , Css.property "font-weight" "700"
                 , Css.property "font-size" "1.5em"
                 , Css.property "margin-top" "2em"
@@ -14932,8 +21449,14 @@ prose =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h1"
-                [ Css.property "color" "#111827"
+            [ Css.Global.selector ":where(h1 strong):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-weight" "900"
+                , Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h1):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-headings)"
                 , Css.property "font-weight" "800"
                 , Css.property "font-size" "2.25em"
                 , Css.property "margin-top" "0"
@@ -14942,22 +21465,22 @@ prose =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "blockquote p:last-of-type::after"
+            [ Css.Global.selector ":where(blockquote p:last-of-type):not(:where(.not-prose, .not-prose *))::after"
                 [ Css.property "content" "close-quote"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "blockquote p:first-of-type::before"
+            [ Css.Global.selector ":where(blockquote p:first-of-type):not(:where(.not-prose, .not-prose *))::before"
                 [ Css.property "content" "open-quote"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "blockquote"
+            [ Css.Global.selector ":where(blockquote):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-weight" "500"
                 , Css.property "font-style" "italic"
-                , Css.property "color" "#111827"
+                , Css.property "color" "var(--tw-prose-quotes)"
                 , Css.property "border-left-width" "0.25rem"
-                , Css.property "border-left-color" "#e5e7eb"
+                , Css.property "border-left-color" "var(--tw-prose-quote-borders)"
                 , Css.property "quotes" "\"\\201C\"\"\\201D\"\"\\2018\"\"\\2019\""
                 , Css.property "margin-top" "1.6em"
                 , Css.property "margin-bottom" "1.6em"
@@ -14965,111 +21488,133 @@ prose =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "hr"
-                [ Css.property "border-color" "#e5e7eb"
+            [ Css.Global.selector ":where(hr):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "border-color" "var(--tw-prose-hr)"
                 , Css.property "border-top-width" "1px"
                 , Css.property "margin-top" "3em"
                 , Css.property "margin-bottom" "3em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul > li::before"
-                [ Css.property "content" "\"\""
-                , Css.property "position" "absolute"
-                , Css.property "background-color" "#d1d5db"
-                , Css.property "border-radius" "50%"
-                , Css.property "width" "0.375em"
-                , Css.property "height" "0.375em"
-                , Css.property "top" "calc(0.875em - 0.1875em)"
-                , Css.property "left" "0.25em"
+            [ Css.Global.selector ":where(dt):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-headings)"
+                , Css.property "font-weight" "600"
+                , Css.property "margin-top" "1.25em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul > li"
-                [ Css.property "position" "relative"
-                , Css.property "padding-left" "1.75em"
+            [ Css.Global.selector ":where(ul > li):not(:where(.not-prose, .not-prose *))::marker"
+                [ Css.property "color" "var(--tw-prose-bullets)"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol > li::before"
-                [ Css.property "content" "counter(list-item, var(--list-counter-style, decimal)) \".\""
-                , Css.property "position" "absolute"
-                , Css.property "font-weight" "400"
-                , Css.property "color" "#6b7280"
-                , Css.property "left" "0"
+            [ Css.Global.selector ":where(ol > li):not(:where(.not-prose, .not-prose *))::marker"
+                [ Css.property "font-weight" "400"
+                , Css.property "color" "var(--tw-prose-counters)"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol > li"
-                [ Css.property "position" "relative"
-                , Css.property "padding-left" "1.75em"
+            [ Css.Global.selector ":where(ul):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "disc"
+                , Css.property "margin-top" "1.25em"
+                , Css.property "margin-bottom" "1.25em"
+                , Css.property "padding-left" "1.625em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol[type='1'i]"
-                [ Css.property "--list-counter-style" "decimal"
+            [ Css.Global.selector ":where(ol[type='1'i]):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "decimal"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol[type='i's]"
-                [ Css.property "--list-counter-style" "lower-roman"
+            [ Css.Global.selector ":where(ol[type='i's]):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "lower-roman"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol[type='I's]"
-                [ Css.property "--list-counter-style" "upper-roman"
+            [ Css.Global.selector ":where(ol[type='I's]):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "upper-roman"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol[type='i'i]"
-                [ Css.property "--list-counter-style" "lower-roman"
+            [ Css.Global.selector ":where(ol[type='i'i]):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "lower-roman"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol[type='I'i]"
-                [ Css.property "--list-counter-style" "upper-roman"
+            [ Css.Global.selector ":where(ol[type='I'i]):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "upper-roman"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol[type='a's]"
-                [ Css.property "--list-counter-style" "lower-alpha"
+            [ Css.Global.selector ":where(ol[type='a's]):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "lower-alpha"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol[type='A's]"
-                [ Css.property "--list-counter-style" "upper-alpha"
+            [ Css.Global.selector ":where(ol[type='A's]):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "upper-alpha"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol[type='a'i]"
-                [ Css.property "--list-counter-style" "lower-alpha"
+            [ Css.Global.selector ":where(ol[type='a'i]):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "lower-alpha"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol[type='A'i]"
-                [ Css.property "--list-counter-style" "upper-alpha"
+            [ Css.Global.selector ":where(ol[type='A'i]):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "upper-alpha"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "strong"
-                [ Css.property "color" "#111827"
+            [ Css.Global.selector ":where(ol):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "list-style-type" "decimal"
+                , Css.property "margin-top" "1.25em"
+                , Css.property "margin-bottom" "1.25em"
+                , Css.property "padding-left" "1.625em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(thead th strong):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(blockquote strong):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(a strong):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "inherit"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(strong):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-bold)"
                 , Css.property "font-weight" "600"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "a"
-                [ Css.property "color" "#111827"
+            [ Css.Global.selector ":where(a):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-links)"
                 , Css.property "text-decoration" "underline"
                 , Css.property "font-weight" "500"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector ".lead"
-                [ Css.property "color" "#4b5563"
+            [ Css.Global.selector ":where(.lead):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "color" "var(--tw-prose-lead)"
                 , Css.property "font-size" "1.25em"
                 , Css.property "line-height" "1.6"
                 , Css.property "margin-top" "1.2em"
                 , Css.property "margin-bottom" "1.2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(p):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.25em"
+                , Css.property "margin-bottom" "1.25em"
                 ]
             ]
         ]
@@ -15080,28 +21625,47 @@ prose_2xl =
     Css.batch
         [ Css.property "font-size" "1.5rem"
         , Css.property "line-height" "1.6666667"
-        , Css.Global.children
-            [ Css.Global.selector ":last-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-2xl > :last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-bottom" "0"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector ":first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-2xl > :first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td:last-child"
+            [ Css.Global.selector ":where(figcaption):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.8333333em"
+                , Css.property "line-height" "1.6"
+                , Css.property "margin-top" "1em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figure > *):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                , Css.property "margin-bottom" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figure):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(tbody td:last-child, tfoot td:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td:first-child"
+            [ Css.Global.selector ":where(tbody td:first-child, tfoot td:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-left" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td"
+            [ Css.Global.selector ":where(tbody td, tfoot td):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-top" "0.8em"
                 , Css.property "padding-right" "0.6em"
                 , Css.property "padding-bottom" "0.8em"
@@ -15109,147 +21673,135 @@ prose_2xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th:last-child"
+            [ Css.Global.selector ":where(thead th:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th:first-child"
+            [ Css.Global.selector ":where(thead th:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-left" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th"
+            [ Css.Global.selector ":where(thead th):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0.6em"
                 , Css.property "padding-bottom" "0.8em"
                 , Css.property "padding-left" "0.6em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "table"
+            [ Css.Global.selector ":where(table):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8333333em"
                 , Css.property "line-height" "1.4"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h4 + *"
+            [ Css.Global.selector ":where(h4 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3 + *"
+            [ Css.Global.selector ":where(h3 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2 + *"
+            [ Css.Global.selector ":where(h2 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "hr + *"
+            [ Css.Global.selector ":where(hr + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "hr"
+            [ Css.Global.selector ":where(hr):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "3em"
                 , Css.property "margin-bottom" "3em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol ol"
-                [ Css.property "margin-top" "0.6666667em"
-                , Css.property "margin-bottom" "0.6666667em"
+            [ Css.Global.selector ":where(dd):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.5em"
+                , Css.property "padding-left" "1.5833333em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol ul"
-                [ Css.property "margin-top" "0.6666667em"
-                , Css.property "margin-bottom" "0.6666667em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ul ol"
-                [ Css.property "margin-top" "0.6666667em"
-                , Css.property "margin-bottom" "0.6666667em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ul ul"
-                [ Css.property "margin-top" "0.6666667em"
-                , Css.property "margin-bottom" "0.6666667em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ol > li > *:last-child"
-                [ Css.property "margin-bottom" "1.3333333em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ol > li > *:first-child"
+            [ Css.Global.selector ":where(dt):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li > *:last-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(dl):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.3333333em"
+                , Css.property "margin-bottom" "1.3333333em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul ul, ul ol, ol ul, ol ol):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.6666667em"
+                , Css.property "margin-bottom" "0.6666667em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-2xl > ol > li > *:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-bottom" "1.3333333em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li > *:first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-2xl > ol > li > *:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li p"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-2xl > ul > li > *:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-bottom" "1.3333333em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-2xl > ul > li > *:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.3333333em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-2xl > ul > li p):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.8333333em"
                 , Css.property "margin-bottom" "0.8333333em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul > li::before"
-                [ Css.property "width" "0.3333333em"
-                , Css.property "height" "0.3333333em"
-                , Css.property "top" "calc(0.8333333em - 0.1666667em)"
-                , Css.property "left" "0.25em"
+            [ Css.Global.selector ":where(ul > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.4166667em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul > li"
-                [ Css.property "padding-left" "1.6666667em"
+            [ Css.Global.selector ":where(ol > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.4166667em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol > li::before"
-                [ Css.property "left" "0"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ol > li"
-                [ Css.property "padding-left" "1.6666667em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "li"
+            [ Css.Global.selector ":where(li):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.5em"
                 , Css.property "margin-bottom" "0.5em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul"
+            [ Css.Global.selector ":where(ul):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
                 , Css.property "margin-bottom" "1.3333333em"
+                , Css.property "padding-left" "1.5833333em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol"
+            [ Css.Global.selector ":where(ol):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
                 , Css.property "margin-bottom" "1.3333333em"
+                , Css.property "padding-left" "1.5833333em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "pre"
+            [ Css.Global.selector ":where(pre):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8333333em"
                 , Css.property "line-height" "1.8"
                 , Css.property "margin-top" "2em"
@@ -15262,60 +21814,63 @@ prose_2xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3 code"
+            [ Css.Global.selector ":where(h3 code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8888889em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2 code"
+            [ Css.Global.selector ":where(h2 code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.875em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "code"
+            [ Css.Global.selector ":where(code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8333333em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure figcaption"
+            [ Css.Global.selector ":where(kbd):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8333333em"
-                , Css.property "line-height" "1.6"
-                , Css.property "margin-top" "1em"
+                , Css.property "border-radius" "0.375rem"
+                , Css.property "padding-top" "0.25em"
+                , Css.property "padding-right" "0.3333333em"
+                , Css.property "padding-bottom" "0.25em"
+                , Css.property "padding-left" "0.3333333em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure > *"
+            [ Css.Global.selector ":where(video):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(picture > img):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 , Css.property "margin-bottom" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure"
+            [ Css.Global.selector ":where(picture):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "2em"
                 , Css.property "margin-bottom" "2em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "video"
+            [ Css.Global.selector ":where(img):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "2em"
                 , Css.property "margin-bottom" "2em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "img"
-                [ Css.property "margin-top" "2em"
-                , Css.property "margin-bottom" "2em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "h4"
+            [ Css.Global.selector ":where(h4):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.6666667em"
                 , Css.property "margin-bottom" "0.6666667em"
                 , Css.property "line-height" "1.5"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3"
+            [ Css.Global.selector ":where(h3):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.5em"
                 , Css.property "margin-top" "1.5555556em"
                 , Css.property "margin-bottom" "0.6666667em"
@@ -15323,7 +21878,7 @@ prose_2xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2"
+            [ Css.Global.selector ":where(h2):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "2em"
                 , Css.property "margin-top" "1.5em"
                 , Css.property "margin-bottom" "0.8333333em"
@@ -15331,7 +21886,7 @@ prose_2xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h1"
+            [ Css.Global.selector ":where(h1):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "2.6666667em"
                 , Css.property "margin-top" "0"
                 , Css.property "margin-bottom" "0.875em"
@@ -15339,14 +21894,14 @@ prose_2xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "blockquote"
+            [ Css.Global.selector ":where(blockquote):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.7777778em"
                 , Css.property "margin-bottom" "1.7777778em"
                 , Css.property "padding-left" "1.1111111em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector ".lead"
+            [ Css.Global.selector ":where(.lead):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.25em"
                 , Css.property "line-height" "1.4666667"
                 , Css.property "margin-top" "1.0666667em"
@@ -15354,11 +21909,430 @@ prose_2xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "p"
+            [ Css.Global.selector ":where(p):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
                 , Css.property "margin-bottom" "1.3333333em"
                 ]
             ]
+        ]
+
+
+prose_amber : Css.Style
+prose_amber =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#d97706"
+        , Css.property "--tw-prose-invert-links" "#f59e0b"
+        ]
+
+
+prose_base : Css.Style
+prose_base =
+    Css.batch
+        [ Css.property "font-size" "1rem"
+        , Css.property "line-height" "1.75"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-base > :last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-bottom" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-base > :first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figcaption):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.875em"
+                , Css.property "line-height" "1.4285714"
+                , Css.property "margin-top" "0.8571429em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figure > *):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                , Css.property "margin-bottom" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figure):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(tbody td:last-child, tfoot td:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-right" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(tbody td:first-child, tfoot td:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(tbody td, tfoot td):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-top" "0.5714286em"
+                , Css.property "padding-right" "0.5714286em"
+                , Css.property "padding-bottom" "0.5714286em"
+                , Css.property "padding-left" "0.5714286em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(thead th:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-right" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(thead th:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(thead th):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-right" "0.5714286em"
+                , Css.property "padding-bottom" "0.5714286em"
+                , Css.property "padding-left" "0.5714286em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(table):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.875em"
+                , Css.property "line-height" "1.7142857"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h4 + *):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h3 + *):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h2 + *):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(hr + *):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(hr):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "3em"
+                , Css.property "margin-bottom" "3em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(dd):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.5em"
+                , Css.property "padding-left" "1.625em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(dt):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.25em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(dl):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.25em"
+                , Css.property "margin-bottom" "1.25em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul ul, ul ol, ol ul, ol ol):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.75em"
+                , Css.property "margin-bottom" "0.75em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-base > ol > li > *:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-bottom" "1.25em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-base > ol > li > *:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.25em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-base > ul > li > *:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-bottom" "1.25em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-base > ul > li > *:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.25em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-base > ul > li p):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.75em"
+                , Css.property "margin-bottom" "0.75em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.375em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ol > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.375em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.5em"
+                , Css.property "margin-bottom" "0.5em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.25em"
+                , Css.property "margin-bottom" "1.25em"
+                , Css.property "padding-left" "1.625em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ol):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.25em"
+                , Css.property "margin-bottom" "1.25em"
+                , Css.property "padding-left" "1.625em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(pre):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.875em"
+                , Css.property "line-height" "1.7142857"
+                , Css.property "margin-top" "1.7142857em"
+                , Css.property "margin-bottom" "1.7142857em"
+                , Css.property "border-radius" "0.375rem"
+                , Css.property "padding-top" "0.8571429em"
+                , Css.property "padding-right" "1.1428571em"
+                , Css.property "padding-bottom" "0.8571429em"
+                , Css.property "padding-left" "1.1428571em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h3 code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.9em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h2 code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.875em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(code):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.875em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(kbd):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.875em"
+                , Css.property "border-radius" "0.3125rem"
+                , Css.property "padding-top" "0.1875em"
+                , Css.property "padding-right" "0.375em"
+                , Css.property "padding-bottom" "0.1875em"
+                , Css.property "padding-left" "0.375em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(video):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(picture > img):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                , Css.property "margin-bottom" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(picture):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(img):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h4):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.5em"
+                , Css.property "margin-bottom" "0.5em"
+                , Css.property "line-height" "1.5"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h3):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "1.25em"
+                , Css.property "margin-top" "1.6em"
+                , Css.property "margin-bottom" "0.6em"
+                , Css.property "line-height" "1.6"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h2):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "1.5em"
+                , Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "1em"
+                , Css.property "line-height" "1.3333333"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(h1):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "2.25em"
+                , Css.property "margin-top" "0"
+                , Css.property "margin-bottom" "0.8888889em"
+                , Css.property "line-height" "1.1111111"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(blockquote):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.6em"
+                , Css.property "margin-bottom" "1.6em"
+                , Css.property "padding-left" "1em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.lead):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "1.25em"
+                , Css.property "line-height" "1.6"
+                , Css.property "margin-top" "1.2em"
+                , Css.property "margin-bottom" "1.2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(p):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.25em"
+                , Css.property "margin-bottom" "1.25em"
+                ]
+            ]
+        ]
+
+
+prose_blue : Css.Style
+prose_blue =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#2563eb"
+        , Css.property "--tw-prose-invert-links" "#3b82f6"
+        ]
+
+
+prose_cyan : Css.Style
+prose_cyan =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#0891b2"
+        , Css.property "--tw-prose-invert-links" "#06b6d4"
+        ]
+
+
+prose_emerald : Css.Style
+prose_emerald =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#059669"
+        , Css.property "--tw-prose-invert-links" "#10b981"
+        ]
+
+
+prose_fuchsia : Css.Style
+prose_fuchsia =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#c026d3"
+        , Css.property "--tw-prose-invert-links" "#d946ef"
+        ]
+
+
+prose_gray : Css.Style
+prose_gray =
+    Css.batch
+        [ Css.property "--tw-prose-body" "#374151"
+        , Css.property "--tw-prose-headings" "#111827"
+        , Css.property "--tw-prose-lead" "#4b5563"
+        , Css.property "--tw-prose-links" "#111827"
+        , Css.property "--tw-prose-bold" "#111827"
+        , Css.property "--tw-prose-counters" "#6b7280"
+        , Css.property "--tw-prose-bullets" "#d1d5db"
+        , Css.property "--tw-prose-hr" "#e5e7eb"
+        , Css.property "--tw-prose-quotes" "#111827"
+        , Css.property "--tw-prose-quote-borders" "#e5e7eb"
+        , Css.property "--tw-prose-captions" "#6b7280"
+        , Css.property "--tw-prose-kbd" "#111827"
+        , Css.property "--tw-prose-kbd-shadows" "17 24 39"
+        , Css.property "--tw-prose-code" "#111827"
+        , Css.property "--tw-prose-pre-code" "#e5e7eb"
+        , Css.property "--tw-prose-pre-bg" "#1f2937"
+        , Css.property "--tw-prose-th-borders" "#d1d5db"
+        , Css.property "--tw-prose-td-borders" "#e5e7eb"
+        , Css.property "--tw-prose-invert-body" "#d1d5db"
+        , Css.property "--tw-prose-invert-headings" "#fff"
+        , Css.property "--tw-prose-invert-lead" "#9ca3af"
+        , Css.property "--tw-prose-invert-links" "#fff"
+        , Css.property "--tw-prose-invert-bold" "#fff"
+        , Css.property "--tw-prose-invert-counters" "#9ca3af"
+        , Css.property "--tw-prose-invert-bullets" "#4b5563"
+        , Css.property "--tw-prose-invert-hr" "#374151"
+        , Css.property "--tw-prose-invert-quotes" "#f3f4f6"
+        , Css.property "--tw-prose-invert-quote-borders" "#374151"
+        , Css.property "--tw-prose-invert-captions" "#9ca3af"
+        , Css.property "--tw-prose-invert-kbd" "#fff"
+        , Css.property "--tw-prose-invert-kbd-shadows" "255 255 255"
+        , Css.property "--tw-prose-invert-code" "#fff"
+        , Css.property "--tw-prose-invert-pre-code" "#d1d5db"
+        , Css.property "--tw-prose-invert-pre-bg" "rgb(0 0 0 / 50%)"
+        , Css.property "--tw-prose-invert-th-borders" "#4b5563"
+        , Css.property "--tw-prose-invert-td-borders" "#374151"
+        ]
+
+
+prose_green : Css.Style
+prose_green =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#16a34a"
+        , Css.property "--tw-prose-invert-links" "#22c55e"
+        ]
+
+
+prose_indigo : Css.Style
+prose_indigo =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#4f46e5"
+        , Css.property "--tw-prose-invert-links" "#6366f1"
+        ]
+
+
+prose_invert : Css.Style
+prose_invert =
+    Css.batch
+        [ Css.property "--tw-prose-body" "var(--tw-prose-invert-body)"
+        , Css.property "--tw-prose-headings" "var(--tw-prose-invert-headings)"
+        , Css.property "--tw-prose-lead" "var(--tw-prose-invert-lead)"
+        , Css.property "--tw-prose-links" "var(--tw-prose-invert-links)"
+        , Css.property "--tw-prose-bold" "var(--tw-prose-invert-bold)"
+        , Css.property "--tw-prose-counters" "var(--tw-prose-invert-counters)"
+        , Css.property "--tw-prose-bullets" "var(--tw-prose-invert-bullets)"
+        , Css.property "--tw-prose-hr" "var(--tw-prose-invert-hr)"
+        , Css.property "--tw-prose-quotes" "var(--tw-prose-invert-quotes)"
+        , Css.property "--tw-prose-quote-borders" "var(--tw-prose-invert-quote-borders)"
+        , Css.property "--tw-prose-captions" "var(--tw-prose-invert-captions)"
+        , Css.property "--tw-prose-kbd" "var(--tw-prose-invert-kbd)"
+        , Css.property "--tw-prose-kbd-shadows" "var(--tw-prose-invert-kbd-shadows)"
+        , Css.property "--tw-prose-code" "var(--tw-prose-invert-code)"
+        , Css.property "--tw-prose-pre-code" "var(--tw-prose-invert-pre-code)"
+        , Css.property "--tw-prose-pre-bg" "var(--tw-prose-invert-pre-bg)"
+        , Css.property "--tw-prose-th-borders" "var(--tw-prose-invert-th-borders)"
+        , Css.property "--tw-prose-td-borders" "var(--tw-prose-invert-td-borders)"
         ]
 
 
@@ -15367,28 +22341,47 @@ prose_lg =
     Css.batch
         [ Css.property "font-size" "1.125rem"
         , Css.property "line-height" "1.7777778"
-        , Css.Global.children
-            [ Css.Global.selector ":last-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-lg > :last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-bottom" "0"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector ":first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-lg > :first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td:last-child"
+            [ Css.Global.selector ":where(figcaption):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.8888889em"
+                , Css.property "line-height" "1.5"
+                , Css.property "margin-top" "1em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figure > *):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                , Css.property "margin-bottom" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figure):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.7777778em"
+                , Css.property "margin-bottom" "1.7777778em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(tbody td:last-child, tfoot td:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td:first-child"
+            [ Css.Global.selector ":where(tbody td:first-child, tfoot td:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-left" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td"
+            [ Css.Global.selector ":where(tbody td, tfoot td):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-top" "0.75em"
                 , Css.property "padding-right" "0.75em"
                 , Css.property "padding-bottom" "0.75em"
@@ -15396,147 +22389,135 @@ prose_lg =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th:last-child"
+            [ Css.Global.selector ":where(thead th:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th:first-child"
+            [ Css.Global.selector ":where(thead th:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-left" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th"
+            [ Css.Global.selector ":where(thead th):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0.75em"
                 , Css.property "padding-bottom" "0.75em"
                 , Css.property "padding-left" "0.75em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "table"
+            [ Css.Global.selector ":where(table):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8888889em"
                 , Css.property "line-height" "1.5"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h4 + *"
+            [ Css.Global.selector ":where(h4 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3 + *"
+            [ Css.Global.selector ":where(h3 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2 + *"
+            [ Css.Global.selector ":where(h2 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "hr + *"
+            [ Css.Global.selector ":where(hr + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "hr"
+            [ Css.Global.selector ":where(hr):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "3.1111111em"
                 , Css.property "margin-bottom" "3.1111111em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol ol"
-                [ Css.property "margin-top" "0.8888889em"
-                , Css.property "margin-bottom" "0.8888889em"
+            [ Css.Global.selector ":where(dd):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.6666667em"
+                , Css.property "padding-left" "1.5555556em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol ul"
-                [ Css.property "margin-top" "0.8888889em"
-                , Css.property "margin-bottom" "0.8888889em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ul ol"
-                [ Css.property "margin-top" "0.8888889em"
-                , Css.property "margin-bottom" "0.8888889em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ul ul"
-                [ Css.property "margin-top" "0.8888889em"
-                , Css.property "margin-bottom" "0.8888889em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ol > li > *:last-child"
-                [ Css.property "margin-bottom" "1.3333333em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ol > li > *:first-child"
+            [ Css.Global.selector ":where(dt):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li > *:last-child"
-                [ Css.property "margin-bottom" "1.3333333em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li > *:first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(dl):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
+                , Css.property "margin-bottom" "1.3333333em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li p"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul ul, ul ol, ol ul, ol ol):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.8888889em"
                 , Css.property "margin-bottom" "0.8888889em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul > li::before"
-                [ Css.property "width" "0.3333333em"
-                , Css.property "height" "0.3333333em"
-                , Css.property "top" "calc(0.8888889em - 0.1666667em)"
-                , Css.property "left" "0.2222222em"
+            [ Css.Global.selector ":where(.prose-lg > ol > li > *:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-bottom" "1.3333333em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul > li"
-                [ Css.property "padding-left" "1.6666667em"
+            [ Css.Global.selector ":where(.prose-lg > ol > li > *:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.3333333em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol > li::before"
-                [ Css.property "left" "0"
+            [ Css.Global.selector ":where(.prose-lg > ul > li > *:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-bottom" "1.3333333em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol > li"
-                [ Css.property "padding-left" "1.6666667em"
+            [ Css.Global.selector ":where(.prose-lg > ul > li > *:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.3333333em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "li"
+            [ Css.Global.selector ":where(.prose-lg > ul > li p):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.8888889em"
+                , Css.property "margin-bottom" "0.8888889em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.4444444em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ol > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.4444444em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(li):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.6666667em"
                 , Css.property "margin-bottom" "0.6666667em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul"
+            [ Css.Global.selector ":where(ul):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
                 , Css.property "margin-bottom" "1.3333333em"
+                , Css.property "padding-left" "1.5555556em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol"
+            [ Css.Global.selector ":where(ol):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
                 , Css.property "margin-bottom" "1.3333333em"
+                , Css.property "padding-left" "1.5555556em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "pre"
+            [ Css.Global.selector ":where(pre):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8888889em"
                 , Css.property "line-height" "1.75"
                 , Css.property "margin-top" "2em"
@@ -15549,60 +22530,63 @@ prose_lg =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3 code"
+            [ Css.Global.selector ":where(h3 code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.875em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2 code"
+            [ Css.Global.selector ":where(h2 code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8666667em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "code"
+            [ Css.Global.selector ":where(code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8888889em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure figcaption"
+            [ Css.Global.selector ":where(kbd):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8888889em"
-                , Css.property "line-height" "1.5"
-                , Css.property "margin-top" "1em"
+                , Css.property "border-radius" "0.3125rem"
+                , Css.property "padding-top" "0.2222222em"
+                , Css.property "padding-right" "0.4444444em"
+                , Css.property "padding-bottom" "0.2222222em"
+                , Css.property "padding-left" "0.4444444em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure > *"
+            [ Css.Global.selector ":where(video):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.7777778em"
+                , Css.property "margin-bottom" "1.7777778em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(picture > img):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 , Css.property "margin-bottom" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure"
+            [ Css.Global.selector ":where(picture):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.7777778em"
                 , Css.property "margin-bottom" "1.7777778em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "video"
+            [ Css.Global.selector ":where(img):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.7777778em"
                 , Css.property "margin-bottom" "1.7777778em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "img"
-                [ Css.property "margin-top" "1.7777778em"
-                , Css.property "margin-bottom" "1.7777778em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "h4"
+            [ Css.Global.selector ":where(h4):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.7777778em"
                 , Css.property "margin-bottom" "0.4444444em"
                 , Css.property "line-height" "1.5555556"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3"
+            [ Css.Global.selector ":where(h3):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.3333333em"
                 , Css.property "margin-top" "1.6666667em"
                 , Css.property "margin-bottom" "0.6666667em"
@@ -15610,7 +22594,7 @@ prose_lg =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2"
+            [ Css.Global.selector ":where(h2):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.6666667em"
                 , Css.property "margin-top" "1.8666667em"
                 , Css.property "margin-bottom" "1.0666667em"
@@ -15618,7 +22602,7 @@ prose_lg =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h1"
+            [ Css.Global.selector ":where(h1):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "2.6666667em"
                 , Css.property "margin-top" "0"
                 , Css.property "margin-bottom" "0.8333333em"
@@ -15626,14 +22610,14 @@ prose_lg =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "blockquote"
+            [ Css.Global.selector ":where(blockquote):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.6666667em"
                 , Css.property "margin-bottom" "1.6666667em"
                 , Css.property "padding-left" "1em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector ".lead"
+            [ Css.Global.selector ":where(.lead):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.2222222em"
                 , Css.property "line-height" "1.4545455"
                 , Css.property "margin-top" "1.0909091em"
@@ -15641,11 +22625,151 @@ prose_lg =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "p"
+            [ Css.Global.selector ":where(p):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
                 , Css.property "margin-bottom" "1.3333333em"
                 ]
             ]
+        ]
+
+
+prose_lime : Css.Style
+prose_lime =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#65a30d"
+        , Css.property "--tw-prose-invert-links" "#84cc16"
+        ]
+
+
+prose_neutral : Css.Style
+prose_neutral =
+    Css.batch
+        [ Css.property "--tw-prose-body" "#404040"
+        , Css.property "--tw-prose-headings" "#171717"
+        , Css.property "--tw-prose-lead" "#525252"
+        , Css.property "--tw-prose-links" "#171717"
+        , Css.property "--tw-prose-bold" "#171717"
+        , Css.property "--tw-prose-counters" "#737373"
+        , Css.property "--tw-prose-bullets" "#d4d4d4"
+        , Css.property "--tw-prose-hr" "#e5e5e5"
+        , Css.property "--tw-prose-quotes" "#171717"
+        , Css.property "--tw-prose-quote-borders" "#e5e5e5"
+        , Css.property "--tw-prose-captions" "#737373"
+        , Css.property "--tw-prose-kbd" "#171717"
+        , Css.property "--tw-prose-kbd-shadows" "23 23 23"
+        , Css.property "--tw-prose-code" "#171717"
+        , Css.property "--tw-prose-pre-code" "#e5e5e5"
+        , Css.property "--tw-prose-pre-bg" "#262626"
+        , Css.property "--tw-prose-th-borders" "#d4d4d4"
+        , Css.property "--tw-prose-td-borders" "#e5e5e5"
+        , Css.property "--tw-prose-invert-body" "#d4d4d4"
+        , Css.property "--tw-prose-invert-headings" "#fff"
+        , Css.property "--tw-prose-invert-lead" "#a3a3a3"
+        , Css.property "--tw-prose-invert-links" "#fff"
+        , Css.property "--tw-prose-invert-bold" "#fff"
+        , Css.property "--tw-prose-invert-counters" "#a3a3a3"
+        , Css.property "--tw-prose-invert-bullets" "#525252"
+        , Css.property "--tw-prose-invert-hr" "#404040"
+        , Css.property "--tw-prose-invert-quotes" "#f5f5f5"
+        , Css.property "--tw-prose-invert-quote-borders" "#404040"
+        , Css.property "--tw-prose-invert-captions" "#a3a3a3"
+        , Css.property "--tw-prose-invert-kbd" "#fff"
+        , Css.property "--tw-prose-invert-kbd-shadows" "255 255 255"
+        , Css.property "--tw-prose-invert-code" "#fff"
+        , Css.property "--tw-prose-invert-pre-code" "#d4d4d4"
+        , Css.property "--tw-prose-invert-pre-bg" "rgb(0 0 0 / 50%)"
+        , Css.property "--tw-prose-invert-th-borders" "#525252"
+        , Css.property "--tw-prose-invert-td-borders" "#404040"
+        ]
+
+
+prose_orange : Css.Style
+prose_orange =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#ea580c"
+        , Css.property "--tw-prose-invert-links" "#f97316"
+        ]
+
+
+prose_pink : Css.Style
+prose_pink =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#db2777"
+        , Css.property "--tw-prose-invert-links" "#ec4899"
+        ]
+
+
+prose_purple : Css.Style
+prose_purple =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#9333ea"
+        , Css.property "--tw-prose-invert-links" "#a855f7"
+        ]
+
+
+prose_red : Css.Style
+prose_red =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#dc2626"
+        , Css.property "--tw-prose-invert-links" "#ef4444"
+        ]
+
+
+prose_rose : Css.Style
+prose_rose =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#e11d48"
+        , Css.property "--tw-prose-invert-links" "#f43f5e"
+        ]
+
+
+prose_sky : Css.Style
+prose_sky =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#0284c7"
+        , Css.property "--tw-prose-invert-links" "#0ea5e9"
+        ]
+
+
+prose_slate : Css.Style
+prose_slate =
+    Css.batch
+        [ Css.property "--tw-prose-body" "#334155"
+        , Css.property "--tw-prose-headings" "#0f172a"
+        , Css.property "--tw-prose-lead" "#475569"
+        , Css.property "--tw-prose-links" "#0f172a"
+        , Css.property "--tw-prose-bold" "#0f172a"
+        , Css.property "--tw-prose-counters" "#64748b"
+        , Css.property "--tw-prose-bullets" "#cbd5e1"
+        , Css.property "--tw-prose-hr" "#e2e8f0"
+        , Css.property "--tw-prose-quotes" "#0f172a"
+        , Css.property "--tw-prose-quote-borders" "#e2e8f0"
+        , Css.property "--tw-prose-captions" "#64748b"
+        , Css.property "--tw-prose-kbd" "#0f172a"
+        , Css.property "--tw-prose-kbd-shadows" "15 23 42"
+        , Css.property "--tw-prose-code" "#0f172a"
+        , Css.property "--tw-prose-pre-code" "#e2e8f0"
+        , Css.property "--tw-prose-pre-bg" "#1e293b"
+        , Css.property "--tw-prose-th-borders" "#cbd5e1"
+        , Css.property "--tw-prose-td-borders" "#e2e8f0"
+        , Css.property "--tw-prose-invert-body" "#cbd5e1"
+        , Css.property "--tw-prose-invert-headings" "#fff"
+        , Css.property "--tw-prose-invert-lead" "#94a3b8"
+        , Css.property "--tw-prose-invert-links" "#fff"
+        , Css.property "--tw-prose-invert-bold" "#fff"
+        , Css.property "--tw-prose-invert-counters" "#94a3b8"
+        , Css.property "--tw-prose-invert-bullets" "#475569"
+        , Css.property "--tw-prose-invert-hr" "#334155"
+        , Css.property "--tw-prose-invert-quotes" "#f1f5f9"
+        , Css.property "--tw-prose-invert-quote-borders" "#334155"
+        , Css.property "--tw-prose-invert-captions" "#94a3b8"
+        , Css.property "--tw-prose-invert-kbd" "#fff"
+        , Css.property "--tw-prose-invert-kbd-shadows" "255 255 255"
+        , Css.property "--tw-prose-invert-code" "#fff"
+        , Css.property "--tw-prose-invert-pre-code" "#cbd5e1"
+        , Css.property "--tw-prose-invert-pre-bg" "rgb(0 0 0 / 50%)"
+        , Css.property "--tw-prose-invert-th-borders" "#475569"
+        , Css.property "--tw-prose-invert-td-borders" "#334155"
         ]
 
 
@@ -15654,28 +22778,47 @@ prose_sm =
     Css.batch
         [ Css.property "font-size" "0.875rem"
         , Css.property "line-height" "1.7142857"
-        , Css.Global.children
-            [ Css.Global.selector ":last-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-sm > :last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-bottom" "0"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector ":first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-sm > :first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td:last-child"
+            [ Css.Global.selector ":where(figcaption):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.8571429em"
+                , Css.property "line-height" "1.3333333"
+                , Css.property "margin-top" "0.6666667em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figure > *):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                , Css.property "margin-bottom" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figure):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.7142857em"
+                , Css.property "margin-bottom" "1.7142857em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(tbody td:last-child, tfoot td:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td:first-child"
+            [ Css.Global.selector ":where(tbody td:first-child, tfoot td:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-left" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td"
+            [ Css.Global.selector ":where(tbody td, tfoot td):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-top" "0.6666667em"
                 , Css.property "padding-right" "1em"
                 , Css.property "padding-bottom" "0.6666667em"
@@ -15683,147 +22826,135 @@ prose_sm =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th:last-child"
+            [ Css.Global.selector ":where(thead th:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th:first-child"
+            [ Css.Global.selector ":where(thead th:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-left" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th"
+            [ Css.Global.selector ":where(thead th):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "1em"
                 , Css.property "padding-bottom" "0.6666667em"
                 , Css.property "padding-left" "1em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "table"
+            [ Css.Global.selector ":where(table):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8571429em"
                 , Css.property "line-height" "1.5"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h4 + *"
+            [ Css.Global.selector ":where(h4 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3 + *"
+            [ Css.Global.selector ":where(h3 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2 + *"
+            [ Css.Global.selector ":where(h2 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "hr + *"
+            [ Css.Global.selector ":where(hr + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "hr"
+            [ Css.Global.selector ":where(hr):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "2.8571429em"
                 , Css.property "margin-bottom" "2.8571429em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol ol"
-                [ Css.property "margin-top" "0.5714286em"
-                , Css.property "margin-bottom" "0.5714286em"
+            [ Css.Global.selector ":where(dd):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.2857143em"
+                , Css.property "padding-left" "1.5714286em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol ul"
-                [ Css.property "margin-top" "0.5714286em"
-                , Css.property "margin-bottom" "0.5714286em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ul ol"
-                [ Css.property "margin-top" "0.5714286em"
-                , Css.property "margin-bottom" "0.5714286em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ul ul"
-                [ Css.property "margin-top" "0.5714286em"
-                , Css.property "margin-bottom" "0.5714286em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ol > li > *:last-child"
-                [ Css.property "margin-bottom" "1.1428571em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ol > li > *:first-child"
+            [ Css.Global.selector ":where(dt):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.1428571em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li > *:last-child"
-                [ Css.property "margin-bottom" "1.1428571em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li > *:first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(dl):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.1428571em"
+                , Css.property "margin-bottom" "1.1428571em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li p"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul ul, ul ol, ol ul, ol ol):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.5714286em"
                 , Css.property "margin-bottom" "0.5714286em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul > li::before"
-                [ Css.property "height" "0.3571429em"
-                , Css.property "width" "0.3571429em"
-                , Css.property "top" "calc(0.8571429em - 0.1785714em)"
-                , Css.property "left" "0.2142857em"
+            [ Css.Global.selector ":where(.prose-sm > ol > li > *:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-bottom" "1.1428571em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul > li"
-                [ Css.property "padding-left" "1.5714286em"
+            [ Css.Global.selector ":where(.prose-sm > ol > li > *:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.1428571em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol > li::before"
-                [ Css.property "left" "0"
+            [ Css.Global.selector ":where(.prose-sm > ul > li > *:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-bottom" "1.1428571em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol > li"
-                [ Css.property "padding-left" "1.5714286em"
+            [ Css.Global.selector ":where(.prose-sm > ul > li > *:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.1428571em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "li"
+            [ Css.Global.selector ":where(.prose-sm > ul > li p):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.5714286em"
+                , Css.property "margin-bottom" "0.5714286em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.4285714em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ol > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.4285714em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(li):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.2857143em"
                 , Css.property "margin-bottom" "0.2857143em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul"
+            [ Css.Global.selector ":where(ul):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.1428571em"
                 , Css.property "margin-bottom" "1.1428571em"
+                , Css.property "padding-left" "1.5714286em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol"
+            [ Css.Global.selector ":where(ol):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.1428571em"
                 , Css.property "margin-bottom" "1.1428571em"
+                , Css.property "padding-left" "1.5714286em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "pre"
+            [ Css.Global.selector ":where(pre):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8571429em"
                 , Css.property "line-height" "1.6666667"
                 , Css.property "margin-top" "1.6666667em"
@@ -15836,60 +22967,63 @@ prose_sm =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3 code"
+            [ Css.Global.selector ":where(h3 code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8888889em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2 code"
+            [ Css.Global.selector ":where(h2 code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.9em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "code"
+            [ Css.Global.selector ":where(code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8571429em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure figcaption"
+            [ Css.Global.selector ":where(kbd):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8571429em"
-                , Css.property "line-height" "1.3333333"
-                , Css.property "margin-top" "0.6666667em"
+                , Css.property "border-radius" "0.3125rem"
+                , Css.property "padding-top" "0.1428571em"
+                , Css.property "padding-right" "0.3571429em"
+                , Css.property "padding-bottom" "0.1428571em"
+                , Css.property "padding-left" "0.3571429em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure > *"
+            [ Css.Global.selector ":where(video):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.7142857em"
+                , Css.property "margin-bottom" "1.7142857em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(picture > img):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 , Css.property "margin-bottom" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure"
+            [ Css.Global.selector ":where(picture):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.7142857em"
                 , Css.property "margin-bottom" "1.7142857em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "video"
+            [ Css.Global.selector ":where(img):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.7142857em"
                 , Css.property "margin-bottom" "1.7142857em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "img"
-                [ Css.property "margin-top" "1.7142857em"
-                , Css.property "margin-bottom" "1.7142857em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "h4"
+            [ Css.Global.selector ":where(h4):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.4285714em"
                 , Css.property "margin-bottom" "0.5714286em"
                 , Css.property "line-height" "1.4285714"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3"
+            [ Css.Global.selector ":where(h3):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.2857143em"
                 , Css.property "margin-top" "1.5555556em"
                 , Css.property "margin-bottom" "0.4444444em"
@@ -15897,7 +23031,7 @@ prose_sm =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2"
+            [ Css.Global.selector ":where(h2):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.4285714em"
                 , Css.property "margin-top" "1.6em"
                 , Css.property "margin-bottom" "0.8em"
@@ -15905,7 +23039,7 @@ prose_sm =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h1"
+            [ Css.Global.selector ":where(h1):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "2.1428571em"
                 , Css.property "margin-top" "0"
                 , Css.property "margin-bottom" "0.8em"
@@ -15913,14 +23047,14 @@ prose_sm =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "blockquote"
+            [ Css.Global.selector ":where(blockquote):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.3333333em"
                 , Css.property "margin-bottom" "1.3333333em"
                 , Css.property "padding-left" "1.1111111em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector ".lead"
+            [ Css.Global.selector ":where(.lead):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.2857143em"
                 , Css.property "line-height" "1.5555556"
                 , Css.property "margin-top" "0.8888889em"
@@ -15928,11 +23062,69 @@ prose_sm =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "p"
+            [ Css.Global.selector ":where(p):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.1428571em"
                 , Css.property "margin-bottom" "1.1428571em"
                 ]
             ]
+        ]
+
+
+prose_stone : Css.Style
+prose_stone =
+    Css.batch
+        [ Css.property "--tw-prose-body" "#44403c"
+        , Css.property "--tw-prose-headings" "#1c1917"
+        , Css.property "--tw-prose-lead" "#57534e"
+        , Css.property "--tw-prose-links" "#1c1917"
+        , Css.property "--tw-prose-bold" "#1c1917"
+        , Css.property "--tw-prose-counters" "#78716c"
+        , Css.property "--tw-prose-bullets" "#d6d3d1"
+        , Css.property "--tw-prose-hr" "#e7e5e4"
+        , Css.property "--tw-prose-quotes" "#1c1917"
+        , Css.property "--tw-prose-quote-borders" "#e7e5e4"
+        , Css.property "--tw-prose-captions" "#78716c"
+        , Css.property "--tw-prose-kbd" "#1c1917"
+        , Css.property "--tw-prose-kbd-shadows" "28 25 23"
+        , Css.property "--tw-prose-code" "#1c1917"
+        , Css.property "--tw-prose-pre-code" "#e7e5e4"
+        , Css.property "--tw-prose-pre-bg" "#292524"
+        , Css.property "--tw-prose-th-borders" "#d6d3d1"
+        , Css.property "--tw-prose-td-borders" "#e7e5e4"
+        , Css.property "--tw-prose-invert-body" "#d6d3d1"
+        , Css.property "--tw-prose-invert-headings" "#fff"
+        , Css.property "--tw-prose-invert-lead" "#a8a29e"
+        , Css.property "--tw-prose-invert-links" "#fff"
+        , Css.property "--tw-prose-invert-bold" "#fff"
+        , Css.property "--tw-prose-invert-counters" "#a8a29e"
+        , Css.property "--tw-prose-invert-bullets" "#57534e"
+        , Css.property "--tw-prose-invert-hr" "#44403c"
+        , Css.property "--tw-prose-invert-quotes" "#f5f5f4"
+        , Css.property "--tw-prose-invert-quote-borders" "#44403c"
+        , Css.property "--tw-prose-invert-captions" "#a8a29e"
+        , Css.property "--tw-prose-invert-kbd" "#fff"
+        , Css.property "--tw-prose-invert-kbd-shadows" "255 255 255"
+        , Css.property "--tw-prose-invert-code" "#fff"
+        , Css.property "--tw-prose-invert-pre-code" "#d6d3d1"
+        , Css.property "--tw-prose-invert-pre-bg" "rgb(0 0 0 / 50%)"
+        , Css.property "--tw-prose-invert-th-borders" "#57534e"
+        , Css.property "--tw-prose-invert-td-borders" "#44403c"
+        ]
+
+
+prose_teal : Css.Style
+prose_teal =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#0d9488"
+        , Css.property "--tw-prose-invert-links" "#14b8a6"
+        ]
+
+
+prose_violet : Css.Style
+prose_violet =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#7c3aed"
+        , Css.property "--tw-prose-invert-links" "#8b5cf6"
         ]
 
 
@@ -15941,28 +23133,47 @@ prose_xl =
     Css.batch
         [ Css.property "font-size" "1.25rem"
         , Css.property "line-height" "1.8"
-        , Css.Global.children
-            [ Css.Global.selector ":last-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-xl > :last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-bottom" "0"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector ":first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(.prose-xl > :first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td:last-child"
+            [ Css.Global.selector ":where(figcaption):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "font-size" "0.9em"
+                , Css.property "line-height" "1.5555556"
+                , Css.property "margin-top" "1em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figure > *):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0"
+                , Css.property "margin-bottom" "0"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(figure):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(tbody td:last-child, tfoot td:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td:first-child"
+            [ Css.Global.selector ":where(tbody td:first-child, tfoot td:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-left" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "tbody td"
+            [ Css.Global.selector ":where(tbody td, tfoot td):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-top" "0.8888889em"
                 , Css.property "padding-right" "0.6666667em"
                 , Css.property "padding-bottom" "0.8888889em"
@@ -15970,147 +23181,135 @@ prose_xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th:last-child"
+            [ Css.Global.selector ":where(thead th:last-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th:first-child"
+            [ Css.Global.selector ":where(thead th:first-child):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-left" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "thead th"
+            [ Css.Global.selector ":where(thead th):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "padding-right" "0.6666667em"
                 , Css.property "padding-bottom" "0.8888889em"
                 , Css.property "padding-left" "0.6666667em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "table"
+            [ Css.Global.selector ":where(table):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.9em"
                 , Css.property "line-height" "1.5555556"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h4 + *"
+            [ Css.Global.selector ":where(h4 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3 + *"
+            [ Css.Global.selector ":where(h3 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2 + *"
+            [ Css.Global.selector ":where(h2 + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "hr + *"
+            [ Css.Global.selector ":where(hr + *):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "hr"
+            [ Css.Global.selector ":where(hr):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "2.8em"
                 , Css.property "margin-bottom" "2.8em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol ol"
-                [ Css.property "margin-top" "0.8em"
-                , Css.property "margin-bottom" "0.8em"
+            [ Css.Global.selector ":where(dd):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.6em"
+                , Css.property "padding-left" "1.6em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol ul"
-                [ Css.property "margin-top" "0.8em"
-                , Css.property "margin-bottom" "0.8em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ul ol"
-                [ Css.property "margin-top" "0.8em"
-                , Css.property "margin-bottom" "0.8em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "ul ul"
-                [ Css.property "margin-top" "0.8em"
-                , Css.property "margin-bottom" "0.8em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ol > li > *:last-child"
-                [ Css.property "margin-bottom" "1.2em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ol > li > *:first-child"
+            [ Css.Global.selector ":where(dt):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.2em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li > *:last-child"
-                [ Css.property "margin-bottom" "1.2em"
-                ]
-            ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li > *:first-child"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(dl):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.2em"
+                , Css.property "margin-bottom" "1.2em"
                 ]
             ]
-        , Css.Global.children
-            [ Css.Global.selector "ul > li p"
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul ul, ul ol, ol ul, ol ol):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.8em"
                 , Css.property "margin-bottom" "0.8em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul > li::before"
-                [ Css.property "width" "0.35em"
-                , Css.property "height" "0.35em"
-                , Css.property "top" "calc(0.9em - 0.175em)"
-                , Css.property "left" "0.25em"
+            [ Css.Global.selector ":where(.prose-xl > ol > li > *:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-bottom" "1.2em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul > li"
-                [ Css.property "padding-left" "1.8em"
+            [ Css.Global.selector ":where(.prose-xl > ol > li > *:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.2em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol > li::before"
-                [ Css.property "left" "0"
+            [ Css.Global.selector ":where(.prose-xl > ul > li > *:last-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-bottom" "1.2em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol > li"
-                [ Css.property "padding-left" "1.8em"
+            [ Css.Global.selector ":where(.prose-xl > ul > li > *:first-child):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "1.2em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "li"
+            [ Css.Global.selector ":where(.prose-xl > ul > li p):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "0.8em"
+                , Css.property "margin-bottom" "0.8em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ul > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.4em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(ol > li):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "padding-left" "0.4em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(li):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0.6em"
                 , Css.property "margin-bottom" "0.6em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ul"
+            [ Css.Global.selector ":where(ul):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.2em"
                 , Css.property "margin-bottom" "1.2em"
+                , Css.property "padding-left" "1.6em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "ol"
+            [ Css.Global.selector ":where(ol):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.2em"
                 , Css.property "margin-bottom" "1.2em"
+                , Css.property "padding-left" "1.6em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "pre"
+            [ Css.Global.selector ":where(pre):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.9em"
                 , Css.property "line-height" "1.7777778"
                 , Css.property "margin-top" "2em"
@@ -16123,60 +23322,63 @@ prose_xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3 code"
+            [ Css.Global.selector ":where(h3 code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.9em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2 code"
+            [ Css.Global.selector ":where(h2 code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.8611111em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "code"
+            [ Css.Global.selector ":where(code):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.9em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure figcaption"
+            [ Css.Global.selector ":where(kbd):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "0.9em"
-                , Css.property "line-height" "1.5555556"
-                , Css.property "margin-top" "1em"
+                , Css.property "border-radius" "0.3125rem"
+                , Css.property "padding-top" "0.25em"
+                , Css.property "padding-right" "0.4em"
+                , Css.property "padding-bottom" "0.25em"
+                , Css.property "padding-left" "0.4em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure > *"
+            [ Css.Global.selector ":where(video):not(:where(.not-prose, .not-prose *))"
+                [ Css.property "margin-top" "2em"
+                , Css.property "margin-bottom" "2em"
+                ]
+            ]
+        , Css.Global.descendants
+            [ Css.Global.selector ":where(picture > img):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "0"
                 , Css.property "margin-bottom" "0"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "figure"
+            [ Css.Global.selector ":where(picture):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "2em"
                 , Css.property "margin-bottom" "2em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "video"
+            [ Css.Global.selector ":where(img):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "2em"
                 , Css.property "margin-bottom" "2em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "img"
-                [ Css.property "margin-top" "2em"
-                , Css.property "margin-bottom" "2em"
-                ]
-            ]
-        , Css.Global.descendants
-            [ Css.Global.selector "h4"
+            [ Css.Global.selector ":where(h4):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.8em"
                 , Css.property "margin-bottom" "0.6em"
                 , Css.property "line-height" "1.6"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h3"
+            [ Css.Global.selector ":where(h3):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.5em"
                 , Css.property "margin-top" "1.6em"
                 , Css.property "margin-bottom" "0.6666667em"
@@ -16184,7 +23386,7 @@ prose_xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h2"
+            [ Css.Global.selector ":where(h2):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.8em"
                 , Css.property "margin-top" "1.5555556em"
                 , Css.property "margin-bottom" "0.8888889em"
@@ -16192,7 +23394,7 @@ prose_xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "h1"
+            [ Css.Global.selector ":where(h1):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "2.8em"
                 , Css.property "margin-top" "0"
                 , Css.property "margin-bottom" "0.8571429em"
@@ -16200,14 +23402,14 @@ prose_xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "blockquote"
+            [ Css.Global.selector ":where(blockquote):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.6em"
                 , Css.property "margin-bottom" "1.6em"
                 , Css.property "padding-left" "1.0666667em"
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector ".lead"
+            [ Css.Global.selector ":where(.lead):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "font-size" "1.2em"
                 , Css.property "line-height" "1.5"
                 , Css.property "margin-top" "1em"
@@ -16215,12 +23417,237 @@ prose_xl =
                 ]
             ]
         , Css.Global.descendants
-            [ Css.Global.selector "p"
+            [ Css.Global.selector ":where(p):not(:where(.not-prose, .not-prose *))"
                 [ Css.property "margin-top" "1.2em"
                 , Css.property "margin-bottom" "1.2em"
                 ]
             ]
         ]
+
+
+prose_yellow : Css.Style
+prose_yellow =
+    Css.batch
+        [ Css.property "--tw-prose-links" "#ca8a04"
+        , Css.property "--tw-prose-invert-links" "#eab308"
+        ]
+
+
+prose_zinc : Css.Style
+prose_zinc =
+    Css.batch
+        [ Css.property "--tw-prose-body" "#3f3f46"
+        , Css.property "--tw-prose-headings" "#18181b"
+        , Css.property "--tw-prose-lead" "#52525b"
+        , Css.property "--tw-prose-links" "#18181b"
+        , Css.property "--tw-prose-bold" "#18181b"
+        , Css.property "--tw-prose-counters" "#71717a"
+        , Css.property "--tw-prose-bullets" "#d4d4d8"
+        , Css.property "--tw-prose-hr" "#e4e4e7"
+        , Css.property "--tw-prose-quotes" "#18181b"
+        , Css.property "--tw-prose-quote-borders" "#e4e4e7"
+        , Css.property "--tw-prose-captions" "#71717a"
+        , Css.property "--tw-prose-kbd" "#18181b"
+        , Css.property "--tw-prose-kbd-shadows" "24 24 27"
+        , Css.property "--tw-prose-code" "#18181b"
+        , Css.property "--tw-prose-pre-code" "#e4e4e7"
+        , Css.property "--tw-prose-pre-bg" "#27272a"
+        , Css.property "--tw-prose-th-borders" "#d4d4d8"
+        , Css.property "--tw-prose-td-borders" "#e4e4e7"
+        , Css.property "--tw-prose-invert-body" "#d4d4d8"
+        , Css.property "--tw-prose-invert-headings" "#fff"
+        , Css.property "--tw-prose-invert-lead" "#a1a1aa"
+        , Css.property "--tw-prose-invert-links" "#fff"
+        , Css.property "--tw-prose-invert-bold" "#fff"
+        , Css.property "--tw-prose-invert-counters" "#a1a1aa"
+        , Css.property "--tw-prose-invert-bullets" "#52525b"
+        , Css.property "--tw-prose-invert-hr" "#3f3f46"
+        , Css.property "--tw-prose-invert-quotes" "#f4f4f5"
+        , Css.property "--tw-prose-invert-quote-borders" "#3f3f46"
+        , Css.property "--tw-prose-invert-captions" "#a1a1aa"
+        , Css.property "--tw-prose-invert-kbd" "#fff"
+        , Css.property "--tw-prose-invert-kbd-shadows" "255 255 255"
+        , Css.property "--tw-prose-invert-code" "#fff"
+        , Css.property "--tw-prose-invert-pre-code" "#d4d4d8"
+        , Css.property "--tw-prose-invert-pre-bg" "rgb(0 0 0 / 50%)"
+        , Css.property "--tw-prose-invert-th-borders" "#52525b"
+        , Css.property "--tw-prose-invert-td-borders" "#3f3f46"
+        ]
+
+
+ps_0 : Css.Style
+ps_0 =
+    Css.property "padding-inline-start" "0px"
+
+
+ps_0_dot_5 : Css.Style
+ps_0_dot_5 =
+    Css.property "padding-inline-start" "0.125rem"
+
+
+ps_1 : Css.Style
+ps_1 =
+    Css.property "padding-inline-start" "0.25rem"
+
+
+ps_10 : Css.Style
+ps_10 =
+    Css.property "padding-inline-start" "2.5rem"
+
+
+ps_11 : Css.Style
+ps_11 =
+    Css.property "padding-inline-start" "2.75rem"
+
+
+ps_12 : Css.Style
+ps_12 =
+    Css.property "padding-inline-start" "3rem"
+
+
+ps_14 : Css.Style
+ps_14 =
+    Css.property "padding-inline-start" "3.5rem"
+
+
+ps_16 : Css.Style
+ps_16 =
+    Css.property "padding-inline-start" "4rem"
+
+
+ps_1_dot_5 : Css.Style
+ps_1_dot_5 =
+    Css.property "padding-inline-start" "0.375rem"
+
+
+ps_2 : Css.Style
+ps_2 =
+    Css.property "padding-inline-start" "0.5rem"
+
+
+ps_20 : Css.Style
+ps_20 =
+    Css.property "padding-inline-start" "5rem"
+
+
+ps_24 : Css.Style
+ps_24 =
+    Css.property "padding-inline-start" "6rem"
+
+
+ps_28 : Css.Style
+ps_28 =
+    Css.property "padding-inline-start" "7rem"
+
+
+ps_2_dot_5 : Css.Style
+ps_2_dot_5 =
+    Css.property "padding-inline-start" "0.625rem"
+
+
+ps_3 : Css.Style
+ps_3 =
+    Css.property "padding-inline-start" "0.75rem"
+
+
+ps_32 : Css.Style
+ps_32 =
+    Css.property "padding-inline-start" "8rem"
+
+
+ps_36 : Css.Style
+ps_36 =
+    Css.property "padding-inline-start" "9rem"
+
+
+ps_3_dot_5 : Css.Style
+ps_3_dot_5 =
+    Css.property "padding-inline-start" "0.875rem"
+
+
+ps_4 : Css.Style
+ps_4 =
+    Css.property "padding-inline-start" "1rem"
+
+
+ps_40 : Css.Style
+ps_40 =
+    Css.property "padding-inline-start" "10rem"
+
+
+ps_44 : Css.Style
+ps_44 =
+    Css.property "padding-inline-start" "11rem"
+
+
+ps_48 : Css.Style
+ps_48 =
+    Css.property "padding-inline-start" "12rem"
+
+
+ps_5 : Css.Style
+ps_5 =
+    Css.property "padding-inline-start" "1.25rem"
+
+
+ps_52 : Css.Style
+ps_52 =
+    Css.property "padding-inline-start" "13rem"
+
+
+ps_56 : Css.Style
+ps_56 =
+    Css.property "padding-inline-start" "14rem"
+
+
+ps_6 : Css.Style
+ps_6 =
+    Css.property "padding-inline-start" "1.5rem"
+
+
+ps_60 : Css.Style
+ps_60 =
+    Css.property "padding-inline-start" "15rem"
+
+
+ps_64 : Css.Style
+ps_64 =
+    Css.property "padding-inline-start" "16rem"
+
+
+ps_7 : Css.Style
+ps_7 =
+    Css.property "padding-inline-start" "1.75rem"
+
+
+ps_72 : Css.Style
+ps_72 =
+    Css.property "padding-inline-start" "18rem"
+
+
+ps_8 : Css.Style
+ps_8 =
+    Css.property "padding-inline-start" "2rem"
+
+
+ps_80 : Css.Style
+ps_80 =
+    Css.property "padding-inline-start" "20rem"
+
+
+ps_9 : Css.Style
+ps_9 =
+    Css.property "padding-inline-start" "2.25rem"
+
+
+ps_96 : Css.Style
+ps_96 =
+    Css.property "padding-inline-start" "24rem"
+
+
+ps_px : Css.Style
+ps_px =
+    Css.property "padding-inline-start" "1px"
 
 
 pt_0 : Css.Style
@@ -17252,22 +24679,6 @@ ring_8 =
         ]
 
 
-ring_destruct : Css.Style
-ring_destruct =
-    Css.batch
-        [ Css.property "--tw-ring-opacity" "1"
-        , Css.property "--tw-ring-color" "rgba(142, 74, 73, var(--tw-ring-opacity))"
-        ]
-
-
-ring_exclaim : Css.Style
-ring_exclaim =
-    Css.batch
-        [ Css.property "--tw-ring-opacity" "1"
-        , Css.property "--tw-ring-color" "rgba(224, 144, 93, var(--tw-ring-opacity))"
-        ]
-
-
 ring_inset : Css.Style
 ring_inset =
     Css.property "--tw-ring-inset" "inset"
@@ -17296,36 +24707,6 @@ ring_offset_4 =
 ring_offset_8 : Css.Style
 ring_offset_8 =
     Css.property "--tw-ring-offset-width" "8px"
-
-
-ring_offset_destruct : Css.Style
-ring_offset_destruct =
-    Css.property "--tw-ring-offset-color" "#8E4A49"
-
-
-ring_offset_exclaim : Css.Style
-ring_offset_exclaim =
-    Css.property "--tw-ring-offset-color" "#E0905D"
-
-
-ring_offset_primary : Css.Style
-ring_offset_primary =
-    Css.property "--tw-ring-offset-color" "#965958"
-
-
-ring_offset_secondary : Css.Style
-ring_offset_secondary =
-    Css.property "--tw-ring-offset-color" "#dfeee3"
-
-
-ring_offset_success : Css.Style
-ring_offset_success =
-    Css.property "--tw-ring-offset-color" "#4ED0B6"
-
-
-ring_offset_tertiary : Css.Style
-ring_offset_tertiary =
-    Css.property "--tw-ring-offset-color" "#A19FBB"
 
 
 ring_opacity_0 : Css.Style
@@ -17403,81 +24784,76 @@ ring_opacity_95 =
     Css.property "--tw-ring-opacity" "0.95"
 
 
-ring_primary : Css.Style
-ring_primary =
-    Css.batch
-        [ Css.property "--tw-ring-opacity" "1"
-        , Css.property "--tw-ring-color" "rgba(150, 89, 88, var(--tw-ring-opacity))"
-        ]
-
-
-ring_secondary : Css.Style
-ring_secondary =
-    Css.batch
-        [ Css.property "--tw-ring-opacity" "1"
-        , Css.property "--tw-ring-color" "rgba(223, 238, 227, var(--tw-ring-opacity))"
-        ]
-
-
-ring_success : Css.Style
-ring_success =
-    Css.batch
-        [ Css.property "--tw-ring-opacity" "1"
-        , Css.property "--tw-ring-color" "rgba(78, 208, 182, var(--tw-ring-opacity))"
-        ]
-
-
-ring_tertiary : Css.Style
-ring_tertiary =
-    Css.batch
-        [ Css.property "--tw-ring-opacity" "1"
-        , Css.property "--tw-ring-color" "rgba(161, 159, 187, var(--tw-ring-opacity))"
-        ]
-
-
 rotate_0 : Css.Style
 rotate_0 =
-    Css.property "--tw-rotate" "0deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "0deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 rotate_1 : Css.Style
 rotate_1 =
-    Css.property "--tw-rotate" "1deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "1deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 rotate_12 : Css.Style
 rotate_12 =
-    Css.property "--tw-rotate" "12deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "12deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 rotate_180 : Css.Style
 rotate_180 =
-    Css.property "--tw-rotate" "180deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "180deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 rotate_2 : Css.Style
 rotate_2 =
-    Css.property "--tw-rotate" "2deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "2deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 rotate_3 : Css.Style
 rotate_3 =
-    Css.property "--tw-rotate" "3deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "3deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 rotate_45 : Css.Style
 rotate_45 =
-    Css.property "--tw-rotate" "45deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "45deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 rotate_6 : Css.Style
 rotate_6 =
-    Css.property "--tw-rotate" "6deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "6deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 rotate_90 : Css.Style
 rotate_90 =
-    Css.property "--tw-rotate" "90deg"
+    Css.batch
+        [ Css.property "--tw-rotate" "90deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 rounded : Css.Style
@@ -17657,6 +25033,168 @@ rounded_br_xl =
     Css.property "border-bottom-right-radius" "0.75rem"
 
 
+rounded_e : Css.Style
+rounded_e =
+    Css.batch
+        [ Css.property "border-start-end-radius" "0.25rem"
+        , Css.property "border-end-end-radius" "0.25rem"
+        ]
+
+
+rounded_e_2xl : Css.Style
+rounded_e_2xl =
+    Css.batch
+        [ Css.property "border-start-end-radius" "1rem"
+        , Css.property "border-end-end-radius" "1rem"
+        ]
+
+
+rounded_e_3xl : Css.Style
+rounded_e_3xl =
+    Css.batch
+        [ Css.property "border-start-end-radius" "1.5rem"
+        , Css.property "border-end-end-radius" "1.5rem"
+        ]
+
+
+rounded_e_full : Css.Style
+rounded_e_full =
+    Css.batch
+        [ Css.property "border-start-end-radius" "9999px"
+        , Css.property "border-end-end-radius" "9999px"
+        ]
+
+
+rounded_e_lg : Css.Style
+rounded_e_lg =
+    Css.batch
+        [ Css.property "border-start-end-radius" "0.5rem"
+        , Css.property "border-end-end-radius" "0.5rem"
+        ]
+
+
+rounded_e_md : Css.Style
+rounded_e_md =
+    Css.batch
+        [ Css.property "border-start-end-radius" "0.375rem"
+        , Css.property "border-end-end-radius" "0.375rem"
+        ]
+
+
+rounded_e_none : Css.Style
+rounded_e_none =
+    Css.batch
+        [ Css.property "border-start-end-radius" "0px"
+        , Css.property "border-end-end-radius" "0px"
+        ]
+
+
+rounded_e_sm : Css.Style
+rounded_e_sm =
+    Css.batch
+        [ Css.property "border-start-end-radius" "0.125rem"
+        , Css.property "border-end-end-radius" "0.125rem"
+        ]
+
+
+rounded_e_xl : Css.Style
+rounded_e_xl =
+    Css.batch
+        [ Css.property "border-start-end-radius" "0.75rem"
+        , Css.property "border-end-end-radius" "0.75rem"
+        ]
+
+
+rounded_ee : Css.Style
+rounded_ee =
+    Css.property "border-end-end-radius" "0.25rem"
+
+
+rounded_ee_2xl : Css.Style
+rounded_ee_2xl =
+    Css.property "border-end-end-radius" "1rem"
+
+
+rounded_ee_3xl : Css.Style
+rounded_ee_3xl =
+    Css.property "border-end-end-radius" "1.5rem"
+
+
+rounded_ee_full : Css.Style
+rounded_ee_full =
+    Css.property "border-end-end-radius" "9999px"
+
+
+rounded_ee_lg : Css.Style
+rounded_ee_lg =
+    Css.property "border-end-end-radius" "0.5rem"
+
+
+rounded_ee_md : Css.Style
+rounded_ee_md =
+    Css.property "border-end-end-radius" "0.375rem"
+
+
+rounded_ee_none : Css.Style
+rounded_ee_none =
+    Css.property "border-end-end-radius" "0px"
+
+
+rounded_ee_sm : Css.Style
+rounded_ee_sm =
+    Css.property "border-end-end-radius" "0.125rem"
+
+
+rounded_ee_xl : Css.Style
+rounded_ee_xl =
+    Css.property "border-end-end-radius" "0.75rem"
+
+
+rounded_es : Css.Style
+rounded_es =
+    Css.property "border-end-start-radius" "0.25rem"
+
+
+rounded_es_2xl : Css.Style
+rounded_es_2xl =
+    Css.property "border-end-start-radius" "1rem"
+
+
+rounded_es_3xl : Css.Style
+rounded_es_3xl =
+    Css.property "border-end-start-radius" "1.5rem"
+
+
+rounded_es_full : Css.Style
+rounded_es_full =
+    Css.property "border-end-start-radius" "9999px"
+
+
+rounded_es_lg : Css.Style
+rounded_es_lg =
+    Css.property "border-end-start-radius" "0.5rem"
+
+
+rounded_es_md : Css.Style
+rounded_es_md =
+    Css.property "border-end-start-radius" "0.375rem"
+
+
+rounded_es_none : Css.Style
+rounded_es_none =
+    Css.property "border-end-start-radius" "0px"
+
+
+rounded_es_sm : Css.Style
+rounded_es_sm =
+    Css.property "border-end-start-radius" "0.125rem"
+
+
+rounded_es_xl : Css.Style
+rounded_es_xl =
+    Css.property "border-end-start-radius" "0.75rem"
+
+
 rounded_full : Css.Style
 rounded_full =
     Css.property "border-radius" "9999px"
@@ -17821,9 +25359,171 @@ rounded_r_xl =
         ]
 
 
+rounded_s : Css.Style
+rounded_s =
+    Css.batch
+        [ Css.property "border-start-start-radius" "0.25rem"
+        , Css.property "border-end-start-radius" "0.25rem"
+        ]
+
+
+rounded_s_2xl : Css.Style
+rounded_s_2xl =
+    Css.batch
+        [ Css.property "border-start-start-radius" "1rem"
+        , Css.property "border-end-start-radius" "1rem"
+        ]
+
+
+rounded_s_3xl : Css.Style
+rounded_s_3xl =
+    Css.batch
+        [ Css.property "border-start-start-radius" "1.5rem"
+        , Css.property "border-end-start-radius" "1.5rem"
+        ]
+
+
+rounded_s_full : Css.Style
+rounded_s_full =
+    Css.batch
+        [ Css.property "border-start-start-radius" "9999px"
+        , Css.property "border-end-start-radius" "9999px"
+        ]
+
+
+rounded_s_lg : Css.Style
+rounded_s_lg =
+    Css.batch
+        [ Css.property "border-start-start-radius" "0.5rem"
+        , Css.property "border-end-start-radius" "0.5rem"
+        ]
+
+
+rounded_s_md : Css.Style
+rounded_s_md =
+    Css.batch
+        [ Css.property "border-start-start-radius" "0.375rem"
+        , Css.property "border-end-start-radius" "0.375rem"
+        ]
+
+
+rounded_s_none : Css.Style
+rounded_s_none =
+    Css.batch
+        [ Css.property "border-start-start-radius" "0px"
+        , Css.property "border-end-start-radius" "0px"
+        ]
+
+
+rounded_s_sm : Css.Style
+rounded_s_sm =
+    Css.batch
+        [ Css.property "border-start-start-radius" "0.125rem"
+        , Css.property "border-end-start-radius" "0.125rem"
+        ]
+
+
+rounded_s_xl : Css.Style
+rounded_s_xl =
+    Css.batch
+        [ Css.property "border-start-start-radius" "0.75rem"
+        , Css.property "border-end-start-radius" "0.75rem"
+        ]
+
+
+rounded_se : Css.Style
+rounded_se =
+    Css.property "border-start-end-radius" "0.25rem"
+
+
+rounded_se_2xl : Css.Style
+rounded_se_2xl =
+    Css.property "border-start-end-radius" "1rem"
+
+
+rounded_se_3xl : Css.Style
+rounded_se_3xl =
+    Css.property "border-start-end-radius" "1.5rem"
+
+
+rounded_se_full : Css.Style
+rounded_se_full =
+    Css.property "border-start-end-radius" "9999px"
+
+
+rounded_se_lg : Css.Style
+rounded_se_lg =
+    Css.property "border-start-end-radius" "0.5rem"
+
+
+rounded_se_md : Css.Style
+rounded_se_md =
+    Css.property "border-start-end-radius" "0.375rem"
+
+
+rounded_se_none : Css.Style
+rounded_se_none =
+    Css.property "border-start-end-radius" "0px"
+
+
+rounded_se_sm : Css.Style
+rounded_se_sm =
+    Css.property "border-start-end-radius" "0.125rem"
+
+
+rounded_se_xl : Css.Style
+rounded_se_xl =
+    Css.property "border-start-end-radius" "0.75rem"
+
+
 rounded_sm : Css.Style
 rounded_sm =
     Css.property "border-radius" "0.125rem"
+
+
+rounded_ss : Css.Style
+rounded_ss =
+    Css.property "border-start-start-radius" "0.25rem"
+
+
+rounded_ss_2xl : Css.Style
+rounded_ss_2xl =
+    Css.property "border-start-start-radius" "1rem"
+
+
+rounded_ss_3xl : Css.Style
+rounded_ss_3xl =
+    Css.property "border-start-start-radius" "1.5rem"
+
+
+rounded_ss_full : Css.Style
+rounded_ss_full =
+    Css.property "border-start-start-radius" "9999px"
+
+
+rounded_ss_lg : Css.Style
+rounded_ss_lg =
+    Css.property "border-start-start-radius" "0.5rem"
+
+
+rounded_ss_md : Css.Style
+rounded_ss_md =
+    Css.property "border-start-start-radius" "0.375rem"
+
+
+rounded_ss_none : Css.Style
+rounded_ss_none =
+    Css.property "border-start-start-radius" "0px"
+
+
+rounded_ss_sm : Css.Style
+rounded_ss_sm =
+    Css.property "border-start-start-radius" "0.125rem"
+
+
+rounded_ss_xl : Css.Style
+rounded_ss_xl =
+    Css.property "border-start-start-radius" "0.75rem"
 
 
 rounded_t : Css.Style
@@ -18115,27 +25815,42 @@ row_start_auto =
 
 saturate_0 : Css.Style
 saturate_0 =
-    Css.property "--tw-saturate" "saturate(0)"
+    Css.batch
+        [ Css.property "--tw-saturate" "saturate(0)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 saturate_100 : Css.Style
 saturate_100 =
-    Css.property "--tw-saturate" "saturate(1)"
+    Css.batch
+        [ Css.property "--tw-saturate" "saturate(1)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 saturate_150 : Css.Style
 saturate_150 =
-    Css.property "--tw-saturate" "saturate(1.5)"
+    Css.batch
+        [ Css.property "--tw-saturate" "saturate(1.5)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 saturate_200 : Css.Style
 saturate_200 =
-    Css.property "--tw-saturate" "saturate(2)"
+    Css.batch
+        [ Css.property "--tw-saturate" "saturate(2)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 saturate_50 : Css.Style
 saturate_50 =
-    Css.property "--tw-saturate" "saturate(.5)"
+    Css.batch
+        [ Css.property "--tw-saturate" "saturate(.5)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 scale_0 : Css.Style
@@ -18143,6 +25858,7 @@ scale_0 =
     Css.batch
         [ Css.property "--tw-scale-x" "0"
         , Css.property "--tw-scale-y" "0"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
         ]
 
 
@@ -18151,6 +25867,7 @@ scale_100 =
     Css.batch
         [ Css.property "--tw-scale-x" "1"
         , Css.property "--tw-scale-y" "1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
         ]
 
 
@@ -18159,6 +25876,7 @@ scale_105 =
     Css.batch
         [ Css.property "--tw-scale-x" "1.05"
         , Css.property "--tw-scale-y" "1.05"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
         ]
 
 
@@ -18167,6 +25885,7 @@ scale_110 =
     Css.batch
         [ Css.property "--tw-scale-x" "1.1"
         , Css.property "--tw-scale-y" "1.1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
         ]
 
 
@@ -18175,6 +25894,7 @@ scale_125 =
     Css.batch
         [ Css.property "--tw-scale-x" "1.25"
         , Css.property "--tw-scale-y" "1.25"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
         ]
 
 
@@ -18183,6 +25903,7 @@ scale_150 =
     Css.batch
         [ Css.property "--tw-scale-x" "1.5"
         , Css.property "--tw-scale-y" "1.5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
         ]
 
 
@@ -18191,6 +25912,7 @@ scale_50 =
     Css.batch
         [ Css.property "--tw-scale-x" ".5"
         , Css.property "--tw-scale-y" ".5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
         ]
 
 
@@ -18199,6 +25921,7 @@ scale_75 =
     Css.batch
         [ Css.property "--tw-scale-x" ".75"
         , Css.property "--tw-scale-y" ".75"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
         ]
 
 
@@ -18207,6 +25930,7 @@ scale_90 =
     Css.batch
         [ Css.property "--tw-scale-x" ".9"
         , Css.property "--tw-scale-y" ".9"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
         ]
 
 
@@ -18215,107 +25939,3748 @@ scale_95 =
     Css.batch
         [ Css.property "--tw-scale-x" ".95"
         , Css.property "--tw-scale-y" ".95"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
         ]
 
 
 scale_x_0 : Css.Style
 scale_x_0 =
-    Css.property "--tw-scale-x" "0"
+    Css.batch
+        [ Css.property "--tw-scale-x" "0"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_x_100 : Css.Style
 scale_x_100 =
-    Css.property "--tw-scale-x" "1"
+    Css.batch
+        [ Css.property "--tw-scale-x" "1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_x_105 : Css.Style
 scale_x_105 =
-    Css.property "--tw-scale-x" "1.05"
+    Css.batch
+        [ Css.property "--tw-scale-x" "1.05"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_x_110 : Css.Style
 scale_x_110 =
-    Css.property "--tw-scale-x" "1.1"
+    Css.batch
+        [ Css.property "--tw-scale-x" "1.1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_x_125 : Css.Style
 scale_x_125 =
-    Css.property "--tw-scale-x" "1.25"
+    Css.batch
+        [ Css.property "--tw-scale-x" "1.25"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_x_150 : Css.Style
 scale_x_150 =
-    Css.property "--tw-scale-x" "1.5"
+    Css.batch
+        [ Css.property "--tw-scale-x" "1.5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_x_50 : Css.Style
 scale_x_50 =
-    Css.property "--tw-scale-x" ".5"
+    Css.batch
+        [ Css.property "--tw-scale-x" ".5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_x_75 : Css.Style
 scale_x_75 =
-    Css.property "--tw-scale-x" ".75"
+    Css.batch
+        [ Css.property "--tw-scale-x" ".75"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_x_90 : Css.Style
 scale_x_90 =
-    Css.property "--tw-scale-x" ".9"
+    Css.batch
+        [ Css.property "--tw-scale-x" ".9"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_x_95 : Css.Style
 scale_x_95 =
-    Css.property "--tw-scale-x" ".95"
+    Css.batch
+        [ Css.property "--tw-scale-x" ".95"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_y_0 : Css.Style
 scale_y_0 =
-    Css.property "--tw-scale-y" "0"
+    Css.batch
+        [ Css.property "--tw-scale-y" "0"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_y_100 : Css.Style
 scale_y_100 =
-    Css.property "--tw-scale-y" "1"
+    Css.batch
+        [ Css.property "--tw-scale-y" "1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_y_105 : Css.Style
 scale_y_105 =
-    Css.property "--tw-scale-y" "1.05"
+    Css.batch
+        [ Css.property "--tw-scale-y" "1.05"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_y_110 : Css.Style
 scale_y_110 =
-    Css.property "--tw-scale-y" "1.1"
+    Css.batch
+        [ Css.property "--tw-scale-y" "1.1"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_y_125 : Css.Style
 scale_y_125 =
-    Css.property "--tw-scale-y" "1.25"
+    Css.batch
+        [ Css.property "--tw-scale-y" "1.25"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_y_150 : Css.Style
 scale_y_150 =
-    Css.property "--tw-scale-y" "1.5"
+    Css.batch
+        [ Css.property "--tw-scale-y" "1.5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_y_50 : Css.Style
 scale_y_50 =
-    Css.property "--tw-scale-y" ".5"
+    Css.batch
+        [ Css.property "--tw-scale-y" ".5"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_y_75 : Css.Style
 scale_y_75 =
-    Css.property "--tw-scale-y" ".75"
+    Css.batch
+        [ Css.property "--tw-scale-y" ".75"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_y_90 : Css.Style
 scale_y_90 =
-    Css.property "--tw-scale-y" ".9"
+    Css.batch
+        [ Css.property "--tw-scale-y" ".9"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 scale_y_95 : Css.Style
 scale_y_95 =
-    Css.property "--tw-scale-y" ".95"
+    Css.batch
+        [ Css.property "--tw-scale-y" ".95"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
+
+
+scroll_auto : Css.Style
+scroll_auto =
+    Css.property "scroll-behavior" "auto"
+
+
+scroll_m_0 : Css.Style
+scroll_m_0 =
+    Css.property "scroll-margin" "0px"
+
+
+scroll_m_0_dot_5 : Css.Style
+scroll_m_0_dot_5 =
+    Css.property "scroll-margin" "0.125rem"
+
+
+scroll_m_1 : Css.Style
+scroll_m_1 =
+    Css.property "scroll-margin" "0.25rem"
+
+
+scroll_m_10 : Css.Style
+scroll_m_10 =
+    Css.property "scroll-margin" "2.5rem"
+
+
+scroll_m_11 : Css.Style
+scroll_m_11 =
+    Css.property "scroll-margin" "2.75rem"
+
+
+scroll_m_12 : Css.Style
+scroll_m_12 =
+    Css.property "scroll-margin" "3rem"
+
+
+scroll_m_14 : Css.Style
+scroll_m_14 =
+    Css.property "scroll-margin" "3.5rem"
+
+
+scroll_m_16 : Css.Style
+scroll_m_16 =
+    Css.property "scroll-margin" "4rem"
+
+
+scroll_m_1_dot_5 : Css.Style
+scroll_m_1_dot_5 =
+    Css.property "scroll-margin" "0.375rem"
+
+
+scroll_m_2 : Css.Style
+scroll_m_2 =
+    Css.property "scroll-margin" "0.5rem"
+
+
+scroll_m_20 : Css.Style
+scroll_m_20 =
+    Css.property "scroll-margin" "5rem"
+
+
+scroll_m_24 : Css.Style
+scroll_m_24 =
+    Css.property "scroll-margin" "6rem"
+
+
+scroll_m_28 : Css.Style
+scroll_m_28 =
+    Css.property "scroll-margin" "7rem"
+
+
+scroll_m_2_dot_5 : Css.Style
+scroll_m_2_dot_5 =
+    Css.property "scroll-margin" "0.625rem"
+
+
+scroll_m_3 : Css.Style
+scroll_m_3 =
+    Css.property "scroll-margin" "0.75rem"
+
+
+scroll_m_32 : Css.Style
+scroll_m_32 =
+    Css.property "scroll-margin" "8rem"
+
+
+scroll_m_36 : Css.Style
+scroll_m_36 =
+    Css.property "scroll-margin" "9rem"
+
+
+scroll_m_3_dot_5 : Css.Style
+scroll_m_3_dot_5 =
+    Css.property "scroll-margin" "0.875rem"
+
+
+scroll_m_4 : Css.Style
+scroll_m_4 =
+    Css.property "scroll-margin" "1rem"
+
+
+scroll_m_40 : Css.Style
+scroll_m_40 =
+    Css.property "scroll-margin" "10rem"
+
+
+scroll_m_44 : Css.Style
+scroll_m_44 =
+    Css.property "scroll-margin" "11rem"
+
+
+scroll_m_48 : Css.Style
+scroll_m_48 =
+    Css.property "scroll-margin" "12rem"
+
+
+scroll_m_5 : Css.Style
+scroll_m_5 =
+    Css.property "scroll-margin" "1.25rem"
+
+
+scroll_m_52 : Css.Style
+scroll_m_52 =
+    Css.property "scroll-margin" "13rem"
+
+
+scroll_m_56 : Css.Style
+scroll_m_56 =
+    Css.property "scroll-margin" "14rem"
+
+
+scroll_m_6 : Css.Style
+scroll_m_6 =
+    Css.property "scroll-margin" "1.5rem"
+
+
+scroll_m_60 : Css.Style
+scroll_m_60 =
+    Css.property "scroll-margin" "15rem"
+
+
+scroll_m_64 : Css.Style
+scroll_m_64 =
+    Css.property "scroll-margin" "16rem"
+
+
+scroll_m_7 : Css.Style
+scroll_m_7 =
+    Css.property "scroll-margin" "1.75rem"
+
+
+scroll_m_72 : Css.Style
+scroll_m_72 =
+    Css.property "scroll-margin" "18rem"
+
+
+scroll_m_8 : Css.Style
+scroll_m_8 =
+    Css.property "scroll-margin" "2rem"
+
+
+scroll_m_80 : Css.Style
+scroll_m_80 =
+    Css.property "scroll-margin" "20rem"
+
+
+scroll_m_9 : Css.Style
+scroll_m_9 =
+    Css.property "scroll-margin" "2.25rem"
+
+
+scroll_m_96 : Css.Style
+scroll_m_96 =
+    Css.property "scroll-margin" "24rem"
+
+
+scroll_m_px : Css.Style
+scroll_m_px =
+    Css.property "scroll-margin" "1px"
+
+
+scroll_mb_0 : Css.Style
+scroll_mb_0 =
+    Css.property "scroll-margin-bottom" "0px"
+
+
+scroll_mb_0_dot_5 : Css.Style
+scroll_mb_0_dot_5 =
+    Css.property "scroll-margin-bottom" "0.125rem"
+
+
+scroll_mb_1 : Css.Style
+scroll_mb_1 =
+    Css.property "scroll-margin-bottom" "0.25rem"
+
+
+scroll_mb_10 : Css.Style
+scroll_mb_10 =
+    Css.property "scroll-margin-bottom" "2.5rem"
+
+
+scroll_mb_11 : Css.Style
+scroll_mb_11 =
+    Css.property "scroll-margin-bottom" "2.75rem"
+
+
+scroll_mb_12 : Css.Style
+scroll_mb_12 =
+    Css.property "scroll-margin-bottom" "3rem"
+
+
+scroll_mb_14 : Css.Style
+scroll_mb_14 =
+    Css.property "scroll-margin-bottom" "3.5rem"
+
+
+scroll_mb_16 : Css.Style
+scroll_mb_16 =
+    Css.property "scroll-margin-bottom" "4rem"
+
+
+scroll_mb_1_dot_5 : Css.Style
+scroll_mb_1_dot_5 =
+    Css.property "scroll-margin-bottom" "0.375rem"
+
+
+scroll_mb_2 : Css.Style
+scroll_mb_2 =
+    Css.property "scroll-margin-bottom" "0.5rem"
+
+
+scroll_mb_20 : Css.Style
+scroll_mb_20 =
+    Css.property "scroll-margin-bottom" "5rem"
+
+
+scroll_mb_24 : Css.Style
+scroll_mb_24 =
+    Css.property "scroll-margin-bottom" "6rem"
+
+
+scroll_mb_28 : Css.Style
+scroll_mb_28 =
+    Css.property "scroll-margin-bottom" "7rem"
+
+
+scroll_mb_2_dot_5 : Css.Style
+scroll_mb_2_dot_5 =
+    Css.property "scroll-margin-bottom" "0.625rem"
+
+
+scroll_mb_3 : Css.Style
+scroll_mb_3 =
+    Css.property "scroll-margin-bottom" "0.75rem"
+
+
+scroll_mb_32 : Css.Style
+scroll_mb_32 =
+    Css.property "scroll-margin-bottom" "8rem"
+
+
+scroll_mb_36 : Css.Style
+scroll_mb_36 =
+    Css.property "scroll-margin-bottom" "9rem"
+
+
+scroll_mb_3_dot_5 : Css.Style
+scroll_mb_3_dot_5 =
+    Css.property "scroll-margin-bottom" "0.875rem"
+
+
+scroll_mb_4 : Css.Style
+scroll_mb_4 =
+    Css.property "scroll-margin-bottom" "1rem"
+
+
+scroll_mb_40 : Css.Style
+scroll_mb_40 =
+    Css.property "scroll-margin-bottom" "10rem"
+
+
+scroll_mb_44 : Css.Style
+scroll_mb_44 =
+    Css.property "scroll-margin-bottom" "11rem"
+
+
+scroll_mb_48 : Css.Style
+scroll_mb_48 =
+    Css.property "scroll-margin-bottom" "12rem"
+
+
+scroll_mb_5 : Css.Style
+scroll_mb_5 =
+    Css.property "scroll-margin-bottom" "1.25rem"
+
+
+scroll_mb_52 : Css.Style
+scroll_mb_52 =
+    Css.property "scroll-margin-bottom" "13rem"
+
+
+scroll_mb_56 : Css.Style
+scroll_mb_56 =
+    Css.property "scroll-margin-bottom" "14rem"
+
+
+scroll_mb_6 : Css.Style
+scroll_mb_6 =
+    Css.property "scroll-margin-bottom" "1.5rem"
+
+
+scroll_mb_60 : Css.Style
+scroll_mb_60 =
+    Css.property "scroll-margin-bottom" "15rem"
+
+
+scroll_mb_64 : Css.Style
+scroll_mb_64 =
+    Css.property "scroll-margin-bottom" "16rem"
+
+
+scroll_mb_7 : Css.Style
+scroll_mb_7 =
+    Css.property "scroll-margin-bottom" "1.75rem"
+
+
+scroll_mb_72 : Css.Style
+scroll_mb_72 =
+    Css.property "scroll-margin-bottom" "18rem"
+
+
+scroll_mb_8 : Css.Style
+scroll_mb_8 =
+    Css.property "scroll-margin-bottom" "2rem"
+
+
+scroll_mb_80 : Css.Style
+scroll_mb_80 =
+    Css.property "scroll-margin-bottom" "20rem"
+
+
+scroll_mb_9 : Css.Style
+scroll_mb_9 =
+    Css.property "scroll-margin-bottom" "2.25rem"
+
+
+scroll_mb_96 : Css.Style
+scroll_mb_96 =
+    Css.property "scroll-margin-bottom" "24rem"
+
+
+scroll_mb_px : Css.Style
+scroll_mb_px =
+    Css.property "scroll-margin-bottom" "1px"
+
+
+scroll_me_0 : Css.Style
+scroll_me_0 =
+    Css.property "scroll-margin-inline-end" "0px"
+
+
+scroll_me_0_dot_5 : Css.Style
+scroll_me_0_dot_5 =
+    Css.property "scroll-margin-inline-end" "0.125rem"
+
+
+scroll_me_1 : Css.Style
+scroll_me_1 =
+    Css.property "scroll-margin-inline-end" "0.25rem"
+
+
+scroll_me_10 : Css.Style
+scroll_me_10 =
+    Css.property "scroll-margin-inline-end" "2.5rem"
+
+
+scroll_me_11 : Css.Style
+scroll_me_11 =
+    Css.property "scroll-margin-inline-end" "2.75rem"
+
+
+scroll_me_12 : Css.Style
+scroll_me_12 =
+    Css.property "scroll-margin-inline-end" "3rem"
+
+
+scroll_me_14 : Css.Style
+scroll_me_14 =
+    Css.property "scroll-margin-inline-end" "3.5rem"
+
+
+scroll_me_16 : Css.Style
+scroll_me_16 =
+    Css.property "scroll-margin-inline-end" "4rem"
+
+
+scroll_me_1_dot_5 : Css.Style
+scroll_me_1_dot_5 =
+    Css.property "scroll-margin-inline-end" "0.375rem"
+
+
+scroll_me_2 : Css.Style
+scroll_me_2 =
+    Css.property "scroll-margin-inline-end" "0.5rem"
+
+
+scroll_me_20 : Css.Style
+scroll_me_20 =
+    Css.property "scroll-margin-inline-end" "5rem"
+
+
+scroll_me_24 : Css.Style
+scroll_me_24 =
+    Css.property "scroll-margin-inline-end" "6rem"
+
+
+scroll_me_28 : Css.Style
+scroll_me_28 =
+    Css.property "scroll-margin-inline-end" "7rem"
+
+
+scroll_me_2_dot_5 : Css.Style
+scroll_me_2_dot_5 =
+    Css.property "scroll-margin-inline-end" "0.625rem"
+
+
+scroll_me_3 : Css.Style
+scroll_me_3 =
+    Css.property "scroll-margin-inline-end" "0.75rem"
+
+
+scroll_me_32 : Css.Style
+scroll_me_32 =
+    Css.property "scroll-margin-inline-end" "8rem"
+
+
+scroll_me_36 : Css.Style
+scroll_me_36 =
+    Css.property "scroll-margin-inline-end" "9rem"
+
+
+scroll_me_3_dot_5 : Css.Style
+scroll_me_3_dot_5 =
+    Css.property "scroll-margin-inline-end" "0.875rem"
+
+
+scroll_me_4 : Css.Style
+scroll_me_4 =
+    Css.property "scroll-margin-inline-end" "1rem"
+
+
+scroll_me_40 : Css.Style
+scroll_me_40 =
+    Css.property "scroll-margin-inline-end" "10rem"
+
+
+scroll_me_44 : Css.Style
+scroll_me_44 =
+    Css.property "scroll-margin-inline-end" "11rem"
+
+
+scroll_me_48 : Css.Style
+scroll_me_48 =
+    Css.property "scroll-margin-inline-end" "12rem"
+
+
+scroll_me_5 : Css.Style
+scroll_me_5 =
+    Css.property "scroll-margin-inline-end" "1.25rem"
+
+
+scroll_me_52 : Css.Style
+scroll_me_52 =
+    Css.property "scroll-margin-inline-end" "13rem"
+
+
+scroll_me_56 : Css.Style
+scroll_me_56 =
+    Css.property "scroll-margin-inline-end" "14rem"
+
+
+scroll_me_6 : Css.Style
+scroll_me_6 =
+    Css.property "scroll-margin-inline-end" "1.5rem"
+
+
+scroll_me_60 : Css.Style
+scroll_me_60 =
+    Css.property "scroll-margin-inline-end" "15rem"
+
+
+scroll_me_64 : Css.Style
+scroll_me_64 =
+    Css.property "scroll-margin-inline-end" "16rem"
+
+
+scroll_me_7 : Css.Style
+scroll_me_7 =
+    Css.property "scroll-margin-inline-end" "1.75rem"
+
+
+scroll_me_72 : Css.Style
+scroll_me_72 =
+    Css.property "scroll-margin-inline-end" "18rem"
+
+
+scroll_me_8 : Css.Style
+scroll_me_8 =
+    Css.property "scroll-margin-inline-end" "2rem"
+
+
+scroll_me_80 : Css.Style
+scroll_me_80 =
+    Css.property "scroll-margin-inline-end" "20rem"
+
+
+scroll_me_9 : Css.Style
+scroll_me_9 =
+    Css.property "scroll-margin-inline-end" "2.25rem"
+
+
+scroll_me_96 : Css.Style
+scroll_me_96 =
+    Css.property "scroll-margin-inline-end" "24rem"
+
+
+scroll_me_px : Css.Style
+scroll_me_px =
+    Css.property "scroll-margin-inline-end" "1px"
+
+
+scroll_ml_0 : Css.Style
+scroll_ml_0 =
+    Css.property "scroll-margin-left" "0px"
+
+
+scroll_ml_0_dot_5 : Css.Style
+scroll_ml_0_dot_5 =
+    Css.property "scroll-margin-left" "0.125rem"
+
+
+scroll_ml_1 : Css.Style
+scroll_ml_1 =
+    Css.property "scroll-margin-left" "0.25rem"
+
+
+scroll_ml_10 : Css.Style
+scroll_ml_10 =
+    Css.property "scroll-margin-left" "2.5rem"
+
+
+scroll_ml_11 : Css.Style
+scroll_ml_11 =
+    Css.property "scroll-margin-left" "2.75rem"
+
+
+scroll_ml_12 : Css.Style
+scroll_ml_12 =
+    Css.property "scroll-margin-left" "3rem"
+
+
+scroll_ml_14 : Css.Style
+scroll_ml_14 =
+    Css.property "scroll-margin-left" "3.5rem"
+
+
+scroll_ml_16 : Css.Style
+scroll_ml_16 =
+    Css.property "scroll-margin-left" "4rem"
+
+
+scroll_ml_1_dot_5 : Css.Style
+scroll_ml_1_dot_5 =
+    Css.property "scroll-margin-left" "0.375rem"
+
+
+scroll_ml_2 : Css.Style
+scroll_ml_2 =
+    Css.property "scroll-margin-left" "0.5rem"
+
+
+scroll_ml_20 : Css.Style
+scroll_ml_20 =
+    Css.property "scroll-margin-left" "5rem"
+
+
+scroll_ml_24 : Css.Style
+scroll_ml_24 =
+    Css.property "scroll-margin-left" "6rem"
+
+
+scroll_ml_28 : Css.Style
+scroll_ml_28 =
+    Css.property "scroll-margin-left" "7rem"
+
+
+scroll_ml_2_dot_5 : Css.Style
+scroll_ml_2_dot_5 =
+    Css.property "scroll-margin-left" "0.625rem"
+
+
+scroll_ml_3 : Css.Style
+scroll_ml_3 =
+    Css.property "scroll-margin-left" "0.75rem"
+
+
+scroll_ml_32 : Css.Style
+scroll_ml_32 =
+    Css.property "scroll-margin-left" "8rem"
+
+
+scroll_ml_36 : Css.Style
+scroll_ml_36 =
+    Css.property "scroll-margin-left" "9rem"
+
+
+scroll_ml_3_dot_5 : Css.Style
+scroll_ml_3_dot_5 =
+    Css.property "scroll-margin-left" "0.875rem"
+
+
+scroll_ml_4 : Css.Style
+scroll_ml_4 =
+    Css.property "scroll-margin-left" "1rem"
+
+
+scroll_ml_40 : Css.Style
+scroll_ml_40 =
+    Css.property "scroll-margin-left" "10rem"
+
+
+scroll_ml_44 : Css.Style
+scroll_ml_44 =
+    Css.property "scroll-margin-left" "11rem"
+
+
+scroll_ml_48 : Css.Style
+scroll_ml_48 =
+    Css.property "scroll-margin-left" "12rem"
+
+
+scroll_ml_5 : Css.Style
+scroll_ml_5 =
+    Css.property "scroll-margin-left" "1.25rem"
+
+
+scroll_ml_52 : Css.Style
+scroll_ml_52 =
+    Css.property "scroll-margin-left" "13rem"
+
+
+scroll_ml_56 : Css.Style
+scroll_ml_56 =
+    Css.property "scroll-margin-left" "14rem"
+
+
+scroll_ml_6 : Css.Style
+scroll_ml_6 =
+    Css.property "scroll-margin-left" "1.5rem"
+
+
+scroll_ml_60 : Css.Style
+scroll_ml_60 =
+    Css.property "scroll-margin-left" "15rem"
+
+
+scroll_ml_64 : Css.Style
+scroll_ml_64 =
+    Css.property "scroll-margin-left" "16rem"
+
+
+scroll_ml_7 : Css.Style
+scroll_ml_7 =
+    Css.property "scroll-margin-left" "1.75rem"
+
+
+scroll_ml_72 : Css.Style
+scroll_ml_72 =
+    Css.property "scroll-margin-left" "18rem"
+
+
+scroll_ml_8 : Css.Style
+scroll_ml_8 =
+    Css.property "scroll-margin-left" "2rem"
+
+
+scroll_ml_80 : Css.Style
+scroll_ml_80 =
+    Css.property "scroll-margin-left" "20rem"
+
+
+scroll_ml_9 : Css.Style
+scroll_ml_9 =
+    Css.property "scroll-margin-left" "2.25rem"
+
+
+scroll_ml_96 : Css.Style
+scroll_ml_96 =
+    Css.property "scroll-margin-left" "24rem"
+
+
+scroll_ml_px : Css.Style
+scroll_ml_px =
+    Css.property "scroll-margin-left" "1px"
+
+
+scroll_mr_0 : Css.Style
+scroll_mr_0 =
+    Css.property "scroll-margin-right" "0px"
+
+
+scroll_mr_0_dot_5 : Css.Style
+scroll_mr_0_dot_5 =
+    Css.property "scroll-margin-right" "0.125rem"
+
+
+scroll_mr_1 : Css.Style
+scroll_mr_1 =
+    Css.property "scroll-margin-right" "0.25rem"
+
+
+scroll_mr_10 : Css.Style
+scroll_mr_10 =
+    Css.property "scroll-margin-right" "2.5rem"
+
+
+scroll_mr_11 : Css.Style
+scroll_mr_11 =
+    Css.property "scroll-margin-right" "2.75rem"
+
+
+scroll_mr_12 : Css.Style
+scroll_mr_12 =
+    Css.property "scroll-margin-right" "3rem"
+
+
+scroll_mr_14 : Css.Style
+scroll_mr_14 =
+    Css.property "scroll-margin-right" "3.5rem"
+
+
+scroll_mr_16 : Css.Style
+scroll_mr_16 =
+    Css.property "scroll-margin-right" "4rem"
+
+
+scroll_mr_1_dot_5 : Css.Style
+scroll_mr_1_dot_5 =
+    Css.property "scroll-margin-right" "0.375rem"
+
+
+scroll_mr_2 : Css.Style
+scroll_mr_2 =
+    Css.property "scroll-margin-right" "0.5rem"
+
+
+scroll_mr_20 : Css.Style
+scroll_mr_20 =
+    Css.property "scroll-margin-right" "5rem"
+
+
+scroll_mr_24 : Css.Style
+scroll_mr_24 =
+    Css.property "scroll-margin-right" "6rem"
+
+
+scroll_mr_28 : Css.Style
+scroll_mr_28 =
+    Css.property "scroll-margin-right" "7rem"
+
+
+scroll_mr_2_dot_5 : Css.Style
+scroll_mr_2_dot_5 =
+    Css.property "scroll-margin-right" "0.625rem"
+
+
+scroll_mr_3 : Css.Style
+scroll_mr_3 =
+    Css.property "scroll-margin-right" "0.75rem"
+
+
+scroll_mr_32 : Css.Style
+scroll_mr_32 =
+    Css.property "scroll-margin-right" "8rem"
+
+
+scroll_mr_36 : Css.Style
+scroll_mr_36 =
+    Css.property "scroll-margin-right" "9rem"
+
+
+scroll_mr_3_dot_5 : Css.Style
+scroll_mr_3_dot_5 =
+    Css.property "scroll-margin-right" "0.875rem"
+
+
+scroll_mr_4 : Css.Style
+scroll_mr_4 =
+    Css.property "scroll-margin-right" "1rem"
+
+
+scroll_mr_40 : Css.Style
+scroll_mr_40 =
+    Css.property "scroll-margin-right" "10rem"
+
+
+scroll_mr_44 : Css.Style
+scroll_mr_44 =
+    Css.property "scroll-margin-right" "11rem"
+
+
+scroll_mr_48 : Css.Style
+scroll_mr_48 =
+    Css.property "scroll-margin-right" "12rem"
+
+
+scroll_mr_5 : Css.Style
+scroll_mr_5 =
+    Css.property "scroll-margin-right" "1.25rem"
+
+
+scroll_mr_52 : Css.Style
+scroll_mr_52 =
+    Css.property "scroll-margin-right" "13rem"
+
+
+scroll_mr_56 : Css.Style
+scroll_mr_56 =
+    Css.property "scroll-margin-right" "14rem"
+
+
+scroll_mr_6 : Css.Style
+scroll_mr_6 =
+    Css.property "scroll-margin-right" "1.5rem"
+
+
+scroll_mr_60 : Css.Style
+scroll_mr_60 =
+    Css.property "scroll-margin-right" "15rem"
+
+
+scroll_mr_64 : Css.Style
+scroll_mr_64 =
+    Css.property "scroll-margin-right" "16rem"
+
+
+scroll_mr_7 : Css.Style
+scroll_mr_7 =
+    Css.property "scroll-margin-right" "1.75rem"
+
+
+scroll_mr_72 : Css.Style
+scroll_mr_72 =
+    Css.property "scroll-margin-right" "18rem"
+
+
+scroll_mr_8 : Css.Style
+scroll_mr_8 =
+    Css.property "scroll-margin-right" "2rem"
+
+
+scroll_mr_80 : Css.Style
+scroll_mr_80 =
+    Css.property "scroll-margin-right" "20rem"
+
+
+scroll_mr_9 : Css.Style
+scroll_mr_9 =
+    Css.property "scroll-margin-right" "2.25rem"
+
+
+scroll_mr_96 : Css.Style
+scroll_mr_96 =
+    Css.property "scroll-margin-right" "24rem"
+
+
+scroll_mr_px : Css.Style
+scroll_mr_px =
+    Css.property "scroll-margin-right" "1px"
+
+
+scroll_ms_0 : Css.Style
+scroll_ms_0 =
+    Css.property "scroll-margin-inline-start" "0px"
+
+
+scroll_ms_0_dot_5 : Css.Style
+scroll_ms_0_dot_5 =
+    Css.property "scroll-margin-inline-start" "0.125rem"
+
+
+scroll_ms_1 : Css.Style
+scroll_ms_1 =
+    Css.property "scroll-margin-inline-start" "0.25rem"
+
+
+scroll_ms_10 : Css.Style
+scroll_ms_10 =
+    Css.property "scroll-margin-inline-start" "2.5rem"
+
+
+scroll_ms_11 : Css.Style
+scroll_ms_11 =
+    Css.property "scroll-margin-inline-start" "2.75rem"
+
+
+scroll_ms_12 : Css.Style
+scroll_ms_12 =
+    Css.property "scroll-margin-inline-start" "3rem"
+
+
+scroll_ms_14 : Css.Style
+scroll_ms_14 =
+    Css.property "scroll-margin-inline-start" "3.5rem"
+
+
+scroll_ms_16 : Css.Style
+scroll_ms_16 =
+    Css.property "scroll-margin-inline-start" "4rem"
+
+
+scroll_ms_1_dot_5 : Css.Style
+scroll_ms_1_dot_5 =
+    Css.property "scroll-margin-inline-start" "0.375rem"
+
+
+scroll_ms_2 : Css.Style
+scroll_ms_2 =
+    Css.property "scroll-margin-inline-start" "0.5rem"
+
+
+scroll_ms_20 : Css.Style
+scroll_ms_20 =
+    Css.property "scroll-margin-inline-start" "5rem"
+
+
+scroll_ms_24 : Css.Style
+scroll_ms_24 =
+    Css.property "scroll-margin-inline-start" "6rem"
+
+
+scroll_ms_28 : Css.Style
+scroll_ms_28 =
+    Css.property "scroll-margin-inline-start" "7rem"
+
+
+scroll_ms_2_dot_5 : Css.Style
+scroll_ms_2_dot_5 =
+    Css.property "scroll-margin-inline-start" "0.625rem"
+
+
+scroll_ms_3 : Css.Style
+scroll_ms_3 =
+    Css.property "scroll-margin-inline-start" "0.75rem"
+
+
+scroll_ms_32 : Css.Style
+scroll_ms_32 =
+    Css.property "scroll-margin-inline-start" "8rem"
+
+
+scroll_ms_36 : Css.Style
+scroll_ms_36 =
+    Css.property "scroll-margin-inline-start" "9rem"
+
+
+scroll_ms_3_dot_5 : Css.Style
+scroll_ms_3_dot_5 =
+    Css.property "scroll-margin-inline-start" "0.875rem"
+
+
+scroll_ms_4 : Css.Style
+scroll_ms_4 =
+    Css.property "scroll-margin-inline-start" "1rem"
+
+
+scroll_ms_40 : Css.Style
+scroll_ms_40 =
+    Css.property "scroll-margin-inline-start" "10rem"
+
+
+scroll_ms_44 : Css.Style
+scroll_ms_44 =
+    Css.property "scroll-margin-inline-start" "11rem"
+
+
+scroll_ms_48 : Css.Style
+scroll_ms_48 =
+    Css.property "scroll-margin-inline-start" "12rem"
+
+
+scroll_ms_5 : Css.Style
+scroll_ms_5 =
+    Css.property "scroll-margin-inline-start" "1.25rem"
+
+
+scroll_ms_52 : Css.Style
+scroll_ms_52 =
+    Css.property "scroll-margin-inline-start" "13rem"
+
+
+scroll_ms_56 : Css.Style
+scroll_ms_56 =
+    Css.property "scroll-margin-inline-start" "14rem"
+
+
+scroll_ms_6 : Css.Style
+scroll_ms_6 =
+    Css.property "scroll-margin-inline-start" "1.5rem"
+
+
+scroll_ms_60 : Css.Style
+scroll_ms_60 =
+    Css.property "scroll-margin-inline-start" "15rem"
+
+
+scroll_ms_64 : Css.Style
+scroll_ms_64 =
+    Css.property "scroll-margin-inline-start" "16rem"
+
+
+scroll_ms_7 : Css.Style
+scroll_ms_7 =
+    Css.property "scroll-margin-inline-start" "1.75rem"
+
+
+scroll_ms_72 : Css.Style
+scroll_ms_72 =
+    Css.property "scroll-margin-inline-start" "18rem"
+
+
+scroll_ms_8 : Css.Style
+scroll_ms_8 =
+    Css.property "scroll-margin-inline-start" "2rem"
+
+
+scroll_ms_80 : Css.Style
+scroll_ms_80 =
+    Css.property "scroll-margin-inline-start" "20rem"
+
+
+scroll_ms_9 : Css.Style
+scroll_ms_9 =
+    Css.property "scroll-margin-inline-start" "2.25rem"
+
+
+scroll_ms_96 : Css.Style
+scroll_ms_96 =
+    Css.property "scroll-margin-inline-start" "24rem"
+
+
+scroll_ms_px : Css.Style
+scroll_ms_px =
+    Css.property "scroll-margin-inline-start" "1px"
+
+
+scroll_mt_0 : Css.Style
+scroll_mt_0 =
+    Css.property "scroll-margin-top" "0px"
+
+
+scroll_mt_0_dot_5 : Css.Style
+scroll_mt_0_dot_5 =
+    Css.property "scroll-margin-top" "0.125rem"
+
+
+scroll_mt_1 : Css.Style
+scroll_mt_1 =
+    Css.property "scroll-margin-top" "0.25rem"
+
+
+scroll_mt_10 : Css.Style
+scroll_mt_10 =
+    Css.property "scroll-margin-top" "2.5rem"
+
+
+scroll_mt_11 : Css.Style
+scroll_mt_11 =
+    Css.property "scroll-margin-top" "2.75rem"
+
+
+scroll_mt_12 : Css.Style
+scroll_mt_12 =
+    Css.property "scroll-margin-top" "3rem"
+
+
+scroll_mt_14 : Css.Style
+scroll_mt_14 =
+    Css.property "scroll-margin-top" "3.5rem"
+
+
+scroll_mt_16 : Css.Style
+scroll_mt_16 =
+    Css.property "scroll-margin-top" "4rem"
+
+
+scroll_mt_1_dot_5 : Css.Style
+scroll_mt_1_dot_5 =
+    Css.property "scroll-margin-top" "0.375rem"
+
+
+scroll_mt_2 : Css.Style
+scroll_mt_2 =
+    Css.property "scroll-margin-top" "0.5rem"
+
+
+scroll_mt_20 : Css.Style
+scroll_mt_20 =
+    Css.property "scroll-margin-top" "5rem"
+
+
+scroll_mt_24 : Css.Style
+scroll_mt_24 =
+    Css.property "scroll-margin-top" "6rem"
+
+
+scroll_mt_28 : Css.Style
+scroll_mt_28 =
+    Css.property "scroll-margin-top" "7rem"
+
+
+scroll_mt_2_dot_5 : Css.Style
+scroll_mt_2_dot_5 =
+    Css.property "scroll-margin-top" "0.625rem"
+
+
+scroll_mt_3 : Css.Style
+scroll_mt_3 =
+    Css.property "scroll-margin-top" "0.75rem"
+
+
+scroll_mt_32 : Css.Style
+scroll_mt_32 =
+    Css.property "scroll-margin-top" "8rem"
+
+
+scroll_mt_36 : Css.Style
+scroll_mt_36 =
+    Css.property "scroll-margin-top" "9rem"
+
+
+scroll_mt_3_dot_5 : Css.Style
+scroll_mt_3_dot_5 =
+    Css.property "scroll-margin-top" "0.875rem"
+
+
+scroll_mt_4 : Css.Style
+scroll_mt_4 =
+    Css.property "scroll-margin-top" "1rem"
+
+
+scroll_mt_40 : Css.Style
+scroll_mt_40 =
+    Css.property "scroll-margin-top" "10rem"
+
+
+scroll_mt_44 : Css.Style
+scroll_mt_44 =
+    Css.property "scroll-margin-top" "11rem"
+
+
+scroll_mt_48 : Css.Style
+scroll_mt_48 =
+    Css.property "scroll-margin-top" "12rem"
+
+
+scroll_mt_5 : Css.Style
+scroll_mt_5 =
+    Css.property "scroll-margin-top" "1.25rem"
+
+
+scroll_mt_52 : Css.Style
+scroll_mt_52 =
+    Css.property "scroll-margin-top" "13rem"
+
+
+scroll_mt_56 : Css.Style
+scroll_mt_56 =
+    Css.property "scroll-margin-top" "14rem"
+
+
+scroll_mt_6 : Css.Style
+scroll_mt_6 =
+    Css.property "scroll-margin-top" "1.5rem"
+
+
+scroll_mt_60 : Css.Style
+scroll_mt_60 =
+    Css.property "scroll-margin-top" "15rem"
+
+
+scroll_mt_64 : Css.Style
+scroll_mt_64 =
+    Css.property "scroll-margin-top" "16rem"
+
+
+scroll_mt_7 : Css.Style
+scroll_mt_7 =
+    Css.property "scroll-margin-top" "1.75rem"
+
+
+scroll_mt_72 : Css.Style
+scroll_mt_72 =
+    Css.property "scroll-margin-top" "18rem"
+
+
+scroll_mt_8 : Css.Style
+scroll_mt_8 =
+    Css.property "scroll-margin-top" "2rem"
+
+
+scroll_mt_80 : Css.Style
+scroll_mt_80 =
+    Css.property "scroll-margin-top" "20rem"
+
+
+scroll_mt_9 : Css.Style
+scroll_mt_9 =
+    Css.property "scroll-margin-top" "2.25rem"
+
+
+scroll_mt_96 : Css.Style
+scroll_mt_96 =
+    Css.property "scroll-margin-top" "24rem"
+
+
+scroll_mt_px : Css.Style
+scroll_mt_px =
+    Css.property "scroll-margin-top" "1px"
+
+
+scroll_mx_0 : Css.Style
+scroll_mx_0 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "0px"
+        , Css.property "scroll-margin-right" "0px"
+        ]
+
+
+scroll_mx_0_dot_5 : Css.Style
+scroll_mx_0_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "0.125rem"
+        , Css.property "scroll-margin-right" "0.125rem"
+        ]
+
+
+scroll_mx_1 : Css.Style
+scroll_mx_1 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "0.25rem"
+        , Css.property "scroll-margin-right" "0.25rem"
+        ]
+
+
+scroll_mx_10 : Css.Style
+scroll_mx_10 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "2.5rem"
+        , Css.property "scroll-margin-right" "2.5rem"
+        ]
+
+
+scroll_mx_11 : Css.Style
+scroll_mx_11 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "2.75rem"
+        , Css.property "scroll-margin-right" "2.75rem"
+        ]
+
+
+scroll_mx_12 : Css.Style
+scroll_mx_12 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "3rem"
+        , Css.property "scroll-margin-right" "3rem"
+        ]
+
+
+scroll_mx_14 : Css.Style
+scroll_mx_14 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "3.5rem"
+        , Css.property "scroll-margin-right" "3.5rem"
+        ]
+
+
+scroll_mx_16 : Css.Style
+scroll_mx_16 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "4rem"
+        , Css.property "scroll-margin-right" "4rem"
+        ]
+
+
+scroll_mx_1_dot_5 : Css.Style
+scroll_mx_1_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "0.375rem"
+        , Css.property "scroll-margin-right" "0.375rem"
+        ]
+
+
+scroll_mx_2 : Css.Style
+scroll_mx_2 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "0.5rem"
+        , Css.property "scroll-margin-right" "0.5rem"
+        ]
+
+
+scroll_mx_20 : Css.Style
+scroll_mx_20 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "5rem"
+        , Css.property "scroll-margin-right" "5rem"
+        ]
+
+
+scroll_mx_24 : Css.Style
+scroll_mx_24 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "6rem"
+        , Css.property "scroll-margin-right" "6rem"
+        ]
+
+
+scroll_mx_28 : Css.Style
+scroll_mx_28 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "7rem"
+        , Css.property "scroll-margin-right" "7rem"
+        ]
+
+
+scroll_mx_2_dot_5 : Css.Style
+scroll_mx_2_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "0.625rem"
+        , Css.property "scroll-margin-right" "0.625rem"
+        ]
+
+
+scroll_mx_3 : Css.Style
+scroll_mx_3 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "0.75rem"
+        , Css.property "scroll-margin-right" "0.75rem"
+        ]
+
+
+scroll_mx_32 : Css.Style
+scroll_mx_32 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "8rem"
+        , Css.property "scroll-margin-right" "8rem"
+        ]
+
+
+scroll_mx_36 : Css.Style
+scroll_mx_36 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "9rem"
+        , Css.property "scroll-margin-right" "9rem"
+        ]
+
+
+scroll_mx_3_dot_5 : Css.Style
+scroll_mx_3_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "0.875rem"
+        , Css.property "scroll-margin-right" "0.875rem"
+        ]
+
+
+scroll_mx_4 : Css.Style
+scroll_mx_4 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "1rem"
+        , Css.property "scroll-margin-right" "1rem"
+        ]
+
+
+scroll_mx_40 : Css.Style
+scroll_mx_40 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "10rem"
+        , Css.property "scroll-margin-right" "10rem"
+        ]
+
+
+scroll_mx_44 : Css.Style
+scroll_mx_44 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "11rem"
+        , Css.property "scroll-margin-right" "11rem"
+        ]
+
+
+scroll_mx_48 : Css.Style
+scroll_mx_48 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "12rem"
+        , Css.property "scroll-margin-right" "12rem"
+        ]
+
+
+scroll_mx_5 : Css.Style
+scroll_mx_5 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "1.25rem"
+        , Css.property "scroll-margin-right" "1.25rem"
+        ]
+
+
+scroll_mx_52 : Css.Style
+scroll_mx_52 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "13rem"
+        , Css.property "scroll-margin-right" "13rem"
+        ]
+
+
+scroll_mx_56 : Css.Style
+scroll_mx_56 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "14rem"
+        , Css.property "scroll-margin-right" "14rem"
+        ]
+
+
+scroll_mx_6 : Css.Style
+scroll_mx_6 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "1.5rem"
+        , Css.property "scroll-margin-right" "1.5rem"
+        ]
+
+
+scroll_mx_60 : Css.Style
+scroll_mx_60 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "15rem"
+        , Css.property "scroll-margin-right" "15rem"
+        ]
+
+
+scroll_mx_64 : Css.Style
+scroll_mx_64 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "16rem"
+        , Css.property "scroll-margin-right" "16rem"
+        ]
+
+
+scroll_mx_7 : Css.Style
+scroll_mx_7 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "1.75rem"
+        , Css.property "scroll-margin-right" "1.75rem"
+        ]
+
+
+scroll_mx_72 : Css.Style
+scroll_mx_72 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "18rem"
+        , Css.property "scroll-margin-right" "18rem"
+        ]
+
+
+scroll_mx_8 : Css.Style
+scroll_mx_8 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "2rem"
+        , Css.property "scroll-margin-right" "2rem"
+        ]
+
+
+scroll_mx_80 : Css.Style
+scroll_mx_80 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "20rem"
+        , Css.property "scroll-margin-right" "20rem"
+        ]
+
+
+scroll_mx_9 : Css.Style
+scroll_mx_9 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "2.25rem"
+        , Css.property "scroll-margin-right" "2.25rem"
+        ]
+
+
+scroll_mx_96 : Css.Style
+scroll_mx_96 =
+    Css.batch
+        [ Css.property "scroll-margin-left" "24rem"
+        , Css.property "scroll-margin-right" "24rem"
+        ]
+
+
+scroll_mx_px : Css.Style
+scroll_mx_px =
+    Css.batch
+        [ Css.property "scroll-margin-left" "1px"
+        , Css.property "scroll-margin-right" "1px"
+        ]
+
+
+scroll_my_0 : Css.Style
+scroll_my_0 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "0px"
+        , Css.property "scroll-margin-bottom" "0px"
+        ]
+
+
+scroll_my_0_dot_5 : Css.Style
+scroll_my_0_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "0.125rem"
+        , Css.property "scroll-margin-bottom" "0.125rem"
+        ]
+
+
+scroll_my_1 : Css.Style
+scroll_my_1 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "0.25rem"
+        , Css.property "scroll-margin-bottom" "0.25rem"
+        ]
+
+
+scroll_my_10 : Css.Style
+scroll_my_10 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "2.5rem"
+        , Css.property "scroll-margin-bottom" "2.5rem"
+        ]
+
+
+scroll_my_11 : Css.Style
+scroll_my_11 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "2.75rem"
+        , Css.property "scroll-margin-bottom" "2.75rem"
+        ]
+
+
+scroll_my_12 : Css.Style
+scroll_my_12 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "3rem"
+        , Css.property "scroll-margin-bottom" "3rem"
+        ]
+
+
+scroll_my_14 : Css.Style
+scroll_my_14 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "3.5rem"
+        , Css.property "scroll-margin-bottom" "3.5rem"
+        ]
+
+
+scroll_my_16 : Css.Style
+scroll_my_16 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "4rem"
+        , Css.property "scroll-margin-bottom" "4rem"
+        ]
+
+
+scroll_my_1_dot_5 : Css.Style
+scroll_my_1_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "0.375rem"
+        , Css.property "scroll-margin-bottom" "0.375rem"
+        ]
+
+
+scroll_my_2 : Css.Style
+scroll_my_2 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "0.5rem"
+        , Css.property "scroll-margin-bottom" "0.5rem"
+        ]
+
+
+scroll_my_20 : Css.Style
+scroll_my_20 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "5rem"
+        , Css.property "scroll-margin-bottom" "5rem"
+        ]
+
+
+scroll_my_24 : Css.Style
+scroll_my_24 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "6rem"
+        , Css.property "scroll-margin-bottom" "6rem"
+        ]
+
+
+scroll_my_28 : Css.Style
+scroll_my_28 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "7rem"
+        , Css.property "scroll-margin-bottom" "7rem"
+        ]
+
+
+scroll_my_2_dot_5 : Css.Style
+scroll_my_2_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "0.625rem"
+        , Css.property "scroll-margin-bottom" "0.625rem"
+        ]
+
+
+scroll_my_3 : Css.Style
+scroll_my_3 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "0.75rem"
+        , Css.property "scroll-margin-bottom" "0.75rem"
+        ]
+
+
+scroll_my_32 : Css.Style
+scroll_my_32 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "8rem"
+        , Css.property "scroll-margin-bottom" "8rem"
+        ]
+
+
+scroll_my_36 : Css.Style
+scroll_my_36 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "9rem"
+        , Css.property "scroll-margin-bottom" "9rem"
+        ]
+
+
+scroll_my_3_dot_5 : Css.Style
+scroll_my_3_dot_5 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "0.875rem"
+        , Css.property "scroll-margin-bottom" "0.875rem"
+        ]
+
+
+scroll_my_4 : Css.Style
+scroll_my_4 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "1rem"
+        , Css.property "scroll-margin-bottom" "1rem"
+        ]
+
+
+scroll_my_40 : Css.Style
+scroll_my_40 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "10rem"
+        , Css.property "scroll-margin-bottom" "10rem"
+        ]
+
+
+scroll_my_44 : Css.Style
+scroll_my_44 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "11rem"
+        , Css.property "scroll-margin-bottom" "11rem"
+        ]
+
+
+scroll_my_48 : Css.Style
+scroll_my_48 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "12rem"
+        , Css.property "scroll-margin-bottom" "12rem"
+        ]
+
+
+scroll_my_5 : Css.Style
+scroll_my_5 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "1.25rem"
+        , Css.property "scroll-margin-bottom" "1.25rem"
+        ]
+
+
+scroll_my_52 : Css.Style
+scroll_my_52 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "13rem"
+        , Css.property "scroll-margin-bottom" "13rem"
+        ]
+
+
+scroll_my_56 : Css.Style
+scroll_my_56 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "14rem"
+        , Css.property "scroll-margin-bottom" "14rem"
+        ]
+
+
+scroll_my_6 : Css.Style
+scroll_my_6 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "1.5rem"
+        , Css.property "scroll-margin-bottom" "1.5rem"
+        ]
+
+
+scroll_my_60 : Css.Style
+scroll_my_60 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "15rem"
+        , Css.property "scroll-margin-bottom" "15rem"
+        ]
+
+
+scroll_my_64 : Css.Style
+scroll_my_64 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "16rem"
+        , Css.property "scroll-margin-bottom" "16rem"
+        ]
+
+
+scroll_my_7 : Css.Style
+scroll_my_7 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "1.75rem"
+        , Css.property "scroll-margin-bottom" "1.75rem"
+        ]
+
+
+scroll_my_72 : Css.Style
+scroll_my_72 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "18rem"
+        , Css.property "scroll-margin-bottom" "18rem"
+        ]
+
+
+scroll_my_8 : Css.Style
+scroll_my_8 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "2rem"
+        , Css.property "scroll-margin-bottom" "2rem"
+        ]
+
+
+scroll_my_80 : Css.Style
+scroll_my_80 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "20rem"
+        , Css.property "scroll-margin-bottom" "20rem"
+        ]
+
+
+scroll_my_9 : Css.Style
+scroll_my_9 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "2.25rem"
+        , Css.property "scroll-margin-bottom" "2.25rem"
+        ]
+
+
+scroll_my_96 : Css.Style
+scroll_my_96 =
+    Css.batch
+        [ Css.property "scroll-margin-top" "24rem"
+        , Css.property "scroll-margin-bottom" "24rem"
+        ]
+
+
+scroll_my_px : Css.Style
+scroll_my_px =
+    Css.batch
+        [ Css.property "scroll-margin-top" "1px"
+        , Css.property "scroll-margin-bottom" "1px"
+        ]
+
+
+scroll_p_0 : Css.Style
+scroll_p_0 =
+    Css.property "scroll-padding" "0px"
+
+
+scroll_p_0_dot_5 : Css.Style
+scroll_p_0_dot_5 =
+    Css.property "scroll-padding" "0.125rem"
+
+
+scroll_p_1 : Css.Style
+scroll_p_1 =
+    Css.property "scroll-padding" "0.25rem"
+
+
+scroll_p_10 : Css.Style
+scroll_p_10 =
+    Css.property "scroll-padding" "2.5rem"
+
+
+scroll_p_11 : Css.Style
+scroll_p_11 =
+    Css.property "scroll-padding" "2.75rem"
+
+
+scroll_p_12 : Css.Style
+scroll_p_12 =
+    Css.property "scroll-padding" "3rem"
+
+
+scroll_p_14 : Css.Style
+scroll_p_14 =
+    Css.property "scroll-padding" "3.5rem"
+
+
+scroll_p_16 : Css.Style
+scroll_p_16 =
+    Css.property "scroll-padding" "4rem"
+
+
+scroll_p_1_dot_5 : Css.Style
+scroll_p_1_dot_5 =
+    Css.property "scroll-padding" "0.375rem"
+
+
+scroll_p_2 : Css.Style
+scroll_p_2 =
+    Css.property "scroll-padding" "0.5rem"
+
+
+scroll_p_20 : Css.Style
+scroll_p_20 =
+    Css.property "scroll-padding" "5rem"
+
+
+scroll_p_24 : Css.Style
+scroll_p_24 =
+    Css.property "scroll-padding" "6rem"
+
+
+scroll_p_28 : Css.Style
+scroll_p_28 =
+    Css.property "scroll-padding" "7rem"
+
+
+scroll_p_2_dot_5 : Css.Style
+scroll_p_2_dot_5 =
+    Css.property "scroll-padding" "0.625rem"
+
+
+scroll_p_3 : Css.Style
+scroll_p_3 =
+    Css.property "scroll-padding" "0.75rem"
+
+
+scroll_p_32 : Css.Style
+scroll_p_32 =
+    Css.property "scroll-padding" "8rem"
+
+
+scroll_p_36 : Css.Style
+scroll_p_36 =
+    Css.property "scroll-padding" "9rem"
+
+
+scroll_p_3_dot_5 : Css.Style
+scroll_p_3_dot_5 =
+    Css.property "scroll-padding" "0.875rem"
+
+
+scroll_p_4 : Css.Style
+scroll_p_4 =
+    Css.property "scroll-padding" "1rem"
+
+
+scroll_p_40 : Css.Style
+scroll_p_40 =
+    Css.property "scroll-padding" "10rem"
+
+
+scroll_p_44 : Css.Style
+scroll_p_44 =
+    Css.property "scroll-padding" "11rem"
+
+
+scroll_p_48 : Css.Style
+scroll_p_48 =
+    Css.property "scroll-padding" "12rem"
+
+
+scroll_p_5 : Css.Style
+scroll_p_5 =
+    Css.property "scroll-padding" "1.25rem"
+
+
+scroll_p_52 : Css.Style
+scroll_p_52 =
+    Css.property "scroll-padding" "13rem"
+
+
+scroll_p_56 : Css.Style
+scroll_p_56 =
+    Css.property "scroll-padding" "14rem"
+
+
+scroll_p_6 : Css.Style
+scroll_p_6 =
+    Css.property "scroll-padding" "1.5rem"
+
+
+scroll_p_60 : Css.Style
+scroll_p_60 =
+    Css.property "scroll-padding" "15rem"
+
+
+scroll_p_64 : Css.Style
+scroll_p_64 =
+    Css.property "scroll-padding" "16rem"
+
+
+scroll_p_7 : Css.Style
+scroll_p_7 =
+    Css.property "scroll-padding" "1.75rem"
+
+
+scroll_p_72 : Css.Style
+scroll_p_72 =
+    Css.property "scroll-padding" "18rem"
+
+
+scroll_p_8 : Css.Style
+scroll_p_8 =
+    Css.property "scroll-padding" "2rem"
+
+
+scroll_p_80 : Css.Style
+scroll_p_80 =
+    Css.property "scroll-padding" "20rem"
+
+
+scroll_p_9 : Css.Style
+scroll_p_9 =
+    Css.property "scroll-padding" "2.25rem"
+
+
+scroll_p_96 : Css.Style
+scroll_p_96 =
+    Css.property "scroll-padding" "24rem"
+
+
+scroll_p_px : Css.Style
+scroll_p_px =
+    Css.property "scroll-padding" "1px"
+
+
+scroll_pb_0 : Css.Style
+scroll_pb_0 =
+    Css.property "scroll-padding-bottom" "0px"
+
+
+scroll_pb_0_dot_5 : Css.Style
+scroll_pb_0_dot_5 =
+    Css.property "scroll-padding-bottom" "0.125rem"
+
+
+scroll_pb_1 : Css.Style
+scroll_pb_1 =
+    Css.property "scroll-padding-bottom" "0.25rem"
+
+
+scroll_pb_10 : Css.Style
+scroll_pb_10 =
+    Css.property "scroll-padding-bottom" "2.5rem"
+
+
+scroll_pb_11 : Css.Style
+scroll_pb_11 =
+    Css.property "scroll-padding-bottom" "2.75rem"
+
+
+scroll_pb_12 : Css.Style
+scroll_pb_12 =
+    Css.property "scroll-padding-bottom" "3rem"
+
+
+scroll_pb_14 : Css.Style
+scroll_pb_14 =
+    Css.property "scroll-padding-bottom" "3.5rem"
+
+
+scroll_pb_16 : Css.Style
+scroll_pb_16 =
+    Css.property "scroll-padding-bottom" "4rem"
+
+
+scroll_pb_1_dot_5 : Css.Style
+scroll_pb_1_dot_5 =
+    Css.property "scroll-padding-bottom" "0.375rem"
+
+
+scroll_pb_2 : Css.Style
+scroll_pb_2 =
+    Css.property "scroll-padding-bottom" "0.5rem"
+
+
+scroll_pb_20 : Css.Style
+scroll_pb_20 =
+    Css.property "scroll-padding-bottom" "5rem"
+
+
+scroll_pb_24 : Css.Style
+scroll_pb_24 =
+    Css.property "scroll-padding-bottom" "6rem"
+
+
+scroll_pb_28 : Css.Style
+scroll_pb_28 =
+    Css.property "scroll-padding-bottom" "7rem"
+
+
+scroll_pb_2_dot_5 : Css.Style
+scroll_pb_2_dot_5 =
+    Css.property "scroll-padding-bottom" "0.625rem"
+
+
+scroll_pb_3 : Css.Style
+scroll_pb_3 =
+    Css.property "scroll-padding-bottom" "0.75rem"
+
+
+scroll_pb_32 : Css.Style
+scroll_pb_32 =
+    Css.property "scroll-padding-bottom" "8rem"
+
+
+scroll_pb_36 : Css.Style
+scroll_pb_36 =
+    Css.property "scroll-padding-bottom" "9rem"
+
+
+scroll_pb_3_dot_5 : Css.Style
+scroll_pb_3_dot_5 =
+    Css.property "scroll-padding-bottom" "0.875rem"
+
+
+scroll_pb_4 : Css.Style
+scroll_pb_4 =
+    Css.property "scroll-padding-bottom" "1rem"
+
+
+scroll_pb_40 : Css.Style
+scroll_pb_40 =
+    Css.property "scroll-padding-bottom" "10rem"
+
+
+scroll_pb_44 : Css.Style
+scroll_pb_44 =
+    Css.property "scroll-padding-bottom" "11rem"
+
+
+scroll_pb_48 : Css.Style
+scroll_pb_48 =
+    Css.property "scroll-padding-bottom" "12rem"
+
+
+scroll_pb_5 : Css.Style
+scroll_pb_5 =
+    Css.property "scroll-padding-bottom" "1.25rem"
+
+
+scroll_pb_52 : Css.Style
+scroll_pb_52 =
+    Css.property "scroll-padding-bottom" "13rem"
+
+
+scroll_pb_56 : Css.Style
+scroll_pb_56 =
+    Css.property "scroll-padding-bottom" "14rem"
+
+
+scroll_pb_6 : Css.Style
+scroll_pb_6 =
+    Css.property "scroll-padding-bottom" "1.5rem"
+
+
+scroll_pb_60 : Css.Style
+scroll_pb_60 =
+    Css.property "scroll-padding-bottom" "15rem"
+
+
+scroll_pb_64 : Css.Style
+scroll_pb_64 =
+    Css.property "scroll-padding-bottom" "16rem"
+
+
+scroll_pb_7 : Css.Style
+scroll_pb_7 =
+    Css.property "scroll-padding-bottom" "1.75rem"
+
+
+scroll_pb_72 : Css.Style
+scroll_pb_72 =
+    Css.property "scroll-padding-bottom" "18rem"
+
+
+scroll_pb_8 : Css.Style
+scroll_pb_8 =
+    Css.property "scroll-padding-bottom" "2rem"
+
+
+scroll_pb_80 : Css.Style
+scroll_pb_80 =
+    Css.property "scroll-padding-bottom" "20rem"
+
+
+scroll_pb_9 : Css.Style
+scroll_pb_9 =
+    Css.property "scroll-padding-bottom" "2.25rem"
+
+
+scroll_pb_96 : Css.Style
+scroll_pb_96 =
+    Css.property "scroll-padding-bottom" "24rem"
+
+
+scroll_pb_px : Css.Style
+scroll_pb_px =
+    Css.property "scroll-padding-bottom" "1px"
+
+
+scroll_pe_0 : Css.Style
+scroll_pe_0 =
+    Css.property "scroll-padding-inline-end" "0px"
+
+
+scroll_pe_0_dot_5 : Css.Style
+scroll_pe_0_dot_5 =
+    Css.property "scroll-padding-inline-end" "0.125rem"
+
+
+scroll_pe_1 : Css.Style
+scroll_pe_1 =
+    Css.property "scroll-padding-inline-end" "0.25rem"
+
+
+scroll_pe_10 : Css.Style
+scroll_pe_10 =
+    Css.property "scroll-padding-inline-end" "2.5rem"
+
+
+scroll_pe_11 : Css.Style
+scroll_pe_11 =
+    Css.property "scroll-padding-inline-end" "2.75rem"
+
+
+scroll_pe_12 : Css.Style
+scroll_pe_12 =
+    Css.property "scroll-padding-inline-end" "3rem"
+
+
+scroll_pe_14 : Css.Style
+scroll_pe_14 =
+    Css.property "scroll-padding-inline-end" "3.5rem"
+
+
+scroll_pe_16 : Css.Style
+scroll_pe_16 =
+    Css.property "scroll-padding-inline-end" "4rem"
+
+
+scroll_pe_1_dot_5 : Css.Style
+scroll_pe_1_dot_5 =
+    Css.property "scroll-padding-inline-end" "0.375rem"
+
+
+scroll_pe_2 : Css.Style
+scroll_pe_2 =
+    Css.property "scroll-padding-inline-end" "0.5rem"
+
+
+scroll_pe_20 : Css.Style
+scroll_pe_20 =
+    Css.property "scroll-padding-inline-end" "5rem"
+
+
+scroll_pe_24 : Css.Style
+scroll_pe_24 =
+    Css.property "scroll-padding-inline-end" "6rem"
+
+
+scroll_pe_28 : Css.Style
+scroll_pe_28 =
+    Css.property "scroll-padding-inline-end" "7rem"
+
+
+scroll_pe_2_dot_5 : Css.Style
+scroll_pe_2_dot_5 =
+    Css.property "scroll-padding-inline-end" "0.625rem"
+
+
+scroll_pe_3 : Css.Style
+scroll_pe_3 =
+    Css.property "scroll-padding-inline-end" "0.75rem"
+
+
+scroll_pe_32 : Css.Style
+scroll_pe_32 =
+    Css.property "scroll-padding-inline-end" "8rem"
+
+
+scroll_pe_36 : Css.Style
+scroll_pe_36 =
+    Css.property "scroll-padding-inline-end" "9rem"
+
+
+scroll_pe_3_dot_5 : Css.Style
+scroll_pe_3_dot_5 =
+    Css.property "scroll-padding-inline-end" "0.875rem"
+
+
+scroll_pe_4 : Css.Style
+scroll_pe_4 =
+    Css.property "scroll-padding-inline-end" "1rem"
+
+
+scroll_pe_40 : Css.Style
+scroll_pe_40 =
+    Css.property "scroll-padding-inline-end" "10rem"
+
+
+scroll_pe_44 : Css.Style
+scroll_pe_44 =
+    Css.property "scroll-padding-inline-end" "11rem"
+
+
+scroll_pe_48 : Css.Style
+scroll_pe_48 =
+    Css.property "scroll-padding-inline-end" "12rem"
+
+
+scroll_pe_5 : Css.Style
+scroll_pe_5 =
+    Css.property "scroll-padding-inline-end" "1.25rem"
+
+
+scroll_pe_52 : Css.Style
+scroll_pe_52 =
+    Css.property "scroll-padding-inline-end" "13rem"
+
+
+scroll_pe_56 : Css.Style
+scroll_pe_56 =
+    Css.property "scroll-padding-inline-end" "14rem"
+
+
+scroll_pe_6 : Css.Style
+scroll_pe_6 =
+    Css.property "scroll-padding-inline-end" "1.5rem"
+
+
+scroll_pe_60 : Css.Style
+scroll_pe_60 =
+    Css.property "scroll-padding-inline-end" "15rem"
+
+
+scroll_pe_64 : Css.Style
+scroll_pe_64 =
+    Css.property "scroll-padding-inline-end" "16rem"
+
+
+scroll_pe_7 : Css.Style
+scroll_pe_7 =
+    Css.property "scroll-padding-inline-end" "1.75rem"
+
+
+scroll_pe_72 : Css.Style
+scroll_pe_72 =
+    Css.property "scroll-padding-inline-end" "18rem"
+
+
+scroll_pe_8 : Css.Style
+scroll_pe_8 =
+    Css.property "scroll-padding-inline-end" "2rem"
+
+
+scroll_pe_80 : Css.Style
+scroll_pe_80 =
+    Css.property "scroll-padding-inline-end" "20rem"
+
+
+scroll_pe_9 : Css.Style
+scroll_pe_9 =
+    Css.property "scroll-padding-inline-end" "2.25rem"
+
+
+scroll_pe_96 : Css.Style
+scroll_pe_96 =
+    Css.property "scroll-padding-inline-end" "24rem"
+
+
+scroll_pe_px : Css.Style
+scroll_pe_px =
+    Css.property "scroll-padding-inline-end" "1px"
+
+
+scroll_pl_0 : Css.Style
+scroll_pl_0 =
+    Css.property "scroll-padding-left" "0px"
+
+
+scroll_pl_0_dot_5 : Css.Style
+scroll_pl_0_dot_5 =
+    Css.property "scroll-padding-left" "0.125rem"
+
+
+scroll_pl_1 : Css.Style
+scroll_pl_1 =
+    Css.property "scroll-padding-left" "0.25rem"
+
+
+scroll_pl_10 : Css.Style
+scroll_pl_10 =
+    Css.property "scroll-padding-left" "2.5rem"
+
+
+scroll_pl_11 : Css.Style
+scroll_pl_11 =
+    Css.property "scroll-padding-left" "2.75rem"
+
+
+scroll_pl_12 : Css.Style
+scroll_pl_12 =
+    Css.property "scroll-padding-left" "3rem"
+
+
+scroll_pl_14 : Css.Style
+scroll_pl_14 =
+    Css.property "scroll-padding-left" "3.5rem"
+
+
+scroll_pl_16 : Css.Style
+scroll_pl_16 =
+    Css.property "scroll-padding-left" "4rem"
+
+
+scroll_pl_1_dot_5 : Css.Style
+scroll_pl_1_dot_5 =
+    Css.property "scroll-padding-left" "0.375rem"
+
+
+scroll_pl_2 : Css.Style
+scroll_pl_2 =
+    Css.property "scroll-padding-left" "0.5rem"
+
+
+scroll_pl_20 : Css.Style
+scroll_pl_20 =
+    Css.property "scroll-padding-left" "5rem"
+
+
+scroll_pl_24 : Css.Style
+scroll_pl_24 =
+    Css.property "scroll-padding-left" "6rem"
+
+
+scroll_pl_28 : Css.Style
+scroll_pl_28 =
+    Css.property "scroll-padding-left" "7rem"
+
+
+scroll_pl_2_dot_5 : Css.Style
+scroll_pl_2_dot_5 =
+    Css.property "scroll-padding-left" "0.625rem"
+
+
+scroll_pl_3 : Css.Style
+scroll_pl_3 =
+    Css.property "scroll-padding-left" "0.75rem"
+
+
+scroll_pl_32 : Css.Style
+scroll_pl_32 =
+    Css.property "scroll-padding-left" "8rem"
+
+
+scroll_pl_36 : Css.Style
+scroll_pl_36 =
+    Css.property "scroll-padding-left" "9rem"
+
+
+scroll_pl_3_dot_5 : Css.Style
+scroll_pl_3_dot_5 =
+    Css.property "scroll-padding-left" "0.875rem"
+
+
+scroll_pl_4 : Css.Style
+scroll_pl_4 =
+    Css.property "scroll-padding-left" "1rem"
+
+
+scroll_pl_40 : Css.Style
+scroll_pl_40 =
+    Css.property "scroll-padding-left" "10rem"
+
+
+scroll_pl_44 : Css.Style
+scroll_pl_44 =
+    Css.property "scroll-padding-left" "11rem"
+
+
+scroll_pl_48 : Css.Style
+scroll_pl_48 =
+    Css.property "scroll-padding-left" "12rem"
+
+
+scroll_pl_5 : Css.Style
+scroll_pl_5 =
+    Css.property "scroll-padding-left" "1.25rem"
+
+
+scroll_pl_52 : Css.Style
+scroll_pl_52 =
+    Css.property "scroll-padding-left" "13rem"
+
+
+scroll_pl_56 : Css.Style
+scroll_pl_56 =
+    Css.property "scroll-padding-left" "14rem"
+
+
+scroll_pl_6 : Css.Style
+scroll_pl_6 =
+    Css.property "scroll-padding-left" "1.5rem"
+
+
+scroll_pl_60 : Css.Style
+scroll_pl_60 =
+    Css.property "scroll-padding-left" "15rem"
+
+
+scroll_pl_64 : Css.Style
+scroll_pl_64 =
+    Css.property "scroll-padding-left" "16rem"
+
+
+scroll_pl_7 : Css.Style
+scroll_pl_7 =
+    Css.property "scroll-padding-left" "1.75rem"
+
+
+scroll_pl_72 : Css.Style
+scroll_pl_72 =
+    Css.property "scroll-padding-left" "18rem"
+
+
+scroll_pl_8 : Css.Style
+scroll_pl_8 =
+    Css.property "scroll-padding-left" "2rem"
+
+
+scroll_pl_80 : Css.Style
+scroll_pl_80 =
+    Css.property "scroll-padding-left" "20rem"
+
+
+scroll_pl_9 : Css.Style
+scroll_pl_9 =
+    Css.property "scroll-padding-left" "2.25rem"
+
+
+scroll_pl_96 : Css.Style
+scroll_pl_96 =
+    Css.property "scroll-padding-left" "24rem"
+
+
+scroll_pl_px : Css.Style
+scroll_pl_px =
+    Css.property "scroll-padding-left" "1px"
+
+
+scroll_pr_0 : Css.Style
+scroll_pr_0 =
+    Css.property "scroll-padding-right" "0px"
+
+
+scroll_pr_0_dot_5 : Css.Style
+scroll_pr_0_dot_5 =
+    Css.property "scroll-padding-right" "0.125rem"
+
+
+scroll_pr_1 : Css.Style
+scroll_pr_1 =
+    Css.property "scroll-padding-right" "0.25rem"
+
+
+scroll_pr_10 : Css.Style
+scroll_pr_10 =
+    Css.property "scroll-padding-right" "2.5rem"
+
+
+scroll_pr_11 : Css.Style
+scroll_pr_11 =
+    Css.property "scroll-padding-right" "2.75rem"
+
+
+scroll_pr_12 : Css.Style
+scroll_pr_12 =
+    Css.property "scroll-padding-right" "3rem"
+
+
+scroll_pr_14 : Css.Style
+scroll_pr_14 =
+    Css.property "scroll-padding-right" "3.5rem"
+
+
+scroll_pr_16 : Css.Style
+scroll_pr_16 =
+    Css.property "scroll-padding-right" "4rem"
+
+
+scroll_pr_1_dot_5 : Css.Style
+scroll_pr_1_dot_5 =
+    Css.property "scroll-padding-right" "0.375rem"
+
+
+scroll_pr_2 : Css.Style
+scroll_pr_2 =
+    Css.property "scroll-padding-right" "0.5rem"
+
+
+scroll_pr_20 : Css.Style
+scroll_pr_20 =
+    Css.property "scroll-padding-right" "5rem"
+
+
+scroll_pr_24 : Css.Style
+scroll_pr_24 =
+    Css.property "scroll-padding-right" "6rem"
+
+
+scroll_pr_28 : Css.Style
+scroll_pr_28 =
+    Css.property "scroll-padding-right" "7rem"
+
+
+scroll_pr_2_dot_5 : Css.Style
+scroll_pr_2_dot_5 =
+    Css.property "scroll-padding-right" "0.625rem"
+
+
+scroll_pr_3 : Css.Style
+scroll_pr_3 =
+    Css.property "scroll-padding-right" "0.75rem"
+
+
+scroll_pr_32 : Css.Style
+scroll_pr_32 =
+    Css.property "scroll-padding-right" "8rem"
+
+
+scroll_pr_36 : Css.Style
+scroll_pr_36 =
+    Css.property "scroll-padding-right" "9rem"
+
+
+scroll_pr_3_dot_5 : Css.Style
+scroll_pr_3_dot_5 =
+    Css.property "scroll-padding-right" "0.875rem"
+
+
+scroll_pr_4 : Css.Style
+scroll_pr_4 =
+    Css.property "scroll-padding-right" "1rem"
+
+
+scroll_pr_40 : Css.Style
+scroll_pr_40 =
+    Css.property "scroll-padding-right" "10rem"
+
+
+scroll_pr_44 : Css.Style
+scroll_pr_44 =
+    Css.property "scroll-padding-right" "11rem"
+
+
+scroll_pr_48 : Css.Style
+scroll_pr_48 =
+    Css.property "scroll-padding-right" "12rem"
+
+
+scroll_pr_5 : Css.Style
+scroll_pr_5 =
+    Css.property "scroll-padding-right" "1.25rem"
+
+
+scroll_pr_52 : Css.Style
+scroll_pr_52 =
+    Css.property "scroll-padding-right" "13rem"
+
+
+scroll_pr_56 : Css.Style
+scroll_pr_56 =
+    Css.property "scroll-padding-right" "14rem"
+
+
+scroll_pr_6 : Css.Style
+scroll_pr_6 =
+    Css.property "scroll-padding-right" "1.5rem"
+
+
+scroll_pr_60 : Css.Style
+scroll_pr_60 =
+    Css.property "scroll-padding-right" "15rem"
+
+
+scroll_pr_64 : Css.Style
+scroll_pr_64 =
+    Css.property "scroll-padding-right" "16rem"
+
+
+scroll_pr_7 : Css.Style
+scroll_pr_7 =
+    Css.property "scroll-padding-right" "1.75rem"
+
+
+scroll_pr_72 : Css.Style
+scroll_pr_72 =
+    Css.property "scroll-padding-right" "18rem"
+
+
+scroll_pr_8 : Css.Style
+scroll_pr_8 =
+    Css.property "scroll-padding-right" "2rem"
+
+
+scroll_pr_80 : Css.Style
+scroll_pr_80 =
+    Css.property "scroll-padding-right" "20rem"
+
+
+scroll_pr_9 : Css.Style
+scroll_pr_9 =
+    Css.property "scroll-padding-right" "2.25rem"
+
+
+scroll_pr_96 : Css.Style
+scroll_pr_96 =
+    Css.property "scroll-padding-right" "24rem"
+
+
+scroll_pr_px : Css.Style
+scroll_pr_px =
+    Css.property "scroll-padding-right" "1px"
+
+
+scroll_ps_0 : Css.Style
+scroll_ps_0 =
+    Css.property "scroll-padding-inline-start" "0px"
+
+
+scroll_ps_0_dot_5 : Css.Style
+scroll_ps_0_dot_5 =
+    Css.property "scroll-padding-inline-start" "0.125rem"
+
+
+scroll_ps_1 : Css.Style
+scroll_ps_1 =
+    Css.property "scroll-padding-inline-start" "0.25rem"
+
+
+scroll_ps_10 : Css.Style
+scroll_ps_10 =
+    Css.property "scroll-padding-inline-start" "2.5rem"
+
+
+scroll_ps_11 : Css.Style
+scroll_ps_11 =
+    Css.property "scroll-padding-inline-start" "2.75rem"
+
+
+scroll_ps_12 : Css.Style
+scroll_ps_12 =
+    Css.property "scroll-padding-inline-start" "3rem"
+
+
+scroll_ps_14 : Css.Style
+scroll_ps_14 =
+    Css.property "scroll-padding-inline-start" "3.5rem"
+
+
+scroll_ps_16 : Css.Style
+scroll_ps_16 =
+    Css.property "scroll-padding-inline-start" "4rem"
+
+
+scroll_ps_1_dot_5 : Css.Style
+scroll_ps_1_dot_5 =
+    Css.property "scroll-padding-inline-start" "0.375rem"
+
+
+scroll_ps_2 : Css.Style
+scroll_ps_2 =
+    Css.property "scroll-padding-inline-start" "0.5rem"
+
+
+scroll_ps_20 : Css.Style
+scroll_ps_20 =
+    Css.property "scroll-padding-inline-start" "5rem"
+
+
+scroll_ps_24 : Css.Style
+scroll_ps_24 =
+    Css.property "scroll-padding-inline-start" "6rem"
+
+
+scroll_ps_28 : Css.Style
+scroll_ps_28 =
+    Css.property "scroll-padding-inline-start" "7rem"
+
+
+scroll_ps_2_dot_5 : Css.Style
+scroll_ps_2_dot_5 =
+    Css.property "scroll-padding-inline-start" "0.625rem"
+
+
+scroll_ps_3 : Css.Style
+scroll_ps_3 =
+    Css.property "scroll-padding-inline-start" "0.75rem"
+
+
+scroll_ps_32 : Css.Style
+scroll_ps_32 =
+    Css.property "scroll-padding-inline-start" "8rem"
+
+
+scroll_ps_36 : Css.Style
+scroll_ps_36 =
+    Css.property "scroll-padding-inline-start" "9rem"
+
+
+scroll_ps_3_dot_5 : Css.Style
+scroll_ps_3_dot_5 =
+    Css.property "scroll-padding-inline-start" "0.875rem"
+
+
+scroll_ps_4 : Css.Style
+scroll_ps_4 =
+    Css.property "scroll-padding-inline-start" "1rem"
+
+
+scroll_ps_40 : Css.Style
+scroll_ps_40 =
+    Css.property "scroll-padding-inline-start" "10rem"
+
+
+scroll_ps_44 : Css.Style
+scroll_ps_44 =
+    Css.property "scroll-padding-inline-start" "11rem"
+
+
+scroll_ps_48 : Css.Style
+scroll_ps_48 =
+    Css.property "scroll-padding-inline-start" "12rem"
+
+
+scroll_ps_5 : Css.Style
+scroll_ps_5 =
+    Css.property "scroll-padding-inline-start" "1.25rem"
+
+
+scroll_ps_52 : Css.Style
+scroll_ps_52 =
+    Css.property "scroll-padding-inline-start" "13rem"
+
+
+scroll_ps_56 : Css.Style
+scroll_ps_56 =
+    Css.property "scroll-padding-inline-start" "14rem"
+
+
+scroll_ps_6 : Css.Style
+scroll_ps_6 =
+    Css.property "scroll-padding-inline-start" "1.5rem"
+
+
+scroll_ps_60 : Css.Style
+scroll_ps_60 =
+    Css.property "scroll-padding-inline-start" "15rem"
+
+
+scroll_ps_64 : Css.Style
+scroll_ps_64 =
+    Css.property "scroll-padding-inline-start" "16rem"
+
+
+scroll_ps_7 : Css.Style
+scroll_ps_7 =
+    Css.property "scroll-padding-inline-start" "1.75rem"
+
+
+scroll_ps_72 : Css.Style
+scroll_ps_72 =
+    Css.property "scroll-padding-inline-start" "18rem"
+
+
+scroll_ps_8 : Css.Style
+scroll_ps_8 =
+    Css.property "scroll-padding-inline-start" "2rem"
+
+
+scroll_ps_80 : Css.Style
+scroll_ps_80 =
+    Css.property "scroll-padding-inline-start" "20rem"
+
+
+scroll_ps_9 : Css.Style
+scroll_ps_9 =
+    Css.property "scroll-padding-inline-start" "2.25rem"
+
+
+scroll_ps_96 : Css.Style
+scroll_ps_96 =
+    Css.property "scroll-padding-inline-start" "24rem"
+
+
+scroll_ps_px : Css.Style
+scroll_ps_px =
+    Css.property "scroll-padding-inline-start" "1px"
+
+
+scroll_pt_0 : Css.Style
+scroll_pt_0 =
+    Css.property "scroll-padding-top" "0px"
+
+
+scroll_pt_0_dot_5 : Css.Style
+scroll_pt_0_dot_5 =
+    Css.property "scroll-padding-top" "0.125rem"
+
+
+scroll_pt_1 : Css.Style
+scroll_pt_1 =
+    Css.property "scroll-padding-top" "0.25rem"
+
+
+scroll_pt_10 : Css.Style
+scroll_pt_10 =
+    Css.property "scroll-padding-top" "2.5rem"
+
+
+scroll_pt_11 : Css.Style
+scroll_pt_11 =
+    Css.property "scroll-padding-top" "2.75rem"
+
+
+scroll_pt_12 : Css.Style
+scroll_pt_12 =
+    Css.property "scroll-padding-top" "3rem"
+
+
+scroll_pt_14 : Css.Style
+scroll_pt_14 =
+    Css.property "scroll-padding-top" "3.5rem"
+
+
+scroll_pt_16 : Css.Style
+scroll_pt_16 =
+    Css.property "scroll-padding-top" "4rem"
+
+
+scroll_pt_1_dot_5 : Css.Style
+scroll_pt_1_dot_5 =
+    Css.property "scroll-padding-top" "0.375rem"
+
+
+scroll_pt_2 : Css.Style
+scroll_pt_2 =
+    Css.property "scroll-padding-top" "0.5rem"
+
+
+scroll_pt_20 : Css.Style
+scroll_pt_20 =
+    Css.property "scroll-padding-top" "5rem"
+
+
+scroll_pt_24 : Css.Style
+scroll_pt_24 =
+    Css.property "scroll-padding-top" "6rem"
+
+
+scroll_pt_28 : Css.Style
+scroll_pt_28 =
+    Css.property "scroll-padding-top" "7rem"
+
+
+scroll_pt_2_dot_5 : Css.Style
+scroll_pt_2_dot_5 =
+    Css.property "scroll-padding-top" "0.625rem"
+
+
+scroll_pt_3 : Css.Style
+scroll_pt_3 =
+    Css.property "scroll-padding-top" "0.75rem"
+
+
+scroll_pt_32 : Css.Style
+scroll_pt_32 =
+    Css.property "scroll-padding-top" "8rem"
+
+
+scroll_pt_36 : Css.Style
+scroll_pt_36 =
+    Css.property "scroll-padding-top" "9rem"
+
+
+scroll_pt_3_dot_5 : Css.Style
+scroll_pt_3_dot_5 =
+    Css.property "scroll-padding-top" "0.875rem"
+
+
+scroll_pt_4 : Css.Style
+scroll_pt_4 =
+    Css.property "scroll-padding-top" "1rem"
+
+
+scroll_pt_40 : Css.Style
+scroll_pt_40 =
+    Css.property "scroll-padding-top" "10rem"
+
+
+scroll_pt_44 : Css.Style
+scroll_pt_44 =
+    Css.property "scroll-padding-top" "11rem"
+
+
+scroll_pt_48 : Css.Style
+scroll_pt_48 =
+    Css.property "scroll-padding-top" "12rem"
+
+
+scroll_pt_5 : Css.Style
+scroll_pt_5 =
+    Css.property "scroll-padding-top" "1.25rem"
+
+
+scroll_pt_52 : Css.Style
+scroll_pt_52 =
+    Css.property "scroll-padding-top" "13rem"
+
+
+scroll_pt_56 : Css.Style
+scroll_pt_56 =
+    Css.property "scroll-padding-top" "14rem"
+
+
+scroll_pt_6 : Css.Style
+scroll_pt_6 =
+    Css.property "scroll-padding-top" "1.5rem"
+
+
+scroll_pt_60 : Css.Style
+scroll_pt_60 =
+    Css.property "scroll-padding-top" "15rem"
+
+
+scroll_pt_64 : Css.Style
+scroll_pt_64 =
+    Css.property "scroll-padding-top" "16rem"
+
+
+scroll_pt_7 : Css.Style
+scroll_pt_7 =
+    Css.property "scroll-padding-top" "1.75rem"
+
+
+scroll_pt_72 : Css.Style
+scroll_pt_72 =
+    Css.property "scroll-padding-top" "18rem"
+
+
+scroll_pt_8 : Css.Style
+scroll_pt_8 =
+    Css.property "scroll-padding-top" "2rem"
+
+
+scroll_pt_80 : Css.Style
+scroll_pt_80 =
+    Css.property "scroll-padding-top" "20rem"
+
+
+scroll_pt_9 : Css.Style
+scroll_pt_9 =
+    Css.property "scroll-padding-top" "2.25rem"
+
+
+scroll_pt_96 : Css.Style
+scroll_pt_96 =
+    Css.property "scroll-padding-top" "24rem"
+
+
+scroll_pt_px : Css.Style
+scroll_pt_px =
+    Css.property "scroll-padding-top" "1px"
+
+
+scroll_px_0 : Css.Style
+scroll_px_0 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "0px"
+        , Css.property "scroll-padding-right" "0px"
+        ]
+
+
+scroll_px_0_dot_5 : Css.Style
+scroll_px_0_dot_5 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "0.125rem"
+        , Css.property "scroll-padding-right" "0.125rem"
+        ]
+
+
+scroll_px_1 : Css.Style
+scroll_px_1 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "0.25rem"
+        , Css.property "scroll-padding-right" "0.25rem"
+        ]
+
+
+scroll_px_10 : Css.Style
+scroll_px_10 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "2.5rem"
+        , Css.property "scroll-padding-right" "2.5rem"
+        ]
+
+
+scroll_px_11 : Css.Style
+scroll_px_11 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "2.75rem"
+        , Css.property "scroll-padding-right" "2.75rem"
+        ]
+
+
+scroll_px_12 : Css.Style
+scroll_px_12 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "3rem"
+        , Css.property "scroll-padding-right" "3rem"
+        ]
+
+
+scroll_px_14 : Css.Style
+scroll_px_14 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "3.5rem"
+        , Css.property "scroll-padding-right" "3.5rem"
+        ]
+
+
+scroll_px_16 : Css.Style
+scroll_px_16 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "4rem"
+        , Css.property "scroll-padding-right" "4rem"
+        ]
+
+
+scroll_px_1_dot_5 : Css.Style
+scroll_px_1_dot_5 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "0.375rem"
+        , Css.property "scroll-padding-right" "0.375rem"
+        ]
+
+
+scroll_px_2 : Css.Style
+scroll_px_2 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "0.5rem"
+        , Css.property "scroll-padding-right" "0.5rem"
+        ]
+
+
+scroll_px_20 : Css.Style
+scroll_px_20 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "5rem"
+        , Css.property "scroll-padding-right" "5rem"
+        ]
+
+
+scroll_px_24 : Css.Style
+scroll_px_24 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "6rem"
+        , Css.property "scroll-padding-right" "6rem"
+        ]
+
+
+scroll_px_28 : Css.Style
+scroll_px_28 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "7rem"
+        , Css.property "scroll-padding-right" "7rem"
+        ]
+
+
+scroll_px_2_dot_5 : Css.Style
+scroll_px_2_dot_5 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "0.625rem"
+        , Css.property "scroll-padding-right" "0.625rem"
+        ]
+
+
+scroll_px_3 : Css.Style
+scroll_px_3 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "0.75rem"
+        , Css.property "scroll-padding-right" "0.75rem"
+        ]
+
+
+scroll_px_32 : Css.Style
+scroll_px_32 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "8rem"
+        , Css.property "scroll-padding-right" "8rem"
+        ]
+
+
+scroll_px_36 : Css.Style
+scroll_px_36 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "9rem"
+        , Css.property "scroll-padding-right" "9rem"
+        ]
+
+
+scroll_px_3_dot_5 : Css.Style
+scroll_px_3_dot_5 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "0.875rem"
+        , Css.property "scroll-padding-right" "0.875rem"
+        ]
+
+
+scroll_px_4 : Css.Style
+scroll_px_4 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "1rem"
+        , Css.property "scroll-padding-right" "1rem"
+        ]
+
+
+scroll_px_40 : Css.Style
+scroll_px_40 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "10rem"
+        , Css.property "scroll-padding-right" "10rem"
+        ]
+
+
+scroll_px_44 : Css.Style
+scroll_px_44 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "11rem"
+        , Css.property "scroll-padding-right" "11rem"
+        ]
+
+
+scroll_px_48 : Css.Style
+scroll_px_48 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "12rem"
+        , Css.property "scroll-padding-right" "12rem"
+        ]
+
+
+scroll_px_5 : Css.Style
+scroll_px_5 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "1.25rem"
+        , Css.property "scroll-padding-right" "1.25rem"
+        ]
+
+
+scroll_px_52 : Css.Style
+scroll_px_52 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "13rem"
+        , Css.property "scroll-padding-right" "13rem"
+        ]
+
+
+scroll_px_56 : Css.Style
+scroll_px_56 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "14rem"
+        , Css.property "scroll-padding-right" "14rem"
+        ]
+
+
+scroll_px_6 : Css.Style
+scroll_px_6 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "1.5rem"
+        , Css.property "scroll-padding-right" "1.5rem"
+        ]
+
+
+scroll_px_60 : Css.Style
+scroll_px_60 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "15rem"
+        , Css.property "scroll-padding-right" "15rem"
+        ]
+
+
+scroll_px_64 : Css.Style
+scroll_px_64 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "16rem"
+        , Css.property "scroll-padding-right" "16rem"
+        ]
+
+
+scroll_px_7 : Css.Style
+scroll_px_7 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "1.75rem"
+        , Css.property "scroll-padding-right" "1.75rem"
+        ]
+
+
+scroll_px_72 : Css.Style
+scroll_px_72 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "18rem"
+        , Css.property "scroll-padding-right" "18rem"
+        ]
+
+
+scroll_px_8 : Css.Style
+scroll_px_8 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "2rem"
+        , Css.property "scroll-padding-right" "2rem"
+        ]
+
+
+scroll_px_80 : Css.Style
+scroll_px_80 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "20rem"
+        , Css.property "scroll-padding-right" "20rem"
+        ]
+
+
+scroll_px_9 : Css.Style
+scroll_px_9 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "2.25rem"
+        , Css.property "scroll-padding-right" "2.25rem"
+        ]
+
+
+scroll_px_96 : Css.Style
+scroll_px_96 =
+    Css.batch
+        [ Css.property "scroll-padding-left" "24rem"
+        , Css.property "scroll-padding-right" "24rem"
+        ]
+
+
+scroll_px_px : Css.Style
+scroll_px_px =
+    Css.batch
+        [ Css.property "scroll-padding-left" "1px"
+        , Css.property "scroll-padding-right" "1px"
+        ]
+
+
+scroll_py_0 : Css.Style
+scroll_py_0 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "0px"
+        , Css.property "scroll-padding-bottom" "0px"
+        ]
+
+
+scroll_py_0_dot_5 : Css.Style
+scroll_py_0_dot_5 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "0.125rem"
+        , Css.property "scroll-padding-bottom" "0.125rem"
+        ]
+
+
+scroll_py_1 : Css.Style
+scroll_py_1 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "0.25rem"
+        , Css.property "scroll-padding-bottom" "0.25rem"
+        ]
+
+
+scroll_py_10 : Css.Style
+scroll_py_10 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "2.5rem"
+        , Css.property "scroll-padding-bottom" "2.5rem"
+        ]
+
+
+scroll_py_11 : Css.Style
+scroll_py_11 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "2.75rem"
+        , Css.property "scroll-padding-bottom" "2.75rem"
+        ]
+
+
+scroll_py_12 : Css.Style
+scroll_py_12 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "3rem"
+        , Css.property "scroll-padding-bottom" "3rem"
+        ]
+
+
+scroll_py_14 : Css.Style
+scroll_py_14 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "3.5rem"
+        , Css.property "scroll-padding-bottom" "3.5rem"
+        ]
+
+
+scroll_py_16 : Css.Style
+scroll_py_16 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "4rem"
+        , Css.property "scroll-padding-bottom" "4rem"
+        ]
+
+
+scroll_py_1_dot_5 : Css.Style
+scroll_py_1_dot_5 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "0.375rem"
+        , Css.property "scroll-padding-bottom" "0.375rem"
+        ]
+
+
+scroll_py_2 : Css.Style
+scroll_py_2 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "0.5rem"
+        , Css.property "scroll-padding-bottom" "0.5rem"
+        ]
+
+
+scroll_py_20 : Css.Style
+scroll_py_20 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "5rem"
+        , Css.property "scroll-padding-bottom" "5rem"
+        ]
+
+
+scroll_py_24 : Css.Style
+scroll_py_24 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "6rem"
+        , Css.property "scroll-padding-bottom" "6rem"
+        ]
+
+
+scroll_py_28 : Css.Style
+scroll_py_28 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "7rem"
+        , Css.property "scroll-padding-bottom" "7rem"
+        ]
+
+
+scroll_py_2_dot_5 : Css.Style
+scroll_py_2_dot_5 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "0.625rem"
+        , Css.property "scroll-padding-bottom" "0.625rem"
+        ]
+
+
+scroll_py_3 : Css.Style
+scroll_py_3 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "0.75rem"
+        , Css.property "scroll-padding-bottom" "0.75rem"
+        ]
+
+
+scroll_py_32 : Css.Style
+scroll_py_32 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "8rem"
+        , Css.property "scroll-padding-bottom" "8rem"
+        ]
+
+
+scroll_py_36 : Css.Style
+scroll_py_36 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "9rem"
+        , Css.property "scroll-padding-bottom" "9rem"
+        ]
+
+
+scroll_py_3_dot_5 : Css.Style
+scroll_py_3_dot_5 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "0.875rem"
+        , Css.property "scroll-padding-bottom" "0.875rem"
+        ]
+
+
+scroll_py_4 : Css.Style
+scroll_py_4 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "1rem"
+        , Css.property "scroll-padding-bottom" "1rem"
+        ]
+
+
+scroll_py_40 : Css.Style
+scroll_py_40 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "10rem"
+        , Css.property "scroll-padding-bottom" "10rem"
+        ]
+
+
+scroll_py_44 : Css.Style
+scroll_py_44 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "11rem"
+        , Css.property "scroll-padding-bottom" "11rem"
+        ]
+
+
+scroll_py_48 : Css.Style
+scroll_py_48 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "12rem"
+        , Css.property "scroll-padding-bottom" "12rem"
+        ]
+
+
+scroll_py_5 : Css.Style
+scroll_py_5 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "1.25rem"
+        , Css.property "scroll-padding-bottom" "1.25rem"
+        ]
+
+
+scroll_py_52 : Css.Style
+scroll_py_52 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "13rem"
+        , Css.property "scroll-padding-bottom" "13rem"
+        ]
+
+
+scroll_py_56 : Css.Style
+scroll_py_56 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "14rem"
+        , Css.property "scroll-padding-bottom" "14rem"
+        ]
+
+
+scroll_py_6 : Css.Style
+scroll_py_6 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "1.5rem"
+        , Css.property "scroll-padding-bottom" "1.5rem"
+        ]
+
+
+scroll_py_60 : Css.Style
+scroll_py_60 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "15rem"
+        , Css.property "scroll-padding-bottom" "15rem"
+        ]
+
+
+scroll_py_64 : Css.Style
+scroll_py_64 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "16rem"
+        , Css.property "scroll-padding-bottom" "16rem"
+        ]
+
+
+scroll_py_7 : Css.Style
+scroll_py_7 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "1.75rem"
+        , Css.property "scroll-padding-bottom" "1.75rem"
+        ]
+
+
+scroll_py_72 : Css.Style
+scroll_py_72 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "18rem"
+        , Css.property "scroll-padding-bottom" "18rem"
+        ]
+
+
+scroll_py_8 : Css.Style
+scroll_py_8 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "2rem"
+        , Css.property "scroll-padding-bottom" "2rem"
+        ]
+
+
+scroll_py_80 : Css.Style
+scroll_py_80 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "20rem"
+        , Css.property "scroll-padding-bottom" "20rem"
+        ]
+
+
+scroll_py_9 : Css.Style
+scroll_py_9 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "2.25rem"
+        , Css.property "scroll-padding-bottom" "2.25rem"
+        ]
+
+
+scroll_py_96 : Css.Style
+scroll_py_96 =
+    Css.batch
+        [ Css.property "scroll-padding-top" "24rem"
+        , Css.property "scroll-padding-bottom" "24rem"
+        ]
+
+
+scroll_py_px : Css.Style
+scroll_py_px =
+    Css.batch
+        [ Css.property "scroll-padding-top" "1px"
+        , Css.property "scroll-padding-bottom" "1px"
+        ]
+
+
+scroll_smooth : Css.Style
+scroll_smooth =
+    Css.property "scroll-behavior" "smooth"
 
 
 select_all : Css.Style
@@ -18386,18 +29751,25 @@ self_stretch =
 
 sepia : Css.Style
 sepia =
-    Css.property "--tw-sepia" "sepia(100%)"
+    Css.batch
+        [ Css.property "--tw-sepia" "sepia(100%)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 sepia_0 : Css.Style
 sepia_0 =
-    Css.property "--tw-sepia" "sepia(0)"
+    Css.batch
+        [ Css.property "--tw-sepia" "sepia(0)"
+        , Css.property "filter" "var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)"
+        ]
 
 
 shadow : Css.Style
 shadow =
     Css.batch
-        [ Css.property "--tw-shadow" "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
+        [ Css.property "--tw-shadow" "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)"
+        , Css.property "--tw-shadow-colored" "0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color)"
         , Css.property "box-shadow" "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)"
         ]
 
@@ -18405,7 +29777,8 @@ shadow =
 shadow_2xl : Css.Style
 shadow_2xl =
     Css.batch
-        [ Css.property "--tw-shadow" "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+        [ Css.property "--tw-shadow" "0 25px 50px -12px rgb(0 0 0 / 0.25)"
+        , Css.property "--tw-shadow-colored" "0 25px 50px -12px var(--tw-shadow-color)"
         , Css.property "box-shadow" "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)"
         ]
 
@@ -18413,7 +29786,8 @@ shadow_2xl =
 shadow_inner : Css.Style
 shadow_inner =
     Css.batch
-        [ Css.property "--tw-shadow" "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)"
+        [ Css.property "--tw-shadow" "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)"
+        , Css.property "--tw-shadow-colored" "inset 0 2px 4px 0 var(--tw-shadow-color)"
         , Css.property "box-shadow" "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)"
         ]
 
@@ -18421,7 +29795,8 @@ shadow_inner =
 shadow_lg : Css.Style
 shadow_lg =
     Css.batch
-        [ Css.property "--tw-shadow" "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+        [ Css.property "--tw-shadow" "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)"
+        , Css.property "--tw-shadow-colored" "0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color)"
         , Css.property "box-shadow" "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)"
         ]
 
@@ -18429,7 +29804,8 @@ shadow_lg =
 shadow_md : Css.Style
 shadow_md =
     Css.batch
-        [ Css.property "--tw-shadow" "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+        [ Css.property "--tw-shadow" "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+        , Css.property "--tw-shadow-colored" "0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color)"
         , Css.property "box-shadow" "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)"
         ]
 
@@ -18438,6 +29814,7 @@ shadow_none : Css.Style
 shadow_none =
     Css.batch
         [ Css.property "--tw-shadow" "0 0 #0000"
+        , Css.property "--tw-shadow-colored" "0 0 #0000"
         , Css.property "box-shadow" "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)"
         ]
 
@@ -18445,7 +29822,8 @@ shadow_none =
 shadow_sm : Css.Style
 shadow_sm =
     Css.batch
-        [ Css.property "--tw-shadow" "0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+        [ Css.property "--tw-shadow" "0 1px 2px 0 rgb(0 0 0 / 0.05)"
+        , Css.property "--tw-shadow-colored" "0 1px 2px 0 var(--tw-shadow-color)"
         , Css.property "box-shadow" "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)"
         ]
 
@@ -18453,1012 +29831,970 @@ shadow_sm =
 shadow_xl : Css.Style
 shadow_xl =
     Css.batch
-        [ Css.property "--tw-shadow" "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+        [ Css.property "--tw-shadow" "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
+        , Css.property "--tw-shadow-colored" "0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color)"
         , Css.property "box-shadow" "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)"
         ]
 
 
+shrink : Css.Style
+shrink =
+    Css.property "flex-shrink" "1"
+
+
+shrink_0 : Css.Style
+shrink_0 =
+    Css.property "flex-shrink" "0"
+
+
 skew_x_0 : Css.Style
 skew_x_0 =
-    Css.property "--tw-skew-x" "0deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "0deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_x_1 : Css.Style
 skew_x_1 =
-    Css.property "--tw-skew-x" "1deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "1deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_x_12 : Css.Style
 skew_x_12 =
-    Css.property "--tw-skew-x" "12deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "12deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_x_2 : Css.Style
 skew_x_2 =
-    Css.property "--tw-skew-x" "2deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "2deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_x_3 : Css.Style
 skew_x_3 =
-    Css.property "--tw-skew-x" "3deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "3deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_x_6 : Css.Style
 skew_x_6 =
-    Css.property "--tw-skew-x" "6deg"
+    Css.batch
+        [ Css.property "--tw-skew-x" "6deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_y_0 : Css.Style
 skew_y_0 =
-    Css.property "--tw-skew-y" "0deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "0deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_y_1 : Css.Style
 skew_y_1 =
-    Css.property "--tw-skew-y" "1deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "1deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_y_12 : Css.Style
 skew_y_12 =
-    Css.property "--tw-skew-y" "12deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "12deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_y_2 : Css.Style
 skew_y_2 =
-    Css.property "--tw-skew-y" "2deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "2deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_y_3 : Css.Style
 skew_y_3 =
-    Css.property "--tw-skew-y" "3deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "3deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 skew_y_6 : Css.Style
 skew_y_6 =
-    Css.property "--tw-skew-y" "6deg"
+    Css.batch
+        [ Css.property "--tw-skew-y" "6deg"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 slashed_zero : Css.Style
 slashed_zero =
     Css.batch
-        [ Css.property "--tw-ordinal" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-slashed-zero" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-figure" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-spacing" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-fraction" "var(--tw-empty,/*!*/ /*!*/)"
+        [ Css.property "--tw-slashed-zero" "slashed-zero"
         , Css.property "font-variant-numeric" "var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)"
-        , Css.property "--tw-slashed-zero" "slashed-zero"
         ]
+
+
+snap_align_none : Css.Style
+snap_align_none =
+    Css.property "scroll-snap-align" "none"
+
+
+snap_always : Css.Style
+snap_always =
+    Css.property "scroll-snap-stop" "always"
+
+
+snap_both : Css.Style
+snap_both =
+    Css.property "scroll-snap-type" "both var(--tw-scroll-snap-strictness)"
+
+
+snap_center : Css.Style
+snap_center =
+    Css.property "scroll-snap-align" "center"
+
+
+snap_end : Css.Style
+snap_end =
+    Css.property "scroll-snap-align" "end"
+
+
+snap_mandatory : Css.Style
+snap_mandatory =
+    Css.property "--tw-scroll-snap-strictness" "mandatory"
+
+
+snap_none : Css.Style
+snap_none =
+    Css.property "scroll-snap-type" "none"
+
+
+snap_normal : Css.Style
+snap_normal =
+    Css.property "scroll-snap-stop" "normal"
+
+
+snap_proximity : Css.Style
+snap_proximity =
+    Css.property "--tw-scroll-snap-strictness" "proximity"
+
+
+snap_start : Css.Style
+snap_start =
+    Css.property "scroll-snap-align" "start"
+
+
+snap_x : Css.Style
+snap_x =
+    Css.property "scroll-snap-type" "x var(--tw-scroll-snap-strictness)"
+
+
+snap_y : Css.Style
+snap_y =
+    Css.property "scroll-snap-type" "y var(--tw-scroll-snap-strictness)"
 
 
 space_x_0 : Css.Style
 space_x_0 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(0px * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(0px * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(0px * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(0px * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_0_dot_5 : Css.Style
 space_x_0_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(0.125rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(0.125rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(0.125rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(0.125rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_1 : Css.Style
 space_x_1 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(0.25rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(0.25rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(0.25rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(0.25rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_10 : Css.Style
 space_x_10 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(2.5rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(2.5rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(2.5rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(2.5rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_11 : Css.Style
 space_x_11 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(2.75rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(2.75rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(2.75rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(2.75rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_12 : Css.Style
 space_x_12 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(3rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(3rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(3rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(3rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_14 : Css.Style
 space_x_14 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(3.5rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(3.5rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(3.5rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(3.5rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_16 : Css.Style
 space_x_16 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(4rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(4rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(4rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(4rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_1_dot_5 : Css.Style
 space_x_1_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(0.375rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(0.375rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(0.375rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(0.375rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_2 : Css.Style
 space_x_2 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(0.5rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(0.5rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_20 : Css.Style
 space_x_20 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(5rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(5rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(5rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(5rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_24 : Css.Style
 space_x_24 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(6rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(6rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(6rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(6rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_28 : Css.Style
 space_x_28 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(7rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(7rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(7rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(7rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_2_dot_5 : Css.Style
 space_x_2_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(0.625rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(0.625rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(0.625rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(0.625rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_3 : Css.Style
 space_x_3 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(0.75rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(0.75rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(0.75rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(0.75rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_32 : Css.Style
 space_x_32 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(8rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(8rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(8rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(8rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_36 : Css.Style
 space_x_36 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(9rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(9rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(9rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(9rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_3_dot_5 : Css.Style
 space_x_3_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(0.875rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(0.875rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(0.875rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(0.875rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_4 : Css.Style
 space_x_4 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(1rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(1rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(1rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(1rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_40 : Css.Style
 space_x_40 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(10rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(10rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(10rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(10rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_44 : Css.Style
 space_x_44 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(11rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(11rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(11rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(11rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_48 : Css.Style
 space_x_48 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(12rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(12rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(12rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(12rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_5 : Css.Style
 space_x_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(1.25rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(1.25rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(1.25rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(1.25rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_52 : Css.Style
 space_x_52 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(13rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(13rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(13rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(13rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_56 : Css.Style
 space_x_56 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(14rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(14rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(14rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(14rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_6 : Css.Style
 space_x_6 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(1.5rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(1.5rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(1.5rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(1.5rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_60 : Css.Style
 space_x_60 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(15rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(15rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(15rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(15rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_64 : Css.Style
 space_x_64 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(16rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(16rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(16rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(16rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_7 : Css.Style
 space_x_7 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(1.75rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(1.75rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(1.75rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(1.75rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_72 : Css.Style
 space_x_72 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(18rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(18rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(18rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(18rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_8 : Css.Style
 space_x_8 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(2rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(2rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(2rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(2rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_80 : Css.Style
 space_x_80 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(20rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(20rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(20rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(20rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_9 : Css.Style
 space_x_9 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(2.25rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(2.25rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(2.25rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(2.25rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_96 : Css.Style
 space_x_96 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(24rem * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(24rem * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(24rem * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(24rem * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_px : Css.Style
 space_x_px =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "0"
-                , Css.property "margin-right" "calc(1px * var(--tw-space-x-reverse))"
-                , Css.property "margin-left" "calc(1px * calc(1 - var(--tw-space-x-reverse)))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "0"
+            , Css.property "margin-right" "calc(1px * var(--tw-space-x-reverse))"
+            , Css.property "margin-left" "calc(1px * calc(1 - var(--tw-space-x-reverse)))"
             ]
         ]
 
 
 space_x_reverse : Css.Style
 space_x_reverse =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-x-reverse" "1"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-x-reverse" "1"
             ]
         ]
 
 
 space_y_0 : Css.Style
 space_y_0 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(0px * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(0px * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(0px * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(0px * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_0_dot_5 : Css.Style
 space_y_0_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(0.125rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(0.125rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(0.125rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(0.125rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_1 : Css.Style
 space_y_1 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(0.25rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(0.25rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(0.25rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(0.25rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_10 : Css.Style
 space_y_10 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(2.5rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(2.5rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(2.5rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(2.5rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_11 : Css.Style
 space_y_11 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(2.75rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(2.75rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(2.75rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(2.75rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_12 : Css.Style
 space_y_12 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(3rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(3rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(3rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(3rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_14 : Css.Style
 space_y_14 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(3.5rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(3.5rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(3.5rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(3.5rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_16 : Css.Style
 space_y_16 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(4rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(4rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(4rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(4rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_1_dot_5 : Css.Style
 space_y_1_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(0.375rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(0.375rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(0.375rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(0.375rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_2 : Css.Style
 space_y_2 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(0.5rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(0.5rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(0.5rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(0.5rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_20 : Css.Style
 space_y_20 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(5rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(5rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(5rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(5rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_24 : Css.Style
 space_y_24 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(6rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(6rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(6rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(6rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_28 : Css.Style
 space_y_28 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(7rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(7rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(7rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(7rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_2_dot_5 : Css.Style
 space_y_2_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(0.625rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(0.625rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(0.625rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(0.625rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_3 : Css.Style
 space_y_3 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(0.75rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(0.75rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(0.75rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(0.75rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_32 : Css.Style
 space_y_32 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(8rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(8rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(8rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(8rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_36 : Css.Style
 space_y_36 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(9rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(9rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(9rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(9rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_3_dot_5 : Css.Style
 space_y_3_dot_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(0.875rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(0.875rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(0.875rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(0.875rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_4 : Css.Style
 space_y_4 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(1rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(1rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(1rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(1rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_40 : Css.Style
 space_y_40 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(10rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(10rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(10rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(10rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_44 : Css.Style
 space_y_44 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(11rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(11rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(11rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(11rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_48 : Css.Style
 space_y_48 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(12rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(12rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(12rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(12rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_5 : Css.Style
 space_y_5 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(1.25rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(1.25rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(1.25rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(1.25rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_52 : Css.Style
 space_y_52 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(13rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(13rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(13rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(13rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_56 : Css.Style
 space_y_56 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(14rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(14rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(14rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(14rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_6 : Css.Style
 space_y_6 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(1.5rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(1.5rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(1.5rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(1.5rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_60 : Css.Style
 space_y_60 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(15rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(15rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(15rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(15rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_64 : Css.Style
 space_y_64 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(16rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(16rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(16rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(16rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_7 : Css.Style
 space_y_7 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(1.75rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(1.75rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(1.75rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(1.75rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_72 : Css.Style
 space_y_72 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(18rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(18rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(18rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(18rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_8 : Css.Style
 space_y_8 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(2rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(2rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(2rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(2rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_80 : Css.Style
 space_y_80 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(20rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(20rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(20rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(20rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_9 : Css.Style
 space_y_9 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(2.25rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(2.25rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(2.25rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(2.25rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_96 : Css.Style
 space_y_96 =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(24rem * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(24rem * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(24rem * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(24rem * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_px : Css.Style
 space_y_px =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "0"
-                , Css.property "margin-top" "calc(1px * calc(1 - var(--tw-space-y-reverse)))"
-                , Css.property "margin-bottom" "calc(1px * var(--tw-space-y-reverse))"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "0"
+            , Css.property "margin-top" "calc(1px * calc(1 - var(--tw-space-y-reverse)))"
+            , Css.property "margin-bottom" "calc(1px * var(--tw-space-y-reverse))"
             ]
         ]
 
 
 space_y_reverse : Css.Style
 space_y_reverse =
-    Css.batch
-        [ Css.Global.children
-            [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
-                [ Css.property "--tw-space-y-reverse" "1"
-                ]
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Css.property "--tw-space-y-reverse" "1"
             ]
         ]
 
@@ -19481,14 +30817,224 @@ sr_only =
 stacked_fractions : Css.Style
 stacked_fractions =
     Css.batch
-        [ Css.property "--tw-ordinal" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-slashed-zero" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-figure" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-spacing" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-fraction" "var(--tw-empty,/*!*/ /*!*/)"
+        [ Css.property "--tw-numeric-fraction" "stacked-fractions"
         , Css.property "font-variant-numeric" "var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)"
-        , Css.property "--tw-numeric-fraction" "stacked-fractions"
         ]
+
+
+start_0 : Css.Style
+start_0 =
+    Css.property "inset-inline-start" "0px"
+
+
+start_0_dot_5 : Css.Style
+start_0_dot_5 =
+    Css.property "inset-inline-start" "0.125rem"
+
+
+start_1 : Css.Style
+start_1 =
+    Css.property "inset-inline-start" "0.25rem"
+
+
+start_10 : Css.Style
+start_10 =
+    Css.property "inset-inline-start" "2.5rem"
+
+
+start_11 : Css.Style
+start_11 =
+    Css.property "inset-inline-start" "2.75rem"
+
+
+start_12 : Css.Style
+start_12 =
+    Css.property "inset-inline-start" "3rem"
+
+
+start_14 : Css.Style
+start_14 =
+    Css.property "inset-inline-start" "3.5rem"
+
+
+start_16 : Css.Style
+start_16 =
+    Css.property "inset-inline-start" "4rem"
+
+
+start_1_dot_5 : Css.Style
+start_1_dot_5 =
+    Css.property "inset-inline-start" "0.375rem"
+
+
+start_1over2 : Css.Style
+start_1over2 =
+    Css.property "inset-inline-start" "50%"
+
+
+start_1over3 : Css.Style
+start_1over3 =
+    Css.property "inset-inline-start" "33.333333%"
+
+
+start_1over4 : Css.Style
+start_1over4 =
+    Css.property "inset-inline-start" "25%"
+
+
+start_2 : Css.Style
+start_2 =
+    Css.property "inset-inline-start" "0.5rem"
+
+
+start_20 : Css.Style
+start_20 =
+    Css.property "inset-inline-start" "5rem"
+
+
+start_24 : Css.Style
+start_24 =
+    Css.property "inset-inline-start" "6rem"
+
+
+start_28 : Css.Style
+start_28 =
+    Css.property "inset-inline-start" "7rem"
+
+
+start_2_dot_5 : Css.Style
+start_2_dot_5 =
+    Css.property "inset-inline-start" "0.625rem"
+
+
+start_2over3 : Css.Style
+start_2over3 =
+    Css.property "inset-inline-start" "66.666667%"
+
+
+start_2over4 : Css.Style
+start_2over4 =
+    Css.property "inset-inline-start" "50%"
+
+
+start_3 : Css.Style
+start_3 =
+    Css.property "inset-inline-start" "0.75rem"
+
+
+start_32 : Css.Style
+start_32 =
+    Css.property "inset-inline-start" "8rem"
+
+
+start_36 : Css.Style
+start_36 =
+    Css.property "inset-inline-start" "9rem"
+
+
+start_3_dot_5 : Css.Style
+start_3_dot_5 =
+    Css.property "inset-inline-start" "0.875rem"
+
+
+start_3over4 : Css.Style
+start_3over4 =
+    Css.property "inset-inline-start" "75%"
+
+
+start_4 : Css.Style
+start_4 =
+    Css.property "inset-inline-start" "1rem"
+
+
+start_40 : Css.Style
+start_40 =
+    Css.property "inset-inline-start" "10rem"
+
+
+start_44 : Css.Style
+start_44 =
+    Css.property "inset-inline-start" "11rem"
+
+
+start_48 : Css.Style
+start_48 =
+    Css.property "inset-inline-start" "12rem"
+
+
+start_5 : Css.Style
+start_5 =
+    Css.property "inset-inline-start" "1.25rem"
+
+
+start_52 : Css.Style
+start_52 =
+    Css.property "inset-inline-start" "13rem"
+
+
+start_56 : Css.Style
+start_56 =
+    Css.property "inset-inline-start" "14rem"
+
+
+start_6 : Css.Style
+start_6 =
+    Css.property "inset-inline-start" "1.5rem"
+
+
+start_60 : Css.Style
+start_60 =
+    Css.property "inset-inline-start" "15rem"
+
+
+start_64 : Css.Style
+start_64 =
+    Css.property "inset-inline-start" "16rem"
+
+
+start_7 : Css.Style
+start_7 =
+    Css.property "inset-inline-start" "1.75rem"
+
+
+start_72 : Css.Style
+start_72 =
+    Css.property "inset-inline-start" "18rem"
+
+
+start_8 : Css.Style
+start_8 =
+    Css.property "inset-inline-start" "2rem"
+
+
+start_80 : Css.Style
+start_80 =
+    Css.property "inset-inline-start" "20rem"
+
+
+start_9 : Css.Style
+start_9 =
+    Css.property "inset-inline-start" "2.25rem"
+
+
+start_96 : Css.Style
+start_96 =
+    Css.property "inset-inline-start" "24rem"
+
+
+start_auto : Css.Style
+start_auto =
+    Css.property "inset-inline-start" "auto"
+
+
+start_full : Css.Style
+start_full =
+    Css.property "inset-inline-start" "100%"
+
+
+start_px : Css.Style
+start_px =
+    Css.property "inset-inline-start" "1px"
 
 
 static : Css.Style
@@ -19516,9 +31062,9 @@ stroke_2 =
     Css.property "stroke-width" "2"
 
 
-stroke_current : Css.Style
-stroke_current =
-    Css.property "stroke" "currentColor"
+stroke_none : Css.Style
+stroke_none =
+    Css.property "stroke" "none"
 
 
 subpixel_antialiased : Css.Style
@@ -19587,13 +31133,8 @@ table_row_group =
 tabular_nums : Css.Style
 tabular_nums =
     Css.batch
-        [ Css.property "--tw-ordinal" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-slashed-zero" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-figure" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-spacing" "var(--tw-empty,/*!*/ /*!*/)"
-        , Css.property "--tw-numeric-fraction" "var(--tw-empty,/*!*/ /*!*/)"
+        [ Css.property "--tw-numeric-spacing" "tabular-nums"
         , Css.property "font-variant-numeric" "var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)"
-        , Css.property "--tw-numeric-spacing" "tabular-nums"
         ]
 
 
@@ -19674,20 +31215,19 @@ text_center =
     Css.property "text-align" "center"
 
 
-text_destruct : Css.Style
-text_destruct =
-    Css.batch
-        [ Css.property "--tw-text-opacity" "1"
-        , Css.property "color" "rgba(142, 74, 73, var(--tw-text-opacity))"
-        ]
+text_clip : Css.Style
+text_clip =
+    Css.property "text-overflow" "clip"
 
 
-text_exclaim : Css.Style
-text_exclaim =
-    Css.batch
-        [ Css.property "--tw-text-opacity" "1"
-        , Css.property "color" "rgba(224, 144, 93, var(--tw-text-opacity))"
-        ]
+text_ellipsis : Css.Style
+text_ellipsis =
+    Css.property "text-overflow" "ellipsis"
+
+
+text_end : Css.Style
+text_end =
+    Css.property "text-align" "end"
 
 
 text_justify : Css.Style
@@ -19783,25 +31323,9 @@ text_opacity_95 =
     Css.property "--tw-text-opacity" "0.95"
 
 
-text_primary : Css.Style
-text_primary =
-    Css.batch
-        [ Css.property "--tw-text-opacity" "1"
-        , Css.property "color" "rgba(150, 89, 88, var(--tw-text-opacity))"
-        ]
-
-
 text_right : Css.Style
 text_right =
     Css.property "text-align" "right"
-
-
-text_secondary : Css.Style
-text_secondary =
-    Css.batch
-        [ Css.property "--tw-text-opacity" "1"
-        , Css.property "color" "rgba(223, 238, 227, var(--tw-text-opacity))"
-        ]
 
 
 text_sm : Css.Style
@@ -19812,20 +31336,9 @@ text_sm =
         ]
 
 
-text_success : Css.Style
-text_success =
-    Css.batch
-        [ Css.property "--tw-text-opacity" "1"
-        , Css.property "color" "rgba(78, 208, 182, var(--tw-text-opacity))"
-        ]
-
-
-text_tertiary : Css.Style
-text_tertiary =
-    Css.batch
-        [ Css.property "--tw-text-opacity" "1"
-        , Css.property "color" "rgba(161, 159, 187, var(--tw-text-opacity))"
-        ]
+text_start : Css.Style
+text_start =
+    Css.property "text-align" "start"
 
 
 text_xl : Css.Style
@@ -19844,34 +31357,109 @@ text_xs =
         ]
 
 
-to_destruct : Css.Style
-to_destruct =
-    Css.property "--tw-gradient-to" "#8E4A49"
+to_0pct : Css.Style
+to_0pct =
+    Css.property "--tw-gradient-to-position" "0%"
 
 
-to_exclaim : Css.Style
-to_exclaim =
-    Css.property "--tw-gradient-to" "#E0905D"
+to_100pct : Css.Style
+to_100pct =
+    Css.property "--tw-gradient-to-position" "100%"
 
 
-to_primary : Css.Style
-to_primary =
-    Css.property "--tw-gradient-to" "#965958"
+to_10pct : Css.Style
+to_10pct =
+    Css.property "--tw-gradient-to-position" "10%"
 
 
-to_secondary : Css.Style
-to_secondary =
-    Css.property "--tw-gradient-to" "#dfeee3"
+to_15pct : Css.Style
+to_15pct =
+    Css.property "--tw-gradient-to-position" "15%"
 
 
-to_success : Css.Style
-to_success =
-    Css.property "--tw-gradient-to" "#4ED0B6"
+to_20pct : Css.Style
+to_20pct =
+    Css.property "--tw-gradient-to-position" "20%"
 
 
-to_tertiary : Css.Style
-to_tertiary =
-    Css.property "--tw-gradient-to" "#A19FBB"
+to_25pct : Css.Style
+to_25pct =
+    Css.property "--tw-gradient-to-position" "25%"
+
+
+to_30pct : Css.Style
+to_30pct =
+    Css.property "--tw-gradient-to-position" "30%"
+
+
+to_35pct : Css.Style
+to_35pct =
+    Css.property "--tw-gradient-to-position" "35%"
+
+
+to_40pct : Css.Style
+to_40pct =
+    Css.property "--tw-gradient-to-position" "40%"
+
+
+to_45pct : Css.Style
+to_45pct =
+    Css.property "--tw-gradient-to-position" "45%"
+
+
+to_50pct : Css.Style
+to_50pct =
+    Css.property "--tw-gradient-to-position" "50%"
+
+
+to_55pct : Css.Style
+to_55pct =
+    Css.property "--tw-gradient-to-position" "55%"
+
+
+to_5pct : Css.Style
+to_5pct =
+    Css.property "--tw-gradient-to-position" "5%"
+
+
+to_60pct : Css.Style
+to_60pct =
+    Css.property "--tw-gradient-to-position" "60%"
+
+
+to_65pct : Css.Style
+to_65pct =
+    Css.property "--tw-gradient-to-position" "65%"
+
+
+to_70pct : Css.Style
+to_70pct =
+    Css.property "--tw-gradient-to-position" "70%"
+
+
+to_75pct : Css.Style
+to_75pct =
+    Css.property "--tw-gradient-to-position" "75%"
+
+
+to_80pct : Css.Style
+to_80pct =
+    Css.property "--tw-gradient-to-position" "80%"
+
+
+to_85pct : Css.Style
+to_85pct =
+    Css.property "--tw-gradient-to-position" "85%"
+
+
+to_90pct : Css.Style
+to_90pct =
+    Css.property "--tw-gradient-to-position" "90%"
+
+
+to_95pct : Css.Style
+to_95pct =
+    Css.property "--tw-gradient-to-position" "95%"
 
 
 top_0 : Css.Style
@@ -20089,6 +31677,77 @@ top_px =
     Css.property "top" "1px"
 
 
+touch_auto : Css.Style
+touch_auto =
+    Css.property "touch-action" "auto"
+
+
+touch_manipulation : Css.Style
+touch_manipulation =
+    Css.property "touch-action" "manipulation"
+
+
+touch_none : Css.Style
+touch_none =
+    Css.property "touch-action" "none"
+
+
+touch_pan_down : Css.Style
+touch_pan_down =
+    Css.batch
+        [ Css.property "--tw-pan-y" "pan-down"
+        , Css.property "touch-action" "var(--tw-pan-x) var(--tw-pan-y) var(--tw-pinch-zoom)"
+        ]
+
+
+touch_pan_left : Css.Style
+touch_pan_left =
+    Css.batch
+        [ Css.property "--tw-pan-x" "pan-left"
+        , Css.property "touch-action" "var(--tw-pan-x) var(--tw-pan-y) var(--tw-pinch-zoom)"
+        ]
+
+
+touch_pan_right : Css.Style
+touch_pan_right =
+    Css.batch
+        [ Css.property "--tw-pan-x" "pan-right"
+        , Css.property "touch-action" "var(--tw-pan-x) var(--tw-pan-y) var(--tw-pinch-zoom)"
+        ]
+
+
+touch_pan_up : Css.Style
+touch_pan_up =
+    Css.batch
+        [ Css.property "--tw-pan-y" "pan-up"
+        , Css.property "touch-action" "var(--tw-pan-x) var(--tw-pan-y) var(--tw-pinch-zoom)"
+        ]
+
+
+touch_pan_x : Css.Style
+touch_pan_x =
+    Css.batch
+        [ Css.property "--tw-pan-x" "pan-x"
+        , Css.property "touch-action" "var(--tw-pan-x) var(--tw-pan-y) var(--tw-pinch-zoom)"
+        ]
+
+
+touch_pan_y : Css.Style
+touch_pan_y =
+    Css.batch
+        [ Css.property "--tw-pan-y" "pan-y"
+        , Css.property "touch-action" "var(--tw-pan-x) var(--tw-pan-y) var(--tw-pinch-zoom)"
+        ]
+
+
+touch_pinch_zoom : Css.Style
+touch_pinch_zoom =
+    Css.batch
+        [ Css.property "--tw-pinch-zoom" "pinch-zoom"
+        , Css.property "touch-action" "var(--tw-pan-x) var(--tw-pan-y) var(--tw-pinch-zoom)"
+        ]
+
+
 tracking_normal : Css.Style
 tracking_normal =
     Css.property "letter-spacing" "0em"
@@ -20121,30 +31780,17 @@ tracking_widest =
 
 transform : Css.Style
 transform =
-    Css.batch
-        [ Css.property "--tw-translate-x" "0"
-        , Css.property "--tw-translate-y" "0"
-        , Css.property "--tw-rotate" "0"
-        , Css.property "--tw-skew-x" "0"
-        , Css.property "--tw-skew-y" "0"
-        , Css.property "--tw-scale-x" "1"
-        , Css.property "--tw-scale-y" "1"
-        , Css.property "transform" "translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
-        ]
+    Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+
+
+transform_cpu : Css.Style
+transform_cpu =
+    Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
 
 
 transform_gpu : Css.Style
 transform_gpu =
-    Css.batch
-        [ Css.property "--tw-translate-x" "0"
-        , Css.property "--tw-translate-y" "0"
-        , Css.property "--tw-rotate" "0"
-        , Css.property "--tw-skew-x" "0"
-        , Css.property "--tw-skew-y" "0"
-        , Css.property "--tw-scale-x" "1"
-        , Css.property "--tw-scale-y" "1"
-        , Css.property "transform" "translate3d(var(--tw-translate-x), var(--tw-translate-y), 0) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
-        ]
+    Css.property "transform" "translate3d(var(--tw-translate-x), var(--tw-translate-y), 0) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
 
 
 transform_none : Css.Style
@@ -20155,9 +31801,9 @@ transform_none =
 transition : Css.Style
 transition =
     Css.batch
-        [ Css.property "transition-property" "background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter"
-        , Css.property "transition-property" "background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter"
-        , Css.property "transition-property" "background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter"
+        [ Css.property "transition-property" "color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter"
+        , Css.property "transition-property" "color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter"
+        , Css.property "transition-property" "color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter"
         , Css.property "transition-timing-function" "cubic-bezier(0.4, 0, 0.2, 1)"
         , Css.property "transition-duration" "150ms"
         ]
@@ -20175,7 +31821,7 @@ transition_all =
 transition_colors : Css.Style
 transition_colors =
     Css.batch
-        [ Css.property "transition-property" "background-color, border-color, color, fill, stroke"
+        [ Css.property "transition-property" "color, background-color, border-color, text-decoration-color, fill, stroke"
         , Css.property "transition-timing-function" "cubic-bezier(0.4, 0, 0.2, 1)"
         , Css.property "transition-duration" "150ms"
         ]
@@ -20215,422 +31861,674 @@ transition_transform =
 
 translate_x_0 : Css.Style
 translate_x_0 =
-    Css.property "--tw-translate-x" "0px"
+    Css.batch
+        [ Css.property "--tw-translate-x" "0px"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_0_dot_5 : Css.Style
 translate_x_0_dot_5 =
-    Css.property "--tw-translate-x" "0.125rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "0.125rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_1 : Css.Style
 translate_x_1 =
-    Css.property "--tw-translate-x" "0.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "0.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_10 : Css.Style
 translate_x_10 =
-    Css.property "--tw-translate-x" "2.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "2.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_11 : Css.Style
 translate_x_11 =
-    Css.property "--tw-translate-x" "2.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "2.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_12 : Css.Style
 translate_x_12 =
-    Css.property "--tw-translate-x" "3rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "3rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_14 : Css.Style
 translate_x_14 =
-    Css.property "--tw-translate-x" "3.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "3.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_16 : Css.Style
 translate_x_16 =
-    Css.property "--tw-translate-x" "4rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "4rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_1_dot_5 : Css.Style
 translate_x_1_dot_5 =
-    Css.property "--tw-translate-x" "0.375rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "0.375rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_1over2 : Css.Style
 translate_x_1over2 =
-    Css.property "--tw-translate-x" "50%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "50%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_1over3 : Css.Style
 translate_x_1over3 =
-    Css.property "--tw-translate-x" "33.333333%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "33.333333%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_1over4 : Css.Style
 translate_x_1over4 =
-    Css.property "--tw-translate-x" "25%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "25%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_2 : Css.Style
 translate_x_2 =
-    Css.property "--tw-translate-x" "0.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "0.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_20 : Css.Style
 translate_x_20 =
-    Css.property "--tw-translate-x" "5rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_24 : Css.Style
 translate_x_24 =
-    Css.property "--tw-translate-x" "6rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "6rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_28 : Css.Style
 translate_x_28 =
-    Css.property "--tw-translate-x" "7rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "7rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_2_dot_5 : Css.Style
 translate_x_2_dot_5 =
-    Css.property "--tw-translate-x" "0.625rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "0.625rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_2over3 : Css.Style
 translate_x_2over3 =
-    Css.property "--tw-translate-x" "66.666667%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "66.666667%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_2over4 : Css.Style
 translate_x_2over4 =
-    Css.property "--tw-translate-x" "50%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "50%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_3 : Css.Style
 translate_x_3 =
-    Css.property "--tw-translate-x" "0.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "0.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_32 : Css.Style
 translate_x_32 =
-    Css.property "--tw-translate-x" "8rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "8rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_36 : Css.Style
 translate_x_36 =
-    Css.property "--tw-translate-x" "9rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "9rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_3_dot_5 : Css.Style
 translate_x_3_dot_5 =
-    Css.property "--tw-translate-x" "0.875rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "0.875rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_3over4 : Css.Style
 translate_x_3over4 =
-    Css.property "--tw-translate-x" "75%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "75%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_4 : Css.Style
 translate_x_4 =
-    Css.property "--tw-translate-x" "1rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "1rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_40 : Css.Style
 translate_x_40 =
-    Css.property "--tw-translate-x" "10rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "10rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_44 : Css.Style
 translate_x_44 =
-    Css.property "--tw-translate-x" "11rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "11rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_48 : Css.Style
 translate_x_48 =
-    Css.property "--tw-translate-x" "12rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "12rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_5 : Css.Style
 translate_x_5 =
-    Css.property "--tw-translate-x" "1.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "1.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_52 : Css.Style
 translate_x_52 =
-    Css.property "--tw-translate-x" "13rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "13rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_56 : Css.Style
 translate_x_56 =
-    Css.property "--tw-translate-x" "14rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "14rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_6 : Css.Style
 translate_x_6 =
-    Css.property "--tw-translate-x" "1.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "1.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_60 : Css.Style
 translate_x_60 =
-    Css.property "--tw-translate-x" "15rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "15rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_64 : Css.Style
 translate_x_64 =
-    Css.property "--tw-translate-x" "16rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "16rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_7 : Css.Style
 translate_x_7 =
-    Css.property "--tw-translate-x" "1.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "1.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_72 : Css.Style
 translate_x_72 =
-    Css.property "--tw-translate-x" "18rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "18rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_8 : Css.Style
 translate_x_8 =
-    Css.property "--tw-translate-x" "2rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "2rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_80 : Css.Style
 translate_x_80 =
-    Css.property "--tw-translate-x" "20rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "20rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_9 : Css.Style
 translate_x_9 =
-    Css.property "--tw-translate-x" "2.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "2.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_96 : Css.Style
 translate_x_96 =
-    Css.property "--tw-translate-x" "24rem"
+    Css.batch
+        [ Css.property "--tw-translate-x" "24rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_full : Css.Style
 translate_x_full =
-    Css.property "--tw-translate-x" "100%"
+    Css.batch
+        [ Css.property "--tw-translate-x" "100%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_x_px : Css.Style
 translate_x_px =
-    Css.property "--tw-translate-x" "1px"
+    Css.batch
+        [ Css.property "--tw-translate-x" "1px"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_0 : Css.Style
 translate_y_0 =
-    Css.property "--tw-translate-y" "0px"
+    Css.batch
+        [ Css.property "--tw-translate-y" "0px"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_0_dot_5 : Css.Style
 translate_y_0_dot_5 =
-    Css.property "--tw-translate-y" "0.125rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "0.125rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_1 : Css.Style
 translate_y_1 =
-    Css.property "--tw-translate-y" "0.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "0.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_10 : Css.Style
 translate_y_10 =
-    Css.property "--tw-translate-y" "2.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "2.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_11 : Css.Style
 translate_y_11 =
-    Css.property "--tw-translate-y" "2.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "2.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_12 : Css.Style
 translate_y_12 =
-    Css.property "--tw-translate-y" "3rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "3rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_14 : Css.Style
 translate_y_14 =
-    Css.property "--tw-translate-y" "3.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "3.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_16 : Css.Style
 translate_y_16 =
-    Css.property "--tw-translate-y" "4rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "4rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_1_dot_5 : Css.Style
 translate_y_1_dot_5 =
-    Css.property "--tw-translate-y" "0.375rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "0.375rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_1over2 : Css.Style
 translate_y_1over2 =
-    Css.property "--tw-translate-y" "50%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "50%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_1over3 : Css.Style
 translate_y_1over3 =
-    Css.property "--tw-translate-y" "33.333333%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "33.333333%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_1over4 : Css.Style
 translate_y_1over4 =
-    Css.property "--tw-translate-y" "25%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "25%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_2 : Css.Style
 translate_y_2 =
-    Css.property "--tw-translate-y" "0.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "0.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_20 : Css.Style
 translate_y_20 =
-    Css.property "--tw-translate-y" "5rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_24 : Css.Style
 translate_y_24 =
-    Css.property "--tw-translate-y" "6rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "6rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_28 : Css.Style
 translate_y_28 =
-    Css.property "--tw-translate-y" "7rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "7rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_2_dot_5 : Css.Style
 translate_y_2_dot_5 =
-    Css.property "--tw-translate-y" "0.625rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "0.625rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_2over3 : Css.Style
 translate_y_2over3 =
-    Css.property "--tw-translate-y" "66.666667%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "66.666667%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_2over4 : Css.Style
 translate_y_2over4 =
-    Css.property "--tw-translate-y" "50%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "50%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_3 : Css.Style
 translate_y_3 =
-    Css.property "--tw-translate-y" "0.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "0.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_32 : Css.Style
 translate_y_32 =
-    Css.property "--tw-translate-y" "8rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "8rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_36 : Css.Style
 translate_y_36 =
-    Css.property "--tw-translate-y" "9rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "9rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_3_dot_5 : Css.Style
 translate_y_3_dot_5 =
-    Css.property "--tw-translate-y" "0.875rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "0.875rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_3over4 : Css.Style
 translate_y_3over4 =
-    Css.property "--tw-translate-y" "75%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "75%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_4 : Css.Style
 translate_y_4 =
-    Css.property "--tw-translate-y" "1rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "1rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_40 : Css.Style
 translate_y_40 =
-    Css.property "--tw-translate-y" "10rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "10rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_44 : Css.Style
 translate_y_44 =
-    Css.property "--tw-translate-y" "11rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "11rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_48 : Css.Style
 translate_y_48 =
-    Css.property "--tw-translate-y" "12rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "12rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_5 : Css.Style
 translate_y_5 =
-    Css.property "--tw-translate-y" "1.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "1.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_52 : Css.Style
 translate_y_52 =
-    Css.property "--tw-translate-y" "13rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "13rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_56 : Css.Style
 translate_y_56 =
-    Css.property "--tw-translate-y" "14rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "14rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_6 : Css.Style
 translate_y_6 =
-    Css.property "--tw-translate-y" "1.5rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "1.5rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_60 : Css.Style
 translate_y_60 =
-    Css.property "--tw-translate-y" "15rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "15rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_64 : Css.Style
 translate_y_64 =
-    Css.property "--tw-translate-y" "16rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "16rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_7 : Css.Style
 translate_y_7 =
-    Css.property "--tw-translate-y" "1.75rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "1.75rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_72 : Css.Style
 translate_y_72 =
-    Css.property "--tw-translate-y" "18rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "18rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_8 : Css.Style
 translate_y_8 =
-    Css.property "--tw-translate-y" "2rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "2rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_80 : Css.Style
 translate_y_80 =
-    Css.property "--tw-translate-y" "20rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "20rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_9 : Css.Style
 translate_y_9 =
-    Css.property "--tw-translate-y" "2.25rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "2.25rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_96 : Css.Style
 translate_y_96 =
-    Css.property "--tw-translate-y" "24rem"
+    Css.batch
+        [ Css.property "--tw-translate-y" "24rem"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_full : Css.Style
 translate_y_full =
-    Css.property "--tw-translate-y" "100%"
+    Css.batch
+        [ Css.property "--tw-translate-y" "100%"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 translate_y_px : Css.Style
 translate_y_px =
-    Css.property "--tw-translate-y" "1px"
+    Css.batch
+        [ Css.property "--tw-translate-y" "1px"
+        , Css.property "transform" "translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))"
+        ]
 
 
 truncate : Css.Style
@@ -20644,7 +32542,37 @@ truncate =
 
 underline : Css.Style
 underline =
-    Css.property "text-decoration" "underline"
+    Css.property "text-decoration-line" "underline"
+
+
+underline_offset_0 : Css.Style
+underline_offset_0 =
+    Css.property "text-underline-offset" "0px"
+
+
+underline_offset_1 : Css.Style
+underline_offset_1 =
+    Css.property "text-underline-offset" "1px"
+
+
+underline_offset_2 : Css.Style
+underline_offset_2 =
+    Css.property "text-underline-offset" "2px"
+
+
+underline_offset_4 : Css.Style
+underline_offset_4 =
+    Css.property "text-underline-offset" "4px"
+
+
+underline_offset_8 : Css.Style
+underline_offset_8 =
+    Css.property "text-underline-offset" "8px"
+
+
+underline_offset_auto : Css.Style
+underline_offset_auto =
+    Css.property "text-underline-offset" "auto"
 
 
 uppercase : Css.Style
@@ -20652,34 +32580,109 @@ uppercase =
     Css.property "text-transform" "uppercase"
 
 
-via_destruct : Css.Style
-via_destruct =
-    Css.property "--tw-gradient-stops" "var(--tw-gradient-from), #8E4A49, var(--tw-gradient-to, rgba(142, 74, 73, 0))"
+via_0pct : Css.Style
+via_0pct =
+    Css.property "--tw-gradient-via-position" "0%"
 
 
-via_exclaim : Css.Style
-via_exclaim =
-    Css.property "--tw-gradient-stops" "var(--tw-gradient-from), #E0905D, var(--tw-gradient-to, rgba(224, 144, 93, 0))"
+via_100pct : Css.Style
+via_100pct =
+    Css.property "--tw-gradient-via-position" "100%"
 
 
-via_primary : Css.Style
-via_primary =
-    Css.property "--tw-gradient-stops" "var(--tw-gradient-from), #965958, var(--tw-gradient-to, rgba(150, 89, 88, 0))"
+via_10pct : Css.Style
+via_10pct =
+    Css.property "--tw-gradient-via-position" "10%"
 
 
-via_secondary : Css.Style
-via_secondary =
-    Css.property "--tw-gradient-stops" "var(--tw-gradient-from), #dfeee3, var(--tw-gradient-to, rgba(223, 238, 227, 0))"
+via_15pct : Css.Style
+via_15pct =
+    Css.property "--tw-gradient-via-position" "15%"
 
 
-via_success : Css.Style
-via_success =
-    Css.property "--tw-gradient-stops" "var(--tw-gradient-from), #4ED0B6, var(--tw-gradient-to, rgba(78, 208, 182, 0))"
+via_20pct : Css.Style
+via_20pct =
+    Css.property "--tw-gradient-via-position" "20%"
 
 
-via_tertiary : Css.Style
-via_tertiary =
-    Css.property "--tw-gradient-stops" "var(--tw-gradient-from), #A19FBB, var(--tw-gradient-to, rgba(161, 159, 187, 0))"
+via_25pct : Css.Style
+via_25pct =
+    Css.property "--tw-gradient-via-position" "25%"
+
+
+via_30pct : Css.Style
+via_30pct =
+    Css.property "--tw-gradient-via-position" "30%"
+
+
+via_35pct : Css.Style
+via_35pct =
+    Css.property "--tw-gradient-via-position" "35%"
+
+
+via_40pct : Css.Style
+via_40pct =
+    Css.property "--tw-gradient-via-position" "40%"
+
+
+via_45pct : Css.Style
+via_45pct =
+    Css.property "--tw-gradient-via-position" "45%"
+
+
+via_50pct : Css.Style
+via_50pct =
+    Css.property "--tw-gradient-via-position" "50%"
+
+
+via_55pct : Css.Style
+via_55pct =
+    Css.property "--tw-gradient-via-position" "55%"
+
+
+via_5pct : Css.Style
+via_5pct =
+    Css.property "--tw-gradient-via-position" "5%"
+
+
+via_60pct : Css.Style
+via_60pct =
+    Css.property "--tw-gradient-via-position" "60%"
+
+
+via_65pct : Css.Style
+via_65pct =
+    Css.property "--tw-gradient-via-position" "65%"
+
+
+via_70pct : Css.Style
+via_70pct =
+    Css.property "--tw-gradient-via-position" "70%"
+
+
+via_75pct : Css.Style
+via_75pct =
+    Css.property "--tw-gradient-via-position" "75%"
+
+
+via_80pct : Css.Style
+via_80pct =
+    Css.property "--tw-gradient-via-position" "80%"
+
+
+via_85pct : Css.Style
+via_85pct =
+    Css.property "--tw-gradient-via-position" "85%"
+
+
+via_90pct : Css.Style
+via_90pct =
+    Css.property "--tw-gradient-via-position" "90%"
+
+
+via_95pct : Css.Style
+via_95pct =
+    Css.property "--tw-gradient-via-position" "95%"
 
 
 visible : Css.Style
@@ -20992,6 +32995,14 @@ w_auto =
     Css.property "width" "auto"
 
 
+w_fit : Css.Style
+w_fit =
+    Css.batch
+        [ Css.property "width" "-moz-fit-content"
+        , Css.property "width" "fit-content"
+        ]
+
+
 w_full : Css.Style
 w_full =
     Css.property "width" "100%"
@@ -21023,6 +33034,11 @@ w_screen =
     Css.property "width" "100vw"
 
 
+whitespace_break_spaces : Css.Style
+whitespace_break_spaces =
+    Css.property "white-space" "break-spaces"
+
+
 whitespace_normal : Css.Style
 whitespace_normal =
     Css.property "white-space" "normal"
@@ -21046,6 +33062,26 @@ whitespace_pre_line =
 whitespace_pre_wrap : Css.Style
 whitespace_pre_wrap =
     Css.property "white-space" "pre-wrap"
+
+
+will_change_auto : Css.Style
+will_change_auto =
+    Css.property "will-change" "auto"
+
+
+will_change_contents : Css.Style
+will_change_contents =
+    Css.property "will-change" "contents"
+
+
+will_change_scroll : Css.Style
+will_change_scroll =
+    Css.property "will-change" "scroll-position"
+
+
+will_change_transform : Css.Style
+will_change_transform =
+    Css.property "will-change" "transform"
 
 
 z_0 : Css.Style
@@ -21081,3 +33117,157 @@ z_50 =
 z_auto : Css.Style
 z_auto =
     Css.property "z-index" "auto"
+
+
+accent_color : Color -> Css.Style
+accent_color color =
+    Tw.propertyWithColor "accent-color" (\c -> c) Nothing color
+
+
+bg_color : Color -> Css.Style
+bg_color color =
+    Tw.propertyWithColor "background-color" (\c -> c) (Just "--tw-bg-opacity") color
+
+
+border_b_color : Color -> Css.Style
+border_b_color color =
+    Tw.propertyWithColor "border-bottom-color" (\c -> c) (Just "--tw-border-opacity") color
+
+
+border_color : Color -> Css.Style
+border_color color =
+    Tw.propertyWithColor "border-color" (\c -> c) (Just "--tw-border-opacity") color
+
+
+border_e_color : Color -> Css.Style
+border_e_color color =
+    Tw.propertyWithColor "border-inline-end-color" (\c -> c) (Just "--tw-border-opacity") color
+
+
+border_l_color : Color -> Css.Style
+border_l_color color =
+    Tw.propertyWithColor "border-left-color" (\c -> c) (Just "--tw-border-opacity") color
+
+
+border_r_color : Color -> Css.Style
+border_r_color color =
+    Tw.propertyWithColor "border-right-color" (\c -> c) (Just "--tw-border-opacity") color
+
+
+border_s_color : Color -> Css.Style
+border_s_color color =
+    Tw.propertyWithColor "border-inline-start-color" (\c -> c) (Just "--tw-border-opacity") color
+
+
+border_t_color : Color -> Css.Style
+border_t_color color =
+    Tw.propertyWithColor "border-top-color" (\c -> c) (Just "--tw-border-opacity") color
+
+
+border_x_color : Color -> Css.Style
+border_x_color color =
+    Css.batch
+        [ Tw.propertyWithColor "border-left-color" (\c -> c) (Just "--tw-border-opacity") color
+        , Tw.propertyWithColor "border-right-color" (\c -> c) (Just "--tw-border-opacity") color
+        ]
+
+
+border_y_color : Color -> Css.Style
+border_y_color color =
+    Css.batch
+        [ Tw.propertyWithColor "border-top-color" (\c -> c) (Just "--tw-border-opacity") color
+        , Tw.propertyWithColor "border-bottom-color" (\c -> c) (Just "--tw-border-opacity") color
+        ]
+
+
+caret_color : Color -> Css.Style
+caret_color color =
+    Tw.propertyWithColor "caret-color" (\c -> c) Nothing color
+
+
+decoration_color : Color -> Css.Style
+decoration_color color =
+    Tw.propertyWithColor "text-decoration-color" (\c -> c) Nothing color
+
+
+divide_color : Color -> Css.Style
+divide_color color =
+    Css.Global.children
+        [ Css.Global.selector ":not([hidden]) ~ :not([hidden])"
+            [ Tw.propertyWithColor "border-color" (\c -> c) (Just "--tw-divide-opacity") color
+            ]
+        ]
+
+
+fill_color : Color -> Css.Style
+fill_color color =
+    Tw.propertyWithColor "fill" (\c -> c) Nothing color
+
+
+from_color : Color -> Css.Style
+from_color color =
+    Css.batch
+        [ Tw.propertyWithColor "--tw-gradient-from" (\c -> "" ++ c ++ " var(--tw-gradient-from-position)") Nothing color
+        , Tw.withOpacity (Tw.Opacity "0") color
+            |> Tw.propertyWithColor "--tw-gradient-to" (\c -> "" ++ c ++ " var(--tw-gradient-to-position)") Nothing
+        , Css.property "--tw-gradient-stops" "var(--tw-gradient-from), var(--tw-gradient-to)"
+        ]
+
+
+outline_color : Color -> Css.Style
+outline_color color =
+    Tw.propertyWithColor "outline-color" (\c -> c) Nothing color
+
+
+placeholder_color : Color -> Css.Style
+placeholder_color color =
+    Css.batch
+        [ Css.pseudoElement "placeholder"
+            [ Tw.propertyWithColor "color" (\c -> c) (Just "--tw-placeholder-opacity") color
+            ]
+        , Css.pseudoElement "-moz-placeholder"
+            [ Tw.propertyWithColor "color" (\c -> c) (Just "--tw-placeholder-opacity") color
+            ]
+        ]
+
+
+ring_color : Color -> Css.Style
+ring_color color =
+    Tw.propertyWithColor "--tw-ring-color" (\c -> c) (Just "--tw-ring-opacity") color
+
+
+ring_offset_color : Color -> Css.Style
+ring_offset_color color =
+    Tw.propertyWithColor "--tw-ring-offset-color" (\c -> c) Nothing color
+
+
+shadow_color : Color -> Css.Style
+shadow_color color =
+    Css.batch
+        [ Tw.propertyWithColor "--tw-shadow-color" (\c -> c) Nothing color
+        , Css.property "--tw-shadow" "var(--tw-shadow-colored)"
+        ]
+
+
+stroke_color : Color -> Css.Style
+stroke_color color =
+    Tw.propertyWithColor "stroke" (\c -> c) Nothing color
+
+
+text_color : Color -> Css.Style
+text_color color =
+    Tw.propertyWithColor "color" (\c -> c) (Just "--tw-text-opacity") color
+
+
+to_color : Color -> Css.Style
+to_color color =
+    Tw.propertyWithColor "--tw-gradient-to" (\c -> "" ++ c ++ " var(--tw-gradient-to-position)") Nothing color
+
+
+via_color : Color -> Css.Style
+via_color color =
+    Css.batch
+        [ Tw.withOpacity (Tw.Opacity "0") color
+            |> Tw.propertyWithColor "--tw-gradient-to" (\c -> "" ++ c ++ "  var(--tw-gradient-to-position)") Nothing
+        , Tw.propertyWithColor "--tw-gradient-stops" (\c -> "var(--tw-gradient-from), " ++ c ++ " var(--tw-gradient-via-position), var(--tw-gradient-to)") Nothing color
+        ]
