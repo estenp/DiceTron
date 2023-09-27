@@ -407,28 +407,33 @@ view model =
 
         console =
             label [ class "console", css [ Tw.p_4, Tw.bg_color Tw.black_200, Tw.border_t_4, Tw.border_color Tw.purple_100, Tw.w_full ] ]
-                [ input
-                    [ type_ "text"
-                    , class "console__textarea"
-                    , css
-                        [ Css.backgroundColor transparent
-                        , Tw.w_full
-                        , Tw.h_8
+                [ span [ css [Tw.flex, Tw.gap_4, Tw.items_center] ]
+                    [ text ">"
+                    , input
+                        [ type_ "text"
+                        , css
+                            [ Css.backgroundColor transparent
+                            , Tw.inline_block
+                            , Tw.w_full
+                            , Tw.h_8
+                            ]
                         ]
+                        []
                     ]
-                    []
                 ]
     in
     span []
+        -- span just to apply global styles to page
         [ global Tw.globalStyles
         , div [ class "main" ]
+            -- main wrapper
             (if not gameIsOver then
                 case model.turnStatus of
                     Fresh ->
                         [ logo
                         , playerStats
                         , tryHistory
-                        , div [ class "play-area" ]
+                        , playArea
                             [ rollButtons
                             ]
                         , console
@@ -438,7 +443,7 @@ view model =
                         [ logo
                         , playerStats
                         , tryHistory
-                        , div [ class "play-area" ]
+                        , playArea
                             [ tableWilds
                             , cup
                             , rollButtons
@@ -451,7 +456,7 @@ view model =
                         [ logo
                         , playerStats
                         , tryHistory
-                        , div [ class "play-area" ]
+                        , playArea
                             [ tableWilds
                             , cupButtons
                             , trySelect
@@ -463,7 +468,7 @@ view model =
                         [ logo
                         , playerStats
                         , tryHistory
-                        , div [ class "play-area" ]
+                        , playArea
                             [ tableWilds
                             , cup
                             , rollButtons
@@ -485,7 +490,7 @@ view model =
                         [ logo
                         , playerStats
                         , tryHistory
-                        , div [ class "play-area" ]
+                        , playArea
                             [ tableWilds
                             , cup
                             , pullResult
@@ -506,11 +511,9 @@ view model =
 -- Html Utils
 
 
-mainContainer : List (Html msg) -> Html msg
-mainContainer =
-    div
-        [ class "main"
-        ]
+playArea : List (Html msg) -> Html msg
+playArea =
+    div [ class "play-area" ]
 
 
 logo : Html msg

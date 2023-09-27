@@ -9,7 +9,7 @@ body {
     ". play history"
     "console console console";
   grid-template-columns: 1fr 3fr 1fr;
-  grid-template-rows: 1fr 2fr 1fr;
+  grid-template-rows: 1fr 3fr 1fr;
 
   justify-items: center;
 
@@ -36,6 +36,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  align-items: center;
+
+  width: 80vh; /* yikes */
 }
 
 #wilds {
