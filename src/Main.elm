@@ -362,7 +362,7 @@ update msg model =
             in
             case tag of
                 "/c" ->
-                    ( modelWithNewEntry [ String.dropLeft 2 command ], focusCmd )
+                    ( modelWithNewEntry [ "[chat] " ++ (String.dropLeft 2 command) ], focusCmd )
 
                 _ ->
                     case command of

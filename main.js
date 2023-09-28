@@ -7769,7 +7769,7 @@ var $author$project$Main$update = F2(
 							modelWithNewEntry(
 								_List_fromArray(
 									[
-										A2($elm$core$String$dropLeft, 2, command)
+										'[chat] ' + A2($elm$core$String$dropLeft, 2, command)
 									])),
 							focusCmd);
 					} else {
