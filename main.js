@@ -608,7 +608,7 @@ ${variant}`;
   var VERSION = "1.2.0-beta.3";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695876613124"
+    "1695877311555"
   );
   var ORIGINAL_COMPILATION_MODE = "standard";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -10967,6 +10967,12 @@ var $author$project$Main$update = F2(
 								consoleValue: ''
 							});
 					};
+					var focusCmd = A2(
+						$elm$core$Task$attempt,
+						function (_v11) {
+							return $author$project$Main$NoOp;
+						},
+						$elm$browser$Browser$Dom$focus('console'));
 					if (tag === '/c') {
 						return _Utils_Tuple2(
 							modelWithNewEntry(
@@ -10974,19 +10980,16 @@ var $author$project$Main$update = F2(
 									[
 										A2($elm$core$String$dropLeft, 2, command)
 									])),
-							$elm$core$Platform$Cmd$none);
+							focusCmd);
 					} else {
 						switch (command) {
 							case 'roll':
 								return A2(
 									$elm$core$Tuple$mapSecond,
-									function (_v11) {
-										return A2(
-											$elm$core$Task$attempt,
-											function (_v12) {
-												return $author$project$Main$NoOp;
-											},
-											$elm$browser$Browser$Dom$focus('console'));
+									function (cmd) {
+										return $elm$core$Platform$Cmd$batch(
+											_List_fromArray(
+												[cmd, focusCmd]));
 									},
 									A2(
 										$author$project$Main$update,
@@ -10995,43 +10998,67 @@ var $author$project$Main$update = F2(
 											_List_fromArray(
 												[command]))));
 							case 'look':
-								var $temp$msg = $author$project$Main$GameEvent($author$project$Main$Look),
-									$temp$model = modelWithNewEntry(
-									_List_fromArray(
-										[command]));
-								msg = $temp$msg;
-								model = $temp$model;
-								continue update;
+								return A2(
+									$elm$core$Tuple$mapSecond,
+									function (cmd) {
+										return $elm$core$Platform$Cmd$batch(
+											_List_fromArray(
+												[cmd, focusCmd]));
+									},
+									A2(
+										$author$project$Main$update,
+										$author$project$Main$GameEvent($author$project$Main$Look),
+										modelWithNewEntry(
+											_List_fromArray(
+												[command]))));
 							case 'pull':
-								var $temp$msg = $author$project$Main$GameEvent($author$project$Main$Pull),
-									$temp$model = modelWithNewEntry(
-									_List_fromArray(
-										[command]));
-								msg = $temp$msg;
-								model = $temp$model;
-								continue update;
+								return A2(
+									$elm$core$Tuple$mapSecond,
+									function (cmd) {
+										return $elm$core$Platform$Cmd$batch(
+											_List_fromArray(
+												[cmd, focusCmd]));
+									},
+									A2(
+										$author$project$Main$update,
+										$author$project$Main$GameEvent($author$project$Main$Pull),
+										modelWithNewEntry(
+											_List_fromArray(
+												[command]))));
 							case 'pass':
-								var $temp$msg = $author$project$Main$GameEvent(
-									$author$project$Main$Pass(
-										_Utils_Tuple2(model.quantity, model.value))),
-									$temp$model = modelWithNewEntry(
-									_List_fromArray(
-										[command]));
-								msg = $temp$msg;
-								model = $temp$model;
-								continue update;
+								return A2(
+									$elm$core$Tuple$mapSecond,
+									function (cmd) {
+										return $elm$core$Platform$Cmd$batch(
+											_List_fromArray(
+												[cmd, focusCmd]));
+									},
+									A2(
+										$author$project$Main$update,
+										$author$project$Main$GameEvent(
+											$author$project$Main$Pass(
+												_Utils_Tuple2(model.quantity, model.value))),
+										modelWithNewEntry(
+											_List_fromArray(
+												[command]))));
+							case 'clear':
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{consoleHistory: _List_Nil, consoleValue: ''}),
+									focusCmd);
 							case '':
 								return _Utils_Tuple2(
 									modelWithNewEntry(
 										_List_fromArray(
 											[''])),
-									$elm$core$Platform$Cmd$none);
+									focusCmd);
 							default:
 								return _Utils_Tuple2(
 									modelWithNewEntry(
 										_List_fromArray(
 											[command, 'Command not recognized.'])),
-									$elm$core$Platform$Cmd$none);
+									focusCmd);
 						}
 					}
 				default:
@@ -12672,7 +12699,7 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$css = $rtfeldman$elm_css$Html$Styl
 var $rtfeldman$elm_css$Html$Styled$div = $rtfeldman$elm_css$Html$Styled$node('div');
 var $author$project$Tailwind$Utilities$flex = A2($rtfeldman$elm_css$Css$property, 'display', 'flex');
 var $author$project$Tailwind$Utilities$flex_col = A2($rtfeldman$elm_css$Css$property, 'flex-direction', 'column');
-var $author$project$Tailwind$Utilities$gap_2 = A2($rtfeldman$elm_css$Css$property, 'gap', '0.5rem');
+var $author$project$Tailwind$Utilities$gap_1 = A2($rtfeldman$elm_css$Css$property, 'gap', '0.25rem');
 var $author$project$Tailwind$Utilities$gap_4 = A2($rtfeldman$elm_css$Css$property, 'gap', '1rem');
 var $author$project$Player$getName = F2(
 	function (players, id) {
@@ -13137,7 +13164,6 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 	]);
 var $author$project$Tailwind$Utilities$grid = A2($rtfeldman$elm_css$Css$property, 'display', 'grid');
 var $author$project$Tailwind$Utilities$grid_cols_2 = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', 'repeat(2, minmax(0, 1fr))');
-var $author$project$Tailwind$Utilities$h_8 = A2($rtfeldman$elm_css$Css$property, 'height', '2rem');
 var $rtfeldman$elm_css$Html$Styled$Attributes$id = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
 var $author$project$Tailwind$Utilities$inline_block = A2($rtfeldman$elm_css$Css$property, 'display', 'inline-block');
 var $rtfeldman$elm_css$Html$Styled$input = $rtfeldman$elm_css$Html$Styled$node('input');
@@ -13359,6 +13385,7 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$value = $rtfeldman$elm_css$Html$St
 var $author$project$Tailwind$Utilities$border_b_2 = A2($rtfeldman$elm_css$Css$property, 'border-bottom-width', '2px');
 var $author$project$Tailwind$Theme$exclaim = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '224', '144', '93', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
 var $author$project$Tailwind$Utilities$flex_1 = A2($rtfeldman$elm_css$Css$property, 'flex', '1 1 0%');
+var $author$project$Tailwind$Utilities$gap_2 = A2($rtfeldman$elm_css$Css$property, 'gap', '0.5rem');
 var $author$project$Tailwind$Utilities$grid_cols_player_stats = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', '2fr 1fr');
 var $rtfeldman$elm_css$Html$Styled$h3 = $rtfeldman$elm_css$Html$Styled$node('h3');
 var $author$project$Tailwind$Utilities$h_full = A2($rtfeldman$elm_css$Css$property, 'height', '100%');
@@ -14062,7 +14089,7 @@ var $author$project$Main$view = function (model) {
 					_List_fromArray(
 						[
 							$author$project$Tailwind$Utilities$flex,
-							$author$project$Tailwind$Utilities$gap_2,
+							$author$project$Tailwind$Utilities$gap_1,
 							$author$project$Tailwind$Utilities$flex_col,
 							$author$project$Tailwind$Utilities$overflow_auto,
 							$author$project$Tailwind$Utilities$p_4,
@@ -14103,8 +14130,7 @@ var $author$project$Main$view = function (model) {
 											[
 												$rtfeldman$elm_css$Css$backgroundColor($rtfeldman$elm_css$Css$transparent),
 												$author$project$Tailwind$Utilities$inline_block,
-												$author$project$Tailwind$Utilities$w_full,
-												$author$project$Tailwind$Utilities$h_8
+												$author$project$Tailwind$Utilities$w_full
 											]))
 									]),
 								_List_Nil)

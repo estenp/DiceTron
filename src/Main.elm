@@ -357,31 +357,36 @@ update msg model =
 
                 modelWithNewEntry entry =
                     { model | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" }
+
+                focusCmd = Task.attempt (\_ -> NoOp) (Dom.focus "console")
             in
             case tag of
                 "/c" ->
-                    ( modelWithNewEntry [ String.dropLeft 2 command ], Cmd.none )
+                    ( modelWithNewEntry [ String.dropLeft 2 command ], focusCmd )
 
                 _ ->
                     case command of
                         "roll" ->
-                            Tuple.mapSecond (\_ -> Task.attempt (\_ -> NoOp) (Dom.focus "console")) (update (Dice RollClick) (modelWithNewEntry [ command ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [cmd, focusCmd]) (update (Dice RollClick) (modelWithNewEntry [ command ]))
 
                         "look" ->
-                            update (GameEvent Look) (modelWithNewEntry [ command ])
+                            Tuple.mapSecond (\cmd -> Cmd.batch [cmd, focusCmd]) (update (GameEvent Look) (modelWithNewEntry [ command ]))
 
                         "pull" ->
-                            update (GameEvent Pull) (modelWithNewEntry [ command ])
+                            Tuple.mapSecond (\cmd -> Cmd.batch [cmd, focusCmd]) (update (GameEvent Pull) (modelWithNewEntry [ command ]))
 
                         "pass" ->
                             -- todo: this will have additional payload with q and v, check those against the minimum and return minumum if they are too low
-                            update (GameEvent (Pass ( model.quantity, model.value ))) (modelWithNewEntry [ command ])
+                            Tuple.mapSecond (\cmd -> Cmd.batch [cmd, focusCmd]) (update (GameEvent (Pass ( model.quantity, model.value ))) (modelWithNewEntry [ command ]))
+
+                        "clear" ->
+                            ( { model | consoleHistory = [], consoleValue = "" }, focusCmd )
 
                         "" ->
-                            ( modelWithNewEntry [ "" ], Cmd.none )
+                            ( modelWithNewEntry [ "" ], focusCmd )
 
                         _ ->
-                            ( modelWithNewEntry [ command, "Command not recognized." ], Cmd.none )
+                            ( modelWithNewEntry [ command, "Command not recognized." ], focusCmd )
 
         NoOp ->
             ( model, Cmd.none )
@@ -476,7 +481,7 @@ view model =
                                     [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ] [ text ">", div [] [ text log ] ] ]
                             )
             in
-            label [ class "console", css [ Tw.flex, Tw.gap_2, Tw.flex_col, Tw.overflow_auto, Tw.p_4, Tw.bg_color Tw.black_200, Tw.border_t_4, Tw.border_color Tw.purple_100, Tw.w_full ] ]
+            label [ class "console", css [ Tw.flex, Tw.gap_1, Tw.flex_col, Tw.overflow_auto, Tw.p_4, Tw.bg_color Tw.black_200, Tw.border_t_4, Tw.border_color Tw.purple_100, Tw.w_full ] ]
                 (history
                     ++ [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ]
                             [ text ">"
@@ -490,7 +495,6 @@ view model =
                                     [ Css.backgroundColor transparent
                                     , Tw.inline_block
                                     , Tw.w_full
-                                    , Tw.h_8
                                     ]
                                 ]
                                 []
