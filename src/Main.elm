@@ -3,21 +3,26 @@ module Main exposing (..)
 -- import Css.Transitions
 
 import Browser
+import Browser.Dom as Dom
+import Browser.Events exposing (onKeyDown)
 import Css exposing (..)
 import Css.Animations exposing (..)
 import Css.Global exposing (global)
 import Deque
 import Dict exposing (..)
 import Face exposing (view)
+import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
 import Html.Styled.Events exposing (..)
+import Json.Decode as Decode
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
 import StyledElements exposing (..)
 import Tailwind.Breakpoints as Break
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
+import Task
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
 import Tuple3
 
@@ -109,6 +114,9 @@ type alias Model =
     , tableWilds : Int
     , tryHistory : List ( Try, Int, String )
     , tryToBeat : Try
+    , consoleHistory : List String
+    , consoleValue : String
+    , consoleIsVisible : Bool
 
     -- turn state
     , cupState : CupState
@@ -133,6 +141,9 @@ init _ =
       , cupState = Covered
       , cupLooked = False
       , turnStatus = Fresh
+      , consoleHistory = []
+      , consoleValue = ""
+      , consoleIsVisible = False
       , whosTurn = 1
       , players = my_players
       , activePlayers = my_players |> Dict.keys |> Deque.fromList
@@ -149,6 +160,8 @@ init _ =
 type ViewState
     = ChangeQuantity Quantity
     | ChangeValue Face
+    | ChangeConsole String
+    | SetConsoleVisable Bool
 
 
 type GameEvent
@@ -169,6 +182,8 @@ type Msg
     = Dice Dice
     | ViewState ViewState
     | GameEvent GameEvent
+    | SubmitConsole String
+    | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -221,6 +236,14 @@ update msg model =
                     ( { model | value = val }
                     , Cmd.none
                     )
+
+                ChangeConsole str ->
+                    ( { model | consoleValue = str }
+                    , Cmd.none
+                    )
+
+                SetConsoleVisable bool ->
+                    ( { model | consoleIsVisible = bool }, Cmd.none )
 
         -- game event messages
         GameEvent subMsg ->
@@ -325,6 +348,44 @@ update msg model =
                     , Cmd.none
                     )
 
+        SubmitConsole command ->
+            -- validate command
+            -- add to history log
+            let
+                tag =
+                    String.left 2 command
+
+                modelWithNewEntry entry =
+                    { model | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" }
+            in
+            case tag of
+                "/c" ->
+                    ( modelWithNewEntry [ String.dropLeft 2 command ], Cmd.none )
+
+                _ ->
+                    case command of
+                        "roll" ->
+                            Tuple.mapSecond (\_ -> Task.attempt (\_ -> NoOp) (Dom.focus "console")) (update (Dice RollClick) (modelWithNewEntry [ command ]))
+
+                        "look" ->
+                            update (GameEvent Look) (modelWithNewEntry [ command ])
+
+                        "pull" ->
+                            update (GameEvent Pull) (modelWithNewEntry [ command ])
+
+                        "pass" ->
+                            -- todo: this will have additional payload with q and v, check those against the minimum and return minumum if they are too low
+                            update (GameEvent (Pass ( model.quantity, model.value ))) (modelWithNewEntry [ command ])
+
+                        "" ->
+                            ( modelWithNewEntry [ "" ], Cmd.none )
+
+                        _ ->
+                            ( modelWithNewEntry [ command, "Command not recognized." ], Cmd.none )
+
+        NoOp ->
+            ( model, Cmd.none )
+
 
 
 -- SUBSCRIPTIONS
@@ -406,21 +467,36 @@ view model =
                 span [] []
 
         console =
-            label [ class "console", css [ Tw.p_4, Tw.bg_color Tw.black_200, Tw.border_t_4, Tw.border_color Tw.purple_100, Tw.w_full ] ]
-                [ span [ css [Tw.flex, Tw.gap_4, Tw.items_center] ]
-                    [ text ">"
-                    , input
-                        [ type_ "text"
-                        , css
-                            [ Css.backgroundColor transparent
-                            , Tw.inline_block
-                            , Tw.w_full
-                            , Tw.h_8
+            let
+                history =
+                    model.consoleHistory
+                        |> List.map
+                            (\log ->
+                                div []
+                                    [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ] [ text ">", div [] [ text log ] ] ]
+                            )
+            in
+            label [ class "console", css [ Tw.flex, Tw.gap_2, Tw.flex_col, Tw.overflow_auto, Tw.p_4, Tw.bg_color Tw.black_200, Tw.border_t_4, Tw.border_color Tw.purple_100, Tw.w_full ] ]
+                (history
+                    ++ [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ]
+                            [ text ">"
+                            , input
+                                [ type_ "text"
+                                , id "console"
+                                , onInput (ViewState << ChangeConsole)
+                                , onEnter (SubmitConsole model.consoleValue)
+                                , value model.consoleValue
+                                , css
+                                    [ Css.backgroundColor transparent
+                                    , Tw.inline_block
+                                    , Tw.w_full
+                                    , Tw.h_8
+                                    ]
+                                ]
+                                []
                             ]
-                        ]
-                        []
-                    ]
-                ]
+                       ]
+                )
     in
     span []
         -- span just to apply global styles to page
@@ -509,6 +585,19 @@ view model =
 
 -- UTILS
 -- Html Utils
+
+
+onEnter : Msg -> Attribute Msg
+onEnter msg =
+    let
+        isEnter code =
+            if code == 13 then
+                Decode.succeed msg
+
+            else
+                Decode.fail "not ENTER"
+    in
+    on "keydown" (Decode.andThen isEnter keyCode)
 
 
 playArea : List (Html msg) -> Html msg

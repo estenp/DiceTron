@@ -608,7 +608,7 @@ ${variant}`;
   var VERSION = "1.2.0-beta.3";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1695777891126"
+    "1695876613124"
   );
   var ORIGINAL_COMPILATION_MODE = "standard";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -8801,6 +8801,9 @@ var $author$project$Main$init = function (_v0) {
 		{
 			activePlayers: $folkertdev$elm_deque$Deque$fromList(
 				$elm$core$Dict$keys($author$project$Main$my_players)),
+			consoleHistory: _List_Nil,
+			consoleIsVisible: false,
+			consoleValue: '',
 			cupLooked: false,
 			cupState: $author$project$Main$Covered,
 			players: $author$project$Main$my_players,
@@ -9603,15 +9606,21 @@ var $author$project$Main$GameEvent = function (a) {
 };
 var $author$project$Try$HadIt = {$: 'HadIt'};
 var $author$project$Try$Lie = {$: 'Lie'};
+var $author$project$Main$Look = {$: 'Look'};
 var $author$project$Main$Looked = {$: 'Looked'};
 var $author$project$Main$NewRoll = function (a) {
 	return {$: 'NewRoll', a: a};
+};
+var $author$project$Main$NoOp = {$: 'NoOp'};
+var $author$project$Main$Pass = function (a) {
+	return {$: 'Pass', a: a};
 };
 var $author$project$Main$Pending = {$: 'Pending'};
 var $author$project$Main$Pull = {$: 'Pull'};
 var $author$project$Main$Pulled = function (a) {
 	return {$: 'Pulled', a: a};
 };
+var $author$project$Main$RollClick = {$: 'RollClick'};
 var $author$project$Main$Rolled = {$: 'Rolled'};
 var $author$project$Main$Uncovered = {$: 'Uncovered'};
 var $author$project$Try$Wilds = {$: 'Wilds'};
@@ -10167,6 +10176,25 @@ var $author$project$Try$assessRoll = function (roll) {
 				$author$project$Try$frequency(
 					A2($elm$core$List$map, $author$project$Try$decodeFace, roll)))));
 };
+var $elm$core$Task$onError = _Scheduler_onError;
+var $elm$core$Task$attempt = F2(
+	function (resultToMessage, task) {
+		return $elm$core$Task$command(
+			$elm$core$Task$Perform(
+				A2(
+					$elm$core$Task$onError,
+					A2(
+						$elm$core$Basics$composeL,
+						A2($elm$core$Basics$composeL, $elm$core$Task$succeed, resultToMessage),
+						$elm$core$Result$Err),
+					A2(
+						$elm$core$Task$andThen,
+						A2(
+							$elm$core$Basics$composeL,
+							A2($elm$core$Basics$composeL, $elm$core$Task$succeed, resultToMessage),
+							$elm$core$Result$Ok),
+						task))));
+	});
 var $author$project$Try$decodeQuantity = function (dieQuantity) {
 	switch (dieQuantity.$) {
 		case 'One':
@@ -10321,6 +10349,7 @@ var $folkertdev$elm_deque$Deque$unwrap = function (_v0) {
 	return boundedDeque;
 };
 var $folkertdev$elm_deque$Deque$first = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$first, $folkertdev$elm_deque$Deque$unwrap);
+var $elm$browser$Browser$Dom$focus = _Browser_call('focus');
 var $elm$random$Random$Generate = function (a) {
 	return {$: 'Generate', a: a};
 };
@@ -10504,6 +10533,14 @@ var $folkertdev$elm_deque$Internal$last = function (deque) {
 	}
 };
 var $folkertdev$elm_deque$Deque$last = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$last, $folkertdev$elm_deque$Deque$unwrap);
+var $elm$core$Tuple$mapSecond = F2(
+	function (func, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			x,
+			func(y));
+	});
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -10535,14 +10572,6 @@ var $author$project$Try$mustPass = function (receivedTry) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $elm$core$Tuple$mapSecond = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			x,
-			func(y));
-	});
 var $folkertdev$elm_deque$Internal$empty = {front: _List_Nil, rear: _List_Nil, sizeF: 0, sizeR: 0};
 var $folkertdev$elm_deque$Internal$popFront = function (deque) {
 	var front = deque.front;
@@ -10801,22 +10830,37 @@ var $author$project$Main$update = F2(
 					}
 				case 'ViewState':
 					var subMsg = msg.a;
-					if (subMsg.$ === 'ChangeQuantity') {
-						var quant = subMsg.a;
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{quantity: quant}),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						var val = subMsg.a;
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{value: val}),
-							$elm$core$Platform$Cmd$none);
+					switch (subMsg.$) {
+						case 'ChangeQuantity':
+							var quant = subMsg.a;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{quantity: quant}),
+								$elm$core$Platform$Cmd$none);
+						case 'ChangeValue':
+							var val = subMsg.a;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{value: val}),
+								$elm$core$Platform$Cmd$none);
+						case 'ChangeConsole':
+							var str = subMsg.a;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{consoleValue: str}),
+								$elm$core$Platform$Cmd$none);
+						default:
+							var bool = subMsg.a;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{consoleIsVisible: bool}),
+								$elm$core$Platform$Cmd$none);
 					}
-				default:
+				case 'GameEvent':
 					var subMsg = msg.a;
 					switch (subMsg.$) {
 						case 'Pull':
@@ -10912,11 +10956,98 @@ var $author$project$Main$update = F2(
 									{cupLooked: true, cupState: $author$project$Main$Uncovered, turnStatus: $author$project$Main$Looked}),
 								$elm$core$Platform$Cmd$none);
 					}
+				case 'SubmitConsole':
+					var command = msg.a;
+					var tag = A2($elm$core$String$left, 2, command);
+					var modelWithNewEntry = function (entry) {
+						return _Utils_update(
+							model,
+							{
+								consoleHistory: _Utils_ap(model.consoleHistory, entry),
+								consoleValue: ''
+							});
+					};
+					if (tag === '/c') {
+						return _Utils_Tuple2(
+							modelWithNewEntry(
+								_List_fromArray(
+									[
+										A2($elm$core$String$dropLeft, 2, command)
+									])),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						switch (command) {
+							case 'roll':
+								return A2(
+									$elm$core$Tuple$mapSecond,
+									function (_v11) {
+										return A2(
+											$elm$core$Task$attempt,
+											function (_v12) {
+												return $author$project$Main$NoOp;
+											},
+											$elm$browser$Browser$Dom$focus('console'));
+									},
+									A2(
+										$author$project$Main$update,
+										$author$project$Main$Dice($author$project$Main$RollClick),
+										modelWithNewEntry(
+											_List_fromArray(
+												[command]))));
+							case 'look':
+								var $temp$msg = $author$project$Main$GameEvent($author$project$Main$Look),
+									$temp$model = modelWithNewEntry(
+									_List_fromArray(
+										[command]));
+								msg = $temp$msg;
+								model = $temp$model;
+								continue update;
+							case 'pull':
+								var $temp$msg = $author$project$Main$GameEvent($author$project$Main$Pull),
+									$temp$model = modelWithNewEntry(
+									_List_fromArray(
+										[command]));
+								msg = $temp$msg;
+								model = $temp$model;
+								continue update;
+							case 'pass':
+								var $temp$msg = $author$project$Main$GameEvent(
+									$author$project$Main$Pass(
+										_Utils_Tuple2(model.quantity, model.value))),
+									$temp$model = modelWithNewEntry(
+									_List_fromArray(
+										[command]));
+								msg = $temp$msg;
+								model = $temp$model;
+								continue update;
+							case '':
+								return _Utils_Tuple2(
+									modelWithNewEntry(
+										_List_fromArray(
+											[''])),
+									$elm$core$Platform$Cmd$none);
+							default:
+								return _Utils_Tuple2(
+									modelWithNewEntry(
+										_List_fromArray(
+											[command, 'Command not recognized.'])),
+									$elm$core$Platform$Cmd$none);
+						}
+					}
+				default:
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			}
 		}
 	});
-var $author$project$Main$Look = {$: 'Look'};
-var $author$project$Main$RollClick = {$: 'RollClick'};
+var $author$project$Main$ChangeConsole = function (a) {
+	return {$: 'ChangeConsole', a: a};
+};
+var $author$project$Main$SubmitConsole = function (a) {
+	return {$: 'SubmitConsole', a: a};
+};
+var $author$project$Main$ViewState = function (a) {
+	return {$: 'ViewState', a: a};
+};
 var $rtfeldman$elm_css$Css$Preprocess$AppendProperty = function (a) {
 	return {$: 'AppendProperty', a: a};
 };
@@ -12540,6 +12671,8 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$class = $rtfeldman$elm_css$Html$St
 var $rtfeldman$elm_css$Html$Styled$Attributes$css = $rtfeldman$elm_css$Html$Styled$Internal$css;
 var $rtfeldman$elm_css$Html$Styled$div = $rtfeldman$elm_css$Html$Styled$node('div');
 var $author$project$Tailwind$Utilities$flex = A2($rtfeldman$elm_css$Css$property, 'display', 'flex');
+var $author$project$Tailwind$Utilities$flex_col = A2($rtfeldman$elm_css$Css$property, 'flex-direction', 'column');
+var $author$project$Tailwind$Utilities$gap_2 = A2($rtfeldman$elm_css$Css$property, 'gap', '0.5rem');
 var $author$project$Tailwind$Utilities$gap_4 = A2($rtfeldman$elm_css$Css$property, 'gap', '1rem');
 var $author$project$Player$getName = F2(
 	function (players, id) {
@@ -13125,6 +13258,52 @@ var $rtfeldman$elm_css$Html$Styled$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $elm$json$Json$Decode$fail = _Json_fail;
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $rtfeldman$elm_css$Html$Styled$Events$keyCode = A2($elm$json$Json$Decode$field, 'keyCode', $elm$json$Json$Decode$int);
+var $author$project$Main$onEnter = function (msg) {
+	var isEnter = function (code) {
+		return (code === 13) ? $elm$json$Json$Decode$succeed(msg) : $elm$json$Json$Decode$fail('not ENTER');
+	};
+	return A2(
+		$rtfeldman$elm_css$Html$Styled$Events$on,
+		'keydown',
+		A2($elm$json$Json$Decode$andThen, isEnter, $rtfeldman$elm_css$Html$Styled$Events$keyCode));
+};
+var $rtfeldman$elm_css$Html$Styled$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $rtfeldman$elm_css$Html$Styled$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$rtfeldman$elm_css$VirtualDom$Styled$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $rtfeldman$elm_css$Html$Styled$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $rtfeldman$elm_css$Html$Styled$Events$onInput = function (tagger) {
+	return A2(
+		$rtfeldman$elm_css$Html$Styled$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$rtfeldman$elm_css$Html$Styled$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $rtfeldman$elm_css$Html$Styled$Events$targetValue)));
+};
 var $author$project$Tailwind$Utilities$overflow_auto = A2($rtfeldman$elm_css$Css$property, 'overflow', 'auto');
 var $rtfeldman$elm_css$Html$Styled$p = $rtfeldman$elm_css$Html$Styled$node('p');
 var $author$project$Tailwind$Utilities$p_4 = A2($rtfeldman$elm_css$Css$property, 'padding', '1rem');
@@ -13176,11 +13355,10 @@ var $author$project$Try$toString = function (_try) {
 var $rtfeldman$elm_css$Css$Structure$Compatible = {$: 'Compatible'};
 var $rtfeldman$elm_css$Css$transparent = {color: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'transparent'};
 var $rtfeldman$elm_css$Html$Styled$Attributes$type_ = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('type');
+var $rtfeldman$elm_css$Html$Styled$Attributes$value = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('value');
 var $author$project$Tailwind$Utilities$border_b_2 = A2($rtfeldman$elm_css$Css$property, 'border-bottom-width', '2px');
 var $author$project$Tailwind$Theme$exclaim = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '224', '144', '93', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
 var $author$project$Tailwind$Utilities$flex_1 = A2($rtfeldman$elm_css$Css$property, 'flex', '1 1 0%');
-var $author$project$Tailwind$Utilities$flex_col = A2($rtfeldman$elm_css$Css$property, 'flex-direction', 'column');
-var $author$project$Tailwind$Utilities$gap_2 = A2($rtfeldman$elm_css$Css$property, 'gap', '0.5rem');
 var $author$project$Tailwind$Utilities$grid_cols_player_stats = A2($rtfeldman$elm_css$Css$property, 'grid-template-columns', '2fr 1fr');
 var $rtfeldman$elm_css$Html$Styled$h3 = $rtfeldman$elm_css$Html$Styled$node('h3');
 var $author$project$Tailwind$Utilities$h_full = A2($rtfeldman$elm_css$Css$property, 'height', '100%');
@@ -13355,12 +13533,6 @@ var $author$project$Main$ChangeQuantity = function (a) {
 var $author$project$Main$ChangeValue = function (a) {
 	return {$: 'ChangeValue', a: a};
 };
-var $author$project$Main$Pass = function (a) {
-	return {$: 'Pass', a: a};
-};
-var $author$project$Main$ViewState = function (a) {
-	return {$: 'ViewState', a: a};
-};
 var $elm$core$Dict$filter = F2(
 	function (isGood, dict) {
 		return A3(
@@ -13428,7 +13600,6 @@ var $author$project$Try$getPassableTrys = function (_try) {
 	return groupedDict;
 };
 var $rtfeldman$elm_css$Html$Styled$option = $rtfeldman$elm_css$Html$Styled$node('option');
-var $rtfeldman$elm_css$Html$Styled$Attributes$value = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('value');
 var $author$project$Main$quantityOptions = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
@@ -13608,39 +13779,6 @@ var $author$project$Main$availTrySelectOpts = F2(
 	});
 var $author$project$Tailwind$Utilities$col_span_2 = A2($rtfeldman$elm_css$Css$property, 'grid-column', 'span 2 / span 2');
 var $rtfeldman$elm_css$Html$Styled$Attributes$for = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('htmlFor');
-var $rtfeldman$elm_css$Html$Styled$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var $rtfeldman$elm_css$Html$Styled$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			$rtfeldman$elm_css$VirtualDom$Styled$on,
-			event,
-			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var $elm$json$Json$Decode$field = _Json_decodeField;
-var $elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
-	});
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $rtfeldman$elm_css$Html$Styled$Events$targetValue = A2(
-	$elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	$elm$json$Json$Decode$string);
-var $rtfeldman$elm_css$Html$Styled$Events$onInput = function (tagger) {
-	return A2(
-		$rtfeldman$elm_css$Html$Styled$Events$stopPropagationOn,
-		'input',
-		A2(
-			$elm$json$Json$Decode$map,
-			$rtfeldman$elm_css$Html$Styled$Events$alwaysStop,
-			A2($elm$json$Json$Decode$map, tagger, $rtfeldman$elm_css$Html$Styled$Events$targetValue)));
-};
 var $rtfeldman$elm_css$Html$Styled$select = $rtfeldman$elm_css$Html$Styled$node('select');
 var $author$project$StyledElements$select_ = A2($rtfeldman$elm_css$Html$Styled$styled, $rtfeldman$elm_css$Html$Styled$select, $author$project$StyledElements$inputBaseStyles);
 var $author$project$Main$viewPassTry = F3(
@@ -13884,51 +14022,95 @@ var $author$project$Main$view = function (model) {
 					[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_evenly]))
 			]),
 		$author$project$Main$viewCup(model.roll));
-	var console = A2(
-		$rtfeldman$elm_css$Html$Styled$label,
-		_List_fromArray(
-			[
-				$rtfeldman$elm_css$Html$Styled$Attributes$class('console'),
-				$rtfeldman$elm_css$Html$Styled$Attributes$css(
+	var console = function () {
+		var history = A2(
+			$elm$core$List$map,
+			function (log) {
+				return A2(
+					$rtfeldman$elm_css$Html$Styled$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$rtfeldman$elm_css$Html$Styled$span,
+							_List_fromArray(
+								[
+									$rtfeldman$elm_css$Html$Styled$Attributes$css(
+									_List_fromArray(
+										[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$gap_4, $author$project$Tailwind$Utilities$items_center]))
+								]),
+							_List_fromArray(
+								[
+									$rtfeldman$elm_css$Html$Styled$text('>'),
+									A2(
+									$rtfeldman$elm_css$Html$Styled$div,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$rtfeldman$elm_css$Html$Styled$text(log)
+										]))
+								]))
+						]));
+			},
+			model.consoleHistory);
+		return A2(
+			$rtfeldman$elm_css$Html$Styled$label,
+			_List_fromArray(
+				[
+					$rtfeldman$elm_css$Html$Styled$Attributes$class('console'),
+					$rtfeldman$elm_css$Html$Styled$Attributes$css(
+					_List_fromArray(
+						[
+							$author$project$Tailwind$Utilities$flex,
+							$author$project$Tailwind$Utilities$gap_2,
+							$author$project$Tailwind$Utilities$flex_col,
+							$author$project$Tailwind$Utilities$overflow_auto,
+							$author$project$Tailwind$Utilities$p_4,
+							$author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$black_200),
+							$author$project$Tailwind$Utilities$border_t_4,
+							$author$project$Tailwind$Utilities$border_color($author$project$Tailwind$Theme$purple_100),
+							$author$project$Tailwind$Utilities$w_full
+						]))
+				]),
+			_Utils_ap(
+				history,
 				_List_fromArray(
 					[
-						$author$project$Tailwind$Utilities$p_4,
-						$author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$black_200),
-						$author$project$Tailwind$Utilities$border_t_4,
-						$author$project$Tailwind$Utilities$border_color($author$project$Tailwind$Theme$purple_100),
-						$author$project$Tailwind$Utilities$w_full
-					]))
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$rtfeldman$elm_css$Html$Styled$span,
-				_List_fromArray(
-					[
-						$rtfeldman$elm_css$Html$Styled$Attributes$css(
-						_List_fromArray(
-							[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$gap_4, $author$project$Tailwind$Utilities$items_center]))
-					]),
-				_List_fromArray(
-					[
-						$rtfeldman$elm_css$Html$Styled$text('>'),
 						A2(
-						$rtfeldman$elm_css$Html$Styled$input,
+						$rtfeldman$elm_css$Html$Styled$span,
 						_List_fromArray(
 							[
-								$rtfeldman$elm_css$Html$Styled$Attributes$type_('text'),
 								$rtfeldman$elm_css$Html$Styled$Attributes$css(
 								_List_fromArray(
-									[
-										$rtfeldman$elm_css$Css$backgroundColor($rtfeldman$elm_css$Css$transparent),
-										$author$project$Tailwind$Utilities$inline_block,
-										$author$project$Tailwind$Utilities$w_full,
-										$author$project$Tailwind$Utilities$h_8
-									]))
+									[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$gap_4, $author$project$Tailwind$Utilities$items_center]))
 							]),
-						_List_Nil)
-					]))
-			]));
+						_List_fromArray(
+							[
+								$rtfeldman$elm_css$Html$Styled$text('>'),
+								A2(
+								$rtfeldman$elm_css$Html$Styled$input,
+								_List_fromArray(
+									[
+										$rtfeldman$elm_css$Html$Styled$Attributes$type_('text'),
+										$rtfeldman$elm_css$Html$Styled$Attributes$id('console'),
+										$rtfeldman$elm_css$Html$Styled$Events$onInput(
+										A2($elm$core$Basics$composeL, $author$project$Main$ViewState, $author$project$Main$ChangeConsole)),
+										$author$project$Main$onEnter(
+										$author$project$Main$SubmitConsole(model.consoleValue)),
+										$rtfeldman$elm_css$Html$Styled$Attributes$value(model.consoleValue),
+										$rtfeldman$elm_css$Html$Styled$Attributes$css(
+										_List_fromArray(
+											[
+												$rtfeldman$elm_css$Css$backgroundColor($rtfeldman$elm_css$Css$transparent),
+												$author$project$Tailwind$Utilities$inline_block,
+												$author$project$Tailwind$Utilities$w_full,
+												$author$project$Tailwind$Utilities$h_8
+											]))
+									]),
+								_List_Nil)
+							]))
+					])));
+	}();
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$span,
 		_List_Nil,
