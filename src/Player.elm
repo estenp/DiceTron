@@ -90,13 +90,13 @@ view currentTurn player =
         healthBg h =
             if h <= player.hp then
                 if (toFloat h / toFloat player.maxHp) <= (1 / 5) then
-                    Tw.bg_color Tw.primary
+                    Tw.bg_color Tw.purple_300
 
                 else if (toFloat h / toFloat player.maxHp) <= (3 / 5) then
-                    Tw.bg_color Tw.exclaim
+                    Tw.bg_color Tw.purple_200
 
                 else
-                    Tw.bg_color Tw.success
+                    Tw.bg_color Tw.purple_100
 
             else
                 Tw.bg_color Tw.secondary
@@ -127,7 +127,7 @@ view currentTurn player =
                     [ css [ Tw.text_3xl, Tw.text_center ]
                     , css
                         (if player.id == currentTurn then
-                            [ Tw.text_color Tw.purple_100, Css.textDecoration Css.underline ]
+                            [ Tw.text_color Tw.purple_200, Css.textDecoration Css.underline ]
 
                          else
                             []
