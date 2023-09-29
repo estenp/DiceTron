@@ -10217,7 +10217,7 @@ var $author$project$Player$view = F2(
 				_List_Nil);
 		};
 		var healthBg = function (h) {
-			return (_Utils_cmp(h, player.hp) < 1) ? ((_Utils_cmp(h / player.maxHp, 1 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$purple_300) : ((_Utils_cmp(h / player.maxHp, 3 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$purple_200) : $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$purple_100))) : $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$secondary);
+			return (_Utils_cmp(h, player.hp) < 1) ? ((_Utils_cmp(h / player.maxHp, 1 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$purple_300) : ((_Utils_cmp(h / player.maxHp, 3 / 5) < 1) ? $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$purple_200) : $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$purple_100))) : $author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$white);
 		};
 		var healthStack = A2(
 			$elm$core$List$map,

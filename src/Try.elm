@@ -267,11 +267,9 @@ decodeQuantity dieQuantity =
             5
 
 
-
--- EXPORTS?
-{- Given a Roll, determine the highest Try value available -}
-
-
+{-|
+- Given a Roll, determine the highest Try value available
+-}
 assessRoll : Roll -> Try
 assessRoll roll =
     roll
@@ -307,18 +305,18 @@ getBestOfAKind dict =
         dict
             -- Wilds have been counted, remove them from dict
             |> Dict.remove 1
-            -- apply wild count to all Face counts to see which count is highest with the addition of the Wilds
+            -- apply wild count to all Face counts to find the highest of-a-kind
             |> Dict.map (\_ v -> v + wild_count)
             -- convert the Dict to a List of Tuple
             |> Dict.toList
             -- sort by the count
             |> List.sortBy Tuple.second
-            -- encode counts to a Quantity
             -- reverse the list so it's easy to grab the highest count with List.head
             |> List.reverse
             |> List.head
             |> Maybe.withDefault ( 2, 2 )
             |> Tuple2.swap
+            -- encode to a Try
             |> encode
 
 

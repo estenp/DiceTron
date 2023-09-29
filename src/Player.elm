@@ -99,25 +99,11 @@ view currentTurn player =
                     Tw.bg_color Tw.purple_100
 
             else
-                Tw.bg_color Tw.secondary
+                Tw.bg_color Tw.white
 
         healthStack =
             List.map healthBg (List.reverse (List.range 1 player.maxHp))
     in
-    {- css
-           [ color
-               (if player.hp <= 0 then
-                   rgb 255 69 0
-
-                else if player.id == currentTurn then
-                   rgb 100 149 237
-
-                else
-                   hex "dfeee3"
-               )
-           ]
-       ,
-    -}
     div
         [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_2, Tw.grid_cols_player_stats ]
         ]
