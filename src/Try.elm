@@ -1,9 +1,10 @@
-module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, assessRoll, availTrySelectOpts, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, getPassableTrys, mustPass, rollGenerator, toString, view)
+module Try exposing (Face(..), PullResult(..), Quantity(..), Roll, Try, assessRoll, availTrySelectOpts, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, getPassableTrys, mustPass, rollGenerator, toString, view)
 
 import Dict exposing (Dict)
-import Dict.Extra as DictExtra exposing (..)
+import Dict.Extra as DictExtra exposing (groupBy)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
+import Html.Styled.Attributes exposing (value)
+import List.Extra exposing (frequencies)
 import Random
 import Tuple2
 import Tuple3
@@ -17,7 +18,9 @@ type alias Roll =
     List Face
 
 
-type Pull
+type
+    PullResult
+    -- todo: I don't like this type, at least in this file. `compare` should return more generic type
     = HadIt
     | Lie
 
@@ -61,8 +64,13 @@ rollGenerator quantity =
 -- UTILS
 
 
-dictionary : Dict ( Int, Int ) Int
+type alias Lookup =
+    Dict ( Int, Int ) Int
+
+
+dictionary : Lookup
 dictionary =
+    -- calling decodes here just for documentation purposes
     Dict.fromList
         [ ( ( decodeQuantity Two, decodeFace Twos ), 1 )
         , ( ( decodeQuantity Two, decodeFace Threes ), 2 )
@@ -87,15 +95,15 @@ dictionary =
         ]
 
 
-
-{- Given a Try, determine the "Try score". -}
-
-
+{-| Convert a Try to a Try score.
+-}
 eval : Try -> Int
 eval try =
     Maybe.withDefault 1 (Dict.get (decode try) dictionary)
 
 
+{-| Convert a Try score to a Try.
+-}
 fromScore : Int -> Try
 fromScore score =
     dictionary
@@ -106,33 +114,34 @@ fromScore score =
         |> encode
 
 
+{-| Convert a Tuple of Int representing Try values to a Try.
+-}
 encode : ( Int, Int ) -> Try
 encode tup =
     ( encodeQuantity (Tuple.first tup), encodeFace (Tuple.second tup) )
 
 
+{-| Convert a Try to a Int representing Try values.
+-}
 decode : Try -> ( Int, Int )
 decode try =
     ( decodeQuantity (Tuple.first try), decodeFace (Tuple.second try) )
 
 
+{-| Convert a Try to a string.
+-}
 toString : Try -> String
-toString try =
-    try
-        |> decode
-        |> (\t -> (t |> Tuple.first |> String.fromInt) ++ " " ++ (t |> Tuple.second |> String.fromInt))
+toString =
+    decode
+        >> Tuple.mapBoth String.fromInt String.fromInt
+        >> (\( q, v ) -> q ++ " " ++ v)
 
 
-compare : Try -> Try -> Pull
+{-| Takes two Try's, and determines if second Try is better or worse than the first.
+-}
+compare : Try -> Try -> PullResult
 compare toBeat passedTry =
-    let
-        toBeatVal =
-            eval toBeat
-
-        passedTryVal =
-            eval passedTry
-    in
-    if toBeatVal >= passedTryVal then
+    if eval toBeat >= eval passedTry then
         HadIt
 
     else
@@ -186,47 +195,6 @@ decodeFace die =
             6
 
 
-quantityToString : Quantity -> String
-quantityToString quant =
-    case quant of
-        One ->
-            "One"
-
-        Two ->
-            "Two"
-
-        Three ->
-            "Three"
-
-        Four ->
-            "Four"
-
-        Five ->
-            "Five"
-
-
-faceToString : Face -> String
-faceToString die =
-    case die of
-        Wilds ->
-            "Wilds"
-
-        Twos ->
-            "Twos"
-
-        Threes ->
-            "Threes"
-
-        Fours ->
-            "Fours"
-
-        Fives ->
-            "Fives"
-
-        Sixes ->
-            "Sixes"
-
-
 encodeQuantity : Int -> Quantity
 encodeQuantity quant =
     case quant of
@@ -268,31 +236,21 @@ decodeQuantity dieQuantity =
             5
 
 
+
+-- todo: refactor these three functions
+
+
 {-|
 
   - Given a Roll, determine the highest Try value available
 
 -}
 assessRoll : Roll -> Try
-assessRoll roll =
-    roll
-        |> List.map decodeFace
-        |> frequency
-        |> Debug.log "Frequency: "
-        |> getBestOfAKind
-        |> Debug.log "Highest Roll: "
-
-
-freqReducer : Int -> Dict Int Int -> Dict Int Int
-freqReducer key acc =
-    Dict.get key acc
-        |> Maybe.withDefault 0
-        |> (\count -> Dict.insert key (count + 1) acc)
-
-
-frequency : List Int -> Dict Int Int
-frequency list =
-    List.foldl freqReducer Dict.empty list
+assessRoll =
+    List.map decodeFace
+        >> frequencies
+        >> Dict.fromList
+        >> getBestOfAKind
 
 
 getBestOfAKind : Dict Int Int -> Try
@@ -333,11 +291,10 @@ getLastTry tryHistory =
 
 
 view : Try -> Html msg
-view try =
-    try
-        |> toString
-        |> text
-        |> (\node -> div [] [ node ])
+view =
+    toString
+        >> text
+        >> (\node -> div [] [ node ])
 
 
 {-| Takes a Try and determines the next highest Try. If the passed Try is the highest possible, return Nothing

@@ -20,7 +20,7 @@ import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
 import Task
-import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
+import Try exposing (Face(..), PullResult(..), Quantity(..), Roll, Try)
 import Tuple3
 
 
@@ -70,7 +70,7 @@ type TurnStatus
     | Pending
     | Looked
     | Rolled
-    | Pulled Pull
+    | Pulled PullResult
 
 
 type alias History =

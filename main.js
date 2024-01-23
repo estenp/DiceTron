@@ -6472,18 +6472,53 @@ var $author$project$Try$decodeFace = function (die) {
 			return 6;
 	}
 };
-var $author$project$Try$freqReducer = F2(
-	function (key, acc) {
-		return function (count) {
-			return A3($elm$core$Dict$insert, key, count + 1, acc);
-		}(
-			A2(
-				$elm$core$Maybe$withDefault,
-				0,
-				A2($elm$core$Dict$get, key, acc)));
+var $elm_community$list_extra$List$Extra$groupWhile = F2(
+	function (isSameGroup, items) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					if (!acc.b) {
+						return _List_fromArray(
+							[
+								_Utils_Tuple2(x, _List_Nil)
+							]);
+					} else {
+						var _v1 = acc.a;
+						var y = _v1.a;
+						var restOfGroup = _v1.b;
+						var groups = acc.b;
+						return A2(isSameGroup, x, y) ? A2(
+							$elm$core$List$cons,
+							_Utils_Tuple2(
+								x,
+								A2($elm$core$List$cons, y, restOfGroup)),
+							groups) : A2(
+							$elm$core$List$cons,
+							_Utils_Tuple2(x, _List_Nil),
+							acc);
+					}
+				}),
+			_List_Nil,
+			items);
 	});
-var $author$project$Try$frequency = function (list) {
-	return A3($elm$core$List$foldl, $author$project$Try$freqReducer, $elm$core$Dict$empty, list);
+var $elm_community$list_extra$List$Extra$group = $elm_community$list_extra$List$Extra$groupWhile($elm$core$Basics$eq);
+var $elm$core$List$sortBy = _List_sortBy;
+var $elm$core$List$sort = function (xs) {
+	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
+};
+var $elm_community$list_extra$List$Extra$frequencies = function (list) {
+	return A2(
+		$elm$core$List$map,
+		function (_v0) {
+			var x = _v0.a;
+			var y = _v0.b;
+			return _Utils_Tuple2(
+				x,
+				1 + $elm$core$List$length(y));
+		},
+		$elm_community$list_extra$List$Extra$group(
+			$elm$core$List$sort(list)));
 };
 var $author$project$Try$Five = {$: 'Five'};
 var $author$project$Try$Sixes = {$: 'Sixes'};
@@ -6925,7 +6960,6 @@ var $elm$core$Dict$remove = F2(
 			return x;
 		}
 	});
-var $elm$core$List$sortBy = _List_sortBy;
 var $TSFoster$elm_tuple_extra$Tuple2$swap = function (_v0) {
 	var a = _v0.a;
 	var b = _v0.b;
@@ -6955,18 +6989,13 @@ var $author$project$Try$getBestOfAKind = function (dict) {
 										}),
 									A2($elm$core$Dict$remove, 1, dict)))))))));
 };
-var $elm$core$Debug$log = _Debug_log;
-var $author$project$Try$assessRoll = function (roll) {
-	return A2(
-		$elm$core$Debug$log,
-		'Highest Roll: ',
-		$author$project$Try$getBestOfAKind(
-			A2(
-				$elm$core$Debug$log,
-				'Frequency: ',
-				$author$project$Try$frequency(
-					A2($elm$core$List$map, $author$project$Try$decodeFace, roll)))));
-};
+var $author$project$Try$assessRoll = A2(
+	$elm$core$Basics$composeR,
+	$elm$core$List$map($author$project$Try$decodeFace),
+	A2(
+		$elm$core$Basics$composeR,
+		$elm_community$list_extra$List$Extra$frequencies,
+		A2($elm$core$Basics$composeR, $elm$core$Dict$fromList, $author$project$Try$getBestOfAKind)));
 var $elm$core$Task$onError = _Scheduler_onError;
 var $elm$core$Task$attempt = F2(
 	function (resultToMessage, task) {
@@ -7121,9 +7150,9 @@ var $author$project$Try$eval = function (_try) {
 var $elm$core$Basics$ge = _Utils_ge;
 var $author$project$Try$compare = F2(
 	function (toBeat, passedTry) {
-		var toBeatVal = $author$project$Try$eval(toBeat);
-		var passedTryVal = $author$project$Try$eval(passedTry);
-		return (_Utils_cmp(toBeatVal, passedTryVal) > -1) ? $author$project$Try$HadIt : $author$project$Try$Lie;
+		return (_Utils_cmp(
+			$author$project$Try$eval(toBeat),
+			$author$project$Try$eval(passedTry)) > -1) ? $author$project$Try$HadIt : $author$project$Try$Lie;
 	});
 var $folkertdev$elm_deque$Internal$first = function (deque) {
 	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
@@ -10163,12 +10192,25 @@ var $author$project$Main$stats_ = $rtfeldman$elm_css$Html$Styled$div(
 					_List_fromArray(
 						[$author$project$Tailwind$Utilities$rounded_t_none]))))
 		]));
-var $author$project$Try$toString = function (_try) {
-	return function (t) {
-		return $elm$core$String$fromInt(t.a) + (' ' + $elm$core$String$fromInt(t.b));
-	}(
-		$author$project$Try$decode(_try));
-};
+var $elm$core$Tuple$mapBoth = F3(
+	function (funcA, funcB, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			funcA(x),
+			funcB(y));
+	});
+var $author$project$Try$toString = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Try$decode,
+	A2(
+		$elm$core$Basics$composeR,
+		A2($elm$core$Tuple$mapBoth, $elm$core$String$fromInt, $elm$core$String$fromInt),
+		function (_v0) {
+			var q = _v0.a;
+			var v = _v0.b;
+			return q + (' ' + v);
+		}));
 var $rtfeldman$elm_css$Css$Structure$Compatible = {$: 'Compatible'};
 var $rtfeldman$elm_css$Css$transparent = {color: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'transparent'};
 var $rtfeldman$elm_css$Html$Styled$Attributes$type_ = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('type');
