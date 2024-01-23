@@ -1,8 +1,8 @@
 module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, assessRoll, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, getPassableTrys, mustPass, rollGenerator, toString, view)
 
 import Dict exposing (Dict)
-import Html exposing (..)
 import Dict.Extra as DictExtra exposing (..)
+import Html.Styled exposing (..)
 import Random
 import Tuple2
 import Tuple3
@@ -267,11 +267,11 @@ decodeQuantity dieQuantity =
             5
 
 
+{-|
 
--- EXPORTS?
-{- Given a Roll, determine the highest Try value available -}
+  - Given a Roll, determine the highest Try value available
 
-
+-}
 assessRoll : Roll -> Try
 assessRoll roll =
     roll
@@ -301,24 +301,26 @@ getBestOfAKind dict =
             Maybe.withDefault 0 (Dict.get 1 dict)
     in
     if wild_count == 5 then
-        (Five, Sixes)
+        ( Five, Sixes )
+
     else
         dict
             -- Wilds have been counted, remove them from dict
             |> Dict.remove 1
-            -- apply wild count to all Face counts to see which count is highest with the addition of the Wilds
+            -- apply wild count to all Face counts to find the highest of-a-kind
             |> Dict.map (\_ v -> v + wild_count)
             -- convert the Dict to a List of Tuple
             |> Dict.toList
             -- sort by the count
             |> List.sortBy Tuple.second
-            -- encode counts to a Quantity
             -- reverse the list so it's easy to grab the highest count with List.head
             |> List.reverse
             |> List.head
             |> Maybe.withDefault ( 2, 2 )
             |> Tuple2.swap
+            -- encode to a Try
             |> encode
+
 
 getLastTry : List ( Try, Int, String ) -> Try
 getLastTry tryHistory =
@@ -337,10 +339,8 @@ view try =
         |> (\node -> div [] [ node ])
 
 
-
--- Takes a Try and determines the next highest Try. If the passed Try is the highest possible, return Nothing
-
-
+{-| Takes a Try and determines the next highest Try. If the passed Try is the highest possible, return Nothing
+-}
 mustPass : Try -> Maybe Try
 mustPass receivedTry =
     let
@@ -362,10 +362,8 @@ mustPass receivedTry =
             Nothing
 
 
-
-{- Takes a Try and returns a Dictionary with a key of quantity, and value of a list of faces -}
-
-
+{-| Takes a Try and returns a Dictionary with a key of quantity, and value of a list of faces
+-}
 getPassableTrys : Try -> Dict Int (List Int)
 getPassableTrys try =
     let

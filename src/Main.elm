@@ -1,13 +1,25 @@
 module Main exposing (..)
 
+-- import Css.Transitions
+
 import Browser
+import Browser.Dom as Dom
+import Css exposing (..)
+import Css.Animations exposing (..)
+import Css.Global exposing (global)
 import Deque
 import Dict exposing (..)
-import Html exposing (..)
-import Html.Attributes exposing (for, id, style, value)
-import Html.Events exposing (..)
+import Face exposing (view)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
+import Html.Styled.Events exposing (..)
+import Json.Decode as Decode
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
+import StyledElements exposing (..)
+import Tailwind.Theme as Tw exposing (..)
+import Tailwind.Utilities as Tw
+import Task
 import Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try)
 import Tuple3
 
@@ -21,7 +33,7 @@ my_players =
     Dict.fromList
         [ ( 1
           , { id = 1
-            , name = "Thad"
+            , name = "Rick"
             , hp = 1
             , maxHp = 5
             }
@@ -99,6 +111,9 @@ type alias Model =
     , tableWilds : Int
     , tryHistory : List ( Try, Int, String )
     , tryToBeat : Try
+    , consoleHistory : List String
+    , consoleValue : String
+    , consoleIsVisible : Bool
 
     -- turn state
     , cupState : CupState
@@ -123,6 +138,9 @@ init _ =
       , cupState = Covered
       , cupLooked = False
       , turnStatus = Fresh
+      , consoleHistory = []
+      , consoleValue = ""
+      , consoleIsVisible = False
       , whosTurn = 1
       , players = my_players
       , activePlayers = my_players |> Dict.keys |> Deque.fromList
@@ -139,6 +157,8 @@ init _ =
 type ViewState
     = ChangeQuantity Quantity
     | ChangeValue Face
+    | ChangeConsole String
+    | SetConsoleVisable Bool
 
 
 type GameEvent
@@ -159,11 +179,8 @@ type Msg
     = Dice Dice
     | ViewState ViewState
     | GameEvent GameEvent
-
-
-appendHistory : Model -> Try -> List ( Try, Int, String )
-appendHistory model try =
-    List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
+    | SubmitConsole String
+    | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -216,6 +233,14 @@ update msg model =
                     ( { model | value = val }
                     , Cmd.none
                     )
+
+                ChangeConsole str ->
+                    ( { model | consoleValue = str }
+                    , Cmd.none
+                    )
+
+                SetConsoleVisable bool ->
+                    ( { model | consoleIsVisible = bool }, Cmd.none )
 
         -- game event messages
         GameEvent subMsg ->
@@ -320,6 +345,50 @@ update msg model =
                     , Cmd.none
                     )
 
+        SubmitConsole command ->
+            -- validate command
+            -- add to history log
+            let
+                tag =
+                    String.left 2 command
+
+                modelWithNewEntry entry =
+                    { model | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" }
+
+                focusCmd =
+                    Task.attempt (\_ -> NoOp) (Dom.focus "console")
+            in
+            case tag of
+                "/c" ->
+                    ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 command ], focusCmd )
+
+                _ ->
+                    case command of
+                        "roll" ->
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (Dice RollClick) (modelWithNewEntry [ command ]))
+
+                        "look" ->
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent Look) (modelWithNewEntry [ command ]))
+
+                        "pull" ->
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent Pull) (modelWithNewEntry [ command ]))
+
+                        "pass" ->
+                            -- todo: this will have additional payload with q and v, check those against the minimum and return minumum if they are too low
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent (Pass ( model.quantity, model.value ))) (modelWithNewEntry [ command ]))
+
+                        "clear" ->
+                            ( { model | consoleHistory = [], consoleValue = "" }, focusCmd )
+
+                        "" ->
+                            ( modelWithNewEntry [ "" ], focusCmd )
+
+                        _ ->
+                            ( modelWithNewEntry [ command, "Command not recognized." ], focusCmd )
+
+        NoOp ->
+            ( model, Cmd.none )
+
 
 
 -- SUBSCRIPTIONS
@@ -337,56 +406,57 @@ subscriptions _ =
 view : Model -> Html Msg
 view model =
     let
-        model_log =
-            Debug.log "Model" model
-
+        -- model_log =
+        --     Debug.log "Model" model
         -- UI
-        isGameOver =
+        gameIsOver =
             Deque.length model.activePlayers <= 1
-
-        currentTry =
-            h3 [] [ text "Try to Beat", Try.view model.tryToBeat ]
-
-        currentTurn =
-            h3 [] [ text "Current Turn: ", text (Player.getName model.players model.whosTurn), playerStats ]
-
-        tryHistory =
-            div []
-                (model.tryHistory
-                    |> List.map (Tuple3.mapAllThree Try.toString (Player.getName model.players) identity)
-                    |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup ++ " " ++ Tuple3.third tup ++ "hp") ])
-                )
 
         playerStats =
             model.players
                 |> Dict.toList
                 |> List.map Tuple.second
                 |> List.map (Player.view model.whosTurn)
-                |> div [ style "display" "flex", style "justify-content" "space-evenly", style "padding" "1rem", style "margin-bottom" "1rem", style "box-shadow" "5px 5px 5px #ddd" ]
+                |> stats_
+
+        tryHistory =
+            div [ class "history", css [ Tw.justify_self_center, Tw.mt_4, Tw.overflow_auto ] ]
+                (model.tryHistory
+                    |> List.map (Tuple3.mapAllThree Try.toString (Player.getName model.players) identity)
+                    |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup) ])
+                )
 
         cup =
-            h2 [] (viewCup model.roll)
+            section
+                [ class "roll"
+                , css [ Tw.flex, Tw.justify_evenly ]
+                ]
+                (viewCup model.roll)
 
         cupButtons =
-            div []
-                [ button [ onClick (GameEvent Pull) ] [ text "Pull" ]
-                , button [ onClick (GameEvent Look) ] [ text "Look" ]
+            div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
+                [ button_ [ onClick (GameEvent Pull) ] [ text "pull" ]
+                , button_ [ onClick (GameEvent Look) ] [ text "look" ]
                 ]
 
         tableWilds =
-            h2 [] (viewCup (List.repeat model.tableWilds Wilds))
+            if model.tableWilds > 0 then
+                section [ id "wilds" ] (viewCup (List.repeat model.tableWilds Wilds))
+
+            else
+                span [] []
 
         rollButtons =
-            div [ style "max-width" "6rem" ]
+            div []
                 [ case model.turnStatus of
                     Fresh ->
-                        button [ onClick (Dice RollClick) ] [ text "Roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "roll" ]
 
                     Pulled _ ->
-                        button [ onClick (Dice RollClick) ] [ text "Roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "roll" ]
 
                     Looked ->
-                        button [ onClick (Dice RollClick) ] [ text "Re-Roll" ]
+                        button_ [ onClick (Dice RollClick) ] [ text "re-roll" ]
 
                     _ ->
                         span [] []
@@ -397,75 +467,121 @@ view model =
                 viewPassTry model.quantity model.value model.tryToBeat
 
             else
-                div [] []
+                span [] []
+
+        console =
+            let
+                history =
+                    model.consoleHistory
+                        |> List.map
+                            (\log ->
+                                div []
+                                    [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ] [ text ">", div [] [ text log ] ] ]
+                            )
+            in
+            label [ class "console", css [ Tw.flex, Tw.gap_1, Tw.flex_col, Tw.overflow_auto, Tw.p_4, Tw.bg_color Tw.black_200, Tw.border_t_4, Tw.border_color Tw.purple_100, Tw.w_full ] ]
+                (history
+                    ++ [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ]
+                            [ text ">"
+                            , input
+                                [ type_ "text"
+                                , id "console"
+                                , onInput (ViewState << ChangeConsole)
+                                , onEnter (SubmitConsole model.consoleValue)
+                                , value model.consoleValue
+                                , css
+                                    [ Css.backgroundColor transparent
+                                    , Tw.inline_block
+                                    , Tw.w_full
+                                    ]
+                                ]
+                                []
+                            ]
+                       ]
+                )
     in
-    if not isGameOver then
-        div [ style "width" "100%" ]
-            [ case model.turnStatus of
-                Fresh ->
-                    tableContainer
-                        [ playerStats
+    span []
+        -- span just to apply global styles to page
+        [ global Tw.globalStyles
+        , div [ class "main" ]
+            -- main wrapper
+            (if not gameIsOver then
+                case model.turnStatus of
+                    Fresh ->
+                        [ logo
+                        , playerStats
                         , tryHistory
-                        , rollButtons
+                        , playArea
+                            [ rollButtons
+                            ]
+                        , console
                         ]
 
-                Rolled ->
-                    tableContainer
-                        [ playerStats
+                    Rolled ->
+                        [ logo
+                        , playerStats
                         , tryHistory
-                        , tableWilds
-                        , cup
-                        , rollButtons
-                        , currentTry
-                        , trySelect
+                        , playArea
+                            [ tableWilds
+                            , cup
+                            , rollButtons
+                            , trySelect
+                            ]
+                        , console
                         ]
 
-                Pending ->
-                    tableContainer
-                        [ playerStats
+                    Pending ->
+                        [ logo
+                        , playerStats
                         , tryHistory
-                        , tableWilds
-                        , cupButtons
-                        , currentTry
-                        , trySelect
+                        , playArea
+                            [ tableWilds
+                            , cupButtons
+                            , trySelect
+                            ]
+                        , console
                         ]
 
-                Looked ->
-                    tableContainer
-                        [ playerStats
+                    Looked ->
+                        [ logo
+                        , playerStats
                         , tryHistory
-                        , tableWilds
-                        , cup
-                        , rollButtons
-                        , currentTry
-                        , trySelect
+                        , playArea
+                            [ tableWilds
+                            , cup
+                            , rollButtons
+                            , trySelect
+                            ]
+                        , console
                         ]
 
-                Pulled result ->
-                    let
-                        pullResult =
-                            case result of
-                                HadIt ->
-                                    p [] [ text "Previous player had the roll. You will lose 1 hp." ]
+                    Pulled result ->
+                        let
+                            pullResult =
+                                case result of
+                                    HadIt ->
+                                        p [] [ text "Previous player had the roll. You will lose 1 hp." ]
 
-                                Lie ->
-                                    p [] [ text "Previous player lied. They will lose 1 hp." ]
-                    in
-                    tableContainer
-                        [ playerStats
+                                    Lie ->
+                                        p [] [ text "Previous player lied. They will lose 1 hp." ]
+                        in
+                        [ logo
+                        , playerStats
                         , tryHistory
-                        , tableWilds
-                        , cup
-                        , pullResult
-                        , rollButtons
-                        , currentTry
+                        , playArea
+                            [ tableWilds
+                            , cup
+                            , pullResult
+                            , rollButtons
+                            ]
+                        , console
                         ]
-            ]
 
-    else
-        div []
-            [ text ("Game over." ++ Player.getName model.players (Maybe.withDefault 0 (Deque.first model.activePlayers)) ++ " wins!")
-            ]
+             else
+                [ text ("Game over." ++ Player.getName model.players (Maybe.withDefault 0 (Deque.first model.activePlayers)) ++ " wins!")
+                ]
+            )
+        ]
 
 
 
@@ -473,24 +589,80 @@ view model =
 -- Html Utils
 
 
-tableContainer =
-    div [ style "display" "grid" ]
+onEnter : Msg -> Attribute Msg
+onEnter msg =
+    let
+        isEnter code =
+            if code == 13 then
+                Decode.succeed msg
+
+            else
+                Decode.fail "not ENTER"
+    in
+    on "keydown" (Decode.andThen isEnter keyCode)
 
 
-viewDie : Face -> Html Msg
-viewDie die =
-    text ("[" ++ String.fromInt (Try.decodeFace die) ++ "] ")
+playArea : List (Html msg) -> Html msg
+playArea =
+    div [ class "play-area" ]
+
+
+logo : Html msg
+logo =
+    div
+        [ css
+            [ Tw.w_32
+            , Tw.h_32
+            , Tw.flex
+            , Tw.justify_center
+            , Tw.items_center
+            , Tw.m_4
+            , Tw.shadow_color Tw.purple_200
+            , Tw.text_8xl
+            , Tw.text_color Tw.black_100
+            , Tw.font_bold
+            , Tw.border_4
+            , Tw.border_color Tw.black_100
+            , Tw.bg_gradient_to_br
+            , Tw.from_color Tw.gray
+            , Tw.to_color Tw.white
+            , Tw.rounded_2xl
+
+            -- , Tw.from_primary
+            -- , Tw.to_destruct
+            ]
+        , class "logo logo-container"
+        ]
+        [ div
+            [ id "logo" ]
+            [ text "D" ]
+        ]
+
+
+stats_ : List (Html msg) -> Html msg
+stats_ =
+    div
+        [ class "stats"
+        , css
+            ([ Tw.flex
+             , Tw.justify_around
+             , Tw.p_4
+             , Tw.text_color Tw.black_100
+             , Tw.gap_8
+             ]
+                ++ card
+                ++ [ Tw.rounded_t_none ]
+            )
+        ]
 
 
 viewCup : Roll -> List (Html Msg)
 viewCup =
-    List.map viewDie
+    List.map Face.view
 
 
-
-{- Takes a Quantity, Face, and a Try to best, and returns HTML for Try HTML `select`'s -}
-
-
+{-| Takes a Quantity, Face, and a Try to best, and returns HTML for Try HTML `select`'s
+-}
 viewPassTry : Quantity -> Face -> Try -> Html Msg
 viewPassTry quantity val tryToBeat =
     let
@@ -503,19 +675,22 @@ viewPassTry quantity val tryToBeat =
         changeValue =
             (ViewState << ChangeValue) << Try.encodeFace << Maybe.withDefault 2 << String.toInt
     in
-    div []
-        [ label [ for "quantity" ] []
-        , select [ onInput changeQuantity, id "quantity" ] quantities
-        , label [ for "value" ] []
-        , select [ onInput changeValue, id "value" ] values
-        , button [ onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "Pass" ]
+    div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
+        [ div []
+            [ label [ for "quantity" ] [ text "Quantity" ]
+            , select_ [ onInput changeQuantity, id "quantity" ] quantities
+            ]
+        , div []
+            [ label [ for "value" ] [ text "Value" ]
+            , select_ [ onInput changeValue, id "value" ] values
+            ]
+        , button_ [ css [ Tw.col_span_2 ], onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "pass" ]
         ]
 
 
-
-{- Takes a Try and a Quantity and returns a tuple of a list of Quantity HTML options and a list of Face HTML options -}
-
-
+{-| Takes a Try and a Quantity and returns a tuple of a list of Quantity HTML options and a list of Face HTML options
+todo: this is kinda dumb -> try and quantity? should decode Quantity from Try instead?
+-}
 availTrySelectOpts : Try -> Quantity -> ( List (Html msg1), List (Html msg) )
 availTrySelectOpts try quantity =
     let
@@ -546,6 +721,14 @@ availTrySelectOpts try quantity =
 
 
 -- Model Utils
+
+
+appendHistory : Model -> Try -> List ( Try, Int, String )
+appendHistory model try =
+    List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
+
+
+
 -- Misc Utils
 -- MAIN
 
@@ -556,5 +739,5 @@ main =
         { init = init
         , update = update
         , subscriptions = subscriptions
-        , view = view
+        , view = view >> toUnstyled
         }

@@ -1,9 +1,12 @@
 module Player exposing (ActivePlayers, Player, PlayerId, Players, getName, getPlayer, health, hit, ko, view)
 
+import Css exposing (..)
 import Deque exposing (Deque)
 import Dict exposing (Dict)
-import Html exposing (..)
-import Html.Attributes exposing (style)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (css, href, src, style)
+import Tailwind.Theme as Tw exposing (..)
+import Tailwind.Utilities as Tw exposing (..)
 
 
 type alias PlayerId =
@@ -81,25 +84,56 @@ ko id activePlayers =
 view : PlayerId -> Player -> Html msg
 view currentTurn player =
     let
-        hp =
-            String.fromInt player.hp
+        healthDiv bgStyle =
+            div [ css [ bgStyle, Tw.w_8, Tw.flex_1, Tw.border_b_2, Tw.border_color Tw.secondary ] ] []
 
-        maxHp =
-            String.fromInt player.maxHp
+        healthBg h =
+            if h <= player.hp then
+                if (toFloat h / toFloat player.maxHp) <= (1 / 5) then
+                    Tw.bg_color Tw.purple_300
+
+                else if (toFloat h / toFloat player.maxHp) <= (3 / 5) then
+                    Tw.bg_color Tw.purple_200
+
+                else
+                    Tw.bg_color Tw.purple_100
+
+            else
+                Tw.bg_color Tw.white
+
+        healthStack =
+            List.map healthBg (List.reverse (List.range 1 player.maxHp))
     in
     div
-        [ style "color"
-            (if player.hp <= 0 then
-                "orangered"
-
-             else if player.id == currentTurn then
-                "cornflowerblue"
-
-             else
-                "black"
-            )
-        , style "display" "inline-block"
+        [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_2, Tw.grid_cols_player_stats ]
         ]
-        [ h3 [] [ text player.name ]
-        , text ("( " ++ hp ++ " / " ++ maxHp ++ " ) ")
+        [ div []
+            [ div []
+                [ h3
+                    [ css [ Tw.text_3xl, Tw.text_center ]
+                    , css
+                        (if player.id == currentTurn then
+                            [ Tw.text_color Tw.purple_200, Css.textDecoration Css.underline ]
+
+                         else
+                            []
+                        )
+                    ]
+                    [ text player.name ]
+                , ul []
+                    [ li
+                        []
+                        [ text "Bonus Dam.: 90" ]
+                    , li
+                        []
+                        [ text "Dam. Mit.: 20" ]
+                    , li
+                        []
+                        [ text "Exec.: 0" ]
+                    ]
+                ]
+            ]
+        , div [ css [ Tw.h_full, Tw.flex, Tw.flex_col, Tw.items_end ] ] (List.map healthDiv healthStack)
+
+        -- , text ("( " ++ hp ++ " / " ++ maxHp ++ " ) ")
         ]
