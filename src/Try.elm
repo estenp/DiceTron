@@ -1,8 +1,9 @@
-module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, assessRoll, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, getPassableTrys, mustPass, rollGenerator, toString, view)
+module Try exposing (Face(..), Pull(..), Quantity(..), Roll, Try, assessRoll, availTrySelectOpts, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, getPassableTrys, mustPass, rollGenerator, toString, view)
 
 import Dict exposing (Dict)
 import Dict.Extra as DictExtra exposing (..)
 import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
 import Random
 import Tuple2
 import Tuple3
@@ -87,7 +88,7 @@ dictionary =
 
 
 
-{- Given a Try, determine the "Try score". Returns a Maybe -}
+{- Given a Try, determine the "Try score". -}
 
 
 eval : Try -> Int
@@ -381,3 +382,56 @@ getPassableTrys try =
                 |> Dict.map (\_ v -> List.map Tuple.second v)
     in
     groupedDict
+
+
+{-| Takes a Try and a Quantity and returns a tuple of a list of Quantity HTML options and a list of Face HTML options
+todo: this is kinda dumb -> try and quantity? should decode Quantity from Try instead?
+-}
+availTrySelectOpts : Try -> Quantity -> ( List (Html msg1), List (Html msg) )
+availTrySelectOpts try quantity =
+    let
+        passableTrysDict =
+            getPassableTrys try
+
+        passableQuants =
+            Dict.keys passableTrysDict
+
+        qOptions =
+            List.map
+                (\o ->
+                    Maybe.withDefault (option [ value "2" ] [ text "two" ])
+                        (Dict.get o quantityOptions)
+                )
+                passableQuants
+
+        vOptions =
+            List.map
+                (\o ->
+                    Maybe.withDefault (option [ value "2" ] [ text "twos" ])
+                        (Dict.get o valueOptions)
+                )
+                (Maybe.withDefault [ 2, 3, 4, 5 ] (Dict.get (decodeQuantity quantity) passableTrysDict))
+    in
+    ( qOptions, vOptions )
+
+
+quantityOptions : Dict Int (Html msg)
+quantityOptions =
+    Dict.fromList
+        [ ( decodeQuantity One, option [ value "1" ] [ text "one" ] )
+        , ( decodeQuantity Two, option [ value "2" ] [ text "two" ] )
+        , ( decodeQuantity Three, option [ value "3" ] [ text "three" ] )
+        , ( decodeQuantity Four, option [ value "4" ] [ text "four" ] )
+        , ( decodeQuantity Five, option [ value "5" ] [ text "five" ] )
+        ]
+
+
+valueOptions : Dict Int (Html msg)
+valueOptions =
+    Dict.fromList
+        [ ( decodeFace Twos, option [ value "2" ] [ text "twos" ] )
+        , ( decodeFace Threes, option [ value "3" ] [ text "threes" ] )
+        , ( decodeFace Fours, option [ value "4" ] [ text "fours" ] )
+        , ( decodeFace Fives, option [ value "5" ] [ text "fives" ] )
+        , ( decodeFace Sixes, option [ value "6" ] [ text "sixes" ] )
+        ]

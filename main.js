@@ -10415,7 +10415,7 @@ var $author$project$Try$getPassableTrys = function (_try) {
 	return groupedDict;
 };
 var $rtfeldman$elm_css$Html$Styled$option = $rtfeldman$elm_css$Html$Styled$node('option');
-var $author$project$Main$quantityOptions = $elm$core$Dict$fromList(
+var $author$project$Try$quantityOptions = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
 			_Utils_Tuple2(
@@ -10479,7 +10479,7 @@ var $author$project$Main$quantityOptions = $elm$core$Dict$fromList(
 						$rtfeldman$elm_css$Html$Styled$text('five')
 					])))
 		]));
-var $author$project$Main$valueOptions = $elm$core$Dict$fromList(
+var $author$project$Try$valueOptions = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
 			_Utils_Tuple2(
@@ -10543,7 +10543,7 @@ var $author$project$Main$valueOptions = $elm$core$Dict$fromList(
 						$rtfeldman$elm_css$Html$Styled$text('sixes')
 					])))
 		]));
-var $author$project$Main$availTrySelectOpts = F2(
+var $author$project$Try$availTrySelectOpts = F2(
 	function (_try, quantity) {
 		var passableTrysDict = $author$project$Try$getPassableTrys(_try);
 		var vOptions = A2(
@@ -10561,7 +10561,7 @@ var $author$project$Main$availTrySelectOpts = F2(
 							[
 								$rtfeldman$elm_css$Html$Styled$text('twos')
 							])),
-					A2($elm$core$Dict$get, o, $author$project$Main$valueOptions));
+					A2($elm$core$Dict$get, o, $author$project$Try$valueOptions));
 			},
 			A2(
 				$elm$core$Maybe$withDefault,
@@ -10587,7 +10587,7 @@ var $author$project$Main$availTrySelectOpts = F2(
 							[
 								$rtfeldman$elm_css$Html$Styled$text('two')
 							])),
-					A2($elm$core$Dict$get, o, $author$project$Main$quantityOptions));
+					A2($elm$core$Dict$get, o, $author$project$Try$quantityOptions));
 			},
 			passableQuants);
 		return _Utils_Tuple2(qOptions, vOptions);
@@ -10618,7 +10618,7 @@ var $author$project$Main$viewPassTry = F3(
 					$author$project$Try$encodeQuantity),
 				$elm$core$Maybe$withDefault(1)),
 			$elm$core$String$toInt);
-		var _v0 = A2($author$project$Main$availTrySelectOpts, tryToBeat, quantity);
+		var _v0 = A2($author$project$Try$availTrySelectOpts, tryToBeat, quantity);
 		var quantities = _v0.a;
 		var values = _v0.b;
 		return A2(
@@ -10698,7 +10698,7 @@ var $author$project$Main$viewPassTry = F3(
 				]));
 	});
 var $author$project$Main$view = function (model) {
-	var trySelect = ($elm$core$List$length(model.roll) > 0) ? A3($author$project$Main$viewPassTry, model.quantity, model.value, model.tryToBeat) : A2($rtfeldman$elm_css$Html$Styled$span, _List_Nil, _List_Nil);
+	var trySelects = A3($author$project$Main$viewPassTry, model.quantity, model.value, model.tryToBeat);
 	var tryHistory = A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_fromArray(
@@ -10960,7 +10960,7 @@ var $author$project$Main$view = function (model) {
 										tryHistory,
 										$author$project$Main$playArea(
 										_List_fromArray(
-											[tableWilds, cup, rollButtons, trySelect])),
+											[tableWilds, cup, rollButtons, trySelects])),
 										console
 									]);
 							case 'Pending':
@@ -10971,7 +10971,7 @@ var $author$project$Main$view = function (model) {
 										tryHistory,
 										$author$project$Main$playArea(
 										_List_fromArray(
-											[tableWilds, cupButtons, trySelect])),
+											[tableWilds, cupButtons, trySelects])),
 										console
 									]);
 							case 'Looked':
@@ -10982,7 +10982,7 @@ var $author$project$Main$view = function (model) {
 										tryHistory,
 										$author$project$Main$playArea(
 										_List_fromArray(
-											[tableWilds, cup, rollButtons, trySelect])),
+											[tableWilds, cup, rollButtons, trySelects])),
 										console
 									]);
 							default:

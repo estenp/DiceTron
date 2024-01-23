@@ -55,28 +55,6 @@ my_players =
         ]
 
 
-quantityOptions : Dict Int (Html msg)
-quantityOptions =
-    Dict.fromList
-        [ ( Try.decodeQuantity One, option [ value "1" ] [ text "one" ] )
-        , ( Try.decodeQuantity Two, option [ value "2" ] [ text "two" ] )
-        , ( Try.decodeQuantity Three, option [ value "3" ] [ text "three" ] )
-        , ( Try.decodeQuantity Four, option [ value "4" ] [ text "four" ] )
-        , ( Try.decodeQuantity Five, option [ value "5" ] [ text "five" ] )
-        ]
-
-
-valueOptions : Dict Int (Html msg)
-valueOptions =
-    Dict.fromList
-        [ ( Try.decodeFace Twos, option [ value "2" ] [ text "twos" ] )
-        , ( Try.decodeFace Threes, option [ value "3" ] [ text "threes" ] )
-        , ( Try.decodeFace Fours, option [ value "4" ] [ text "fours" ] )
-        , ( Try.decodeFace Fives, option [ value "5" ] [ text "fives" ] )
-        , ( Try.decodeFace Sixes, option [ value "6" ] [ text "sixes" ] )
-        ]
-
-
 
 -- MODEL
 -- Form
@@ -659,12 +637,13 @@ viewCup =
 
 
 {-| Takes a Quantity, Face, and a Try to best, and returns HTML for Try HTML `select`'s
+Uses Q
 -}
 viewPassTry : Quantity -> Face -> Try -> Html Msg
 viewPassTry quantity val tryToBeat =
     let
         ( quantities, values ) =
-            availTrySelectOpts tryToBeat quantity
+            Try.availTrySelectOpts tryToBeat quantity
 
         changeQuantity =
             (ViewState << ChangeQuantity) << Try.encodeQuantity << Maybe.withDefault 1 << String.toInt
@@ -683,37 +662,6 @@ viewPassTry quantity val tryToBeat =
             ]
         , button_ [ css [ Tw.col_span_2 ], onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "pass" ]
         ]
-
-
-{-| Takes a Try and a Quantity and returns a tuple of a list of Quantity HTML options and a list of Face HTML options
-todo: this is kinda dumb -> try and quantity? should decode Quantity from Try instead?
--}
-availTrySelectOpts : Try -> Quantity -> ( List (Html msg1), List (Html msg) )
-availTrySelectOpts try quantity =
-    let
-        passableTrysDict =
-            Try.getPassableTrys try
-
-        passableQuants =
-            Dict.keys passableTrysDict
-
-        qOptions =
-            List.map
-                (\o ->
-                    Maybe.withDefault (option [ value "2" ] [ text "two" ])
-                        (Dict.get o quantityOptions)
-                )
-                passableQuants
-
-        vOptions =
-            List.map
-                (\o ->
-                    Maybe.withDefault (option [ value "2" ] [ text "twos" ])
-                        (Dict.get o valueOptions)
-                )
-                (Maybe.withDefault [ 2, 3, 4, 5 ] (Dict.get (Try.decodeQuantity quantity) passableTrysDict))
-    in
-    ( qOptions, vOptions )
 
 
 
