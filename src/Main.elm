@@ -4,14 +4,12 @@ module Main exposing (..)
 
 import Browser
 import Browser.Dom as Dom
-import Browser.Events exposing (onKeyDown)
 import Css exposing (..)
 import Css.Animations exposing (..)
 import Css.Global exposing (global)
 import Deque
 import Dict exposing (..)
 import Face exposing (view)
-import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
 import Html.Styled.Events exposing (..)
@@ -19,7 +17,6 @@ import Json.Decode as Decode
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
 import StyledElements exposing (..)
-import Tailwind.Breakpoints as Break
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
 import Task
@@ -358,26 +355,27 @@ update msg model =
                 modelWithNewEntry entry =
                     { model | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" }
 
-                focusCmd = Task.attempt (\_ -> NoOp) (Dom.focus "console")
+                focusCmd =
+                    Task.attempt (\_ -> NoOp) (Dom.focus "console")
             in
             case tag of
                 "/c" ->
-                    ( modelWithNewEntry [ "[chat] " ++ (String.dropLeft 2 command) ], focusCmd )
+                    ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 command ], focusCmd )
 
                 _ ->
                     case command of
                         "roll" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [cmd, focusCmd]) (update (Dice RollClick) (modelWithNewEntry [ command ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (Dice RollClick) (modelWithNewEntry [ command ]))
 
                         "look" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [cmd, focusCmd]) (update (GameEvent Look) (modelWithNewEntry [ command ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent Look) (modelWithNewEntry [ command ]))
 
                         "pull" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [cmd, focusCmd]) (update (GameEvent Pull) (modelWithNewEntry [ command ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent Pull) (modelWithNewEntry [ command ]))
 
                         "pass" ->
                             -- todo: this will have additional payload with q and v, check those against the minimum and return minumum if they are too low
-                            Tuple.mapSecond (\cmd -> Cmd.batch [cmd, focusCmd]) (update (GameEvent (Pass ( model.quantity, model.value ))) (modelWithNewEntry [ command ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent (Pass ( model.quantity, model.value ))) (modelWithNewEntry [ command ]))
 
                         "clear" ->
                             ( { model | consoleHistory = [], consoleValue = "" }, focusCmd )

@@ -105,16 +105,16 @@ body {
 }
 
 .logo-container {
-  transition: border-radius 500ms ease-in-out, box-shadow 900ms ease-in-out, transform 1s linear;
+  transition: border-radius 1800ms ease-in-out, box-shadow 700ms ease-in-out, transform 1s linear;
   box-shadow: 12px 12px 0 #C8B8DB !important;
-  transform: rotate(0deg);
+  /* transform: rotate(0deg); */
 }
 
 .logo-container:hover {
   /* transform: rotate(270deg); */
   border-radius: 100%;
   box-shadow: 0 0 0 #C8B8DB !important;
-  transform: rotate(360deg);
+  /* transform: rotate(360deg); */
 }
 
 .roll {
@@ -122,8 +122,6 @@ body {
   animation-duration: 500ms;
   animation-timing-function: ease-in;
   animation-iteration-count: 1;
-
-
 }
 
 .face {
