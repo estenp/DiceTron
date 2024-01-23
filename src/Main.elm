@@ -103,6 +103,7 @@ type alias History =
 
 type alias Model =
     { -- dice state
+      -- the current
       roll : Roll
 
     -- view state
@@ -462,12 +463,8 @@ view model =
                         span [] []
                 ]
 
-        trySelect =
-            if List.length model.roll > 0 then
-                viewPassTry model.quantity model.value model.tryToBeat
-
-            else
-                span [] []
+        trySelects =
+            viewPassTry model.quantity model.value model.tryToBeat
 
         console =
             let
@@ -525,7 +522,7 @@ view model =
                             [ tableWilds
                             , cup
                             , rollButtons
-                            , trySelect
+                            , trySelects
                             ]
                         , console
                         ]
@@ -537,7 +534,7 @@ view model =
                         , playArea
                             [ tableWilds
                             , cupButtons
-                            , trySelect
+                            , trySelects
                             ]
                         , console
                         ]
@@ -550,7 +547,7 @@ view model =
                             [ tableWilds
                             , cup
                             , rollButtons
-                            , trySelect
+                            , trySelects
                             ]
                         , console
                         ]
