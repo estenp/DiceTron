@@ -4,13 +4,15 @@ module StyledElements exposing (..)
 
 import Css exposing (Style)
 import Html.Styled exposing (..)
+import Tailwind.Breakpoints as Tw exposing (..)
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw exposing (..)
 
 
 inputBaseStyles : List Style
 inputBaseStyles =
-    [ Tw.border_solid
+    [ Tw.lg [ Tw.h_16 ]
+    , Tw.border_solid
     , Tw.border_2
     , Tw.px_4
     , Tw.py_2
@@ -20,6 +22,7 @@ inputBaseStyles =
     , Tw.border_color Tw.purple_300
     , Tw.text_4xl
     , Tw.w_full
+    , Tw.h_24
     ]
 
 

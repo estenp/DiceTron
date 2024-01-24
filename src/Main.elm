@@ -420,7 +420,20 @@ view model =
 
         tableWilds =
             if model.tableWilds > 0 then
-                section [ id "wilds" ] (viewCup (List.repeat model.tableWilds Wilds))
+                section
+                    [ id "wilds"
+
+                    {- , css
+                       [ Tw.border_8
+                       , Tw.border_color Tw.purple_200
+                       , Tw.rounded_2xl
+                       , Tw.w_full
+                       , Tw.p_12
+                       , Tw.bg_color Tw.black_100
+                       ]
+                    -}
+                    ]
+                    (viewCup (List.repeat model.tableWilds Wilds))
 
             else
                 span [] []
