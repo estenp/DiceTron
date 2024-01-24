@@ -608,7 +608,7 @@ ${variant}`;
   var VERSION = "1.2.0-beta.4";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1706135664875"
+    "1706136707623"
   );
   var ORIGINAL_COMPILATION_MODE = "standard";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -10422,6 +10422,25 @@ var $elm$random$Random$list = F2(
 var $author$project$Try$rollGenerator = function (quantity) {
 	return A2($elm$random$Random$list, quantity, $author$project$Try$dieGenerator);
 };
+var $elm$core$Tuple$mapBoth = F3(
+	function (funcA, funcB, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			funcA(x),
+			funcB(y));
+	});
+var $author$project$Try$toString = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Try$decode,
+	A2(
+		$elm$core$Basics$composeR,
+		A2($elm$core$Tuple$mapBoth, $elm$core$String$fromInt, $elm$core$String$fromInt),
+		function (_v0) {
+			var q = _v0.a;
+			var v = _v0.b;
+			return q + (' ' + v);
+		}));
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		update:
@@ -10614,8 +10633,8 @@ var $author$project$Main$update = F2(
 								$elm$core$Platform$Cmd$none);
 					}
 				case 'SubmitConsole':
-					var command = msg.a;
-					var tag = A2($elm$core$String$left, 2, command);
+					var submittedCommand = msg.a;
+					var tag = A2($elm$core$String$left, 2, submittedCommand);
 					var modelWithNewEntry = function (entry) {
 						return _Utils_update(
 							model,
@@ -10627,7 +10646,7 @@ var $author$project$Main$update = F2(
 					var log = A2($elm$core$Debug$log, 'model', model.consoleHistory);
 					var focusCmd = A2(
 						$elm$core$Task$attempt,
-						function (_v11) {
+						function (_v12) {
 							return $author$project$Main$NoOp;
 						},
 						$elm$browser$Browser$Dom$focus('console'));
@@ -10636,11 +10655,11 @@ var $author$project$Main$update = F2(
 							modelWithNewEntry(
 								_List_fromArray(
 									[
-										'[chat] ' + A2($elm$core$String$dropLeft, 2, command)
+										'[chat] ' + A2($elm$core$String$dropLeft, 2, submittedCommand)
 									])),
 							focusCmd);
 					} else {
-						switch (command) {
+						switch (submittedCommand) {
 							case 'roll':
 								return A2(
 									$elm$core$Tuple$mapSecond,
@@ -10654,7 +10673,7 @@ var $author$project$Main$update = F2(
 										$author$project$Main$Dice($author$project$Main$RollClick),
 										modelWithNewEntry(
 											_List_fromArray(
-												[command]))));
+												[submittedCommand]))));
 							case 'look':
 								return A2(
 									$elm$core$Tuple$mapSecond,
@@ -10668,7 +10687,7 @@ var $author$project$Main$update = F2(
 										$author$project$Main$GameEvent($author$project$Main$Look),
 										modelWithNewEntry(
 											_List_fromArray(
-												[command]))));
+												[submittedCommand]))));
 							case 'pull':
 								return A2(
 									$elm$core$Tuple$mapSecond,
@@ -10682,7 +10701,7 @@ var $author$project$Main$update = F2(
 										$author$project$Main$GameEvent($author$project$Main$Pull),
 										modelWithNewEntry(
 											_List_fromArray(
-												[command]))));
+												[submittedCommand]))));
 							case 'pass':
 								return A2(
 									$elm$core$Tuple$mapSecond,
@@ -10698,7 +10717,25 @@ var $author$project$Main$update = F2(
 												_Utils_Tuple2(model.quantity, model.value))),
 										modelWithNewEntry(
 											_List_fromArray(
-												[command]))));
+												[submittedCommand]))));
+							case 'try':
+								return _Utils_Tuple2(
+									modelWithNewEntry(
+										_List_fromArray(
+											[
+												submittedCommand,
+												'You received: ' + $author$project$Try$toString(model.tryToBeat),
+												'You must pass: ' + function () {
+												var _v11 = $author$project$Try$mustPass(model.tryToBeat);
+												if (_v11.$ === 'Just') {
+													var t = _v11.a;
+													return $author$project$Try$toString(t);
+												} else {
+													return 'You cannot beat this roll. Sorry.';
+												}
+											}()
+											])),
+									focusCmd);
 							case 'clear':
 								return _Utils_Tuple2(
 									_Utils_update(
@@ -10709,7 +10746,7 @@ var $author$project$Main$update = F2(
 								return _Utils_Tuple2(
 									modelWithNewEntry(
 										_List_fromArray(
-											['This console can be used to control your game via commands or chat with other players.\n\n                                `roll` -> trigger a roll or reroll\n                                `look` -> look at a passed roll\n                                `pull` -> pull a passed roll\n                                `pass` -> pass a roll\n                                `clear` -> clear the console\n\n                                Prefixing your message with a tag enables special actions.\n\n                                `/c *your message*` -> add a message to game chat\n                                '])),
+											[submittedCommand, 'This console can be used to control your game via commands or chat with other players.\n\n                                `roll` -> trigger a roll or reroll\n                                `look` -> look at a passed roll\n                                `pull` -> pull a passed roll\n                                `pass` -> pass a roll\n                                `clear` -> clear the console\n                                `try` -> print the current try to beat, passed by the previous player\n\n                                Prefixing your message with a tag enables special actions.\n\n                                `/c *your message*` -> add a message to game chat\n                                '])),
 									focusCmd);
 							case '':
 								return _Utils_Tuple2(
@@ -10721,7 +10758,7 @@ var $author$project$Main$update = F2(
 								return _Utils_Tuple2(
 									modelWithNewEntry(
 										_List_fromArray(
-											[command, 'Command not recognized.'])),
+											[submittedCommand, 'Command not recognized.'])),
 									focusCmd);
 						}
 					}
@@ -13056,25 +13093,6 @@ var $author$project$Main$stats_ = $rtfeldman$elm_css$Html$Styled$div(
 					_List_fromArray(
 						[$author$project$Tailwind$Utilities$rounded_t_none]))))
 		]));
-var $elm$core$Tuple$mapBoth = F3(
-	function (funcA, funcB, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			funcA(x),
-			funcB(y));
-	});
-var $author$project$Try$toString = A2(
-	$elm$core$Basics$composeR,
-	$author$project$Try$decode,
-	A2(
-		$elm$core$Basics$composeR,
-		A2($elm$core$Tuple$mapBoth, $elm$core$String$fromInt, $elm$core$String$fromInt),
-		function (_v0) {
-			var q = _v0.a;
-			var v = _v0.b;
-			return q + (' ' + v);
-		}));
 var $rtfeldman$elm_css$Css$Structure$Compatible = {$: 'Compatible'};
 var $rtfeldman$elm_css$Css$transparent = {color: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'transparent'};
 var $rtfeldman$elm_css$Html$Styled$Attributes$type_ = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('type');

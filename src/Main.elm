@@ -324,12 +324,12 @@ update msg model =
                     , Cmd.none
                     )
 
-        SubmitConsole command ->
+        SubmitConsole submittedCommand ->
             -- validate command
             -- add to history log
             let
                 tag =
-                    String.left 2 command
+                    String.left 2 submittedCommand
 
                 modelWithNewEntry entry =
                     { model | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" }
@@ -342,35 +342,54 @@ update msg model =
             in
             case tag of
                 "/c" ->
-                    ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 command ], focusCmd )
+                    ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 submittedCommand ], focusCmd )
 
                 _ ->
-                    case command of
+                    case submittedCommand of
+                        -- todo: create cleaner function for batching in a focus command
                         "roll" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (Dice RollClick) (modelWithNewEntry [ command ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (Dice RollClick) (modelWithNewEntry [ submittedCommand ]))
 
                         "look" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent Look) (modelWithNewEntry [ command ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent Look) (modelWithNewEntry [ submittedCommand ]))
 
                         "pull" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent Pull) (modelWithNewEntry [ command ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent Pull) (modelWithNewEntry [ submittedCommand ]))
 
                         "pass" ->
                             -- todo: this will have additional payload with q and v, check those against the minimum and return minumum if they are too low
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent (Pass ( model.quantity, model.value ))) (modelWithNewEntry [ command ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent (Pass ( model.quantity, model.value ))) (modelWithNewEntry [ submittedCommand ]))
+
+                        "try" ->
+                            ( modelWithNewEntry
+                                [ submittedCommand
+                                , "You received: " ++ Try.toString model.tryToBeat
+                                , "You must pass: "
+                                    ++ (case Try.mustPass model.tryToBeat of
+                                            Just t ->
+                                                Try.toString t
+
+                                            Nothing ->
+                                                "You cannot beat this roll. Sorry."
+                                       )
+                                ]
+                            , focusCmd
+                            )
 
                         "clear" ->
                             ( { model | consoleHistory = [], consoleValue = "" }, focusCmd )
 
                         "help" ->
                             ( modelWithNewEntry
-                                [ """This console can be used to control your game via commands or chat with other players.
+                                [ submittedCommand
+                                , """This console can be used to control your game via commands or chat with other players.
 
                                 `roll` -> trigger a roll or reroll
                                 `look` -> look at a passed roll
                                 `pull` -> pull a passed roll
                                 `pass` -> pass a roll
                                 `clear` -> clear the console
+                                `try` -> print the current try to beat, passed by the previous player
 
                                 Prefixing your message with a tag enables special actions.
 
@@ -384,7 +403,7 @@ update msg model =
                             ( modelWithNewEntry [ "" ], focusCmd )
 
                         _ ->
-                            ( modelWithNewEntry [ command, "Command not recognized." ], focusCmd )
+                            ( modelWithNewEntry [ submittedCommand, "Command not recognized." ], focusCmd )
 
         NoOp ->
             ( model, Cmd.none )
