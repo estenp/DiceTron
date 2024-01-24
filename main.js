@@ -608,7 +608,7 @@ ${variant}`;
   var VERSION = "1.2.0-beta.4";
   var TARGET_NAME = "My target name";
   var INITIAL_ELM_COMPILED_TIMESTAMP = Number(
-    "1706134448365"
+    "1706135664875"
   );
   var ORIGINAL_COMPILATION_MODE = "standard";
   var ORIGINAL_BROWSER_UI_POSITION = "BottomLeft";
@@ -10197,6 +10197,7 @@ var $folkertdev$elm_deque$Internal$last = function (deque) {
 	}
 };
 var $folkertdev$elm_deque$Deque$last = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$last, $folkertdev$elm_deque$Deque$unwrap);
+var $elm$core$Debug$log = _Debug_log;
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -10623,6 +10624,7 @@ var $author$project$Main$update = F2(
 								consoleValue: ''
 							});
 					};
+					var log = A2($elm$core$Debug$log, 'model', model.consoleHistory);
 					var focusCmd = A2(
 						$elm$core$Task$attempt,
 						function (_v11) {
@@ -10702,6 +10704,12 @@ var $author$project$Main$update = F2(
 									_Utils_update(
 										model,
 										{consoleHistory: _List_Nil, consoleValue: ''}),
+									focusCmd);
+							case 'help':
+								return _Utils_Tuple2(
+									modelWithNewEntry(
+										_List_fromArray(
+											['This console can be used to control your game via commands or chat with other players.\n\n                                `roll` -> trigger a roll or reroll\n                                `look` -> look at a passed roll\n                                `pull` -> pull a passed roll\n                                `pass` -> pass a roll\n                                `clear` -> clear the console\n\n                                Prefixing your message with a tag enables special actions.\n\n                                `/c *your message*` -> add a message to game chat\n                                '])),
 									focusCmd);
 							case '':
 								return _Utils_Tuple2(
@@ -13976,6 +13984,7 @@ var $author$project$Main$viewPassTry = F3(
 						]))
 				]));
 	});
+var $author$project$Tailwind$Utilities$whitespace_pre_line = A2($rtfeldman$elm_css$Css$property, 'white-space', 'pre-line');
 var $author$project$Main$view = function (model) {
 	var trySelects = A3($author$project$Main$viewPassTry, model.quantity, model.value, model.tryToBeat);
 	var tryHistory = A2(
@@ -14138,7 +14147,12 @@ var $author$project$Main$view = function (model) {
 									$rtfeldman$elm_css$Html$Styled$text('>'),
 									A2(
 									$rtfeldman$elm_css$Html$Styled$div,
-									_List_Nil,
+									_List_fromArray(
+										[
+											$rtfeldman$elm_css$Html$Styled$Attributes$css(
+											_List_fromArray(
+												[$author$project$Tailwind$Utilities$whitespace_pre_line]))
+										]),
 									_List_fromArray(
 										[
 											$rtfeldman$elm_css$Html$Styled$text(log)

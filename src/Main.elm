@@ -336,6 +336,9 @@ update msg model =
 
                 focusCmd =
                     Task.attempt (\_ -> NoOp) (Dom.focus "console")
+
+                log =
+                    Debug.log "model" model.consoleHistory
             in
             case tag of
                 "/c" ->
@@ -358,6 +361,24 @@ update msg model =
 
                         "clear" ->
                             ( { model | consoleHistory = [], consoleValue = "" }, focusCmd )
+
+                        "help" ->
+                            ( modelWithNewEntry
+                                [ """This console can be used to control your game via commands or chat with other players.
+
+                                `roll` -> trigger a roll or reroll
+                                `look` -> look at a passed roll
+                                `pull` -> pull a passed roll
+                                `pass` -> pass a roll
+                                `clear` -> clear the console
+
+                                Prefixing your message with a tag enables special actions.
+
+                                `/c *your message*` -> add a message to game chat
+                                """
+                                ]
+                            , focusCmd
+                            )
 
                         "" ->
                             ( modelWithNewEntry [ "" ], focusCmd )
@@ -464,10 +485,23 @@ view model =
                         |> List.map
                             (\log ->
                                 div []
-                                    [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ] [ text ">", div [] [ text log ] ] ]
+                                    [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ] [ text ">", div [ css [ Tw.whitespace_pre_line ] ] [ text log ] ] ]
                             )
             in
-            label [ class "console", css [ Tw.flex, Tw.gap_1, Tw.flex_col, Tw.overflow_auto, Tw.p_4, Tw.bg_color Tw.black_200, Tw.border_t_4, Tw.border_color Tw.purple_100, Tw.w_full ] ]
+            label
+                [ class "console"
+                , css
+                    [ Tw.flex
+                    , Tw.gap_1
+                    , Tw.flex_col
+                    , Tw.overflow_auto
+                    , Tw.p_4
+                    , Tw.bg_color Tw.black_200
+                    , Tw.border_t_4
+                    , Tw.border_color Tw.purple_100
+                    , Tw.w_full
+                    ]
+                ]
                 (history
                     ++ [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ]
                             [ text ">"
