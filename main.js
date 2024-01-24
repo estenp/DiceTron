@@ -6456,6 +6456,8 @@ var $author$project$Main$appendHistory = F2(
 					A2($author$project$Player$health, model.whosTurn, model.players))
 				]));
 	});
+var $author$project$Try$Five = {$: 'Five'};
+var $author$project$Try$Sixes = {$: 'Sixes'};
 var $author$project$Try$decodeFace = function (die) {
 	switch (die.$) {
 		case 'Wilds':
@@ -6471,6 +6473,54 @@ var $author$project$Try$decodeFace = function (die) {
 		default:
 			return 6;
 	}
+};
+var $author$project$Try$Fives = {$: 'Fives'};
+var $author$project$Try$Fours = {$: 'Fours'};
+var $author$project$Try$encodeFace = function (die) {
+	switch (die) {
+		case 1:
+			return $author$project$Try$Wilds;
+		case 2:
+			return $author$project$Try$Twos;
+		case 3:
+			return $author$project$Try$Threes;
+		case 4:
+			return $author$project$Try$Fours;
+		case 5:
+			return $author$project$Try$Fives;
+		case 6:
+			return $author$project$Try$Sixes;
+		default:
+			return $author$project$Try$Twos;
+	}
+};
+var $author$project$Try$Four = {$: 'Four'};
+var $author$project$Try$One = {$: 'One'};
+var $author$project$Try$Three = {$: 'Three'};
+var $author$project$Try$encodeQuantity = function (quant) {
+	switch (quant) {
+		case 1:
+			return $author$project$Try$One;
+		case 2:
+			return $author$project$Try$Two;
+		case 3:
+			return $author$project$Try$Three;
+		case 4:
+			return $author$project$Try$Four;
+		case 5:
+			return $author$project$Try$Five;
+		default:
+			return $author$project$Try$Two;
+	}
+};
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $author$project$Try$encode = function (tup) {
+	return _Utils_Tuple2(
+		$author$project$Try$encodeQuantity(tup.a),
+		$author$project$Try$encodeFace(tup.b));
 };
 var $elm_community$list_extra$List$Extra$groupWhile = F2(
 	function (isSameGroup, items) {
@@ -6520,56 +6570,6 @@ var $elm_community$list_extra$List$Extra$frequencies = function (list) {
 		$elm_community$list_extra$List$Extra$group(
 			$elm$core$List$sort(list)));
 };
-var $author$project$Try$Five = {$: 'Five'};
-var $author$project$Try$Sixes = {$: 'Sixes'};
-var $author$project$Try$Fives = {$: 'Fives'};
-var $author$project$Try$Fours = {$: 'Fours'};
-var $author$project$Try$encodeFace = function (die) {
-	switch (die) {
-		case 1:
-			return $author$project$Try$Wilds;
-		case 2:
-			return $author$project$Try$Twos;
-		case 3:
-			return $author$project$Try$Threes;
-		case 4:
-			return $author$project$Try$Fours;
-		case 5:
-			return $author$project$Try$Fives;
-		case 6:
-			return $author$project$Try$Sixes;
-		default:
-			return $author$project$Try$Twos;
-	}
-};
-var $author$project$Try$Four = {$: 'Four'};
-var $author$project$Try$One = {$: 'One'};
-var $author$project$Try$Three = {$: 'Three'};
-var $author$project$Try$encodeQuantity = function (quant) {
-	switch (quant) {
-		case 1:
-			return $author$project$Try$One;
-		case 2:
-			return $author$project$Try$Two;
-		case 3:
-			return $author$project$Try$Three;
-		case 4:
-			return $author$project$Try$Four;
-		case 5:
-			return $author$project$Try$Five;
-		default:
-			return $author$project$Try$Two;
-	}
-};
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
-};
-var $author$project$Try$encode = function (tup) {
-	return _Utils_Tuple2(
-		$author$project$Try$encodeQuantity(tup.a),
-		$author$project$Try$encodeFace(tup.b));
-};
 var $elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -6579,7 +6579,6 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Tuple$mapSecond = F2(
 	function (func, _v0) {
 		var x = _v0.a;
@@ -6611,49 +6610,45 @@ var $TSFoster$elm_tuple_extra$Tuple2$swap = function (_v0) {
 	var b = _v0.b;
 	return _Utils_Tuple2(b, a);
 };
-var $author$project$Try$getBestOfAKind = function (frequncyList) {
-	var _v0 = A2(
-		$elm$core$List$partition,
-		function (_v1) {
-			var face = _v1.a;
-			return face === 1;
-		},
-		frequncyList);
-	var wilds = _v0.a;
-	var rest = _v0.b;
-	var wildCount = function () {
-		if (wilds.b) {
-			var _v3 = wilds.a;
-			var b = _v3.b;
-			return b;
-		} else {
-			return 0;
-		}
-	}();
-	var counts = A2(
-		$elm$core$List$map,
-		$elm$core$Tuple$mapSecond(
-			$elm$core$Basics$add(wildCount)),
-		rest);
-	return (wildCount === 5) ? _Utils_Tuple2($author$project$Try$Five, $author$project$Try$Sixes) : $author$project$Try$encode(
-		$TSFoster$elm_tuple_extra$Tuple2$swap(
-			A2(
-				$elm$core$Maybe$withDefault,
-				_Utils_Tuple2(2, 2),
-				$elm$core$List$head(
-					A2(
-						$elm$core$Debug$log,
-						'sorted',
+var $author$project$Try$assessRoll = function () {
+	var getBestOfAKind = function (frequncyList) {
+		var _v0 = A2(
+			$elm$core$List$partition,
+			function (_v1) {
+				var face = _v1.a;
+				return face === 1;
+			},
+			frequncyList);
+		var wilds = _v0.a;
+		var rest = _v0.b;
+		var wildCount = function () {
+			if (wilds.b) {
+				var _v3 = wilds.a;
+				var b = _v3.b;
+				return b;
+			} else {
+				return 0;
+			}
+		}();
+		var counts = A2(
+			$elm$core$List$map,
+			$elm$core$Tuple$mapSecond(
+				$elm$core$Basics$add(wildCount)),
+			rest);
+		return (wildCount === 5) ? _Utils_Tuple2($author$project$Try$Five, $author$project$Try$Sixes) : $author$project$Try$encode(
+			$TSFoster$elm_tuple_extra$Tuple2$swap(
+				A2(
+					$elm$core$Maybe$withDefault,
+					_Utils_Tuple2(2, 2),
+					$elm$core$List$head(
 						$elm$core$List$reverse(
-							A2(
-								$elm$core$List$sortBy,
-								$elm$core$Tuple$second,
-								A2($elm$core$Debug$log, 'counts', counts))))))));
-};
-var $author$project$Try$assessRoll = A2(
-	$elm$core$Basics$composeR,
-	$elm$core$List$map($author$project$Try$decodeFace),
-	A2($elm$core$Basics$composeR, $elm_community$list_extra$List$Extra$frequencies, $author$project$Try$getBestOfAKind));
+							A2($elm$core$List$sortBy, $elm$core$Tuple$second, counts))))));
+	};
+	return A2(
+		$elm$core$Basics$composeR,
+		$elm$core$List$map($author$project$Try$decodeFace),
+		A2($elm$core$Basics$composeR, $elm_community$list_extra$List$Extra$frequencies, getBestOfAKind));
+}();
 var $elm$core$Task$onError = _Scheduler_onError;
 var $elm$core$Task$attempt = F2(
 	function (resultToMessage, task) {
