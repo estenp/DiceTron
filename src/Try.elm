@@ -247,38 +247,42 @@ decodeQuantity dieQuantity =
 -}
 assessRoll : Roll -> Try
 assessRoll =
+    let
+        getBestOfAKind : List ( Int, Int ) -> Try
+        getBestOfAKind frequncyList =
+            let
+                ( wilds, rest ) =
+                    List.partition (\( face, _ ) -> face == 1) frequncyList
+
+                wildCount =
+                    case wilds of
+                        ( _, b ) :: _ ->
+                            b
+
+                        [] ->
+                            0
+
+                counts =
+                    List.map (Tuple.mapSecond ((+) wildCount)) rest
+            in
+            if wildCount == 5 then
+                ( Five, Sixes )
+
+            else
+                counts
+                    -- sort by the count
+                    |> List.sortBy Tuple.second
+                    -- reverse the list so it's easy to grab the highest count with List.head
+                    |> List.reverse
+                    |> List.head
+                    |> Maybe.withDefault ( 2, 2 )
+                    |> Tuple2.swap
+                    -- encode to a Try
+                    |> encode
+    in
     List.map decodeFace
         >> frequencies
-        >> Dict.fromList
         >> getBestOfAKind
-
-
-getBestOfAKind : Dict Int Int -> Try
-getBestOfAKind dict =
-    let
-        wild_count =
-            Maybe.withDefault 0 (Dict.get 1 dict)
-    in
-    if wild_count == 5 then
-        ( Five, Sixes )
-
-    else
-        dict
-            -- Wilds have been counted, remove them from dict
-            |> Dict.remove 1
-            -- apply wild count to all Face counts to find the highest of-a-kind
-            |> Dict.map (\_ v -> v + wild_count)
-            -- convert the Dict to a List of Tuple
-            |> Dict.toList
-            -- sort by the count
-            |> List.sortBy Tuple.second
-            -- reverse the list so it's easy to grab the highest count with List.head
-            |> List.reverse
-            |> List.head
-            |> Maybe.withDefault ( 2, 2 )
-            |> Tuple2.swap
-            -- encode to a Try
-            |> encode
 
 
 getLastTry : List ( Try, Int, String ) -> Try
