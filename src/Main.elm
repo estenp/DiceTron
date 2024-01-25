@@ -462,19 +462,10 @@ view model =
         tableWilds =
             if model.tableWilds > 0 then
                 section
-                    [ id "wilds"
-
-                    {- , css
-                       [ Tw.border_8
-                       , Tw.border_color Tw.purple_200
-                       , Tw.rounded_2xl
-                       , Tw.w_full
-                       , Tw.p_12
-                       , Tw.bg_color Tw.black_100
-                       ]
-                    -}
+                    [ id "wilds", css [ Tw.flex_col, Tw.w_full, Tw.gap_8 ] ]
+                    [ div [ css [ Tw.flex, Tw.justify_center ] ] (viewCup (List.repeat model.tableWilds Wilds))
+                    , divider
                     ]
-                    (viewCup (List.repeat model.tableWilds Wilds))
 
             else
                 span [] []

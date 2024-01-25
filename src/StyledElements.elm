@@ -4,9 +4,14 @@ module StyledElements exposing (..)
 
 import Css exposing (Style)
 import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (css)
 import Tailwind.Breakpoints as Tw exposing (..)
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw exposing (..)
+
+
+type alias StyledElement msg =
+    List (Attribute msg) -> List (Html msg) -> Html msg
 
 
 inputBaseStyles : List Style
@@ -37,16 +42,25 @@ card =
     ]
 
 
-button_ : List (Attribute msg) -> List (Html msg) -> Html msg
+button_ : StyledElement msg
 button_ =
     styled button (List.concat [ inputBaseStyles, card ])
 
 
-select_ : List (Attribute msg) -> List (Html msg) -> Html msg
+select_ : StyledElement msg
 select_ =
     styled select inputBaseStyles
 
 
-header_ : List (Attribute msg) -> List (Html msg) -> Html msg
+header_ : StyledElement msg
 header_ =
     styled div [ Tw.grid, Tw.grid_cols_header, Tw.mb_10, Tw.w_full ]
+
+
+
+-- todo: this isn't a styled element, but it's a generic, reusable element?
+
+
+divider : Html msg
+divider =
+    div [ css [ Tw.w_full, Tw.h_2, Tw.bg_color Tw.black_200 ] ] []

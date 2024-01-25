@@ -7642,7 +7642,7 @@ var $matheus23$elm_tailwind_modules_base$Tailwind$Color$Color = F5(
 		return {$: 'Color', a: a, b: b, c: c, d: d, e: e};
 	});
 var $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable = {$: 'ViaVariable'};
-var $author$project$Tailwind$Theme$black_200 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '34', '33', '35', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
+var $author$project$Tailwind$Theme$black_200 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '48', '41', '55', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
 var $author$project$Tailwind$Utilities$border_color = function (color) {
 	return A4(
 		$matheus23$elm_tailwind_modules_base$Tailwind$Color$propertyWithColor,
@@ -9209,10 +9209,25 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty = F2(
 var $rtfeldman$elm_css$Html$Styled$Attributes$class = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('className');
 var $rtfeldman$elm_css$Html$Styled$Attributes$css = $rtfeldman$elm_css$Html$Styled$Internal$css;
 var $rtfeldman$elm_css$Html$Styled$div = $rtfeldman$elm_css$Html$Styled$node('div');
+var $author$project$Tailwind$Utilities$h_2 = A2($rtfeldman$elm_css$Css$property, 'height', '0.5rem');
+var $author$project$StyledElements$divider = A2(
+	$rtfeldman$elm_css$Html$Styled$div,
+	_List_fromArray(
+		[
+			$rtfeldman$elm_css$Html$Styled$Attributes$css(
+			_List_fromArray(
+				[
+					$author$project$Tailwind$Utilities$w_full,
+					$author$project$Tailwind$Utilities$h_2,
+					$author$project$Tailwind$Utilities$bg_color($author$project$Tailwind$Theme$black_200)
+				]))
+		]),
+	_List_Nil);
 var $author$project$Tailwind$Utilities$flex = A2($rtfeldman$elm_css$Css$property, 'display', 'flex');
 var $author$project$Tailwind$Utilities$flex_col = A2($rtfeldman$elm_css$Css$property, 'flex-direction', 'column');
 var $author$project$Tailwind$Utilities$gap_1 = A2($rtfeldman$elm_css$Css$property, 'gap', '0.25rem');
 var $author$project$Tailwind$Utilities$gap_4 = A2($rtfeldman$elm_css$Css$property, 'gap', '1rem');
+var $author$project$Tailwind$Utilities$gap_8 = A2($rtfeldman$elm_css$Css$property, 'gap', '2rem');
 var $author$project$Player$getName = F2(
 	function (players, id) {
 		return function ($) {
@@ -9680,6 +9695,7 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$id = $rtfeldman$elm_css$Html$Style
 var $author$project$Tailwind$Utilities$inline_block = A2($rtfeldman$elm_css$Css$property, 'display', 'inline-block');
 var $rtfeldman$elm_css$Html$Styled$input = $rtfeldman$elm_css$Html$Styled$node('input');
 var $author$project$Tailwind$Utilities$items_center = A2($rtfeldman$elm_css$Css$property, 'align-items', 'center');
+var $author$project$Tailwind$Utilities$justify_center = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'center');
 var $author$project$Tailwind$Utilities$justify_evenly = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'space-evenly');
 var $author$project$Tailwind$Utilities$justify_self_center = A2($rtfeldman$elm_css$Css$property, 'justify-self', 'center');
 var $rtfeldman$elm_css$Html$Styled$label = $rtfeldman$elm_css$Html$Styled$node('label');
@@ -9687,11 +9703,10 @@ var $folkertdev$elm_deque$Internal$length = function (deque) {
 	return deque.sizeF + deque.sizeR;
 };
 var $folkertdev$elm_deque$Deque$length = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$length, $folkertdev$elm_deque$Deque$unwrap);
-var $author$project$Tailwind$Theme$black_100 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '55', '47', '62', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
+var $author$project$Tailwind$Theme$black_100 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '73', '65', '82', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
 var $author$project$Tailwind$Utilities$border_4 = A2($rtfeldman$elm_css$Css$property, 'border-width', '4px');
 var $author$project$Tailwind$Utilities$font_bold = A2($rtfeldman$elm_css$Css$property, 'font-weight', '700');
 var $author$project$Tailwind$Utilities$h_32 = A2($rtfeldman$elm_css$Css$property, 'height', '8rem');
-var $author$project$Tailwind$Utilities$justify_center = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'center');
 var $author$project$Tailwind$Utilities$m_4 = A2($rtfeldman$elm_css$Css$property, 'margin', '1rem');
 var $author$project$Tailwind$Theme$purple_200 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '112', '88', '124', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
 var $author$project$Tailwind$Utilities$shadow_color = function (color) {
@@ -9857,7 +9872,6 @@ var $TSFoster$elm_tuple_extra$Tuple3$second = function (_v0) {
 };
 var $rtfeldman$elm_css$Html$Styled$section = $rtfeldman$elm_css$Html$Styled$node('section');
 var $rtfeldman$elm_css$Html$Styled$span = $rtfeldman$elm_css$Html$Styled$node('span');
-var $author$project$Tailwind$Utilities$gap_8 = A2($rtfeldman$elm_css$Css$property, 'gap', '2rem');
 var $author$project$Tailwind$Utilities$justify_around = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'space-around');
 var $author$project$Tailwind$Utilities$rounded_t_none = $rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
@@ -10829,10 +10843,25 @@ var $author$project$Main$view = function (model) {
 		$rtfeldman$elm_css$Html$Styled$section,
 		_List_fromArray(
 			[
-				$rtfeldman$elm_css$Html$Styled$Attributes$id('wilds')
+				$rtfeldman$elm_css$Html$Styled$Attributes$id('wilds'),
+				$rtfeldman$elm_css$Html$Styled$Attributes$css(
+				_List_fromArray(
+					[$author$project$Tailwind$Utilities$flex_col, $author$project$Tailwind$Utilities$w_full, $author$project$Tailwind$Utilities$gap_8]))
 			]),
-		$author$project$Main$viewCup(
-			A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds))) : A2($rtfeldman$elm_css$Html$Styled$span, _List_Nil, _List_Nil);
+		_List_fromArray(
+			[
+				A2(
+				$rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[
+						$rtfeldman$elm_css$Html$Styled$Attributes$css(
+						_List_fromArray(
+							[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_center]))
+					]),
+				$author$project$Main$viewCup(
+					A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds))),
+				$author$project$StyledElements$divider
+			])) : A2($rtfeldman$elm_css$Html$Styled$span, _List_Nil, _List_Nil);
 	var rollButtons = A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_Nil,

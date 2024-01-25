@@ -8,6 +8,8 @@ module Tailwind.Theme exposing
     , success
     , black_100
     , black_200
+    , black_300
+    , black_400
     , gray
     , white
     , purple_100
@@ -52,6 +54,8 @@ If you want to extend the set of available colors or opacities, take a look [con
 @docs success
 @docs black_100
 @docs black_200
+@docs black_300
+@docs black_400
 @docs gray
 @docs white
 @docs purple_100
@@ -146,11 +150,21 @@ success =
 
 black_100 : Color
 black_100 =
-    Tw.Color "rgb" "55" "47" "62" Tw.ViaVariable
+    Tw.Color "rgb" "73" "65" "82" Tw.ViaVariable
 
 
 black_200 : Color
 black_200 =
+    Tw.Color "rgb" "48" "41" "55" Tw.ViaVariable
+
+
+black_300 : Color
+black_300 =
+    Tw.Color "rgb" "55" "47" "62" Tw.ViaVariable
+
+
+black_400 : Color
+black_400 =
     Tw.Color "rgb" "34" "33" "35" Tw.ViaVariable
 
 
