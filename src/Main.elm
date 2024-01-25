@@ -358,6 +358,7 @@ update msg model =
 
                         "pass" ->
                             -- todo: this will have additional payload with q and v, check those against the minimum and return minumum if they are too low
+                            -- todo: probably should validate this in the pass Msg and allow whatever since we maybe shouldn't rely on selects anyway
                             Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent (Pass ( model.quantity, model.value ))) (modelWithNewEntry [ submittedCommand ]))
 
                         "try" ->
