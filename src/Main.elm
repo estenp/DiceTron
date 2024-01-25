@@ -446,48 +446,49 @@ view model =
                     |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup) ])
                 )
 
+        -- Play Area UI
         cup =
-            section
+            [ section
                 [ class "roll"
                 , css [ Tw.flex, Tw.justify_evenly ]
                 ]
                 (viewCup model.roll)
+            ]
 
         cupButtons =
-            div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
+            [ div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
                 [ button_ [ onClick (GameEvent Pull) ] [ text "pull" ]
                 , button_ [ onClick (GameEvent Look) ] [ text "look" ]
                 ]
+            ]
 
         tableWilds =
             if model.tableWilds > 0 then
-                section
-                    [ id "wilds", css [ Tw.flex_col, Tw.w_full, Tw.gap_8 ] ]
-                    [ div [ css [ Tw.flex, Tw.justify_center ] ] (viewCup (List.repeat model.tableWilds Wilds))
-                    , divider
-                    ]
-
-            else
-                span [] []
-
-        rollButtons =
-            div []
-                [ case model.turnStatus of
-                    Fresh ->
-                        button_ [ onClick (Dice RollClick) ] [ text "roll" ]
-
-                    Pulled _ ->
-                        button_ [ onClick (Dice RollClick) ] [ text "roll" ]
-
-                    Looked ->
-                        button_ [ onClick (Dice RollClick) ] [ text "re-roll" ]
-
-                    _ ->
-                        span [] []
+                [ section
+                    [ id "wilds" ]
+                    (viewCup (List.repeat model.tableWilds Wilds))
+                , divider
                 ]
 
+            else
+                []
+
+        rollButtons =
+            case model.turnStatus of
+                Fresh ->
+                    [ div [] [ button_ [ onClick (Dice RollClick) ] [ text "roll" ] ] ]
+
+                Pulled _ ->
+                    [ div [] [ button_ [ onClick (Dice RollClick) ] [ text "roll" ] ] ]
+
+                Looked ->
+                    [ div [] [ button_ [ onClick (Dice RollClick) ] [ text "re-roll" ] ] ]
+
+                _ ->
+                    []
+
         trySelects =
-            viewPassTry model.quantity model.value model.tryToBeat
+            [ viewPassTry model.quantity model.value model.tryToBeat ]
 
         console =
             let
@@ -544,9 +545,7 @@ view model =
                         [ logo
                         , playerStats
                         , tryHistory
-                        , playArea
-                            [ rollButtons
-                            ]
+                        , playArea rollButtons
                         , console
                         ]
 
@@ -555,11 +554,7 @@ view model =
                         , playerStats
                         , tryHistory
                         , playArea
-                            [ tableWilds
-                            , cup
-                            , rollButtons
-                            , trySelects
-                            ]
+                            (tableWilds ++ cup ++ rollButtons ++ trySelects)
                         , console
                         ]
 
@@ -568,10 +563,7 @@ view model =
                         , playerStats
                         , tryHistory
                         , playArea
-                            [ tableWilds
-                            , cupButtons
-                            , trySelects
-                            ]
+                            (tableWilds ++ cupButtons ++ trySelects)
                         , console
                         ]
 
@@ -580,11 +572,7 @@ view model =
                         , playerStats
                         , tryHistory
                         , playArea
-                            [ tableWilds
-                            , cup
-                            , rollButtons
-                            , trySelects
-                            ]
+                            (tableWilds ++ cup ++ rollButtons ++ trySelects)
                         , console
                         ]
 
@@ -602,11 +590,7 @@ view model =
                         , playerStats
                         , tryHistory
                         , playArea
-                            [ tableWilds
-                            , cup
-                            , pullResult
-                            , rollButtons
-                            ]
+                            (tableWilds ++ cup ++ [ pullResult ] ++ rollButtons)
                         , console
                         ]
 
