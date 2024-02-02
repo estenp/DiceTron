@@ -208,6 +208,9 @@ update msg model =
                             )
 
                         ReRoll ->
+                            -- checking state and factoring Wilds works well in update when we want to more generically call for a roll (whether fresh or reroll), as you might in console
+                            -- but maybe this should all be determined in view and pass more specific roll message
+                            -- console update would still want to determine the right roll type (or require more specfiic roll command)
                             case model.rollState of
                                 Pulled _ ->
                                     -- reset
@@ -236,28 +239,28 @@ update msg model =
 
                 Pull ->
                     -- check that the roll satisfied the required Try level
+                    -- move to pulled state
                     let
-                        currentRollTry =
+                        bestTryInCup =
                             Try.assessRoll (model.roll ++ List.repeat model.tableWilds Wilds)
 
-                        passedTry =
+                        receivedTry =
                             model.tryToBeat
 
-                        compare : Try -> Try -> PullResult
-                        compare toBeat passed =
-                            if (Try.toScore toBeat |> Maybe.withDefault 1) >= (Try.toScore passed |> Maybe.withDefault 1) then
+                        validateReceivedTry : Try -> Try -> PullResult
+                        validateReceivedTry mustBeat received =
+                            if (Try.toScore mustBeat |> Maybe.withDefault 1) >= (Try.toScore received |> Maybe.withDefault 1) then
                                 HadIt
 
                             else
                                 Lie
 
                         pullResult =
-                            compare currentRollTry passedTry
+                            validateReceivedTry bestTryInCup receivedTry
                     in
                     case pullResult of
                         HadIt ->
                             -- current player takes a fold
-                            -- fresh roll
                             let
                                 hitPlayer =
                                     Player.hit model.players model.whosTurn
@@ -279,10 +282,8 @@ update msg model =
                             , Cmd.none
                             )
 
-                        -- )
                         Lie ->
                             -- previous player takes a fold
-                            -- fresh roll
                             let
                                 prevPlayer =
                                     Maybe.withDefault 0 (Deque.last model.activePlayers)
