@@ -20,7 +20,7 @@ import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
 import Task
-import Try exposing (Face(..), PullResult(..), Quantity(..), Roll, Try)
+import Try exposing (Cup, Face(..), Quantity(..), Try)
 import Tuple3
 
 
@@ -65,12 +65,17 @@ type CupState
     | Uncovered
 
 
-type TurnStatus
+type RollState
     = Fresh
-    | Pending
+    | Received
     | Looked
     | Rolled
     | Pulled PullResult
+
+
+type PullResult
+    = HadIt
+    | Lie
 
 
 type alias History =
@@ -82,7 +87,7 @@ type alias History =
 type alias Model =
     { -- dice state
       -- the current
-      roll : Roll
+      roll : Cup
 
     -- view state
     , quantity : Quantity
@@ -94,10 +99,10 @@ type alias Model =
     , consoleValue : String
     , consoleIsVisible : Bool
 
-    -- turn state
+    -- game state
     , cupState : CupState
     , cupLooked : Bool
-    , turnStatus : TurnStatus
+    , rollState : RollState
     , whosTurn : Int -- index of activePlayers
 
     -- player state
@@ -116,7 +121,7 @@ init _ =
       , tableWilds = 0
       , cupState = Covered
       , cupLooked = False
-      , turnStatus = Fresh
+      , rollState = Fresh
       , consoleHistory = []
       , consoleValue = ""
       , consoleIsVisible = False
@@ -140,24 +145,29 @@ type ViewState
     | SetConsoleVisable Bool
 
 
-type GameEvent
+type GameAction
     = Pull
     | Pass Try
     | Look
+    | Roll Roll
 
 
-type Dice
-    = -- User wants a new roll value displayed.
-      -- Should this be a GameEvent variant?
-      RollClick
-      -- Runtime is sending a new random die value.∏
-    | NewRoll (List Face)
+type Roll
+    = -- Runtime is sending a new random die value.∏
+      NewRoll Try.Cup
+    | ReRoll
 
 
+{-| Main Msg type.
+
+Here, some top level Msg variants take a sub Msg to group cases in update function.
+
+`ViewState Viewstate` indicates a top level Msg type of ViewState which holds sub Msg such as `ChangeValue`
+
+-}
 type Msg
-    = Dice Dice
-    | ViewState ViewState
-    | GameEvent GameEvent
+    = ViewState ViewState
+    | GameAction GameAction
     | SubmitConsole String
     | NoOp
 
@@ -165,41 +175,6 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        -- dice messages
-        Dice subMsg ->
-            case subMsg of
-                RollClick ->
-                    case model.turnStatus of
-                        Pulled _ ->
-                            -- reset
-                            ( { model | tableWilds = 0 }, Random.generate (Dice << NewRoll) (Try.rollGenerator 5) )
-
-                        Fresh ->
-                            -- reset
-                            ( { model | tableWilds = 0 }, Random.generate (Dice << NewRoll) (Try.rollGenerator 5) )
-
-                        _ ->
-                            let
-                                -- pull the wilds from the roll
-                                ( cup, wilds ) =
-                                    List.partition (\d -> d /= Wilds) model.roll
-                            in
-                            if List.length cup /= 0 then
-                                -- add pulled wilds to the tableWilds count, create new roll with remaining cup
-                                ( { model | tableWilds = List.length wilds + model.tableWilds }
-                                , Random.generate (Dice << NewRoll) (Try.rollGenerator (List.length cup))
-                                )
-
-                            else
-                                ( model
-                                , Random.generate (Dice << NewRoll) (Try.rollGenerator (List.length model.roll))
-                                )
-
-                NewRoll roll ->
-                    ( { model | roll = roll, turnStatus = Rolled }
-                    , Cmd.none
-                    )
-
         -- view state messages
         ViewState subMsg ->
             case subMsg of
@@ -222,8 +197,43 @@ update msg model =
                     ( { model | consoleIsVisible = bool }, Cmd.none )
 
         -- game event messages
-        GameEvent subMsg ->
+        GameAction subMsg ->
             case subMsg of
+                Roll rollType ->
+                    case rollType of
+                        -- this message only should come in from runtime
+                        NewRoll roll ->
+                            ( { model | roll = roll, rollState = Rolled }
+                            , Cmd.none
+                            )
+
+                        ReRoll ->
+                            case model.rollState of
+                                Pulled _ ->
+                                    -- reset
+                                    ( { model | tableWilds = 0 }, Random.generate (GameAction << Roll << NewRoll) (Try.rollGenerator 5) )
+
+                                Fresh ->
+                                    -- reset
+                                    ( { model | tableWilds = 0 }, Random.generate (GameAction << Roll << NewRoll) (Try.rollGenerator 5) )
+
+                                _ ->
+                                    let
+                                        -- pull the wilds from the roll
+                                        ( cup, wilds ) =
+                                            List.partition (\d -> d /= Wilds) model.roll
+                                    in
+                                    if List.length cup /= 0 then
+                                        -- add pulled wilds to the tableWilds count, create new roll with remaining cup
+                                        ( { model | tableWilds = List.length wilds + model.tableWilds }
+                                        , Random.generate (GameAction << Roll << NewRoll) (Try.rollGenerator (List.length cup))
+                                        )
+
+                                    else
+                                        ( model
+                                        , Random.generate (GameAction << Roll << NewRoll) (Try.rollGenerator (List.length model.roll))
+                                        )
+
                 Pull ->
                     -- check that the roll satisfied the required Try level
                     let
@@ -231,10 +241,18 @@ update msg model =
                             Try.assessRoll (model.roll ++ List.repeat model.tableWilds Wilds)
 
                         passedTry =
-                            Try.getLastTry model.tryHistory
+                            model.tryToBeat
+
+                        compare : Try -> Try -> PullResult
+                        compare toBeat passed =
+                            if (Try.toScore toBeat |> Maybe.withDefault 1) >= (Try.toScore passed |> Maybe.withDefault 1) then
+                                HadIt
+
+                            else
+                                Lie
 
                         pullResult =
-                            Try.compare currentRollTry passedTry
+                            compare currentRollTry passedTry
                     in
                     case pullResult of
                         HadIt ->
@@ -257,7 +275,7 @@ update msg model =
                                 newWhosTurn =
                                     Maybe.withDefault 0 (Deque.first activePlayers)
                             in
-                            ( { model | cupState = Uncovered, turnStatus = Pulled HadIt, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers, whosTurn = newWhosTurn }
+                            ( { model | cupState = Uncovered, rollState = Pulled HadIt, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers, whosTurn = newWhosTurn }
                             , Cmd.none
                             )
 
@@ -282,7 +300,7 @@ update msg model =
                                     else
                                         Player.ko hitPlayer.id model.activePlayers
                             in
-                            ( { model | cupState = Uncovered, turnStatus = Pulled Lie, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers }
+                            ( { model | cupState = Uncovered, rollState = Pulled Lie, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers }
                             , Cmd.none
                             )
 
@@ -309,7 +327,7 @@ update msg model =
                                 , value = Tuple.second nextPassableTry
                                 , cupState = Covered
                                 , cupLooked = False
-                                , turnStatus = Pending
+                                , rollState = Received
                               }
                             , Cmd.none
                             )
@@ -317,10 +335,10 @@ update msg model =
                         -- The last try passed was as high as you can possibly roll this means we must force a Pull message,
                         -- evaluate the roll and determine if the passer or the receiver gets a fold.
                         Nothing ->
-                            update (GameEvent Pull) model
+                            update (GameAction Pull) model
 
                 Look ->
-                    ( { model | cupState = Uncovered, cupLooked = True, turnStatus = Looked }
+                    ( { model | cupState = Uncovered, cupLooked = True, rollState = Looked }
                     , Cmd.none
                     )
 
@@ -328,38 +346,55 @@ update msg model =
             -- validate command
             -- add to history log
             let
-                tag =
-                    String.left 2 submittedCommand
-
                 modelWithNewEntry entry =
                     { model | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" }
 
                 focusCmd =
                     Task.attempt (\_ -> NoOp) (Dom.focus "console")
 
-                log =
-                    Debug.log "model" model.consoleHistory
+                _ =
+                    Debug.log "console log" model
             in
-            case tag of
-                "/c" ->
-                    ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 submittedCommand ], focusCmd )
+            case String.words submittedCommand of
+                x :: xs ->
+                    case x of
+                        "/c" ->
+                            ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 submittedCommand ], focusCmd )
 
-                _ ->
-                    case submittedCommand of
-                        -- todo: create cleaner function for batching in a focus command
+                        -- todo: create cleaner function for batching in a focus command - mapSecond isn't very intuitive
                         "roll" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (Dice RollClick) (modelWithNewEntry [ submittedCommand ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameAction (Roll ReRoll)) (modelWithNewEntry [ submittedCommand ]))
 
                         "look" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent Look) (modelWithNewEntry [ submittedCommand ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameAction Look) (modelWithNewEntry [ submittedCommand ]))
 
                         "pull" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent Pull) (modelWithNewEntry [ submittedCommand ]))
+                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameAction Pull) (modelWithNewEntry [ submittedCommand ]))
 
                         "pass" ->
-                            -- todo: this will have additional payload with q and v, check those against the minimum and return minumum if they are too low
-                            -- todo: probably should validate this in the pass Msg and allow whatever since we maybe shouldn't rely on selects anyway
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameEvent (Pass ( model.quantity, model.value ))) (modelWithNewEntry [ submittedCommand ]))
+                            let
+                                parsedTry =
+                                    case List.filterMap String.toInt xs of
+                                        a :: b :: _ ->
+                                            Try.encode ( a, b ) |> Result.fromMaybe "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
+
+                                        [ _ ] ->
+                                            Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
+
+                                        [] ->
+                                            Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
+
+                                -- _ =
+                                --     parsedTry |> Debug.todo "A default somewhere is causing a pull when passed a bad Try"
+                            in
+                            case parsedTry of
+                                Ok try ->
+                                    Tuple.mapSecond
+                                        (\cmd -> Cmd.batch [ cmd, focusCmd ])
+                                        (update (GameAction (Pass try)) (modelWithNewEntry [ submittedCommand ]))
+
+                                Err message ->
+                                    ( modelWithNewEntry [ submittedCommand, message ], focusCmd )
 
                         "try" ->
                             ( modelWithNewEntry
@@ -385,17 +420,17 @@ update msg model =
                                 [ submittedCommand
                                 , """This console can be used to control your game via commands or chat with other players.
 
-                                `roll` -> trigger a roll or reroll
-                                `look` -> look at a passed roll
-                                `pull` -> pull a passed roll
-                                `pass` -> pass a roll
-                                `clear` -> clear the console
-                                `try` -> print the current try to beat, passed by the previous player
+                                    `roll` -> trigger a roll or reroll
+                                    `look` -> look at a passed roll
+                                    `pull` -> pull a passed roll
+                                    `pass` -> pass a roll
+                                    `clear` -> clear the console
+                                    `try` -> print the current try to beat, passed by the previous player
 
-                                Prefixing your message with a tag enables special actions.
+                                    Prefixing your message with a tag enables special actions.
 
-                                `/c *your message*` -> add a message to game chat
-                                """
+                                    `/c *your message*` -> add a message to game chat
+                                    """
                                 ]
                             , focusCmd
                             )
@@ -405,6 +440,9 @@ update msg model =
 
                         _ ->
                             ( modelWithNewEntry [ submittedCommand, "Command not recognized." ], focusCmd )
+
+                _ ->
+                    ( model, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )
@@ -457,8 +495,8 @@ view model =
 
         cupButtons =
             [ div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
-                [ button_ [ onClick (GameEvent Pull) ] [ text "pull" ]
-                , button_ [ onClick (GameEvent Look) ] [ text "look" ]
+                [ button_ [ onClick (GameAction Pull) ] [ text "pull" ]
+                , button_ [ onClick (GameAction Look) ] [ text "look" ]
                 ]
             ]
 
@@ -474,15 +512,15 @@ view model =
                 []
 
         rollButtons =
-            case model.turnStatus of
+            case model.rollState of
                 Fresh ->
-                    [ div [] [ button_ [ onClick (Dice RollClick) ] [ text "roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameAction (Roll ReRoll)) ] [ text "roll" ] ] ]
 
                 Pulled _ ->
-                    [ div [] [ button_ [ onClick (Dice RollClick) ] [ text "roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameAction (Roll ReRoll)) ] [ text "roll" ] ] ]
 
                 Looked ->
-                    [ div [] [ button_ [ onClick (Dice RollClick) ] [ text "re-roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameAction (Roll ReRoll)) ] [ text "re-roll" ] ] ]
 
                 _ ->
                     []
@@ -497,7 +535,8 @@ view model =
                         |> List.map
                             (\log ->
                                 div []
-                                    [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ] [ text ">", div [ css [ Tw.whitespace_pre_line ] ] [ text log ] ] ]
+                                    -- todo: this needs to be a component with below?
+                                    [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_start ] ] [ text ">", div [ css [ Tw.whitespace_pre_line ] ] [ text log ] ] ]
                             )
             in
             label
@@ -515,7 +554,8 @@ view model =
                     ]
                 ]
                 (history
-                    ++ [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_center ] ]
+                    ++ [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_start ] ]
+                            -- todo: ^^ here
                             [ text ">"
                             , input
                                 [ type_ "text"
@@ -540,7 +580,7 @@ view model =
         , div [ class "main" ]
             -- main wrapper
             (if not gameIsOver then
-                case model.turnStatus of
+                case model.rollState of
                     Fresh ->
                         [ logo
                         , playerStats
@@ -558,7 +598,7 @@ view model =
                         , console
                         ]
 
-                    Pending ->
+                    Received ->
                         [ logo
                         , playerStats
                         , tryHistory
@@ -673,7 +713,7 @@ stats_ =
         ]
 
 
-viewCup : Roll -> List (Html Msg)
+viewCup : Cup -> List (Html Msg)
 viewCup =
     List.map Face.view
 
@@ -688,10 +728,10 @@ viewPassTry quantity val tryToBeat =
             Try.availTrySelectOpts tryToBeat quantity
 
         changeQuantity =
-            (ViewState << ChangeQuantity) << Try.encodeQuantity << Maybe.withDefault 1 << String.toInt
+            (ViewState << ChangeQuantity) << Maybe.withDefault Two << Try.encodeQuantity << Maybe.withDefault 1 << String.toInt
 
         changeValue =
-            (ViewState << ChangeValue) << Try.encodeFace << Maybe.withDefault 2 << String.toInt
+            (ViewState << ChangeValue) << Maybe.withDefault Twos << Try.encodeFace << Maybe.withDefault 2 << String.toInt
     in
     div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
         [ div []
@@ -702,7 +742,7 @@ viewPassTry quantity val tryToBeat =
             [ label [ for "value" ] [ text "Value" ]
             , select_ [ onInput changeValue, id "value" ] values
             ]
-        , button_ [ css [ Tw.col_span_2 ], onClick ((GameEvent << Pass) ( quantity, val )) ] [ text "pass" ]
+        , button_ [ css [ Tw.col_span_2 ], onClick ((GameAction << Pass) ( quantity, val )) ] [ text "pass" ]
         ]
 
 

@@ -1,7 +1,7 @@
-module Try exposing (Face(..), PullResult(..), Quantity(..), Roll, Try, assessRoll, availTrySelectOpts, compare, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, eval, fromScore, getLastTry, getPassableTrys, mustPass, rollGenerator, toString, view)
+module Try exposing (Cup, Face(..), Quantity(..), Try, assessRoll, availTrySelectOpts, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, fromScore, getLastTry, mustPass, rollGenerator, toScore, toString, view)
 
 import Dict exposing (Dict)
-import Dict.Extra as DictExtra exposing (groupBy)
+import Dict.Extra exposing (groupBy)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (value)
 import List.Extra exposing (frequencies)
@@ -14,15 +14,8 @@ import Tuple3
 -- TYPES
 
 
-type alias Roll =
+type alias Cup =
     List Face
-
-
-type
-    PullResult
-    -- todo: I don't like this type, at least in this file. `compare` should return more generic type
-    = HadIt
-    | Lie
 
 
 type alias Try =
@@ -97,9 +90,9 @@ dictionary =
 
 {-| Convert a Try to a Try score.
 -}
-eval : Try -> Int
-eval try =
-    Maybe.withDefault 1 (Dict.get (decode try) dictionary)
+toScore : Try -> Maybe Int
+toScore try =
+    Dict.get (decode try) dictionary
 
 
 {-| Convert a Try score to a Try.
@@ -109,16 +102,23 @@ fromScore score =
     dictionary
         |> Dict.filter (\_ v -> v == score)
         |> Dict.keys
-        |> List.head
+        -- todo: is this really how we want to assess an invalid try?
         |> Maybe.withDefault ( 2, 2 )
-        |> encode
+        << List.head
+        |> Maybe.withDefault ( Two, Twos )
+        << encode
 
 
 {-| Convert a Tuple of Int representing Try values to a Try.
 -}
-encode : ( Int, Int ) -> Try
+encode : ( Int, Int ) -> Maybe Try
 encode tup =
-    ( encodeQuantity (Tuple.first tup), encodeFace (Tuple.second tup) )
+    Maybe.andThen
+        (\quantity ->
+            Maybe.map (\face -> ( quantity, face ))
+                (encodeFace (Tuple.second tup))
+        )
+        (encodeQuantity (Tuple.first tup))
 
 
 {-| Convert a Try to a Int representing Try values.
@@ -137,40 +137,30 @@ toString =
         >> (\( q, v ) -> q ++ " " ++ v)
 
 
-{-| Takes two Try's, and determines if second Try is better or worse than the first.
--}
-compare : Try -> Try -> PullResult
-compare toBeat passedTry =
-    if eval toBeat >= eval passedTry then
-        HadIt
-
-    else
-        Lie
-
-
-encodeFace : Int -> Face
+encodeFace : Int -> Maybe Face
 encodeFace die =
     case die of
         1 ->
-            Wilds
+            Just Wilds
 
         2 ->
-            Twos
+            Just Twos
 
         3 ->
-            Threes
+            Just Threes
 
         4 ->
-            Fours
+            Just Fours
 
         5 ->
-            Fives
+            Just Fives
 
         6 ->
-            Sixes
+            Just Sixes
 
+        -- todo: this is the root of my eval issue. Default encoding to Two Twos will result in the potential that mustTry breaks the restriction of received try
         _ ->
-            Twos
+            Nothing
 
 
 decodeFace : Face -> Int
@@ -195,26 +185,26 @@ decodeFace die =
             6
 
 
-encodeQuantity : Int -> Quantity
+encodeQuantity : Int -> Maybe Quantity
 encodeQuantity quant =
     case quant of
         1 ->
-            One
+            Just One
 
         2 ->
-            Two
+            Just Two
 
         3 ->
-            Three
+            Just Three
 
         4 ->
-            Four
+            Just Four
 
         5 ->
-            Five
+            Just Five
 
         _ ->
-            Two
+            Nothing
 
 
 decodeQuantity : Quantity -> Int
@@ -245,7 +235,7 @@ decodeQuantity dieQuantity =
   - Given a Roll, determine the highest Try value available
 
 -}
-assessRoll : Roll -> Try
+assessRoll : Cup -> Try
 assessRoll =
     let
         getBestOfAKind : List ( Int, Int ) -> Try
@@ -274,11 +264,13 @@ assessRoll =
                     |> List.sortBy Tuple.second
                     -- reverse the list so it's easy to grab the highest count with List.head
                     |> List.reverse
+                    -- todo: is this really how we want to assess an invalid try?
                     |> List.head
                     |> Maybe.withDefault ( 2, 2 )
                     |> Tuple2.swap
                     -- encode to a Try
                     |> encode
+                    |> Maybe.withDefault ( Two, Twos )
     in
     List.map decodeFace
         >> frequencies
@@ -307,21 +299,21 @@ mustPass : Try -> Maybe Try
 mustPass receivedTry =
     let
         receivedTryVal =
-            eval receivedTry
+            case toScore receivedTry of
+                Just value ->
+                    value
+
+                Nothing ->
+                    1
 
         nextTry =
-            dictionary
-                |> Dict.toList
-                |> List.filter (\t -> Tuple.second t == (receivedTryVal + 1))
-                |> List.map Tuple.first
-                |> List.head
+            fromScore (receivedTryVal + 1)
     in
-    case nextTry of
-        Just tup ->
-            Just (encode tup)
+    if receivedTryVal + 1 == 20 then
+        Just nextTry
 
-        _ ->
-            Nothing
+    else
+        Nothing
 
 
 {-| Takes a Try and returns a Dictionary with a key of quantity, and value of a list of faces
@@ -330,13 +322,18 @@ getPassableTrys : Try -> Dict Int (List Int)
 getPassableTrys try =
     let
         tryValue =
-            eval try
+            case toScore try of
+                Just value ->
+                    value
+
+                Nothing ->
+                    1
 
         betterTrys =
             Dict.keys (Dict.filter (\_ v -> v > tryValue) dictionary)
 
         groupedTrys =
-            DictExtra.groupBy Tuple.first betterTrys
+            Dict.Extra.groupBy Tuple.first betterTrys
 
         groupedDict =
             groupedTrys
@@ -346,7 +343,7 @@ getPassableTrys try =
 
 
 {-| Takes a Try and a Quantity and returns a tuple of a list of Quantity HTML options and a list of Face HTML options
-todo: this is kinda dumb -> try and quantity? should decode Quantity from Try instead?
+-- todo: this is kinda dumb -> try and quantity? should decode Quantity from Try instead?
 -}
 availTrySelectOpts : Try -> Quantity -> ( List (Html msg1), List (Html msg) )
 availTrySelectOpts try quantity =
