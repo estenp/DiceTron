@@ -7390,24 +7390,24 @@ var $author$project$Main$update = F2(
 								}
 							}
 						case 'Pull':
-							var passedTry = model.tryToBeat;
-							var currentRollTry = $author$project$Try$assessRoll(
-								_Utils_ap(
-									model.roll,
-									A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
-							var compare = F2(
-								function (toBeat, passed) {
+							var validateReceivedTry = F2(
+								function (mustBeat, received) {
 									return (_Utils_cmp(
 										A2(
 											$elm$core$Maybe$withDefault,
 											1,
-											$author$project$Try$toScore(toBeat)),
+											$author$project$Try$toScore(mustBeat)),
 										A2(
 											$elm$core$Maybe$withDefault,
 											1,
-											$author$project$Try$toScore(passed))) > -1) ? $author$project$Main$HadIt : $author$project$Main$Lie;
+											$author$project$Try$toScore(received))) > -1) ? $author$project$Main$HadIt : $author$project$Main$Lie;
 								});
-							var pullResult = A2(compare, currentRollTry, passedTry);
+							var receivedTry = model.tryToBeat;
+							var bestTryInCup = $author$project$Try$assessRoll(
+								_Utils_ap(
+									model.roll,
+									A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
+							var pullResult = A2(validateReceivedTry, bestTryInCup, receivedTry);
 							if (pullResult.$ === 'HadIt') {
 								var hitPlayer = A2($author$project$Player$hit, model.players, model.whosTurn);
 								var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
@@ -7510,6 +7510,21 @@ var $author$project$Main$update = F2(
 							return $author$project$Main$NoOp;
 						},
 						$elm$browser$Browser$Dom$focus('console'));
+					var appendFocusCmd = function (cmd) {
+						return A2(
+							$elm$core$Tuple$mapSecond,
+							function (c) {
+								return $elm$core$Platform$Cmd$batch(
+									_List_fromArray(
+										[c, focusCmd]));
+							},
+							A2(
+								$author$project$Main$update,
+								cmd,
+								modelWithNewEntry(
+									_List_fromArray(
+										[submittedCommand]))));
+					};
 					var _v9 = A2($elm$core$Debug$log, 'console log', model);
 					var _v10 = $elm$core$String$words(submittedCommand);
 					if (_v10.b) {
@@ -7525,48 +7540,15 @@ var $author$project$Main$update = F2(
 											])),
 									focusCmd);
 							case 'roll':
-								return A2(
-									$elm$core$Tuple$mapSecond,
-									function (cmd) {
-										return $elm$core$Platform$Cmd$batch(
-											_List_fromArray(
-												[cmd, focusCmd]));
-									},
-									A2(
-										$author$project$Main$update,
-										$author$project$Main$GameAction(
-											$author$project$Main$Roll($author$project$Main$ReRoll)),
-										modelWithNewEntry(
-											_List_fromArray(
-												[submittedCommand]))));
+								return appendFocusCmd(
+									$author$project$Main$GameAction(
+										$author$project$Main$Roll($author$project$Main$ReRoll)));
 							case 'look':
-								return A2(
-									$elm$core$Tuple$mapSecond,
-									function (cmd) {
-										return $elm$core$Platform$Cmd$batch(
-											_List_fromArray(
-												[cmd, focusCmd]));
-									},
-									A2(
-										$author$project$Main$update,
-										$author$project$Main$GameAction($author$project$Main$Look),
-										modelWithNewEntry(
-											_List_fromArray(
-												[submittedCommand]))));
+								return appendFocusCmd(
+									$author$project$Main$GameAction($author$project$Main$Look));
 							case 'pull':
-								return A2(
-									$elm$core$Tuple$mapSecond,
-									function (cmd) {
-										return $elm$core$Platform$Cmd$batch(
-											_List_fromArray(
-												[cmd, focusCmd]));
-									},
-									A2(
-										$author$project$Main$update,
-										$author$project$Main$GameAction($author$project$Main$Pull),
-										modelWithNewEntry(
-											_List_fromArray(
-												[submittedCommand]))));
+								return appendFocusCmd(
+									$author$project$Main$GameAction($author$project$Main$Pull));
 							case 'pass':
 								var parsedTry = function () {
 									var _v13 = A2($elm$core$List$filterMap, $elm$core$String$toInt, xs);
@@ -7589,20 +7571,9 @@ var $author$project$Main$update = F2(
 								}();
 								if (parsedTry.$ === 'Ok') {
 									var _try = parsedTry.a;
-									return A2(
-										$elm$core$Tuple$mapSecond,
-										function (cmd) {
-											return $elm$core$Platform$Cmd$batch(
-												_List_fromArray(
-													[cmd, focusCmd]));
-										},
-										A2(
-											$author$project$Main$update,
-											$author$project$Main$GameAction(
-												$author$project$Main$Pass(_try)),
-											modelWithNewEntry(
-												_List_fromArray(
-													[submittedCommand]))));
+									return appendFocusCmd(
+										$author$project$Main$GameAction(
+											$author$project$Main$Pass(_try)));
 								} else {
 									var message = parsedTry.a;
 									return _Utils_Tuple2(

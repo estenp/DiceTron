@@ -14,6 +14,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
 import Html.Styled.Events exposing (..)
 import Json.Decode as Decode
+import List exposing (append)
 import Player exposing (ActivePlayers, PlayerId, Players)
 import Random
 import StyledElements exposing (..)
@@ -353,6 +354,10 @@ update msg model =
                 focusCmd =
                     Task.attempt (\_ -> NoOp) (Dom.focus "console")
 
+                appendFocusCmd cmd =
+                    update cmd (modelWithNewEntry [ submittedCommand ])
+                        |> Tuple.mapSecond (\c -> Cmd.batch [ c, focusCmd ])
+
                 _ =
                     Debug.log "console log" model
             in
@@ -364,13 +369,13 @@ update msg model =
 
                         -- todo: create cleaner function for batching in a focus command - mapSecond isn't very intuitive
                         "roll" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameAction (Roll ReRoll)) (modelWithNewEntry [ submittedCommand ]))
+                            GameAction (Roll ReRoll) |> appendFocusCmd
 
                         "look" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameAction Look) (modelWithNewEntry [ submittedCommand ]))
+                            GameAction Look |> appendFocusCmd
 
                         "pull" ->
-                            Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameAction Pull) (modelWithNewEntry [ submittedCommand ]))
+                            GameAction Pull |> appendFocusCmd
 
                         "pass" ->
                             let
@@ -390,9 +395,7 @@ update msg model =
                             in
                             case parsedTry of
                                 Ok try ->
-                                    Tuple.mapSecond
-                                        (\cmd -> Cmd.batch [ cmd, focusCmd ])
-                                        (update (GameAction (Pass try)) (modelWithNewEntry [ submittedCommand ]))
+                                    GameAction (Pass try) |> appendFocusCmd
 
                                 Err message ->
                                     ( modelWithNewEntry [ submittedCommand, message ], focusCmd )
