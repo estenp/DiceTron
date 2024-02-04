@@ -5247,8 +5247,8 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Covered = {$: 'Covered'};
-var $author$project$Main$Fresh = {$: 'Fresh'};
+var $author$project$Model$Covered = {$: 'Covered'};
+var $author$project$Model$Fresh = {$: 'Fresh'};
 var $author$project$Try$Threes = {$: 'Threes'};
 var $author$project$Try$Two = {$: 'Two'};
 var $author$project$Try$Twos = {$: 'Twos'};
@@ -5572,7 +5572,7 @@ var $elm$core$Dict$fromList = function (assocs) {
 		$elm$core$Dict$empty,
 		assocs);
 };
-var $author$project$Main$my_players = $elm$core$Dict$fromList(
+var $author$project$Data$my_players = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
 			_Utils_Tuple2(
@@ -5591,16 +5591,16 @@ var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
 		{
 			activePlayers: $folkertdev$elm_deque$Deque$fromList(
-				$elm$core$Dict$keys($author$project$Main$my_players)),
+				$elm$core$Dict$keys($author$project$Data$my_players)),
 			consoleHistory: _List_Nil,
 			consoleIsVisible: false,
 			consoleValue: '',
 			cupLooked: false,
-			cupState: $author$project$Main$Covered,
-			players: $author$project$Main$my_players,
+			cupState: $author$project$Model$Covered,
+			players: $author$project$Data$my_players,
 			quantity: $author$project$Try$Two,
 			roll: _List_Nil,
-			rollState: $author$project$Main$Fresh,
+			rollState: $author$project$Model$Fresh,
 			tableWilds: 0,
 			tryHistory: _List_Nil,
 			tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
@@ -6392,10 +6392,10 @@ var $rtfeldman$elm_css$Html$Styled$toUnstyled = $rtfeldman$elm_css$VirtualDom$St
 var $author$project$Main$GameAction = function (a) {
 	return {$: 'GameAction', a: a};
 };
-var $author$project$Main$HadIt = {$: 'HadIt'};
-var $author$project$Main$Lie = {$: 'Lie'};
+var $author$project$Model$HadIt = {$: 'HadIt'};
+var $author$project$Model$Lie = {$: 'Lie'};
 var $author$project$Main$Look = {$: 'Look'};
-var $author$project$Main$Looked = {$: 'Looked'};
+var $author$project$Model$Looked = {$: 'Looked'};
 var $author$project$Main$NewRoll = function (a) {
 	return {$: 'NewRoll', a: a};
 };
@@ -6404,16 +6404,16 @@ var $author$project$Main$Pass = function (a) {
 	return {$: 'Pass', a: a};
 };
 var $author$project$Main$Pull = {$: 'Pull'};
-var $author$project$Main$Pulled = function (a) {
+var $author$project$Model$Pulled = function (a) {
 	return {$: 'Pulled', a: a};
 };
 var $author$project$Main$ReRoll = {$: 'ReRoll'};
-var $author$project$Main$Received = {$: 'Received'};
+var $author$project$Model$Received = {$: 'Received'};
 var $author$project$Main$Roll = function (a) {
 	return {$: 'Roll', a: a};
 };
-var $author$project$Main$Rolled = {$: 'Rolled'};
-var $author$project$Main$Uncovered = {$: 'Uncovered'};
+var $author$project$Model$Rolled = {$: 'Rolled'};
+var $author$project$Model$Uncovered = {$: 'Uncovered'};
 var $author$project$Try$Wilds = {$: 'Wilds'};
 var $elm$core$List$append = F2(
 	function (xs, ys) {
@@ -7326,7 +7326,7 @@ var $author$project$Main$update = F2(
 								return _Utils_Tuple2(
 									_Utils_update(
 										model,
-										{roll: roll, rollState: $author$project$Main$Rolled}),
+										{roll: roll, rollState: $author$project$Model$Rolled}),
 									$elm$core$Platform$Cmd$none);
 							} else {
 								var _v4 = model.rollState;
@@ -7400,7 +7400,7 @@ var $author$project$Main$update = F2(
 										A2(
 											$elm$core$Maybe$withDefault,
 											1,
-											$author$project$Try$toScore(received))) > -1) ? $author$project$Main$HadIt : $author$project$Main$Lie;
+											$author$project$Try$toScore(received))) > -1) ? $author$project$Model$HadIt : $author$project$Model$Lie;
 								});
 							var receivedTry = model.tryToBeat;
 							var bestTryInCup = $author$project$Try$assessRoll(
@@ -7421,10 +7421,10 @@ var $author$project$Main$update = F2(
 										model,
 										{
 											activePlayers: activePlayers,
-											cupState: $author$project$Main$Uncovered,
+											cupState: $author$project$Model$Uncovered,
 											players: players,
 											quantity: $author$project$Try$Two,
-											rollState: $author$project$Main$Pulled($author$project$Main$HadIt),
+											rollState: $author$project$Model$Pulled($author$project$Model$HadIt),
 											tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
 											value: $author$project$Try$Twos,
 											whosTurn: newWhosTurn
@@ -7443,10 +7443,10 @@ var $author$project$Main$update = F2(
 										model,
 										{
 											activePlayers: activePlayers,
-											cupState: $author$project$Main$Uncovered,
+											cupState: $author$project$Model$Uncovered,
 											players: players,
 											quantity: $author$project$Try$Two,
-											rollState: $author$project$Main$Pulled($author$project$Main$Lie),
+											rollState: $author$project$Model$Pulled($author$project$Model$Lie),
 											tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
 											value: $author$project$Try$Twos
 										}),
@@ -7471,9 +7471,9 @@ var $author$project$Main$update = F2(
 										{
 											activePlayers: newActivePlayers,
 											cupLooked: false,
-											cupState: $author$project$Main$Covered,
+											cupState: $author$project$Model$Covered,
 											quantity: nextPassableTry.a,
-											rollState: $author$project$Main$Received,
+											rollState: $author$project$Model$Received,
 											tryHistory: A2($author$project$Main$appendHistory, model, _try),
 											tryToBeat: _try,
 											value: nextPassableTry.b,
@@ -7491,7 +7491,7 @@ var $author$project$Main$update = F2(
 							return _Utils_Tuple2(
 								_Utils_update(
 									model,
-									{cupLooked: true, cupState: $author$project$Main$Uncovered, rollState: $author$project$Main$Looked}),
+									{cupLooked: true, cupState: $author$project$Model$Uncovered, rollState: $author$project$Model$Looked}),
 								$elm$core$Platform$Cmd$none);
 					}
 				case 'SubmitConsole':

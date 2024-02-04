@@ -7,6 +7,7 @@ import Browser.Dom as Dom
 import Css exposing (..)
 import Css.Animations exposing (..)
 import Css.Global exposing (global)
+import Data
 import Deque
 import Dict exposing (..)
 import Face exposing (view)
@@ -14,8 +15,9 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
 import Html.Styled.Events exposing (..)
 import Json.Decode as Decode
-import List exposing (append)
-import Player exposing (ActivePlayers, PlayerId, Players)
+import List
+import Model exposing (..)
+import Player
 import Random
 import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
@@ -23,93 +25,6 @@ import Tailwind.Utilities as Tw
 import Task
 import Try exposing (Cup, Face(..), Quantity(..), Try)
 import Tuple3
-
-
-
--- CONSTANTS, DUMMY DATA
-
-
-my_players : Players
-my_players =
-    Dict.fromList
-        [ ( 1
-          , { id = 1
-            , name = "Rick"
-            , hp = 1
-            , maxHp = 5
-            }
-          )
-        , ( 2
-          , { id = 2
-            , name = "Pat"
-            , hp = 5
-            , maxHp = 5
-            }
-          )
-        , ( 3
-          , { id = 3
-            , name = "Esten"
-            , hp = 5
-            , maxHp = 5
-            }
-          )
-        ]
-
-
-
--- MODEL
--- Form
-
-
-type CupState
-    = Covered
-    | Uncovered
-
-
-type RollState
-    = Fresh
-    | Received
-    | Looked
-    | Rolled
-    | Pulled PullResult
-
-
-type PullResult
-    = HadIt
-    | Lie
-
-
-type alias History =
-    List
-        { playerId : PlayerId
-        }
-
-
-type alias Model =
-    { -- dice state
-      -- the current
-      roll : Cup
-
-    -- view state
-    , quantity : Quantity
-    , value : Face
-    , tableWilds : Int
-    , tryHistory : List ( Try, Int, String )
-    , tryToBeat : Try
-    , consoleHistory : List String
-    , consoleValue : String
-    , consoleIsVisible : Bool
-
-    -- game state
-    , cupState : CupState
-    , cupLooked : Bool
-    , rollState : RollState
-    , whosTurn : Int -- index of activePlayers
-
-    -- player state
-    , players : Players
-    , activePlayers : ActivePlayers
-    }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -127,8 +42,8 @@ init _ =
       , consoleValue = ""
       , consoleIsVisible = False
       , whosTurn = 1
-      , players = my_players
-      , activePlayers = my_players |> Dict.keys |> Deque.fromList
+      , players = Data.my_players
+      , activePlayers = Data.my_players |> Dict.keys |> Deque.fromList
       }
     , Cmd.none
     )
