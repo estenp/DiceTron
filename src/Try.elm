@@ -309,7 +309,7 @@ mustPass receivedTry =
         nextTry =
             fromScore (receivedTryVal + 1)
     in
-    if receivedTryVal + 1 == 20 then
+    if receivedTryVal + 1 <= 20 then
         Just nextTry
 
     else
