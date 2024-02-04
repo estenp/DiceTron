@@ -6392,88 +6392,35 @@ var $rtfeldman$elm_css$Html$Styled$toUnstyled = $rtfeldman$elm_css$VirtualDom$St
 var $author$project$Main$GameAction = function (a) {
 	return {$: 'GameAction', a: a};
 };
-var $author$project$Model$HadIt = {$: 'HadIt'};
-var $author$project$Model$Lie = {$: 'Lie'};
-var $author$project$Main$Look = {$: 'Look'};
-var $author$project$Model$Looked = {$: 'Looked'};
-var $author$project$Main$NewRoll = function (a) {
-	return {$: 'NewRoll', a: a};
-};
+var $author$project$Action$Look = {$: 'Look'};
 var $author$project$Main$NoOp = {$: 'NoOp'};
-var $author$project$Main$Pass = function (a) {
+var $author$project$Action$Pass = function (a) {
 	return {$: 'Pass', a: a};
 };
-var $author$project$Main$Pull = {$: 'Pull'};
-var $author$project$Model$Pulled = function (a) {
-	return {$: 'Pulled', a: a};
-};
-var $author$project$Main$ReRoll = {$: 'ReRoll'};
-var $author$project$Model$Received = {$: 'Received'};
-var $author$project$Main$Roll = function (a) {
+var $author$project$Action$Pull = {$: 'Pull'};
+var $author$project$Action$ReRoll = {$: 'ReRoll'};
+var $author$project$Action$Roll = function (a) {
 	return {$: 'Roll', a: a};
 };
-var $author$project$Model$Rolled = {$: 'Rolled'};
-var $author$project$Model$Uncovered = {$: 'Uncovered'};
-var $author$project$Try$Wilds = {$: 'Wilds'};
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
+var $elm$core$Task$onError = _Scheduler_onError;
+var $elm$core$Task$attempt = F2(
+	function (resultToMessage, task) {
+		return $elm$core$Task$command(
+			$elm$core$Task$Perform(
+				A2(
+					$elm$core$Task$onError,
+					A2(
+						$elm$core$Basics$composeL,
+						A2($elm$core$Basics$composeL, $elm$core$Task$succeed, resultToMessage),
+						$elm$core$Result$Err),
+					A2(
+						$elm$core$Task$andThen,
+						A2(
+							$elm$core$Basics$composeL,
+							A2($elm$core$Basics$composeL, $elm$core$Task$succeed, resultToMessage),
+							$elm$core$Result$Ok),
+						task))));
 	});
-var $author$project$Player$default_player = {hp: 0, id: 0, maxHp: 0, name: 'DEFAULT'};
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Player$getPlayer = F2(
-	function (players, id) {
-		var maybe = A2($elm$core$Dict$get, id, players);
-		return A2($elm$core$Maybe$withDefault, $author$project$Player$default_player, maybe);
-	});
-var $author$project$Player$health = F2(
-	function (playerId, players) {
-		var player = A2($author$project$Player$getPlayer, players, playerId);
-		return '(' + ($elm$core$String$fromInt(player.hp) + ('/' + ($elm$core$String$fromInt(player.maxHp) + ')')));
-	});
-var $author$project$Main$appendHistory = F2(
-	function (model, _try) {
-		return A2(
-			$elm$core$List$append,
-			model.tryHistory,
-			_List_fromArray(
-				[
-					_Utils_Tuple3(
-					_try,
-					model.whosTurn,
-					A2($author$project$Player$health, model.whosTurn, model.players))
-				]));
-	});
-var $author$project$Try$Five = {$: 'Five'};
-var $author$project$Try$Sixes = {$: 'Sixes'};
-var $author$project$Try$decodeFace = function (die) {
-	switch (die.$) {
-		case 'Wilds':
-			return 1;
-		case 'Twos':
-			return 2;
-		case 'Threes':
-			return 3;
-		case 'Fours':
-			return 4;
-		case 'Fives':
-			return 5;
-		default:
-			return 6;
-	}
-};
 var $elm$core$Maybe$andThen = F2(
 	function (callback, maybeValue) {
 		if (maybeValue.$ === 'Just') {
@@ -6485,6 +6432,8 @@ var $elm$core$Maybe$andThen = F2(
 	});
 var $author$project$Try$Fives = {$: 'Fives'};
 var $author$project$Try$Fours = {$: 'Fours'};
+var $author$project$Try$Sixes = {$: 'Sixes'};
+var $author$project$Try$Wilds = {$: 'Wilds'};
 var $author$project$Try$encodeFace = function (die) {
 	switch (die) {
 		case 1:
@@ -6503,6 +6452,7 @@ var $author$project$Try$encodeFace = function (die) {
 			return $elm$core$Maybe$Nothing;
 	}
 };
+var $author$project$Try$Five = {$: 'Five'};
 var $author$project$Try$Four = {$: 'Four'};
 var $author$project$Try$One = {$: 'One'};
 var $author$project$Try$Three = {$: 'Three'};
@@ -6549,155 +6499,6 @@ var $author$project$Try$encode = function (tup) {
 		},
 		$author$project$Try$encodeQuantity(tup.a));
 };
-var $elm_community$list_extra$List$Extra$groupWhile = F2(
-	function (isSameGroup, items) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					if (!acc.b) {
-						return _List_fromArray(
-							[
-								_Utils_Tuple2(x, _List_Nil)
-							]);
-					} else {
-						var _v1 = acc.a;
-						var y = _v1.a;
-						var restOfGroup = _v1.b;
-						var groups = acc.b;
-						return A2(isSameGroup, x, y) ? A2(
-							$elm$core$List$cons,
-							_Utils_Tuple2(
-								x,
-								A2($elm$core$List$cons, y, restOfGroup)),
-							groups) : A2(
-							$elm$core$List$cons,
-							_Utils_Tuple2(x, _List_Nil),
-							acc);
-					}
-				}),
-			_List_Nil,
-			items);
-	});
-var $elm_community$list_extra$List$Extra$group = $elm_community$list_extra$List$Extra$groupWhile($elm$core$Basics$eq);
-var $elm$core$List$sortBy = _List_sortBy;
-var $elm$core$List$sort = function (xs) {
-	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
-};
-var $elm_community$list_extra$List$Extra$frequencies = function (list) {
-	return A2(
-		$elm$core$List$map,
-		function (_v0) {
-			var x = _v0.a;
-			var y = _v0.b;
-			return _Utils_Tuple2(
-				x,
-				1 + $elm$core$List$length(y));
-		},
-		$elm_community$list_extra$List$Extra$group(
-			$elm$core$List$sort(list)));
-};
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $elm$core$Tuple$mapSecond = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			x,
-			func(y));
-	});
-var $elm$core$List$partition = F2(
-	function (pred, list) {
-		var step = F2(
-			function (x, _v0) {
-				var trues = _v0.a;
-				var falses = _v0.b;
-				return pred(x) ? _Utils_Tuple2(
-					A2($elm$core$List$cons, x, trues),
-					falses) : _Utils_Tuple2(
-					trues,
-					A2($elm$core$List$cons, x, falses));
-			});
-		return A3(
-			$elm$core$List$foldr,
-			step,
-			_Utils_Tuple2(_List_Nil, _List_Nil),
-			list);
-	});
-var $TSFoster$elm_tuple_extra$Tuple2$swap = function (_v0) {
-	var a = _v0.a;
-	var b = _v0.b;
-	return _Utils_Tuple2(b, a);
-};
-var $author$project$Try$assessRoll = function () {
-	var getBestOfAKind = function (frequncyList) {
-		var _v0 = A2(
-			$elm$core$List$partition,
-			function (_v1) {
-				var face = _v1.a;
-				return face === 1;
-			},
-			frequncyList);
-		var wilds = _v0.a;
-		var rest = _v0.b;
-		var wildCount = function () {
-			if (wilds.b) {
-				var _v3 = wilds.a;
-				var b = _v3.b;
-				return b;
-			} else {
-				return 0;
-			}
-		}();
-		var counts = A2(
-			$elm$core$List$map,
-			$elm$core$Tuple$mapSecond(
-				$elm$core$Basics$add(wildCount)),
-			rest);
-		return (wildCount === 5) ? _Utils_Tuple2($author$project$Try$Five, $author$project$Try$Sixes) : A2(
-			$elm$core$Maybe$withDefault,
-			_Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
-			$author$project$Try$encode(
-				$TSFoster$elm_tuple_extra$Tuple2$swap(
-					A2(
-						$elm$core$Maybe$withDefault,
-						_Utils_Tuple2(2, 2),
-						$elm$core$List$head(
-							$elm$core$List$reverse(
-								A2($elm$core$List$sortBy, $elm$core$Tuple$second, counts)))))));
-	};
-	return A2(
-		$elm$core$Basics$composeR,
-		$elm$core$List$map($author$project$Try$decodeFace),
-		A2($elm$core$Basics$composeR, $elm_community$list_extra$List$Extra$frequencies, getBestOfAKind));
-}();
-var $elm$core$Task$onError = _Scheduler_onError;
-var $elm$core$Task$attempt = F2(
-	function (resultToMessage, task) {
-		return $elm$core$Task$command(
-			$elm$core$Task$Perform(
-				A2(
-					$elm$core$Task$onError,
-					A2(
-						$elm$core$Basics$composeL,
-						A2($elm$core$Basics$composeL, $elm$core$Task$succeed, resultToMessage),
-						$elm$core$Result$Err),
-					A2(
-						$elm$core$Task$andThen,
-						A2(
-							$elm$core$Basics$composeL,
-							A2($elm$core$Basics$composeL, $elm$core$Task$succeed, resultToMessage),
-							$elm$core$Result$Ok),
-						task))));
-	});
 var $elm$core$List$maybeCons = F3(
 	function (f, mx, xs) {
 		var _v0 = f(mx);
@@ -6716,21 +6517,6 @@ var $elm$core$List$filterMap = F2(
 			_List_Nil,
 			xs);
 	});
-var $folkertdev$elm_deque$Internal$first = function (deque) {
-	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
-	if (((!_v0.a.b) && _v0.b.b) && (!_v0.b.b.b)) {
-		var _v1 = _v0.b;
-		var x = _v1.a;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$List$head(deque.front);
-	}
-};
-var $folkertdev$elm_deque$Deque$unwrap = function (_v0) {
-	var boundedDeque = _v0.a;
-	return boundedDeque;
-};
-var $folkertdev$elm_deque$Deque$first = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$first, $folkertdev$elm_deque$Deque$unwrap);
 var $elm$browser$Browser$Dom$focus = _Browser_call('focus');
 var $elm$core$Result$fromMaybe = F2(
 	function (err, maybe) {
@@ -6741,158 +6527,32 @@ var $elm$core$Result$fromMaybe = F2(
 			return $elm$core$Result$Err(err);
 		}
 	});
-var $elm$core$Basics$ge = _Utils_ge;
-var $elm$random$Random$Generate = function (a) {
-	return {$: 'Generate', a: a};
-};
-var $elm$random$Random$Seed = F2(
-	function (a, b) {
-		return {$: 'Seed', a: a, b: b};
-	});
-var $elm$random$Random$next = function (_v0) {
-	var state0 = _v0.a;
-	var incr = _v0.b;
-	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
-};
-var $elm$random$Random$initialSeed = function (x) {
-	var _v0 = $elm$random$Random$next(
-		A2($elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _v0.a;
-	var incr = _v0.b;
-	var state2 = (state1 + x) >>> 0;
-	return $elm$random$Random$next(
-		A2($elm$random$Random$Seed, state2, incr));
-};
-var $elm$time$Time$Name = function (a) {
-	return {$: 'Name', a: a};
-};
-var $elm$time$Time$Offset = function (a) {
-	return {$: 'Offset', a: a};
-};
-var $elm$time$Time$Zone = F2(
-	function (a, b) {
-		return {$: 'Zone', a: a, b: b};
-	});
-var $elm$time$Time$customZone = $elm$time$Time$Zone;
-var $elm$time$Time$Posix = function (a) {
-	return {$: 'Posix', a: a};
-};
-var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
-var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
-var $elm$time$Time$posixToMillis = function (_v0) {
-	var millis = _v0.a;
-	return millis;
-};
-var $elm$random$Random$init = A2(
-	$elm$core$Task$andThen,
-	function (time) {
-		return $elm$core$Task$succeed(
-			$elm$random$Random$initialSeed(
-				$elm$time$Time$posixToMillis(time)));
-	},
-	$elm$time$Time$now);
-var $elm$random$Random$step = F2(
-	function (_v0, seed) {
-		var generator = _v0.a;
-		return generator(seed);
-	});
-var $elm$random$Random$onEffects = F3(
-	function (router, commands, seed) {
-		if (!commands.b) {
-			return $elm$core$Task$succeed(seed);
-		} else {
-			var generator = commands.a.a;
-			var rest = commands.b;
-			var _v1 = A2($elm$random$Random$step, generator, seed);
-			var value = _v1.a;
-			var newSeed = _v1.b;
-			return A2(
-				$elm$core$Task$andThen,
-				function (_v2) {
-					return A3($elm$random$Random$onEffects, router, rest, newSeed);
-				},
-				A2($elm$core$Platform$sendToApp, router, value));
-		}
-	});
-var $elm$random$Random$onSelfMsg = F3(
-	function (_v0, _v1, seed) {
-		return $elm$core$Task$succeed(seed);
-	});
-var $elm$random$Random$Generator = function (a) {
-	return {$: 'Generator', a: a};
-};
-var $elm$random$Random$map = F2(
+var $elm$core$Debug$log = _Debug_log;
+var $elm$core$Platform$Cmd$map = _Platform_map;
+var $elm$core$Tuple$mapSecond = F2(
 	function (func, _v0) {
-		var genA = _v0.a;
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v1 = genA(seed0);
-				var a = _v1.a;
-				var seed1 = _v1.b;
-				return _Utils_Tuple2(
-					func(a),
-					seed1);
-			});
-	});
-var $elm$random$Random$cmdMap = F2(
-	function (func, _v0) {
-		var generator = _v0.a;
-		return $elm$random$Random$Generate(
-			A2($elm$random$Random$map, func, generator));
-	});
-_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
-var $elm$random$Random$command = _Platform_leaf('Random');
-var $elm$random$Random$generate = F2(
-	function (tagger, generator) {
-		return $elm$random$Random$command(
-			$elm$random$Random$Generate(
-				A2($elm$random$Random$map, tagger, generator)));
-	});
-var $author$project$Player$hit = F2(
-	function (players, id) {
-		var player = A2($author$project$Player$getPlayer, players, id);
-		return (player.hp > 0) ? _Utils_update(
-			player,
-			{hp: player.hp - 1}) : _Utils_update(
-			player,
-			{hp: 0});
-	});
-var $folkertdev$elm_deque$Deque$partition = F2(
-	function (p, _v0) {
-		var deque = _v0.a;
-		var _v1 = A2($elm$core$List$partition, p, deque.rear);
-		var l2 = _v1.a;
-		var r2 = _v1.b;
-		var _v2 = A2($elm$core$List$partition, p, deque.front);
-		var l1 = _v2.a;
-		var r1 = _v2.b;
+		var x = _v0.a;
+		var y = _v0.b;
 		return _Utils_Tuple2(
-			$folkertdev$elm_deque$Deque$fromList(
-				_Utils_ap(l1, l2)),
-			$folkertdev$elm_deque$Deque$fromList(
-				_Utils_ap(r1, r2)));
+			x,
+			func(y));
 	});
-var $author$project$Player$ko = F2(
-	function (id, activePlayers) {
-		return A2(
-			$folkertdev$elm_deque$Deque$partition,
-			function (activePlayer) {
-				return !_Utils_eq(activePlayer, id);
-			},
-			activePlayers).a;
-	});
-var $folkertdev$elm_deque$Internal$last = function (deque) {
-	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
-	if ((_v0.a.b && (!_v0.a.b.b)) && (!_v0.b.b)) {
-		var _v1 = _v0.a;
-		var x = _v1.a;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$List$head(deque.rear);
+var $author$project$Try$decodeFace = function (die) {
+	switch (die.$) {
+		case 'Wilds':
+			return 1;
+		case 'Twos':
+			return 2;
+		case 'Threes':
+			return 3;
+		case 'Fours':
+			return 4;
+		case 'Fives':
+			return 5;
+		default:
+			return 6;
 	}
 };
-var $folkertdev$elm_deque$Deque$last = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$last, $folkertdev$elm_deque$Deque$unwrap);
-var $elm$core$Debug$log = _Debug_log;
 var $author$project$Try$decodeQuantity = function (dieQuantity) {
 	switch (dieQuantity.$) {
 		case 'One':
@@ -7022,6 +6682,24 @@ var $elm$core$Dict$filter = F2(
 			$elm$core$Dict$empty,
 			dict);
 	});
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Try$fromScore = function (score) {
 	return A3(
 		$elm$core$Basics$composeL,
@@ -7066,6 +6744,335 @@ var $author$project$Try$mustPass = function (receivedTry) {
 	var nextTry = $author$project$Try$fromScore(receivedTryVal + 1);
 	return ((receivedTryVal + 1) === 20) ? $elm$core$Maybe$Just(nextTry) : $elm$core$Maybe$Nothing;
 };
+var $elm$core$Tuple$mapBoth = F3(
+	function (funcA, funcB, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			funcA(x),
+			funcB(y));
+	});
+var $author$project$Try$toString = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Try$decode,
+	A2(
+		$elm$core$Basics$composeR,
+		A2($elm$core$Tuple$mapBoth, $elm$core$String$fromInt, $elm$core$String$fromInt),
+		function (_v0) {
+			var q = _v0.a;
+			var v = _v0.b;
+			return q + (' ' + v);
+		}));
+var $author$project$Model$HadIt = {$: 'HadIt'};
+var $author$project$Model$Lie = {$: 'Lie'};
+var $author$project$Model$Looked = {$: 'Looked'};
+var $author$project$Action$NewRoll = function (a) {
+	return {$: 'NewRoll', a: a};
+};
+var $author$project$Model$Pulled = function (a) {
+	return {$: 'Pulled', a: a};
+};
+var $author$project$Model$Received = {$: 'Received'};
+var $author$project$Model$Rolled = {$: 'Rolled'};
+var $author$project$Model$Uncovered = {$: 'Uncovered'};
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm_community$list_extra$List$Extra$groupWhile = F2(
+	function (isSameGroup, items) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					if (!acc.b) {
+						return _List_fromArray(
+							[
+								_Utils_Tuple2(x, _List_Nil)
+							]);
+					} else {
+						var _v1 = acc.a;
+						var y = _v1.a;
+						var restOfGroup = _v1.b;
+						var groups = acc.b;
+						return A2(isSameGroup, x, y) ? A2(
+							$elm$core$List$cons,
+							_Utils_Tuple2(
+								x,
+								A2($elm$core$List$cons, y, restOfGroup)),
+							groups) : A2(
+							$elm$core$List$cons,
+							_Utils_Tuple2(x, _List_Nil),
+							acc);
+					}
+				}),
+			_List_Nil,
+			items);
+	});
+var $elm_community$list_extra$List$Extra$group = $elm_community$list_extra$List$Extra$groupWhile($elm$core$Basics$eq);
+var $elm$core$List$sortBy = _List_sortBy;
+var $elm$core$List$sort = function (xs) {
+	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
+};
+var $elm_community$list_extra$List$Extra$frequencies = function (list) {
+	return A2(
+		$elm$core$List$map,
+		function (_v0) {
+			var x = _v0.a;
+			var y = _v0.b;
+			return _Utils_Tuple2(
+				x,
+				1 + $elm$core$List$length(y));
+		},
+		$elm_community$list_extra$List$Extra$group(
+			$elm$core$List$sort(list)));
+};
+var $elm$core$List$partition = F2(
+	function (pred, list) {
+		var step = F2(
+			function (x, _v0) {
+				var trues = _v0.a;
+				var falses = _v0.b;
+				return pred(x) ? _Utils_Tuple2(
+					A2($elm$core$List$cons, x, trues),
+					falses) : _Utils_Tuple2(
+					trues,
+					A2($elm$core$List$cons, x, falses));
+			});
+		return A3(
+			$elm$core$List$foldr,
+			step,
+			_Utils_Tuple2(_List_Nil, _List_Nil),
+			list);
+	});
+var $TSFoster$elm_tuple_extra$Tuple2$swap = function (_v0) {
+	var a = _v0.a;
+	var b = _v0.b;
+	return _Utils_Tuple2(b, a);
+};
+var $author$project$Try$assessRoll = function () {
+	var getBestOfAKind = function (frequncyList) {
+		var _v0 = A2(
+			$elm$core$List$partition,
+			function (_v1) {
+				var face = _v1.a;
+				return face === 1;
+			},
+			frequncyList);
+		var wilds = _v0.a;
+		var rest = _v0.b;
+		var wildCount = function () {
+			if (wilds.b) {
+				var _v3 = wilds.a;
+				var b = _v3.b;
+				return b;
+			} else {
+				return 0;
+			}
+		}();
+		var counts = A2(
+			$elm$core$List$map,
+			$elm$core$Tuple$mapSecond(
+				$elm$core$Basics$add(wildCount)),
+			rest);
+		return (wildCount === 5) ? _Utils_Tuple2($author$project$Try$Five, $author$project$Try$Sixes) : A2(
+			$elm$core$Maybe$withDefault,
+			_Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
+			$author$project$Try$encode(
+				$TSFoster$elm_tuple_extra$Tuple2$swap(
+					A2(
+						$elm$core$Maybe$withDefault,
+						_Utils_Tuple2(2, 2),
+						$elm$core$List$head(
+							$elm$core$List$reverse(
+								A2($elm$core$List$sortBy, $elm$core$Tuple$second, counts)))))));
+	};
+	return A2(
+		$elm$core$Basics$composeR,
+		$elm$core$List$map($author$project$Try$decodeFace),
+		A2($elm$core$Basics$composeR, $elm_community$list_extra$List$Extra$frequencies, getBestOfAKind));
+}();
+var $folkertdev$elm_deque$Internal$first = function (deque) {
+	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
+	if (((!_v0.a.b) && _v0.b.b) && (!_v0.b.b.b)) {
+		var _v1 = _v0.b;
+		var x = _v1.a;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$List$head(deque.front);
+	}
+};
+var $folkertdev$elm_deque$Deque$unwrap = function (_v0) {
+	var boundedDeque = _v0.a;
+	return boundedDeque;
+};
+var $folkertdev$elm_deque$Deque$first = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$first, $folkertdev$elm_deque$Deque$unwrap);
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
+};
+var $elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 'Seed', a: a, b: b};
+	});
+var $elm$random$Random$next = function (_v0) {
+	var state0 = _v0.a;
+	var incr = _v0.b;
+	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $elm$time$Time$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var $elm$time$Time$Offset = function (a) {
+	return {$: 'Offset', a: a};
+};
+var $elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var $elm$time$Time$customZone = $elm$time$Time$Zone;
+var $elm$time$Time$Posix = function (a) {
+	return {$: 'Posix', a: a};
+};
+var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
+var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
+var $elm$time$Time$posixToMillis = function (_v0) {
+	var millis = _v0.a;
+	return millis;
+};
+var $elm$random$Random$init = A2(
+	$elm$core$Task$andThen,
+	function (time) {
+		return $elm$core$Task$succeed(
+			$elm$random$Random$initialSeed(
+				$elm$time$Time$posixToMillis(time)));
+	},
+	$elm$time$Time$now);
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return $elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _v1 = A2($elm$random$Random$step, generator, seed);
+			var value = _v1.a;
+			var newSeed = _v1.b;
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2($elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var $elm$random$Random$onSelfMsg = F3(
+	function (_v0, _v1, seed) {
+		return $elm$core$Task$succeed(seed);
+	});
+var $elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var $elm$random$Random$cmdMap = F2(
+	function (func, _v0) {
+		var generator = _v0.a;
+		return $elm$random$Random$Generate(
+			A2($elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
+var $elm$random$Random$command = _Platform_leaf('Random');
+var $elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return $elm$random$Random$command(
+			$elm$random$Random$Generate(
+				A2($elm$random$Random$map, tagger, generator)));
+	});
+var $author$project$Player$default_player = {hp: 0, id: 0, maxHp: 0, name: 'DEFAULT'};
+var $author$project$Player$getPlayer = F2(
+	function (players, id) {
+		var maybe = A2($elm$core$Dict$get, id, players);
+		return A2($elm$core$Maybe$withDefault, $author$project$Player$default_player, maybe);
+	});
+var $author$project$Player$health = F2(
+	function (playerId, players) {
+		var player = A2($author$project$Player$getPlayer, players, playerId);
+		return '(' + ($elm$core$String$fromInt(player.hp) + ('/' + ($elm$core$String$fromInt(player.maxHp) + ')')));
+	});
+var $author$project$Player$hit = F2(
+	function (players, id) {
+		var player = A2($author$project$Player$getPlayer, players, id);
+		return (player.hp > 0) ? _Utils_update(
+			player,
+			{hp: player.hp - 1}) : _Utils_update(
+			player,
+			{hp: 0});
+	});
+var $folkertdev$elm_deque$Deque$partition = F2(
+	function (p, _v0) {
+		var deque = _v0.a;
+		var _v1 = A2($elm$core$List$partition, p, deque.rear);
+		var l2 = _v1.a;
+		var r2 = _v1.b;
+		var _v2 = A2($elm$core$List$partition, p, deque.front);
+		var l1 = _v2.a;
+		var r1 = _v2.b;
+		return _Utils_Tuple2(
+			$folkertdev$elm_deque$Deque$fromList(
+				_Utils_ap(l1, l2)),
+			$folkertdev$elm_deque$Deque$fromList(
+				_Utils_ap(r1, r2)));
+	});
+var $author$project$Player$ko = F2(
+	function (id, activePlayers) {
+		return A2(
+			$folkertdev$elm_deque$Deque$partition,
+			function (activePlayer) {
+				return !_Utils_eq(activePlayer, id);
+			},
+			activePlayers).a;
+	});
+var $folkertdev$elm_deque$Internal$last = function (deque) {
+	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
+	if ((_v0.a.b && (!_v0.a.b.b)) && (!_v0.b.b)) {
+		var _v1 = _v0.a;
+		var x = _v1.a;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$List$head(deque.rear);
+	}
+};
+var $folkertdev$elm_deque$Deque$last = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$last, $folkertdev$elm_deque$Deque$unwrap);
 var $folkertdev$elm_deque$Internal$empty = {front: _List_Nil, rear: _List_Nil, sizeF: 0, sizeR: 0};
 var $folkertdev$elm_deque$Internal$popFront = function (deque) {
 	var front = deque.front;
@@ -7259,378 +7266,363 @@ var $elm$random$Random$list = F2(
 var $author$project$Try$rollGenerator = function (quantity) {
 	return A2($elm$random$Random$list, quantity, $author$project$Try$dieGenerator);
 };
-var $elm$core$Tuple$mapBoth = F3(
-	function (funcA, funcB, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			funcA(x),
-			funcB(y));
-	});
-var $author$project$Try$toString = A2(
-	$elm$core$Basics$composeR,
-	$author$project$Try$decode,
-	A2(
-		$elm$core$Basics$composeR,
-		A2($elm$core$Tuple$mapBoth, $elm$core$String$fromInt, $elm$core$String$fromInt),
-		function (_v0) {
-			var q = _v0.a;
-			var v = _v0.b;
-			return q + (' ' + v);
-		}));
-var $elm$core$String$words = _String_words;
-var $author$project$Main$update = F2(
+var $author$project$Action$update = F2(
 	function (msg, model) {
 		update:
 		while (true) {
 			switch (msg.$) {
-				case 'ViewState':
-					var subMsg = msg.a;
-					switch (subMsg.$) {
-						case 'ChangeQuantity':
-							var quant = subMsg.a;
-							return _Utils_Tuple2(
-								_Utils_update(
+				case 'Roll':
+					var rollType = msg.a;
+					if (rollType.$ === 'NewRoll') {
+						var roll = rollType.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{roll: roll, rollState: $author$project$Model$Rolled}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var _v2 = model.rollState;
+						switch (_v2.$) {
+							case 'Pulled':
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{tableWilds: 0}),
+									A2(
+										$elm$random$Random$generate,
+										A2($elm$core$Basics$composeL, $author$project$Action$Roll, $author$project$Action$NewRoll),
+										$author$project$Try$rollGenerator(5)));
+							case 'Fresh':
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{tableWilds: 0}),
+									A2(
+										$elm$random$Random$generate,
+										A2($elm$core$Basics$composeL, $author$project$Action$Roll, $author$project$Action$NewRoll),
+										$author$project$Try$rollGenerator(5)));
+							default:
+								var _v3 = A2(
+									$elm$core$List$partition,
+									function (d) {
+										return !_Utils_eq(d, $author$project$Try$Wilds);
+									},
+									model.roll);
+								var cup = _v3.a;
+								var wilds = _v3.b;
+								return (!(!$elm$core$List$length(cup))) ? _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											tableWilds: $elm$core$List$length(wilds) + model.tableWilds
+										}),
+									A2(
+										$elm$random$Random$generate,
+										A2($elm$core$Basics$composeL, $author$project$Action$Roll, $author$project$Action$NewRoll),
+										$author$project$Try$rollGenerator(
+											$elm$core$List$length(cup)))) : _Utils_Tuple2(
 									model,
-									{quantity: quant}),
-								$elm$core$Platform$Cmd$none);
-						case 'ChangeValue':
-							var val = subMsg.a;
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
-									{value: val}),
-								$elm$core$Platform$Cmd$none);
-						case 'ChangeConsole':
-							var str = subMsg.a;
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
-									{consoleValue: str}),
-								$elm$core$Platform$Cmd$none);
-						default:
-							var bool = subMsg.a;
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
-									{consoleIsVisible: bool}),
-								$elm$core$Platform$Cmd$none);
+									A2(
+										$elm$random$Random$generate,
+										A2($elm$core$Basics$composeL, $author$project$Action$Roll, $author$project$Action$NewRoll),
+										$author$project$Try$rollGenerator(
+											$elm$core$List$length(model.roll))));
+						}
 					}
-				case 'GameAction':
-					var subMsg = msg.a;
-					switch (subMsg.$) {
-						case 'Roll':
-							var rollType = subMsg.a;
-							if (rollType.$ === 'NewRoll') {
-								var roll = rollType.a;
-								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{roll: roll, rollState: $author$project$Model$Rolled}),
-									$elm$core$Platform$Cmd$none);
-							} else {
-								var _v4 = model.rollState;
-								switch (_v4.$) {
-									case 'Pulled':
-										return _Utils_Tuple2(
-											_Utils_update(
-												model,
-												{tableWilds: 0}),
-											A2(
-												$elm$random$Random$generate,
-												A2(
-													$elm$core$Basics$composeL,
-													A2($elm$core$Basics$composeL, $author$project$Main$GameAction, $author$project$Main$Roll),
-													$author$project$Main$NewRoll),
-												$author$project$Try$rollGenerator(5)));
-									case 'Fresh':
-										return _Utils_Tuple2(
-											_Utils_update(
-												model,
-												{tableWilds: 0}),
-											A2(
-												$elm$random$Random$generate,
-												A2(
-													$elm$core$Basics$composeL,
-													A2($elm$core$Basics$composeL, $author$project$Main$GameAction, $author$project$Main$Roll),
-													$author$project$Main$NewRoll),
-												$author$project$Try$rollGenerator(5)));
-									default:
-										var _v5 = A2(
-											$elm$core$List$partition,
-											function (d) {
-												return !_Utils_eq(d, $author$project$Try$Wilds);
-											},
-											model.roll);
-										var cup = _v5.a;
-										var wilds = _v5.b;
-										return (!(!$elm$core$List$length(cup))) ? _Utils_Tuple2(
-											_Utils_update(
-												model,
-												{
-													tableWilds: $elm$core$List$length(wilds) + model.tableWilds
-												}),
-											A2(
-												$elm$random$Random$generate,
-												A2(
-													$elm$core$Basics$composeL,
-													A2($elm$core$Basics$composeL, $author$project$Main$GameAction, $author$project$Main$Roll),
-													$author$project$Main$NewRoll),
-												$author$project$Try$rollGenerator(
-													$elm$core$List$length(cup)))) : _Utils_Tuple2(
-											model,
-											A2(
-												$elm$random$Random$generate,
-												A2(
-													$elm$core$Basics$composeL,
-													A2($elm$core$Basics$composeL, $author$project$Main$GameAction, $author$project$Main$Roll),
-													$author$project$Main$NewRoll),
-												$author$project$Try$rollGenerator(
-													$elm$core$List$length(model.roll))));
-								}
-							}
-						case 'Pull':
-							var validateReceivedTry = F2(
-								function (mustBeat, received) {
-									return (_Utils_cmp(
-										A2(
-											$elm$core$Maybe$withDefault,
-											1,
-											$author$project$Try$toScore(mustBeat)),
-										A2(
-											$elm$core$Maybe$withDefault,
-											1,
-											$author$project$Try$toScore(received))) > -1) ? $author$project$Model$HadIt : $author$project$Model$Lie;
-								});
-							var receivedTry = model.tryToBeat;
-							var bestTryInCup = $author$project$Try$assessRoll(
-								_Utils_ap(
-									model.roll,
-									A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
-							var pullResult = A2(validateReceivedTry, bestTryInCup, receivedTry);
-							if (pullResult.$ === 'HadIt') {
-								var hitPlayer = A2($author$project$Player$hit, model.players, model.whosTurn);
-								var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
-								var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
-								var newWhosTurn = A2(
+				case 'Pull':
+					var validateReceivedTry = F2(
+						function (mustBeat, received) {
+							return (_Utils_cmp(
+								A2(
 									$elm$core$Maybe$withDefault,
-									0,
-									$folkertdev$elm_deque$Deque$first(activePlayers));
-								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{
-											activePlayers: activePlayers,
-											cupState: $author$project$Model$Uncovered,
-											players: players,
-											quantity: $author$project$Try$Two,
-											rollState: $author$project$Model$Pulled($author$project$Model$HadIt),
-											tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
-											value: $author$project$Try$Twos,
-											whosTurn: newWhosTurn
-										}),
-									$elm$core$Platform$Cmd$none);
-							} else {
-								var prevPlayer = A2(
+									1,
+									$author$project$Try$toScore(mustBeat)),
+								A2(
 									$elm$core$Maybe$withDefault,
-									0,
-									$folkertdev$elm_deque$Deque$last(model.activePlayers));
-								var hitPlayer = A2($author$project$Player$hit, model.players, prevPlayer);
-								var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
-								var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
-								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{
-											activePlayers: activePlayers,
-											cupState: $author$project$Model$Uncovered,
-											players: players,
-											quantity: $author$project$Try$Two,
-											rollState: $author$project$Model$Pulled($author$project$Model$Lie),
-											tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
-											value: $author$project$Try$Twos
-										}),
-									$elm$core$Platform$Cmd$none);
-							}
-						case 'Pass':
-							var _try = subMsg.a;
-							var _v7 = $author$project$Try$mustPass(_try);
-							if (_v7.$ === 'Just') {
-								var nextPassableTry = _v7.a;
-								var _v8 = $folkertdev$elm_deque$Deque$popFront(model.activePlayers);
-								var currentTurn = _v8.a;
-								var rest = _v8.b;
-								var newActivePlayers = A2(
-									$folkertdev$elm_deque$Deque$pushBack,
-									A2($elm$core$Maybe$withDefault, 0, currentTurn),
-									rest);
-								var newCurrentTurn = $folkertdev$elm_deque$Deque$first(newActivePlayers);
-								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{
-											activePlayers: newActivePlayers,
-											cupLooked: false,
-											cupState: $author$project$Model$Covered,
-											quantity: nextPassableTry.a,
-											rollState: $author$project$Model$Received,
-											tryHistory: A2($author$project$Main$appendHistory, model, _try),
-											tryToBeat: _try,
-											value: nextPassableTry.b,
-											whosTurn: A2($elm$core$Maybe$withDefault, 0, newCurrentTurn)
-										}),
-									$elm$core$Platform$Cmd$none);
-							} else {
-								var $temp$msg = $author$project$Main$GameAction($author$project$Main$Pull),
-									$temp$model = model;
-								msg = $temp$msg;
-								model = $temp$model;
-								continue update;
-							}
-						default:
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
-									{cupLooked: true, cupState: $author$project$Model$Uncovered, rollState: $author$project$Model$Looked}),
-								$elm$core$Platform$Cmd$none);
+									1,
+									$author$project$Try$toScore(received))) > -1) ? $author$project$Model$HadIt : $author$project$Model$Lie;
+						});
+					var receivedTry = model.tryToBeat;
+					var bestTryInCup = $author$project$Try$assessRoll(
+						_Utils_ap(
+							model.roll,
+							A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
+					var pullResult = A2(validateReceivedTry, bestTryInCup, receivedTry);
+					if (pullResult.$ === 'HadIt') {
+						var hitPlayer = A2($author$project$Player$hit, model.players, model.whosTurn);
+						var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
+						var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
+						var newWhosTurn = A2(
+							$elm$core$Maybe$withDefault,
+							0,
+							$folkertdev$elm_deque$Deque$first(activePlayers));
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									activePlayers: activePlayers,
+									cupState: $author$project$Model$Uncovered,
+									players: players,
+									quantity: $author$project$Try$Two,
+									rollState: $author$project$Model$Pulled($author$project$Model$HadIt),
+									tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
+									value: $author$project$Try$Twos,
+									whosTurn: newWhosTurn
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var prevPlayer = A2(
+							$elm$core$Maybe$withDefault,
+							0,
+							$folkertdev$elm_deque$Deque$last(model.activePlayers));
+						var hitPlayer = A2($author$project$Player$hit, model.players, prevPlayer);
+						var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
+						var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									activePlayers: activePlayers,
+									cupState: $author$project$Model$Uncovered,
+									players: players,
+									quantity: $author$project$Try$Two,
+									rollState: $author$project$Model$Pulled($author$project$Model$Lie),
+									tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
+									value: $author$project$Try$Twos
+								}),
+							$elm$core$Platform$Cmd$none);
 					}
-				case 'SubmitConsole':
-					var submittedCommand = msg.a;
-					var modelWithNewEntry = function (entry) {
-						return _Utils_update(
-							model,
-							{
-								consoleHistory: _Utils_ap(model.consoleHistory, entry),
-								consoleValue: ''
-							});
-					};
-					var focusCmd = A2(
-						$elm$core$Task$attempt,
-						function (_v16) {
-							return $author$project$Main$NoOp;
-						},
-						$elm$browser$Browser$Dom$focus('console'));
-					var appendFocusCmd = function (cmd) {
-						return A2(
-							$elm$core$Tuple$mapSecond,
-							function (c) {
-								return $elm$core$Platform$Cmd$batch(
-									_List_fromArray(
-										[c, focusCmd]));
-							},
-							A2(
-								$author$project$Main$update,
-								cmd,
-								modelWithNewEntry(
-									_List_fromArray(
-										[submittedCommand]))));
-					};
-					var _v9 = A2($elm$core$Debug$log, 'console log', model);
-					var _v10 = $elm$core$String$words(submittedCommand);
-					if (_v10.b) {
-						var x = _v10.a;
-						var xs = _v10.b;
-						switch (x) {
-							case '/c':
-								return _Utils_Tuple2(
-									modelWithNewEntry(
+				case 'Pass':
+					var _try = msg.a;
+					var _v5 = $author$project$Try$mustPass(_try);
+					if (_v5.$ === 'Just') {
+						var nextPassableTry = _v5.a;
+						var _v6 = $folkertdev$elm_deque$Deque$popFront(model.activePlayers);
+						var currentTurn = _v6.a;
+						var rest = _v6.b;
+						var newActivePlayers = A2(
+							$folkertdev$elm_deque$Deque$pushBack,
+							A2($elm$core$Maybe$withDefault, 0, currentTurn),
+							rest);
+						var newCurrentTurn = $folkertdev$elm_deque$Deque$first(newActivePlayers);
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									activePlayers: newActivePlayers,
+									cupLooked: false,
+									cupState: $author$project$Model$Covered,
+									quantity: nextPassableTry.a,
+									rollState: $author$project$Model$Received,
+									tryHistory: A2(
+										$elm$core$List$append,
+										model.tryHistory,
 										_List_fromArray(
 											[
-												'[chat] ' + A2($elm$core$String$dropLeft, 2, submittedCommand)
+												_Utils_Tuple3(
+												_try,
+												model.whosTurn,
+												A2($author$project$Player$health, model.whosTurn, model.players))
 											])),
-									focusCmd);
-							case 'roll':
-								return appendFocusCmd(
-									$author$project$Main$GameAction(
-										$author$project$Main$Roll($author$project$Main$ReRoll)));
-							case 'look':
-								return appendFocusCmd(
-									$author$project$Main$GameAction($author$project$Main$Look));
-							case 'pull':
-								return appendFocusCmd(
-									$author$project$Main$GameAction($author$project$Main$Pull));
-							case 'pass':
-								var parsedTry = function () {
-									var _v13 = A2($elm$core$List$filterMap, $elm$core$String$toInt, xs);
-									if (_v13.b) {
-										if (_v13.b.b) {
-											var a = _v13.a;
-											var _v14 = _v13.b;
-											var b = _v14.a;
-											return A2(
-												$elm$core$Result$fromMaybe,
-												'`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.',
-												$author$project$Try$encode(
-													_Utils_Tuple2(a, b)));
-										} else {
-											return $elm$core$Result$Err('`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.');
-										}
+									tryToBeat: _try,
+									value: nextPassableTry.b,
+									whosTurn: A2($elm$core$Maybe$withDefault, 0, newCurrentTurn)
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var $temp$msg = $author$project$Action$Pull,
+							$temp$model = model;
+						msg = $temp$msg;
+						model = $temp$model;
+						continue update;
+					}
+				default:
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{cupLooked: true, cupState: $author$project$Model$Uncovered, rollState: $author$project$Model$Looked}),
+						$elm$core$Platform$Cmd$none);
+			}
+		}
+	});
+var $elm$core$String$words = _String_words;
+var $author$project$Main$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'ViewState':
+				var subMsg = msg.a;
+				switch (subMsg.$) {
+					case 'ChangeQuantity':
+						var quant = subMsg.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{quantity: quant}),
+							$elm$core$Platform$Cmd$none);
+					case 'ChangeValue':
+						var val = subMsg.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{value: val}),
+							$elm$core$Platform$Cmd$none);
+					case 'ChangeConsole':
+						var str = subMsg.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{consoleValue: str}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						var bool = subMsg.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{consoleIsVisible: bool}),
+							$elm$core$Platform$Cmd$none);
+				}
+			case 'GameAction':
+				var subMsg = msg.a;
+				return A2(
+					$elm$core$Tuple$mapSecond,
+					$elm$core$Platform$Cmd$map($author$project$Main$GameAction),
+					A2($author$project$Action$update, subMsg, model));
+			case 'SubmitConsole':
+				var submittedCommand = msg.a;
+				var modelWithNewEntry = function (entry) {
+					return _Utils_update(
+						model,
+						{
+							consoleHistory: _Utils_ap(model.consoleHistory, entry),
+							consoleValue: ''
+						});
+				};
+				var focusCmd = A2(
+					$elm$core$Task$attempt,
+					function (_v9) {
+						return $author$project$Main$NoOp;
+					},
+					$elm$browser$Browser$Dom$focus('console'));
+				var appendFocusCmd = function (cmd) {
+					return A2(
+						$elm$core$Tuple$mapSecond,
+						function (c) {
+							return $elm$core$Platform$Cmd$batch(
+								_List_fromArray(
+									[c, focusCmd]));
+						},
+						A2(
+							$author$project$Main$update,
+							cmd,
+							modelWithNewEntry(
+								_List_fromArray(
+									[submittedCommand]))));
+				};
+				var _v2 = A2($elm$core$Debug$log, 'console log', model);
+				var _v3 = $elm$core$String$words(submittedCommand);
+				if (_v3.b) {
+					var x = _v3.a;
+					var xs = _v3.b;
+					switch (x) {
+						case '/c':
+							return _Utils_Tuple2(
+								modelWithNewEntry(
+									_List_fromArray(
+										[
+											'[chat] ' + A2($elm$core$String$dropLeft, 2, submittedCommand)
+										])),
+								focusCmd);
+						case 'roll':
+							return appendFocusCmd(
+								$author$project$Main$GameAction(
+									$author$project$Action$Roll($author$project$Action$ReRoll)));
+						case 'look':
+							return appendFocusCmd(
+								$author$project$Main$GameAction($author$project$Action$Look));
+						case 'pull':
+							return appendFocusCmd(
+								$author$project$Main$GameAction($author$project$Action$Pull));
+						case 'pass':
+							var parsedTry = function () {
+								var _v6 = A2($elm$core$List$filterMap, $elm$core$String$toInt, xs);
+								if (_v6.b) {
+									if (_v6.b.b) {
+										var a = _v6.a;
+										var _v7 = _v6.b;
+										var b = _v7.a;
+										return A2(
+											$elm$core$Result$fromMaybe,
+											'`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.',
+											$author$project$Try$encode(
+												_Utils_Tuple2(a, b)));
 									} else {
 										return $elm$core$Result$Err('`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.');
 									}
-								}();
-								if (parsedTry.$ === 'Ok') {
-									var _try = parsedTry.a;
-									return appendFocusCmd(
-										$author$project$Main$GameAction(
-											$author$project$Main$Pass(_try)));
 								} else {
-									var message = parsedTry.a;
-									return _Utils_Tuple2(
-										modelWithNewEntry(
-											_List_fromArray(
-												[submittedCommand, message])),
-										focusCmd);
+									return $elm$core$Result$Err('`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.');
 								}
-							case 'try':
+							}();
+							if (parsedTry.$ === 'Ok') {
+								var _try = parsedTry.a;
+								return appendFocusCmd(
+									$author$project$Main$GameAction(
+										$author$project$Action$Pass(_try)));
+							} else {
+								var message = parsedTry.a;
 								return _Utils_Tuple2(
 									modelWithNewEntry(
 										_List_fromArray(
-											[
-												submittedCommand,
-												'You received: ' + $author$project$Try$toString(model.tryToBeat),
-												'You must pass: ' + function () {
-												var _v15 = $author$project$Try$mustPass(model.tryToBeat);
-												if (_v15.$ === 'Just') {
-													var t = _v15.a;
-													return $author$project$Try$toString(t);
-												} else {
-													return 'You cannot beat this roll. Sorry.';
-												}
-											}()
-											])),
+											[submittedCommand, message])),
 									focusCmd);
-							case 'clear':
-								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{consoleHistory: _List_Nil, consoleValue: ''}),
-									focusCmd);
-							case 'help':
-								return _Utils_Tuple2(
-									modelWithNewEntry(
-										_List_fromArray(
-											[submittedCommand, 'This console can be used to control your game via commands or chat with other players.\n\n                                    `roll` -> trigger a roll or reroll\n                                    `look` -> look at a passed roll\n                                    `pull` -> pull a passed roll\n                                    `pass` -> pass a roll\n                                    `clear` -> clear the console\n                                    `try` -> print the current try to beat, passed by the previous player\n\n                                    Prefixing your message with a tag enables special actions.\n\n                                    `/c *your message*` -> add a message to game chat\n                                    '])),
-									focusCmd);
-							case '':
-								return _Utils_Tuple2(
-									modelWithNewEntry(
-										_List_fromArray(
-											[''])),
-									focusCmd);
-							default:
-								return _Utils_Tuple2(
-									modelWithNewEntry(
-										_List_fromArray(
-											[submittedCommand, 'Command not recognized.'])),
-									focusCmd);
-						}
-					} else {
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+							}
+						case 'try':
+							return _Utils_Tuple2(
+								modelWithNewEntry(
+									_List_fromArray(
+										[
+											submittedCommand,
+											'You received: ' + $author$project$Try$toString(model.tryToBeat),
+											'You must pass: ' + function () {
+											var _v8 = $author$project$Try$mustPass(model.tryToBeat);
+											if (_v8.$ === 'Just') {
+												var t = _v8.a;
+												return $author$project$Try$toString(t);
+											} else {
+												return 'You cannot beat this roll. Sorry.';
+											}
+										}()
+										])),
+								focusCmd);
+						case 'clear':
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{consoleHistory: _List_Nil, consoleValue: ''}),
+								focusCmd);
+						case 'help':
+							return _Utils_Tuple2(
+								modelWithNewEntry(
+									_List_fromArray(
+										[submittedCommand, 'This console can be used to control your game via commands or chat with other players.\n\n                                    `roll` -> trigger a roll or reroll\n                                    `look` -> look at a passed roll\n                                    `pull` -> pull a passed roll\n                                    `pass` -> pass a roll\n                                    `clear` -> clear the console\n                                    `try` -> print the current try to beat, passed by the previous player\n\n                                    Prefixing your message with a tag enables special actions.\n\n                                    `/c *your message*` -> add a message to game chat\n                                    '])),
+								focusCmd);
+						case '':
+							return _Utils_Tuple2(
+								modelWithNewEntry(
+									_List_fromArray(
+										[''])),
+								focusCmd);
+						default:
+							return _Utils_Tuple2(
+								modelWithNewEntry(
+									_List_fromArray(
+										[submittedCommand, 'Command not recognized.'])),
+								focusCmd);
 					}
-				default:
+				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			}
+				}
+			default:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$ChangeConsole = function (a) {
@@ -10871,7 +10863,7 @@ var $author$project$Main$viewPassTry = F3(
 							_List_fromArray(
 								[$author$project$Tailwind$Utilities$col_span_2])),
 							$rtfeldman$elm_css$Html$Styled$Events$onClick(
-							A2($elm$core$Basics$composeL, $author$project$Main$GameAction, $author$project$Main$Pass)(
+							A2($elm$core$Basics$composeL, $author$project$Main$GameAction, $author$project$Action$Pass)(
 								_Utils_Tuple2(quantity, val)))
 						]),
 					_List_fromArray(
@@ -10944,7 +10936,7 @@ var $author$project$Main$view = function (model) {
 									[
 										$rtfeldman$elm_css$Html$Styled$Events$onClick(
 										$author$project$Main$GameAction(
-											$author$project$Main$Roll($author$project$Main$ReRoll)))
+											$author$project$Action$Roll($author$project$Action$ReRoll)))
 									]),
 								_List_fromArray(
 									[
@@ -10966,7 +10958,7 @@ var $author$project$Main$view = function (model) {
 									[
 										$rtfeldman$elm_css$Html$Styled$Events$onClick(
 										$author$project$Main$GameAction(
-											$author$project$Main$Roll($author$project$Main$ReRoll)))
+											$author$project$Action$Roll($author$project$Action$ReRoll)))
 									]),
 								_List_fromArray(
 									[
@@ -10988,7 +10980,7 @@ var $author$project$Main$view = function (model) {
 									[
 										$rtfeldman$elm_css$Html$Styled$Events$onClick(
 										$author$project$Main$GameAction(
-											$author$project$Main$Roll($author$project$Main$ReRoll)))
+											$author$project$Action$Roll($author$project$Action$ReRoll)))
 									]),
 								_List_fromArray(
 									[
@@ -11026,7 +11018,7 @@ var $author$project$Main$view = function (model) {
 					_List_fromArray(
 						[
 							$rtfeldman$elm_css$Html$Styled$Events$onClick(
-							$author$project$Main$GameAction($author$project$Main$Pull))
+							$author$project$Main$GameAction($author$project$Action$Pull))
 						]),
 					_List_fromArray(
 						[
@@ -11037,7 +11029,7 @@ var $author$project$Main$view = function (model) {
 					_List_fromArray(
 						[
 							$rtfeldman$elm_css$Html$Styled$Events$onClick(
-							$author$project$Main$GameAction($author$project$Main$Look))
+							$author$project$Main$GameAction($author$project$Action$Look))
 						]),
 					_List_fromArray(
 						[

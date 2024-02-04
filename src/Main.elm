@@ -2,6 +2,7 @@ module Main exposing (..)
 
 -- import Css.Transitions
 
+import Action
 import Browser
 import Browser.Dom as Dom
 import Css exposing (..)
@@ -18,7 +19,6 @@ import Json.Decode as Decode
 import List
 import Model exposing (..)
 import Player
-import Random
 import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
@@ -61,19 +61,6 @@ type ViewState
     | SetConsoleVisable Bool
 
 
-type GameAction
-    = Pull
-    | Pass Try
-    | Look
-    | Roll Roll
-
-
-type Roll
-    = -- Runtime is sending a new random die value.∏
-      NewRoll Try.Cup
-    | ReRoll
-
-
 {-| Main Msg type.
 
 Here, some top level Msg variants take a sub Msg to group cases in update function.
@@ -83,7 +70,7 @@ Here, some top level Msg variants take a sub Msg to group cases in update functi
 -}
 type Msg
     = ViewState ViewState
-    | GameAction GameAction
+    | GameAction Action.Msg
     | SubmitConsole String
     | NoOp
 
@@ -114,150 +101,7 @@ update msg model =
 
         -- game event messages
         GameAction subMsg ->
-            case subMsg of
-                Roll rollType ->
-                    case rollType of
-                        -- this message only should come in from runtime
-                        NewRoll roll ->
-                            ( { model | roll = roll, rollState = Rolled }
-                            , Cmd.none
-                            )
-
-                        ReRoll ->
-                            -- checking state and factoring Wilds works well in update when we want to more generically call for a roll (whether fresh or reroll), as you might in console
-                            -- but maybe this should all be determined in view and pass more specific roll message
-                            -- console update would still want to determine the right roll type (or require more specfiic roll command)
-                            case model.rollState of
-                                Pulled _ ->
-                                    -- reset
-                                    ( { model | tableWilds = 0 }, Random.generate (GameAction << Roll << NewRoll) (Try.rollGenerator 5) )
-
-                                Fresh ->
-                                    -- reset
-                                    ( { model | tableWilds = 0 }, Random.generate (GameAction << Roll << NewRoll) (Try.rollGenerator 5) )
-
-                                _ ->
-                                    let
-                                        -- pull the wilds from the roll
-                                        ( cup, wilds ) =
-                                            List.partition (\d -> d /= Wilds) model.roll
-                                    in
-                                    if List.length cup /= 0 then
-                                        -- add pulled wilds to the tableWilds count, create new roll with remaining cup
-                                        ( { model | tableWilds = List.length wilds + model.tableWilds }
-                                        , Random.generate (GameAction << Roll << NewRoll) (Try.rollGenerator (List.length cup))
-                                        )
-
-                                    else
-                                        ( model
-                                        , Random.generate (GameAction << Roll << NewRoll) (Try.rollGenerator (List.length model.roll))
-                                        )
-
-                Pull ->
-                    -- check that the roll satisfied the required Try level
-                    -- move to pulled state
-                    let
-                        bestTryInCup =
-                            Try.assessRoll (model.roll ++ List.repeat model.tableWilds Wilds)
-
-                        receivedTry =
-                            model.tryToBeat
-
-                        validateReceivedTry : Try -> Try -> PullResult
-                        validateReceivedTry mustBeat received =
-                            if (Try.toScore mustBeat |> Maybe.withDefault 1) >= (Try.toScore received |> Maybe.withDefault 1) then
-                                HadIt
-
-                            else
-                                Lie
-
-                        pullResult =
-                            validateReceivedTry bestTryInCup receivedTry
-                    in
-                    case pullResult of
-                        HadIt ->
-                            -- current player takes a fold
-                            let
-                                hitPlayer =
-                                    Player.hit model.players model.whosTurn
-
-                                players =
-                                    Dict.insert hitPlayer.id hitPlayer model.players
-
-                                activePlayers =
-                                    if hitPlayer.hp /= 0 then
-                                        model.activePlayers
-
-                                    else
-                                        Player.ko hitPlayer.id model.activePlayers
-
-                                newWhosTurn =
-                                    Maybe.withDefault 0 (Deque.first activePlayers)
-                            in
-                            ( { model | cupState = Uncovered, rollState = Pulled HadIt, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers, whosTurn = newWhosTurn }
-                            , Cmd.none
-                            )
-
-                        Lie ->
-                            -- previous player takes a fold
-                            let
-                                prevPlayer =
-                                    Maybe.withDefault 0 (Deque.last model.activePlayers)
-
-                                hitPlayer =
-                                    Player.hit model.players prevPlayer
-
-                                players =
-                                    Dict.insert hitPlayer.id hitPlayer model.players
-
-                                activePlayers =
-                                    if hitPlayer.hp /= 0 then
-                                        model.activePlayers
-
-                                    else
-                                        Player.ko hitPlayer.id model.activePlayers
-                            in
-                            ( { model | cupState = Uncovered, rollState = Pulled Lie, tryToBeat = ( Two, Twos ), quantity = Two, value = Twos, players = players, activePlayers = activePlayers }
-                            , Cmd.none
-                            )
-
-                Pass try ->
-                    case Try.mustPass try of
-                        -- there is a "next" try to be passed
-                        Just nextPassableTry ->
-                            let
-                                ( currentTurn, rest ) =
-                                    Deque.popFront model.activePlayers
-
-                                newActivePlayers =
-                                    Deque.pushBack (Maybe.withDefault 0 currentTurn) rest
-
-                                newCurrentTurn =
-                                    Deque.first newActivePlayers
-                            in
-                            ( { model
-                                | tryHistory = appendHistory model try
-                                , tryToBeat = try
-                                , whosTurn = Maybe.withDefault 0 newCurrentTurn
-                                , activePlayers = newActivePlayers
-                                , quantity = Tuple.first nextPassableTry
-                                , value = Tuple.second nextPassableTry
-                                , cupState = Covered
-                                , cupLooked = False
-                                , rollState = Received
-                              }
-                            , Cmd.none
-                            )
-
-                        -- The last try passed was as high as you can possibly roll this means we must force a Pull message,
-                        -- evaluate the roll and determine if the passer or the receiver gets a fold.
-                        Nothing ->
-                            update (GameAction Pull) model
-
-                Look ->
-                    ( { model | cupState = Uncovered, cupLooked = True, rollState = Looked }
-                    , Cmd.none
-                    )
+            Action.update subMsg model |> Tuple.mapSecond (Cmd.map GameAction)
 
         SubmitConsole submittedCommand ->
             -- validate command
@@ -284,13 +128,13 @@ update msg model =
 
                         -- todo: create cleaner function for batching in a focus command - mapSecond isn't very intuitive
                         "roll" ->
-                            GameAction (Roll ReRoll) |> appendFocusCmd
+                            GameAction (Action.Roll Action.ReRoll) |> appendFocusCmd
 
                         "look" ->
-                            GameAction Look |> appendFocusCmd
+                            GameAction Action.Look |> appendFocusCmd
 
                         "pull" ->
-                            GameAction Pull |> appendFocusCmd
+                            GameAction Action.Pull |> appendFocusCmd
 
                         "pass" ->
                             let
@@ -310,7 +154,7 @@ update msg model =
                             in
                             case parsedTry of
                                 Ok try ->
-                                    GameAction (Pass try) |> appendFocusCmd
+                                    GameAction (Action.Pass try) |> appendFocusCmd
 
                                 Err message ->
                                     ( modelWithNewEntry [ submittedCommand, message ], focusCmd )
@@ -414,8 +258,8 @@ view model =
 
         cupButtons =
             [ div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
-                [ button_ [ onClick (GameAction Pull) ] [ text "pull" ]
-                , button_ [ onClick (GameAction Look) ] [ text "look" ]
+                [ button_ [ onClick (GameAction Action.Pull) ] [ text "pull" ]
+                , button_ [ onClick (GameAction Action.Look) ] [ text "look" ]
                 ]
             ]
 
@@ -433,13 +277,13 @@ view model =
         rollButtons =
             case model.rollState of
                 Fresh ->
-                    [ div [] [ button_ [ onClick (GameAction (Roll ReRoll)) ] [ text "roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameAction (Action.Roll Action.ReRoll)) ] [ text "roll" ] ] ]
 
                 Pulled _ ->
-                    [ div [] [ button_ [ onClick (GameAction (Roll ReRoll)) ] [ text "roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameAction (Action.Roll Action.ReRoll)) ] [ text "roll" ] ] ]
 
                 Looked ->
-                    [ div [] [ button_ [ onClick (GameAction (Roll ReRoll)) ] [ text "re-roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameAction (Action.Roll Action.ReRoll)) ] [ text "re-roll" ] ] ]
 
                 _ ->
                     []
@@ -661,20 +505,12 @@ viewPassTry quantity val tryToBeat =
             [ label [ for "value" ] [ text "Value" ]
             , select_ [ onInput changeValue, id "value" ] values
             ]
-        , button_ [ css [ Tw.col_span_2 ], onClick ((GameAction << Pass) ( quantity, val )) ] [ text "pass" ]
+        , button_ [ css [ Tw.col_span_2 ], onClick ((GameAction << Action.Pass) ( quantity, val )) ] [ text "pass" ]
         ]
 
 
 
 -- Model Utils
-
-
-appendHistory : Model -> Try -> List ( Try, Int, String )
-appendHistory model try =
-    List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
-
-
-
 -- Misc Utils
 -- MAIN
 
