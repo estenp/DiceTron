@@ -58,7 +58,7 @@ type ViewState
     = ChangeQuantity Quantity
     | ChangeValue Face
     | ChangeConsole String
-    | SetConsoleVisable Bool
+    | SetConsoleVisible Bool
 
 
 {-| Main Msg type.
@@ -96,7 +96,7 @@ update msg model =
                     , Cmd.none
                     )
 
-                SetConsoleVisable bool ->
+                SetConsoleVisible bool ->
                     ( { model | consoleIsVisible = bool }, Cmd.none )
 
         -- game event messages
