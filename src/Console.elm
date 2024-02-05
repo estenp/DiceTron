@@ -1,110 +1,196 @@
-module Console exposing (update)
+module Console exposing (Msg(..), update, view)
 
--- import Main exposing (NoOp)
-
+import Action
 import Browser.Dom as Dom
+import Css
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
+import Html.Styled.Events exposing (..)
+import Json.Decode as Decode
+import Model exposing (Model, NoOp(..))
+import Tailwind.Theme as Tw exposing (..)
+import Tailwind.Utilities as Tw
 import Task
 import Try
 
 
-update model consoleInput =
-    -- validate command
-    -- add to history log
-    let
-        modelWithNewEntry entry =
-            { model | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" }
+type Msg
+    = Change String
+    | VisibilityToggled
+    | Submit String
 
-        focusCmd =
-            Task.attempt (\_ -> NoOp) (Dom.focus "console")
 
-        _ =
-            Debug.log "console log" model
-    in
-    case String.words command of
-        x :: xs ->
-            case x of
-                "/c" ->
-                    ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 command ], focusCmd )
+update : Msg -> Model -> ( Model, Cmd Action.Msg )
+update msg model =
+    case msg of
+        Change str ->
+            ( { model | consoleValue = str }
+            , Cmd.none
+            )
 
-                -- todo: create cleaner function for batching in a focus command - mapSecond isn't very intuitive
-                "roll" ->
-                    Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameAction (Roll ReRoll)) (modelWithNewEntry [ command ]))
+        VisibilityToggled ->
+            ( { model | consoleIsVisible = not model.consoleIsVisible }
+            , Cmd.none
+            )
 
-                "look" ->
-                    Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameAction Look) (modelWithNewEntry [ command ]))
+        Submit consoleInput ->
+            -- validate command
+            -- add to history log
+            let
+                modelWithNewEntry entry =
+                    { model | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" }
 
-                "pull" ->
-                    Tuple.mapSecond (\cmd -> Cmd.batch [ cmd, focusCmd ]) (update (GameAction Pull) (modelWithNewEntry [ command ]))
+                -- Cmd.none =
+                --     Task.attempt (\_ -> NoOp) (Dom.focus "console")
+                -- appendCmd.none cmd =
+                --     update cmd (modelWithNewEntry [ consoleInput ])
+                --         |> Tuple.mapSecond (\c -> Cmd.batch [ c, Cmd.none ])
+                -- Debug.log "console log" model
+            in
+            case String.words consoleInput of
+                x :: xs ->
+                    case x of
+                        "/c" ->
+                            ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 consoleInput ], Cmd.none )
 
-                "pass" ->
-                    let
-                        parsedTry =
-                            case List.filterMap String.toInt xs of
-                                a :: b :: _ ->
-                                    Try.encode ( a, b ) |> Result.fromMaybe "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
+                        -- todo: create cleaner function for batching in a focus command - mapSecond isn't very intuitive
+                        "roll" ->
+                            Action.roll Action.ReRoll model
 
-                                [ _ ] ->
-                                    Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
+                        "look" ->
+                            ( Action.look model, Cmd.none )
 
-                                [] ->
-                                    Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
+                        "pull" ->
+                            ( Action.pull model, Cmd.none )
 
-                        -- _ =
-                        --     parsedTry |> Debug.todo "A default somewhere is causing a pull when passed a bad Try"
-                    in
-                    case parsedTry of
-                        Ok try ->
-                            Tuple.mapSecond
-                                (\cmd -> Cmd.batch [ cmd, focusCmd ])
-                                (update (GameAction (Pass try)) (modelWithNewEntry [ command ]))
+                        "pass" ->
+                            let
+                                parsedTry =
+                                    case List.filterMap String.toInt xs of
+                                        a :: b :: _ ->
+                                            Try.encode ( a, b ) |> Result.fromMaybe "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
 
-                        Err message ->
-                            ( modelWithNewEntry [ command, message ], focusCmd )
+                                        [ _ ] ->
+                                            Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
 
-                "try" ->
-                    ( modelWithNewEntry
-                        [ command
-                        , "You received: " ++ Try.toString model.tryToBeat
-                        , "You must pass: "
-                            ++ (case Try.mustPass model.tryToBeat of
-                                    Just t ->
-                                        Try.toString t
+                                        [] ->
+                                            Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
 
-                                    Nothing ->
-                                        "You cannot beat this roll. Sorry."
-                               )
-                        ]
-                    , focusCmd
-                    )
+                                -- _ =
+                                --     parsedTry |> Debug.todo "A default somewhere is causing a pull when passed a bad Try"
+                            in
+                            case parsedTry of
+                                Ok try ->
+                                    ( Action.pass model try, Cmd.none )
 
-                "clear" ->
-                    ( { model | consoleHistory = [], consoleValue = "" }, focusCmd )
+                                Err message ->
+                                    ( modelWithNewEntry [ consoleInput, message ], Cmd.none )
 
-                "help" ->
-                    ( modelWithNewEntry
-                        [ command
-                        , """This console can be used to control your game via commands or chat with other players.
+                        "try" ->
+                            ( modelWithNewEntry
+                                [ consoleInput
+                                , "You received: " ++ Try.toString model.tryToBeat
+                                , "You must pass: "
+                                    ++ (case Try.mustPass model.tryToBeat of
+                                            Just t ->
+                                                Try.toString t
 
-                                    `roll` -> trigger a roll or reroll
-                                    `look` -> look at a passed roll
-                                    `pull` -> pull a passed roll
-                                    `pass` -> pass a roll
-                                    `clear` -> clear the console
-                                    `try` -> print the current try to beat, passed by the previous player
+                                            Nothing ->
+                                                "You cannot beat this roll. Sorry."
+                                       )
+                                ]
+                            , Cmd.none
+                            )
 
-                                    Prefixing your message with a tag enables special actions.
+                        "clear" ->
+                            ( { model | consoleHistory = [], consoleValue = "" }, Cmd.none )
 
-                                    `/c *your message*` -> add a message to game chat
-                                    """
-                        ]
-                    , focusCmd
-                    )
+                        "help" ->
+                            ( modelWithNewEntry
+                                [ consoleInput
+                                , """This console can be used to control your game via commands or chat with other players.
 
-                "" ->
-                    ( modelWithNewEntry [ "" ], focusCmd )
+                                        `roll` -> trigger a roll or reroll
+                                        `look` -> look at a passed roll
+                                        `pull` -> pull a passed roll
+                                        `pass` -> pass a roll
+                                        `clear` -> clear the console
+                                        `try` -> print the current try to beat, passed by the previous player
+
+                                        Prefixing your message with a tag enables special actions.
+
+                                        `/c *your message*` -> add a message to game chat
+                                        """
+                                ]
+                            , Cmd.none
+                            )
+
+                        "" ->
+                            ( modelWithNewEntry [ "" ], Cmd.none )
+
+                        _ ->
+                            ( modelWithNewEntry [ consoleInput, "Command not recognized." ], Cmd.none )
 
                 _ ->
-                    ( modelWithNewEntry [ command, "Command not recognized." ], focusCmd )
+                    ( model, Cmd.none )
 
-        _ ->
-            ( model, Cmd.none )
+
+view : Model -> Html Msg
+view model =
+    let
+        history =
+            model.consoleHistory
+                |> List.map
+                    (\log ->
+                        div []
+                            -- todo: this needs to be a component with below?
+                            [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_start ] ] [ text ">", div [ css [ Tw.whitespace_pre_line ] ] [ text log ] ] ]
+                    )
+    in
+    label
+        [ class "console"
+        , css
+            [ Tw.flex
+            , Tw.gap_1
+            , Tw.flex_col
+            , Tw.overflow_auto
+            , Tw.p_4
+            , Tw.bg_color Tw.black_200
+            , Tw.border_t_4
+            , Tw.border_color Tw.purple_100
+            , Tw.w_full
+            ]
+        ]
+        (history
+            ++ [ span [ css [ Tw.flex, Tw.gap_4, Tw.items_start ] ]
+                    -- todo: ^^ here
+                    [ text ">"
+                    , input
+                        [ type_ "text"
+                        , id "console"
+                        , onInput Change
+                        , onEnter (Submit model.consoleValue)
+                        , value model.consoleValue
+                        , css
+                            [ Tw.inline_block
+                            , Tw.w_full
+                            , Css.backgroundColor Css.transparent
+                            ]
+                        ]
+                        []
+                    ]
+               ]
+        )
+
+
+onEnter : Msg -> Attribute Msg
+onEnter msg =
+    let
+        isEnter code =
+            if code == 13 then
+                Decode.succeed msg
+
+            else
+                Decode.fail "not ENTER"
+    in
+    on "keydown" (Decode.andThen isEnter keyCode)

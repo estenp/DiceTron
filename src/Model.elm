@@ -9,6 +9,15 @@ import Try exposing (Try)
 -- Form
 
 
+type ViewState
+    = ChangeQuantity Try.Quantity
+    | ChangeValue Try.Face
+
+
+type NoOp
+    = NoOp
+
+
 type CupState
     = Covered
     | Uncovered
