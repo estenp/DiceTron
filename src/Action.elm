@@ -103,7 +103,16 @@ update msg model =
                         newWhosTurn =
                             Maybe.withDefault 0 (Deque.first activePlayers)
                     in
-                    ( { model | cupState = Uncovered, rollState = Pulled HadIt, tryToBeat = ( Try.Two, Try.Twos ), quantity = Try.Two, value = Try.Twos, players = players, activePlayers = activePlayers, whosTurn = newWhosTurn }
+                    ( { model
+                        | cupState = Uncovered
+                        , rollState = Pulled HadIt
+                        , tryToBeat = ( Try.Two, Try.Twos )
+                        , quantity = Try.Two
+                        , value = Try.Twos
+                        , players = players
+                        , activePlayers = activePlayers
+                        , whosTurn = newWhosTurn
+                      }
                     , Cmd.none
                     )
 
@@ -126,7 +135,15 @@ update msg model =
                             else
                                 Player.ko hitPlayer.id model.activePlayers
                     in
-                    ( { model | cupState = Uncovered, rollState = Pulled Lie, tryToBeat = ( Try.Two, Try.Twos ), quantity = Try.Two, value = Try.Twos, players = players, activePlayers = activePlayers }
+                    ( { model
+                        | cupState = Uncovered
+                        , rollState = Pulled Lie
+                        , tryToBeat = ( Try.Two, Try.Twos )
+                        , quantity = Try.Two
+                        , value = Try.Twos
+                        , players = players
+                        , activePlayers = activePlayers
+                      }
                     , Cmd.none
                     )
 
