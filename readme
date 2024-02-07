@@ -1,1 +1,3 @@
-elm make src/Main.elm --output=main.js
+npm run app:build
+
+https://dicetron.netlify.app/
