@@ -144,37 +144,50 @@ pull model =
             }
 
 
-pass : Model -> Try -> Model
+pass : Model -> Try -> Result String Model
 pass model try =
-    case Try.mustPass try of
-        -- there is a "next" try to be passed
-        Just nextPassableTry ->
-            let
-                ( currentTurn, rest ) =
-                    Deque.popFront model.activePlayers
+    let
+        received =
+            Try.toScore model.tryToBeat |> Maybe.withDefault 1
 
-                newActivePlayers =
-                    Deque.pushBack (Maybe.withDefault 0 currentTurn) rest
+        beingPassed =
+            Try.toScore try |> Maybe.withDefault 1
+    in
+    if beingPassed > received then
+        Ok
+            (case Try.mustPass try of
+                -- there is a "next" try to be passed
+                Just nextPassableTry ->
+                    let
+                        ( currentTurn, rest ) =
+                            Deque.popFront model.activePlayers
 
-                newCurrentTurn =
-                    Deque.first newActivePlayers
-            in
-            { model
-                | tryHistory = List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
-                , tryToBeat = try
-                , whosTurn = Maybe.withDefault 0 newCurrentTurn
-                , activePlayers = newActivePlayers
-                , quantity = Tuple.first nextPassableTry
-                , value = Tuple.second nextPassableTry
-                , cupState = Covered
-                , cupLooked = False
-                , rollState = Received
-            }
+                        newActivePlayers =
+                            Deque.pushBack (Maybe.withDefault 0 currentTurn) rest
 
-        -- The last try passed was as high as you can possibly roll this means we must force a Pull message,
-        -- evaluate the roll and determine if the passer or the receiver gets a fold.
-        Nothing ->
-            pull model
+                        newCurrentTurn =
+                            Deque.first newActivePlayers
+                    in
+                    { model
+                        | tryHistory = List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
+                        , tryToBeat = try
+                        , whosTurn = Maybe.withDefault 0 newCurrentTurn
+                        , activePlayers = newActivePlayers
+                        , quantity = Tuple.first nextPassableTry
+                        , value = Tuple.second nextPassableTry
+                        , cupState = Covered
+                        , cupLooked = False
+                        , rollState = Received
+                    }
+
+                -- The last try passed was as high as you can possibly roll this means we must force a Pull message,
+                -- evaluate the roll and determine if the passer or the receiver gets a fold.
+                Nothing ->
+                    pull model
+            )
+
+    else
+        Err ("You must pass a better Try than " ++ Try.toString model.tryToBeat ++ ". " ++ Try.toString try ++ " does not beat " ++ Try.toString model.tryToBeat ++ ".")
 
 
 look : Model -> Model

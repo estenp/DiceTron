@@ -39,13 +39,6 @@ update msg model =
             let
                 modelWithNewEntry entry =
                     { model | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" }
-
-                -- Cmd.none =
-                --     Task.attempt (\_ -> NoOp) (Dom.focus "console")
-                -- appendCmd.none cmd =
-                --     update cmd (modelWithNewEntry [ consoleInput ])
-                --         |> Tuple.mapSecond (\c -> Cmd.batch [ c, Cmd.none ])
-                -- Debug.log "console log" model
             in
             case String.words consoleInput of
                 x :: xs ->
@@ -53,22 +46,24 @@ update msg model =
                         "/c" ->
                             ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 consoleInput ], Cmd.none )
 
-                        -- todo: create cleaner function for batching in a focus command - mapSecond isn't very intuitive
                         "roll" ->
-                            Action.roll Action.ReRoll model
+                            Action.roll Action.ReRoll (modelWithNewEntry [ x ])
 
                         "look" ->
-                            ( Action.look model, Cmd.none )
+                            ( Action.look (modelWithNewEntry [ x ]), Cmd.none )
 
                         "pull" ->
-                            ( Action.pull model, Cmd.none )
+                            ( Action.pull (modelWithNewEntry [ x ]), Cmd.none )
 
                         "pass" ->
                             let
+                                parsedTry : Result String Try.Try
                                 parsedTry =
                                     case List.filterMap String.toInt xs of
                                         a :: b :: _ ->
-                                            Try.encode ( a, b ) |> Result.fromMaybe "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
+                                            Try.encode ( a, b )
+                                                |> Debug.log "tryasdfsdaf"
+                                                |> Result.fromMaybe "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
 
                                         [ _ ] ->
                                             Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
@@ -77,11 +72,16 @@ update msg model =
                                             Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
 
                                 -- _ =
-                                --     parsedTry |> Debug.todo "A default somewhere is causing a pull when passed a bad Try"
+                                --     Debug.todo "try not validated properly. handle in Action.pass"
                             in
                             case parsedTry of
                                 Ok try ->
-                                    ( Action.pass model try, Cmd.none )
+                                    case Action.pass (modelWithNewEntry [ x ++ " " ++ Try.toString try ]) try of
+                                        Ok m ->
+                                            ( m, Cmd.none )
+
+                                        Err e ->
+                                            ( modelWithNewEntry [ consoleInput, e ], Cmd.none )
 
                                 Err message ->
                                     ( modelWithNewEntry [ consoleInput, message ], Cmd.none )
@@ -102,9 +102,6 @@ update msg model =
                             , Cmd.none
                             )
 
-                        "clear" ->
-                            ( { model | consoleHistory = [], consoleValue = "" }, Cmd.none )
-
                         "help" ->
                             ( modelWithNewEntry
                                 [ consoleInput
@@ -124,6 +121,9 @@ update msg model =
                                 ]
                             , Cmd.none
                             )
+
+                        "clear" ->
+                            ( { model | consoleHistory = [], consoleValue = "" }, Cmd.none )
 
                         "" ->
                             ( modelWithNewEntry [ "" ], Cmd.none )

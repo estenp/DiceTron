@@ -4,6 +4,7 @@ module Main exposing (..)
 
 import Action
 import Browser
+import Browser.Dom as Dom
 import Console
 import Css exposing (..)
 import Css.Animations exposing (..)
@@ -22,6 +23,7 @@ import Player
 import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
+import Task
 import Try exposing (Cup, Face(..), Quantity(..), Try)
 import Tuple3
 
@@ -57,8 +59,6 @@ init _ =
 
 Here, some top level Msg variants take a sub Msg to group cases in update function.
 
-`ViewState Viewstate` indicates a top level Msg type of ViewState which holds sub Msg such as `ChangeValue`
-
 -}
 type Msg
     = ViewState ViewState
@@ -85,6 +85,7 @@ update msg model =
 
         -- game event messages
         GameAction subMsg ->
+            -- check available actions here?
             (case subMsg of
                 Action.Roll rollType ->
                     Action.roll rollType model
@@ -96,13 +97,29 @@ update msg model =
                     ( Action.look model, Cmd.none )
 
                 Action.Pass try ->
-                    ( Action.pass model try, Cmd.none )
+                    case Action.pass model try of
+                        Ok m ->
+                            ( m, Cmd.none )
+
+                        Err e ->
+                            -- update (ConsoleMsg (Console.Submit e) model) -- todo: hmm..
+                            -- update NoOp model
+                            ( model, Cmd.none )
             )
                 |> Tuple.mapSecond (Cmd.map GameAction)
 
         ConsoleMsg subMsg ->
+            let
+                focusCmd =
+                    Task.attempt (\_ -> NoOp) (Dom.focus "console")
+
+                withFocus =
+                    -- todo: apply focus logic - move out to main?
+                    Tuple.mapSecond (\c -> Cmd.batch [ focusCmd, c ])
+            in
             Console.update subMsg model
                 |> Tuple.mapSecond (Cmd.map GameAction)
+                |> withFocus
 
         NoOp ->
             ( model, Cmd.none )
@@ -126,6 +143,9 @@ view model =
     let
         -- model_log =
         --     Debug.log "Model" model
+        _ =
+            Debug.log "Need to validate available commands on any given screen. console and currently 'pass' when there isn't a roll yet"
+
         -- UI
         gameIsOver =
             Deque.length model.activePlayers <= 1
