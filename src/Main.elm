@@ -1,7 +1,5 @@
 module Main exposing (..)
 
--- import Css.Transitions
-
 import Action
 import Browser
 import Browser.Dom as Dom
@@ -50,18 +48,13 @@ init _ =
     )
 
 
-
--- UPDATE
--- Update messages
-
-
 {-| Main Msg type.
 
 Here, some top level Msg variants take a sub Msg to group cases in update function.
 
 -}
 type Msg
-    = ViewState ViewState
+    = TrySelectChanged TrySelectMsg
     | GameAction Action.Msg
     | ConsoleMsg Console.Msg
     | NoOp
@@ -71,7 +64,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         -- view state messages
-        ViewState subMsg ->
+        TrySelectChanged subMsg ->
             case subMsg of
                 ChangeQuantity quant ->
                     ( { model | quantity = quant }
@@ -103,7 +96,7 @@ update msg model =
 
                         Err e ->
                             -- update (ConsoleMsg (Console.Submit e) model) -- todo: hmm..
-                            -- update NoOp model
+                            -- update NoOp model -- one of these would def be preferred, but dont currently work
                             ( model, Cmd.none )
             )
                 |> Tuple.mapSecond (Cmd.map GameAction)
@@ -123,15 +116,6 @@ update msg model =
 
         NoOp ->
             ( model, Cmd.none )
-
-
-
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.none
 
 
 
@@ -365,10 +349,10 @@ viewPassTry quantity val tryToBeat =
             Try.availTrySelectOpts tryToBeat quantity
 
         changeQuantity =
-            (ViewState << ChangeQuantity) << Maybe.withDefault Two << Try.encodeQuantity << Maybe.withDefault 1 << String.toInt
+            (TrySelectChanged << ChangeQuantity) << Maybe.withDefault Two << Try.encodeQuantity << Maybe.withDefault 1 << String.toInt
 
         changeValue =
-            (ViewState << ChangeValue) << Maybe.withDefault Twos << Try.encodeFace << Maybe.withDefault 2 << String.toInt
+            (TrySelectChanged << ChangeValue) << Maybe.withDefault Twos << Try.encodeFace << Maybe.withDefault 2 << String.toInt
     in
     div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
         [ div []
@@ -394,6 +378,6 @@ main =
     Browser.element
         { init = init
         , update = update
-        , subscriptions = subscriptions
+        , subscriptions = \_ -> Sub.none
         , view = view >> toUnstyled
         }

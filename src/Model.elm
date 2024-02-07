@@ -9,7 +9,7 @@ import Try exposing (Try)
 -- Form
 
 
-type ViewState
+type TrySelectMsg
     = ChangeQuantity Try.Quantity
     | ChangeValue Try.Face
 

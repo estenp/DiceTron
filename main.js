@@ -5611,9 +5611,6 @@ var $author$project$Main$init = function (_v0) {
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$subscriptions = function (_v0) {
-	return $elm$core$Platform$Sub$none;
-};
 var $elm$core$String$cons = _String_cons;
 var $robinheghan$murmur3$Murmur3$HashData = F4(
 	function (shift, seed, hash, charsProcessed) {
@@ -7601,7 +7598,7 @@ var $author$project$Console$update = F2(
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
-			case 'ViewState':
+			case 'TrySelectChanged':
 				var subMsg = msg.a;
 				if (subMsg.$ === 'ChangeQuantity') {
 					var quant = subMsg.a;
@@ -10393,8 +10390,8 @@ var $author$project$Model$ChangeValue = function (a) {
 var $author$project$Action$Pass = function (a) {
 	return {$: 'Pass', a: a};
 };
-var $author$project$Main$ViewState = function (a) {
-	return {$: 'ViewState', a: a};
+var $author$project$Main$TrySelectChanged = function (a) {
+	return {$: 'TrySelectChanged', a: a};
 };
 var $elm$core$Dict$getMin = function (dict) {
 	getMin:
@@ -11032,7 +11029,7 @@ var $author$project$Main$viewPassTry = F3(
 					$elm$core$Basics$composeL,
 					A2(
 						$elm$core$Basics$composeL,
-						A2($elm$core$Basics$composeL, $author$project$Main$ViewState, $author$project$Model$ChangeValue),
+						A2($elm$core$Basics$composeL, $author$project$Main$TrySelectChanged, $author$project$Model$ChangeValue),
 						$elm$core$Maybe$withDefault($author$project$Try$Twos)),
 					$author$project$Try$encodeFace),
 				$elm$core$Maybe$withDefault(2)),
@@ -11045,7 +11042,7 @@ var $author$project$Main$viewPassTry = F3(
 					$elm$core$Basics$composeL,
 					A2(
 						$elm$core$Basics$composeL,
-						A2($elm$core$Basics$composeL, $author$project$Main$ViewState, $author$project$Model$ChangeQuantity),
+						A2($elm$core$Basics$composeL, $author$project$Main$TrySelectChanged, $author$project$Model$ChangeQuantity),
 						$elm$core$Maybe$withDefault($author$project$Try$Two)),
 					$author$project$Try$encodeQuantity),
 				$elm$core$Maybe$withDefault(1)),
@@ -11433,7 +11430,9 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{
 		init: $author$project$Main$init,
-		subscriptions: $author$project$Main$subscriptions,
+		subscriptions: function (_v0) {
+			return $elm$core$Platform$Sub$none;
+		},
 		update: $author$project$Main$update,
 		view: A2($elm$core$Basics$composeR, $author$project$Main$view, $rtfeldman$elm_css$Html$Styled$toUnstyled)
 	});
