@@ -1,6 +1,7 @@
 module Main exposing (..)
 
-import Action
+-- import Model exposing (..)
+
 import Browser
 import Browser.Dom as Dom
 import Console
@@ -11,13 +12,14 @@ import Data
 import Deque
 import Dict exposing (..)
 import Face exposing (view)
+import Game
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
 import Html.Styled.Events exposing (..)
 import Json.Decode as Decode
 import List
-import Model exposing (..)
 import Player
+import Set
 import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
@@ -26,21 +28,50 @@ import Try exposing (Cup, Face(..), Quantity(..), Try)
 import Tuple3
 
 
+
+-- MODEL
+-- Form
+
+
+type TrySelectMsg
+    = ChangeQuantity Try.Quantity
+    | ChangeValue Try.Face
+
+
+type NoOp
+    = NoOp
+
+
+type alias History =
+    List
+        { playerId : Player.PlayerId
+        }
+
+
+type alias Model =
+    { gameState : Game.Model
+    , consoleState : Console.Model
+    }
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { roll = []
-      , tryHistory = []
-      , tryToBeat = ( Two, Twos )
+    ( { gameState =
+            { roll = []
+            , tryToBeat = ( Two, Twos )
+            , cupState = Covered
+            , tableWilds = 0
+            , cupLooked = False
+            , whosTurn = 1
+            , validActions = Set.fromList [ Game.ReRoll ]
+            }
+      , rollState = Fresh
       , quantity = Try.Two
       , value = Try.Threes
-      , tableWilds = 0
-      , cupState = Covered
-      , cupLooked = False
-      , rollState = Fresh
+      , tryHistory = []
       , consoleHistory = []
       , consoleValue = ""
       , consoleIsVisible = False
-      , whosTurn = 1
       , players = Data.my_players
       , activePlayers = Data.my_players |> Dict.keys |> Deque.fromList
       }
@@ -55,8 +86,8 @@ Here, some top level Msg variants take a sub Msg to group cases in update functi
 -}
 type Msg
     = TrySelectChanged TrySelectMsg
-    | GameAction Action.Msg
-    | ConsoleMsg Console.Msg
+    | GameAction Game.Action
+    | ConsoleMsg (Console.Msg)
     | NoOp
 
 
@@ -80,17 +111,17 @@ update msg model =
         GameAction subMsg ->
             -- check available actions here?
             (case subMsg of
-                Action.Roll rollType ->
-                    Action.roll rollType model
+                Game.Roll rollType ->
+                    Game.roll rollType model
 
-                Action.Pull ->
-                    ( Action.pull model, Cmd.none )
+                Game.Pull ->
+                    ( Game.pull model, Cmd.none )
 
-                Action.Look ->
-                    ( Action.look model, Cmd.none )
+                Game.Look ->
+                    ( Game.look model, Cmd.none )
 
-                Action.Pass try ->
-                    case Action.pass model try of
+                Game.Pass try ->
+                    case Game.pass model try of
                         Ok m ->
                             ( m, Cmd.none )
 
@@ -110,6 +141,7 @@ update msg model =
                     -- todo: apply focus logic - move out to main?
                     Tuple.mapSecond (\c -> Cmd.batch [ focusCmd, c ])
             in
+
             Console.update subMsg model
                 |> Tuple.mapSecond (Cmd.map GameAction)
                 |> withFocus
@@ -159,8 +191,8 @@ view model =
 
         cupButtons =
             [ div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
-                [ button_ [ onClick (GameAction Action.Pull) ] [ text "pull" ]
-                , button_ [ onClick (GameAction Action.Look) ] [ text "look" ]
+                [ button_ [ onClick (GameAction Game.Pull) ] [ text "pull" ]
+                , button_ [ onClick (GameAction Game.Look) ] [ text "look" ]
                 ]
             ]
 
@@ -178,13 +210,13 @@ view model =
         rollButtons =
             case model.rollState of
                 Fresh ->
-                    [ div [] [ button_ [ onClick (GameAction (Action.Roll Action.ReRoll)) ] [ text "roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameAction (Game.Roll Game.ReRoll)) ] [ text "roll" ] ] ]
 
                 Pulled _ ->
-                    [ div [] [ button_ [ onClick (GameAction (Action.Roll Action.ReRoll)) ] [ text "roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameAction (Game.Roll Game.ReRoll)) ] [ text "roll" ] ] ]
 
                 Looked ->
-                    [ div [] [ button_ [ onClick (GameAction (Action.Roll Action.ReRoll)) ] [ text "re-roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameAction (Game.Roll Game.ReRoll)) ] [ text "re-roll" ] ] ]
 
                 _ ->
                     []
@@ -363,7 +395,7 @@ viewPassTry quantity val tryToBeat =
             [ label [ for "value" ] [ text "Value" ]
             , select_ [ onInput changeValue, id "value" ] values
             ]
-        , button_ [ css [ Tw.col_span_2 ], onClick ((GameAction << Action.Pass) ( quantity, val )) ] [ text "pass" ]
+        , button_ [ css [ Tw.col_span_2 ], onClick ((GameAction << Game.Pass) ( quantity, val )) ] [ text "pass" ]
         ]
 
 

@@ -1,16 +1,13 @@
-module Console exposing (Msg(..), update, view)
+module Console exposing (Model, Msg(..), update, view)
 
-import Action
-import Browser.Dom as Dom
 import Css
+import Game
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
+import Html.Styled.Attributes exposing (class, css, id, type_, value)
 import Html.Styled.Events exposing (..)
 import Json.Decode as Decode
-import Model exposing (Model, NoOp(..))
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
-import Task
 import Try
 
 
@@ -20,7 +17,14 @@ type Msg
     | Submit String
 
 
-update : Msg -> Model -> ( Model, Cmd Action.Msg )
+type alias Model =
+    { consoleHistory : List String
+    , consoleValue : String
+    , consoleIsVisible : Bool
+    }
+
+
+update : Msg -> Model -> ( Model, Cmd Game.Action )
 update msg model =
     case msg of
         Change str ->
@@ -47,13 +51,13 @@ update msg model =
                             ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 consoleInput ], Cmd.none )
 
                         "roll" ->
-                            Action.roll Action.ReRoll (modelWithNewEntry [ x ])
+                            Game.roll Game.ReRoll (modelWithNewEntry [ x ])
 
                         "look" ->
-                            ( Action.look (modelWithNewEntry [ x ]), Cmd.none )
+                            ( Game.look (modelWithNewEntry [ x ]), Cmd.none )
 
                         "pull" ->
-                            ( Action.pull (modelWithNewEntry [ x ]), Cmd.none )
+                            ( Game.pull (modelWithNewEntry [ x ]), Cmd.none )
 
                         "pass" ->
                             let
@@ -72,11 +76,11 @@ update msg model =
                                             Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
 
                                 -- _ =
-                                --     Debug.todo "try not validated properly. handle in Action.pass"
+                                --     Debug.todo "try not validated properly. handle in Game.pass"
                             in
                             case parsedTry of
                                 Ok try ->
-                                    case Action.pass (modelWithNewEntry [ x ++ " " ++ Try.toString try ]) try of
+                                    case Game.pass (modelWithNewEntry [ x ++ " " ++ Try.toString try ]) try of
                                         Ok m ->
                                             ( m, Cmd.none )
 
@@ -194,3 +198,17 @@ onEnter msg =
                 Decode.fail "not ENTER"
     in
     on "keydown" (Decode.andThen isEnter keyCode)
+
+
+
+-- handleConsoleToggle : Msg -> Attribute Msg
+-- handleConsoleToggle msg =
+--     let
+--         isShortcut code =
+--             if code == 13 then
+--                 -- todo: replace with some sort of validator on `CMD + J`
+--                 Decode.succeed msg
+--             else
+--                 Decode.fail "not ENTER"
+--     in
+--     on "keydown" (Decode.andThen isShortcut keyCode)
