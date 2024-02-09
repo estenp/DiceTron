@@ -2,6 +2,7 @@ module Game exposing (..)
 
 -- import Model exposing (CupState, RollState)
 
+import Css.Transitions exposing (offset)
 import Deque
 import Dict
 import Player
@@ -18,7 +19,7 @@ type RollState
     | Pulled PullResult
 
 
-type Action
+type Msg
     = Pull
     | Pass Try
     | Look
@@ -31,8 +32,24 @@ type Roll
     | ReRoll
 
 
+msgToString : Msg -> String
+msgToString msg =
+    case msg of
+        Pull ->
+            "pull"
+
+        Pass _ ->
+            "pass"
+
+        Look ->
+            "look"
+
+        Roll _ ->
+            "roll"
+
+
 type alias ValidActions =
-    Set Action
+    Set String
 
 
 type alias Model =
@@ -67,14 +84,12 @@ type CupState
     | Uncovered
 
 
-roll : Roll -> Model -> ( Model, Cmd Action )
+roll : Roll -> Model -> ( Model, Cmd Msg )
 roll rollType model =
     case rollType of
         -- this message only should come in from runtime
         NewRoll cup ->
-            ( { model | roll = cup, rollState = Rolled }
-            , Cmd.none
-            )
+            ( { model | roll = cup, rollState = Rolled }, Cmd.none )
 
         ReRoll ->
             -- checking state and factoring Wilds works well in update when we want to more generically call for a roll (whether fresh or reroll), as you might in console

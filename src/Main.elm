@@ -19,6 +19,7 @@ import Html.Styled.Events exposing (..)
 import Json.Decode as Decode
 import List
 import Player
+import Random
 import Set
 import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
@@ -38,57 +39,81 @@ type TrySelectMsg
     | ChangeValue Try.Face
 
 
-type NoOp
-    = NoOp
-
-
-type alias History =
-    List
-        { playerId : Player.PlayerId
-        }
-
-
 type alias Model =
     { gameState : Game.Model
     , consoleState : Console.Model
     }
 
 
+initGameState : Game.Model
+initGameState =
+    { roll = []
+    , tryToBeat = ( Two, Twos )
+    , cupState = Game.Covered
+    , tableWilds = 0
+    , cupLooked = False
+    , rollState = Game.Fresh
+    , whosTurn = 1
+    , validActions = Set.fromList [ Game.msgToString (Game.Roll Game.ReRoll) ]
+    , tryHistory = []
+    , quantity = Try.Two
+    , value = Try.Threes
+    , activePlayers = Data.my_players |> Dict.keys |> Deque.fromList
+    , players = Data.my_players
+    }
+
+
+initConsoleState : Console.Model
+initConsoleState =
+    { consoleHistory = []
+    , consoleValue = ""
+    , consoleIsVisible = False
+    }
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { gameState =
-            { roll = []
-            , tryToBeat = ( Two, Twos )
-            , cupState = Covered
-            , tableWilds = 0
-            , cupLooked = False
-            , whosTurn = 1
-            , validActions = Set.fromList [ Game.ReRoll ]
-            }
-      , rollState = Fresh
-      , quantity = Try.Two
-      , value = Try.Threes
-      , tryHistory = []
-      , consoleHistory = []
-      , consoleValue = ""
-      , consoleIsVisible = False
-      , players = Data.my_players
-      , activePlayers = Data.my_players |> Dict.keys |> Deque.fromList
+    ( { gameState = initGameState
+      , consoleState = initConsoleState
       }
     , Cmd.none
     )
 
 
-{-| Main Msg type.
-
-Here, some top level Msg variants take a sub Msg to group cases in update function.
-
--}
 type Msg
     = TrySelectChanged TrySelectMsg
-    | GameAction Game.Action
-    | ConsoleMsg (Console.Msg)
+    | GameAction Game.Msg
+    | ConsoleMsg Console.Msg
     | NoOp
+
+
+mergeGameState : Model -> Game.Model -> Model
+mergeGameState model game =
+    { model | gameState = game }
+
+
+mergeConsoleState : Model -> Console.Model -> Model
+mergeConsoleState model console =
+    { model | consoleState = console }
+
+
+
+-- console =
+--     model.consoleState
+-- game =
+--     model.gameState
+-- withGame g =
+--     mergeGameState model g
+-- withConsole c =
+--     mergeConsoleState model c
+-- -- model
+-- --  |> withGame game
+-- --  |> withConsole console
+-- --
+-- updateModel : Game.Model -> List String -> Model
+-- updateModel g entries =
+--     mergeGameState model g
+--     >> mergeConsoleState model ({ console | consoleHistory = model.consoleHistory ++ entries, consoleValue = "" }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -98,53 +123,77 @@ update msg model =
         TrySelectChanged subMsg ->
             case subMsg of
                 ChangeQuantity quant ->
-                    ( { model | quantity = quant }
+                    let
+                        gs =
+                            model.gameState
+
+                        new =
+                            { gs | quantity = quant }
+                    in
+                    ( { model | gameState = new }
                     , Cmd.none
                     )
 
                 ChangeValue val ->
-                    ( { model | value = val }
+                    let
+                        gs =
+                            model.gameState
+
+                        new =
+                            { gs | value = val }
+                    in
+                    ( { model | gameState = new }
                     , Cmd.none
                     )
 
         -- game event messages
         GameAction subMsg ->
             -- check available actions here?
-            (case subMsg of
+            let
+                gameModel =
+                    model.gameState
+            in
+            case subMsg of
                 Game.Roll rollType ->
-                    Game.roll rollType model
+                    Game.roll rollType gameModel
+                        |> Tuple.mapBoth
+                            (mergeGameState model)
+                            (Cmd.map GameAction)
 
                 Game.Pull ->
-                    ( Game.pull model, Cmd.none )
+                    ( Game.pull model.gameState |> mergeGameState model, Cmd.none )
 
                 Game.Look ->
-                    ( Game.look model, Cmd.none )
+                    ( Game.look model.gameState |> mergeGameState model, Cmd.none )
 
                 Game.Pass try ->
-                    case Game.pass model try of
+                    case Game.pass model.gameState try of
                         Ok m ->
-                            ( m, Cmd.none )
+                            ( m |> mergeGameState model, Cmd.none )
 
                         Err e ->
                             -- update (ConsoleMsg (Console.Submit e) model) -- todo: hmm..
                             -- update NoOp model -- one of these would def be preferred, but dont currently work
                             ( model, Cmd.none )
-            )
-                |> Tuple.mapSecond (Cmd.map GameAction)
 
         ConsoleMsg subMsg ->
             let
                 focusCmd =
                     Task.attempt (\_ -> NoOp) (Dom.focus "console")
 
-                withFocus =
-                    -- todo: apply focus logic - move out to main?
-                    Tuple.mapSecond (\c -> Cmd.batch [ focusCmd, c ])
-            in
+                -- withFocus =
+                --     -- todo: apply focus logic - move out to main?
+                --     Tuple.mapSecond (\c -> Cmd.batch [ focusCmd, c ])
+                --
+                ( newConsole, ( newGame, gameMsg ) ) =
+                    Console.update subMsg ( model.consoleState, model.gameState )
 
-            Console.update subMsg model
-                |> Tuple.mapSecond (Cmd.map GameAction)
-                |> withFocus
+                m =
+                    mergeGameState (mergeConsoleState model newConsole) newGame
+            in
+            ( m
+            , Cmd.batch [ focusCmd, Cmd.map GameAction gameMsg ]
+            )
 
         NoOp ->
             ( model, Cmd.none )
@@ -162,21 +211,27 @@ view model =
         _ =
             Debug.log "Need to validate available commands on any given screen. console and currently 'pass' when there isn't a roll yet"
 
+        gameModel =
+            model.gameState
+
+        consoleModel =
+            model.consoleState
+
         -- UI
         gameIsOver =
-            Deque.length model.activePlayers <= 1
+            Deque.length gameModel.activePlayers <= 1
 
         playerStats =
-            model.players
+            gameModel.players
                 |> Dict.toList
                 |> List.map Tuple.second
-                |> List.map (Player.view model.whosTurn)
+                |> List.map (Player.view gameModel.whosTurn)
                 |> stats_
 
         tryHistory =
             div [ class "history", css [ Tw.justify_self_center, Tw.mt_4, Tw.overflow_auto ] ]
-                (model.tryHistory
-                    |> List.map (Tuple3.mapAllThree Try.toString (Player.getName model.players) identity)
+                (gameModel.tryHistory
+                    |> List.map (Tuple3.mapAllThree Try.toString (Player.getName gameModel.players) identity)
                     |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup) ])
                 )
 
@@ -186,7 +241,7 @@ view model =
                 [ class "roll"
                 , css [ Tw.flex, Tw.justify_evenly ]
                 ]
-                (viewCup model.roll)
+                (viewCup gameModel.roll)
             ]
 
         cupButtons =
@@ -197,10 +252,10 @@ view model =
             ]
 
         tableWilds =
-            if model.tableWilds > 0 then
+            if gameModel.tableWilds > 0 then
                 [ section
                     [ id "wilds" ]
-                    (viewCup (List.repeat model.tableWilds Wilds))
+                    (viewCup (List.repeat gameModel.tableWilds Wilds))
                 , divider
                 ]
 
@@ -208,24 +263,24 @@ view model =
                 []
 
         rollButtons =
-            case model.rollState of
-                Fresh ->
+            case gameModel.rollState of
+                Game.Fresh ->
                     [ div [] [ button_ [ onClick (GameAction (Game.Roll Game.ReRoll)) ] [ text "roll" ] ] ]
 
-                Pulled _ ->
+                Game.Pulled _ ->
                     [ div [] [ button_ [ onClick (GameAction (Game.Roll Game.ReRoll)) ] [ text "roll" ] ] ]
 
-                Looked ->
+                Game.Looked ->
                     [ div [] [ button_ [ onClick (GameAction (Game.Roll Game.ReRoll)) ] [ text "re-roll" ] ] ]
 
                 _ ->
                     []
 
         trySelects =
-            [ viewPassTry model.quantity model.value model.tryToBeat ]
+            [ viewPassTry gameModel.quantity gameModel.value gameModel.tryToBeat ]
 
         console =
-            Console.view model |> Html.Styled.map ConsoleMsg
+            Console.view consoleModel { onEnter = Console.Submit, onInput = Console.Change } |> Html.Styled.map ConsoleMsg
     in
     span []
         -- span just to apply global styles to page
@@ -233,8 +288,8 @@ view model =
         , div [ class "main" ]
             -- main wrapper
             (if not gameIsOver then
-                case model.rollState of
-                    Fresh ->
+                case gameModel.rollState of
+                    Game.Fresh ->
                         [ logo
                         , playerStats
                         , tryHistory
@@ -242,7 +297,7 @@ view model =
                         , console
                         ]
 
-                    Rolled ->
+                    Game.Rolled ->
                         [ logo
                         , playerStats
                         , tryHistory
@@ -251,7 +306,7 @@ view model =
                         , console
                         ]
 
-                    Received ->
+                    Game.Received ->
                         [ logo
                         , playerStats
                         , tryHistory
@@ -260,7 +315,7 @@ view model =
                         , console
                         ]
 
-                    Looked ->
+                    Game.Looked ->
                         [ logo
                         , playerStats
                         , tryHistory
@@ -269,14 +324,14 @@ view model =
                         , console
                         ]
 
-                    Pulled result ->
+                    Game.Pulled result ->
                         let
                             pullResult =
                                 case result of
-                                    HadIt ->
+                                    Game.HadIt ->
                                         p [] [ text "Previous player had the roll. You will lose 1 hp." ]
 
-                                    Lie ->
+                                    Game.Lie ->
                                         p [] [ text "Previous player lied. They will lose 1 hp." ]
                         in
                         [ logo
@@ -288,7 +343,7 @@ view model =
                         ]
 
              else
-                [ text ("Game over." ++ Player.getName model.players (Maybe.withDefault 0 (Deque.first model.activePlayers)) ++ " wins!")
+                [ text ("Game over." ++ Player.getName gameModel.players (Maybe.withDefault 0 (Deque.first gameModel.activePlayers)) ++ " wins!")
                 ]
             )
         ]

@@ -24,41 +24,55 @@ type alias Model =
     }
 
 
-update : Msg -> Model -> ( Model, Cmd Game.Action )
-update msg model =
+update : Msg -> ( Model, Game.Model ) -> ( Model, ( Game.Model, Cmd Game.Msg ) )
+update msg ( console, game ) =
     case msg of
         Change str ->
-            ( { model | consoleValue = str }
-            , Cmd.none
-            )
+            ( { console | consoleValue = str }, ( game, Cmd.none ) )
 
         VisibilityToggled ->
-            ( { model | consoleIsVisible = not model.consoleIsVisible }
-            , Cmd.none
-            )
+            ( { console | consoleIsVisible = not console.consoleIsVisible }, ( game, Cmd.none ) )
 
         Submit consoleInput ->
             -- validate command
             -- add to history log
             let
-                modelWithNewEntry entry =
-                    { model | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" }
+                -- for command case
+                -- * add a console to the log
+                -- * update game state
+                addConsoleEntries : List String -> Model
+                addConsoleEntries entries =
+                    { console | consoleHistory = console.consoleHistory ++ entries, consoleValue = "" }
+
+                --
+                -- |> mergeConsoleState model
+                -- newConsole = mergeConsoleState model ({ c | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" })
+                --
             in
             case String.words consoleInput of
                 x :: xs ->
                     case x of
                         "/c" ->
-                            ( modelWithNewEntry [ "[chat] " ++ String.dropLeft 2 consoleInput ], Cmd.none )
+                            ( addConsoleEntries [ "[chat] " ++ String.dropLeft 2 consoleInput ]
+                            , ( game, Cmd.none )
+                            )
 
                         "roll" ->
-                            Game.roll Game.ReRoll (modelWithNewEntry [ x ])
+                            ( addConsoleEntries [ x ]
+                            , Game.roll Game.ReRoll game
+                            )
 
                         "look" ->
-                            ( Game.look (modelWithNewEntry [ x ]), Cmd.none )
+                            ( addConsoleEntries [ x ]
+                            , ( Game.look game, Cmd.none )
+                            )
 
                         "pull" ->
-                            ( Game.pull (modelWithNewEntry [ x ]), Cmd.none )
+                            ( addConsoleEntries [ x ]
+                            , ( Game.pull game, Cmd.none )
+                            )
 
+                        -- todo: apply this new util below
                         "pass" ->
                             let
                                 parsedTry : Result String Try.Try
@@ -80,22 +94,28 @@ update msg model =
                             in
                             case parsedTry of
                                 Ok try ->
-                                    case Game.pass (modelWithNewEntry [ x ++ " " ++ Try.toString try ]) try of
-                                        Ok m ->
-                                            ( m, Cmd.none )
+                                    case Game.pass game try of
+                                        Ok gameModel ->
+                                            ( addConsoleEntries [ x ++ " " ++ Try.toString try ]
+                                            , ( gameModel, Cmd.none )
+                                            )
 
                                         Err e ->
-                                            ( modelWithNewEntry [ consoleInput, e ], Cmd.none )
+                                            ( addConsoleEntries [ consoleInput, e ]
+                                            , ( game, Cmd.none )
+                                            )
 
                                 Err message ->
-                                    ( modelWithNewEntry [ consoleInput, message ], Cmd.none )
+                                    ( addConsoleEntries [ consoleInput, message ]
+                                    , ( game, Cmd.none )
+                                    )
 
                         "try" ->
-                            ( modelWithNewEntry
+                            ( addConsoleEntries
                                 [ consoleInput
-                                , "You received: " ++ Try.toString model.tryToBeat
+                                , "You received: " ++ Try.toString game.tryToBeat
                                 , "You must pass: "
-                                    ++ (case Try.mustPass model.tryToBeat of
+                                    ++ (case Try.mustPass game.tryToBeat of
                                             Just t ->
                                                 Try.toString t
 
@@ -103,11 +123,11 @@ update msg model =
                                                 "You cannot beat this roll. Sorry."
                                        )
                                 ]
-                            , Cmd.none
+                            , ( game, Cmd.none )
                             )
 
                         "help" ->
-                            ( modelWithNewEntry
+                            ( addConsoleEntries
                                 [ consoleInput
                                 , """This console can be used to control your game via commands or chat with other players.
 
@@ -123,24 +143,36 @@ update msg model =
                                         `/c *your message*` -> add a message to game chat
                                         """
                                 ]
-                            , Cmd.none
+                            , ( game, Cmd.none )
                             )
 
                         "clear" ->
-                            ( { model | consoleHistory = [], consoleValue = "" }, Cmd.none )
+                            ( { console | consoleHistory = [], consoleValue = "" }, ( game, Cmd.none ) )
 
                         "" ->
-                            ( modelWithNewEntry [ "" ], Cmd.none )
+                            ( addConsoleEntries [ "" ], ( game, Cmd.none ) )
 
                         _ ->
-                            ( modelWithNewEntry [ consoleInput, "Command not recognized." ], Cmd.none )
+                            ( addConsoleEntries [ consoleInput, "Command not recognized." ], ( game, Cmd.none ) )
 
                 _ ->
-                    ( model, Cmd.none )
+                    ( console, ( game, Cmd.none ) )
 
 
-view : Model -> Html Msg
-view model =
+type alias Messages message =
+    { onEnter : String -> message
+    , onInput : String -> message
+    }
+
+
+
+-- type ViewHtmlMsg
+--     = OnEnterMsg
+--     | Msg
+
+
+view : Model -> Messages a -> Html a
+view model messages =
     let
         history =
             model.consoleHistory
@@ -172,8 +204,8 @@ view model =
                     , input
                         [ type_ "text"
                         , id "console"
-                        , onInput Change
-                        , onEnter (Submit model.consoleValue)
+                        , onInput messages.onInput
+                        , onEnter (messages.onEnter model.consoleValue)
                         , value model.consoleValue
                         , css
                             [ Tw.inline_block
@@ -187,7 +219,10 @@ view model =
         )
 
 
-onEnter : Msg -> Attribute Msg
+
+-- onEnter : Msg -> Attribute Msg
+
+
 onEnter msg =
     let
         isEnter code =
