@@ -7671,7 +7671,6 @@ var $author$project$Main$update = F2(
 				}
 			case 'GameAction':
 				var subMsg = msg.a;
-				var gameModel = model.gameState;
 				switch (subMsg.$) {
 					case 'Roll':
 						var rollType = subMsg.a;
@@ -7679,7 +7678,7 @@ var $author$project$Main$update = F2(
 							$elm$core$Tuple$mapBoth,
 							$author$project$Main$mergeGameState(model),
 							$elm$core$Platform$Cmd$map($author$project$Main$GameAction),
-							A2($author$project$Game$roll, rollType, gameModel));
+							A2($author$project$Game$roll, rollType, model.gameState));
 					case 'Pull':
 						return _Utils_Tuple2(
 							A2(
@@ -7723,12 +7722,11 @@ var $author$project$Main$update = F2(
 				var _v5 = _v4.b;
 				var newGame = _v5.a;
 				var gameMsg = _v5.b;
-				var m = A2(
-					$author$project$Main$mergeGameState,
-					A2($author$project$Main$mergeConsoleState, model, newConsole),
-					newGame);
 				return _Utils_Tuple2(
-					m,
+					A2(
+						$author$project$Main$mergeGameState,
+						A2($author$project$Main$mergeConsoleState, model, newConsole),
+						newGame),
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[
@@ -11199,18 +11197,77 @@ var $author$project$Main$viewPassTry = F3(
 				]));
 	});
 var $author$project$Main$view = function (model) {
-	var gameModel = model.gameState;
+	var cupButtons = _List_fromArray(
+		[
+			A2(
+			$rtfeldman$elm_css$Html$Styled$div,
+			_List_fromArray(
+				[
+					$rtfeldman$elm_css$Html$Styled$Attributes$css(
+					_List_fromArray(
+						[$author$project$Tailwind$Utilities$grid, $author$project$Tailwind$Utilities$grid_cols_2, $author$project$Tailwind$Utilities$gap_4, $author$project$Tailwind$Utilities$w_full]))
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$author$project$StyledElements$button_,
+					_List_fromArray(
+						[
+							$rtfeldman$elm_css$Html$Styled$Events$onClick(
+							$author$project$Main$GameAction($author$project$Game$Pull))
+						]),
+					_List_fromArray(
+						[
+							$rtfeldman$elm_css$Html$Styled$text('pull')
+						])),
+					A2(
+					$author$project$StyledElements$button_,
+					_List_fromArray(
+						[
+							$rtfeldman$elm_css$Html$Styled$Events$onClick(
+							$author$project$Main$GameAction($author$project$Game$Look))
+						]),
+					_List_fromArray(
+						[
+							$rtfeldman$elm_css$Html$Styled$text('look')
+						]))
+				]))
+		]);
+	var _v0 = model;
+	var gameState = _v0.gameState;
+	var consoleState = _v0.consoleState;
+	var console = A2(
+		$rtfeldman$elm_css$Html$Styled$map,
+		$author$project$Main$ConsoleMsg,
+		A2(
+			$author$project$Console$view,
+			consoleState,
+			{onEnter: $author$project$Console$Submit, onInput: $author$project$Console$Change}));
+	var cup = _List_fromArray(
+		[
+			A2(
+			$rtfeldman$elm_css$Html$Styled$section,
+			_List_fromArray(
+				[
+					$rtfeldman$elm_css$Html$Styled$Attributes$class('roll'),
+					$rtfeldman$elm_css$Html$Styled$Attributes$css(
+					_List_fromArray(
+						[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_evenly]))
+				]),
+			$author$project$Main$viewCup(gameState.roll))
+		]);
+	var gameIsOver = $folkertdev$elm_deque$Deque$length(gameState.activePlayers) <= 1;
 	var playerStats = $author$project$Main$stats_(
 		A2(
 			$elm$core$List$map,
-			$author$project$Player$view(gameModel.whosTurn),
+			$author$project$Player$view(gameState.whosTurn),
 			A2(
 				$elm$core$List$map,
 				$elm$core$Tuple$second,
-				$elm$core$Dict$toList(gameModel.players))));
+				$elm$core$Dict$toList(gameState.players))));
 	var rollButtons = function () {
-		var _v3 = gameModel.rollState;
-		switch (_v3.$) {
+		var _v4 = gameState.rollState;
+		switch (_v4.$) {
 			case 'Fresh':
 				return _List_fromArray(
 					[
@@ -11281,7 +11338,7 @@ var $author$project$Main$view = function (model) {
 				return _List_Nil;
 		}
 	}();
-	var tableWilds = (gameModel.tableWilds > 0) ? _List_fromArray(
+	var tableWilds = (gameState.tableWilds > 0) ? _List_fromArray(
 		[
 			A2(
 			$rtfeldman$elm_css$Html$Styled$section,
@@ -11290,7 +11347,7 @@ var $author$project$Main$view = function (model) {
 					$rtfeldman$elm_css$Html$Styled$Attributes$id('wilds')
 				]),
 			$author$project$Main$viewCup(
-				A2($elm$core$List$repeat, gameModel.tableWilds, $author$project$Try$Wilds))),
+				A2($elm$core$List$repeat, gameState.tableWilds, $author$project$Try$Wilds))),
 			$author$project$StyledElements$divider
 		]) : _List_Nil;
 	var tryHistory = A2(
@@ -11319,72 +11376,14 @@ var $author$project$Main$view = function (model) {
 				A3(
 					$TSFoster$elm_tuple_extra$Tuple3$mapAllThree,
 					$author$project$Try$toString,
-					$author$project$Player$getName(gameModel.players),
+					$author$project$Player$getName(gameState.players),
 					$elm$core$Basics$identity),
-				gameModel.tryHistory)));
+				gameState.tryHistory)));
 	var trySelects = _List_fromArray(
 		[
-			A3($author$project$Main$viewPassTry, gameModel.quantity, gameModel.value, gameModel.tryToBeat)
+			A3($author$project$Main$viewPassTry, gameState.quantity, gameState.value, gameState.tryToBeat)
 		]);
-	var gameIsOver = $folkertdev$elm_deque$Deque$length(gameModel.activePlayers) <= 1;
-	var cupButtons = _List_fromArray(
-		[
-			A2(
-			$rtfeldman$elm_css$Html$Styled$div,
-			_List_fromArray(
-				[
-					$rtfeldman$elm_css$Html$Styled$Attributes$css(
-					_List_fromArray(
-						[$author$project$Tailwind$Utilities$grid, $author$project$Tailwind$Utilities$grid_cols_2, $author$project$Tailwind$Utilities$gap_4, $author$project$Tailwind$Utilities$w_full]))
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$author$project$StyledElements$button_,
-					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$Events$onClick(
-							$author$project$Main$GameAction($author$project$Game$Pull))
-						]),
-					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$text('pull')
-						])),
-					A2(
-					$author$project$StyledElements$button_,
-					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$Events$onClick(
-							$author$project$Main$GameAction($author$project$Game$Look))
-						]),
-					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$text('look')
-						]))
-				]))
-		]);
-	var cup = _List_fromArray(
-		[
-			A2(
-			$rtfeldman$elm_css$Html$Styled$section,
-			_List_fromArray(
-				[
-					$rtfeldman$elm_css$Html$Styled$Attributes$class('roll'),
-					$rtfeldman$elm_css$Html$Styled$Attributes$css(
-					_List_fromArray(
-						[$author$project$Tailwind$Utilities$flex, $author$project$Tailwind$Utilities$justify_evenly]))
-				]),
-			$author$project$Main$viewCup(gameModel.roll))
-		]);
-	var consoleModel = model.consoleState;
-	var console = A2(
-		$rtfeldman$elm_css$Html$Styled$map,
-		$author$project$Main$ConsoleMsg,
-		A2(
-			$author$project$Console$view,
-			consoleModel,
-			{onEnter: $author$project$Console$Submit, onInput: $author$project$Console$Change}));
-	var _v0 = $elm$core$Debug$log('Need to validate available commands on any given screen. console and currently \'pass\' when there isn\'t a roll yet');
+	var _v1 = $elm$core$Debug$log('Need to validate available commands on any given screen. console and currently \'pass\' when there isn\'t a roll yet');
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$span,
 		_List_Nil,
@@ -11399,8 +11398,8 @@ var $author$project$Main$view = function (model) {
 					]),
 				function () {
 					if (!gameIsOver) {
-						var _v1 = gameModel.rollState;
-						switch (_v1.$) {
+						var _v2 = gameState.rollState;
+						switch (_v2.$) {
 							case 'Fresh':
 								return _List_fromArray(
 									[
@@ -11451,7 +11450,7 @@ var $author$project$Main$view = function (model) {
 										console
 									]);
 							default:
-								var result = _v1.a;
+								var result = _v2.a;
 								var pullResult = function () {
 									if (result.$ === 'HadIt') {
 										return A2(
@@ -11494,11 +11493,11 @@ var $author$project$Main$view = function (model) {
 								$rtfeldman$elm_css$Html$Styled$text(
 								'Game over.' + (A2(
 									$author$project$Player$getName,
-									gameModel.players,
+									gameState.players,
 									A2(
 										$elm$core$Maybe$withDefault,
 										0,
-										$folkertdev$elm_deque$Deque$first(gameModel.activePlayers))) + ' wins!'))
+										$folkertdev$elm_deque$Deque$first(gameState.activePlayers))) + ' wins!'))
 							]);
 					}
 				}())

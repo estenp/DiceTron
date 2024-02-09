@@ -31,7 +31,6 @@ import Tuple3
 
 
 -- MODEL
--- Form
 
 
 type TrySelectMsg
@@ -80,6 +79,10 @@ init _ =
     )
 
 
+
+-- UPDATE
+
+
 type Msg
     = TrySelectChanged TrySelectMsg
     | GameAction Game.Msg
@@ -95,25 +98,6 @@ mergeGameState model game =
 mergeConsoleState : Model -> Console.Model -> Model
 mergeConsoleState model console =
     { model | consoleState = console }
-
-
-
--- console =
---     model.consoleState
--- game =
---     model.gameState
--- withGame g =
---     mergeGameState model g
--- withConsole c =
---     mergeConsoleState model c
--- -- model
--- --  |> withGame game
--- --  |> withConsole console
--- --
--- updateModel : Game.Model -> List String -> Model
--- updateModel g entries =
---     mergeGameState model g
---     >> mergeConsoleState model ({ console | consoleHistory = model.consoleHistory ++ entries, consoleValue = "" }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -149,13 +133,9 @@ update msg model =
         -- game event messages
         GameAction subMsg ->
             -- check available actions here?
-            let
-                gameModel =
-                    model.gameState
-            in
             case subMsg of
                 Game.Roll rollType ->
-                    Game.roll rollType gameModel
+                    Game.roll rollType model.gameState
                         |> Tuple.mapBoth
                             (mergeGameState model)
                             (Cmd.map GameAction)
@@ -187,11 +167,8 @@ update msg model =
                 --
                 ( newConsole, ( newGame, gameMsg ) ) =
                     Console.update subMsg ( model.consoleState, model.gameState )
-
-                m =
-                    mergeGameState (mergeConsoleState model newConsole) newGame
             in
-            ( m
+            ( mergeGameState (mergeConsoleState model newConsole) newGame
             , Cmd.batch [ focusCmd, Cmd.map GameAction gameMsg ]
             )
 
@@ -211,27 +188,24 @@ view model =
         _ =
             Debug.log "Need to validate available commands on any given screen. console and currently 'pass' when there isn't a roll yet"
 
-        gameModel =
-            model.gameState
-
-        consoleModel =
-            model.consoleState
+        { gameState, consoleState } =
+            model
 
         -- UI
         gameIsOver =
-            Deque.length gameModel.activePlayers <= 1
+            Deque.length gameState.activePlayers <= 1
 
         playerStats =
-            gameModel.players
+            gameState.players
                 |> Dict.toList
                 |> List.map Tuple.second
-                |> List.map (Player.view gameModel.whosTurn)
+                |> List.map (Player.view gameState.whosTurn)
                 |> stats_
 
         tryHistory =
             div [ class "history", css [ Tw.justify_self_center, Tw.mt_4, Tw.overflow_auto ] ]
-                (gameModel.tryHistory
-                    |> List.map (Tuple3.mapAllThree Try.toString (Player.getName gameModel.players) identity)
+                (gameState.tryHistory
+                    |> List.map (Tuple3.mapAllThree Try.toString (Player.getName gameState.players) identity)
                     |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup) ])
                 )
 
@@ -241,7 +215,7 @@ view model =
                 [ class "roll"
                 , css [ Tw.flex, Tw.justify_evenly ]
                 ]
-                (viewCup gameModel.roll)
+                (viewCup gameState.roll)
             ]
 
         cupButtons =
@@ -252,10 +226,10 @@ view model =
             ]
 
         tableWilds =
-            if gameModel.tableWilds > 0 then
+            if gameState.tableWilds > 0 then
                 [ section
                     [ id "wilds" ]
-                    (viewCup (List.repeat gameModel.tableWilds Wilds))
+                    (viewCup (List.repeat gameState.tableWilds Wilds))
                 , divider
                 ]
 
@@ -263,7 +237,7 @@ view model =
                 []
 
         rollButtons =
-            case gameModel.rollState of
+            case gameState.rollState of
                 Game.Fresh ->
                     [ div [] [ button_ [ onClick (GameAction (Game.Roll Game.ReRoll)) ] [ text "roll" ] ] ]
 
@@ -277,10 +251,10 @@ view model =
                     []
 
         trySelects =
-            [ viewPassTry gameModel.quantity gameModel.value gameModel.tryToBeat ]
+            [ viewPassTry gameState.quantity gameState.value gameState.tryToBeat ]
 
         console =
-            Console.view consoleModel { onEnter = Console.Submit, onInput = Console.Change } |> Html.Styled.map ConsoleMsg
+            Console.view consoleState { onEnter = Console.Submit, onInput = Console.Change } |> Html.Styled.map ConsoleMsg
     in
     span []
         -- span just to apply global styles to page
@@ -288,7 +262,7 @@ view model =
         , div [ class "main" ]
             -- main wrapper
             (if not gameIsOver then
-                case gameModel.rollState of
+                case gameState.rollState of
                     Game.Fresh ->
                         [ logo
                         , playerStats
@@ -343,7 +317,7 @@ view model =
                         ]
 
              else
-                [ text ("Game over." ++ Player.getName gameModel.players (Maybe.withDefault 0 (Deque.first gameModel.activePlayers)) ++ " wins!")
+                [ text ("Game over." ++ Player.getName gameState.players (Maybe.withDefault 0 (Deque.first gameState.activePlayers)) ++ " wins!")
                 ]
             )
         ]
