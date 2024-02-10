@@ -5250,10 +5250,6 @@ var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$initConsoleState = {consoleHistory: _List_Nil, consoleIsVisible: false, consoleValue: ''};
 var $author$project$Game$Covered = {$: 'Covered'};
 var $author$project$Game$Fresh = {$: 'Fresh'};
-var $author$project$Game$ReRoll = {$: 'ReRoll'};
-var $author$project$Game$Roll = function (a) {
-	return {$: 'Roll', a: a};
-};
 var $author$project$Try$Threes = {$: 'Threes'};
 var $author$project$Try$Two = {$: 'Two'};
 var $author$project$Try$Twos = {$: 'Twos'};
@@ -5454,12 +5450,8 @@ var $folkertdev$elm_deque$Internal$fromList = function (list) {
 		});
 };
 var $folkertdev$elm_deque$Deque$fromList = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Deque$Deque, $folkertdev$elm_deque$Internal$fromList);
-var $elm$core$Set$Set_elm_builtin = function (a) {
-	return {$: 'Set_elm_builtin', a: a};
-};
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
-var $elm$core$Set$empty = $elm$core$Set$Set_elm_builtin($elm$core$Dict$empty);
 var $elm$core$Dict$Black = {$: 'Black'};
 var $elm$core$Dict$RBNode_elm_builtin = F5(
 	function (a, b, c, d, e) {
@@ -5569,27 +5561,6 @@ var $elm$core$Dict$insert = F3(
 			return x;
 		}
 	});
-var $elm$core$Set$insert = F2(
-	function (key, _v0) {
-		var dict = _v0.a;
-		return $elm$core$Set$Set_elm_builtin(
-			A3($elm$core$Dict$insert, key, _Utils_Tuple0, dict));
-	});
-var $elm$core$Set$fromList = function (list) {
-	return A3($elm$core$List$foldl, $elm$core$Set$insert, $elm$core$Set$empty, list);
-};
-var $author$project$Game$msgToString = function (msg) {
-	switch (msg.$) {
-		case 'Pull':
-			return 'pull';
-		case 'Pass':
-			return 'pass';
-		case 'Look':
-			return 'look';
-		default:
-			return 'roll';
-	}
-};
 var $elm$core$Dict$fromList = function (assocs) {
 	return A3(
 		$elm$core$List$foldl,
@@ -5627,12 +5598,6 @@ var $author$project$Main$initGameState = {
 	tableWilds: 0,
 	tryHistory: _List_Nil,
 	tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
-	validActions: $elm$core$Set$fromList(
-		_List_fromArray(
-			[
-				$author$project$Game$msgToString(
-				$author$project$Game$Roll($author$project$Game$ReRoll))
-			])),
 	value: $author$project$Try$Threes,
 	whosTurn: 1
 };
@@ -6424,6 +6389,15 @@ var $author$project$Main$GameAction = function (a) {
 	return {$: 'GameAction', a: a};
 };
 var $author$project$Main$NoOp = {$: 'NoOp'};
+var $author$project$Console$addEntries = F2(
+	function (console, entries) {
+		return _Utils_update(
+			console,
+			{
+				consoleHistory: _Utils_ap(console.consoleHistory, entries),
+				consoleValue: ''
+			});
+	});
 var $elm$core$Task$onError = _Scheduler_onError;
 var $elm$core$Task$attempt = F2(
 	function (resultToMessage, task) {
@@ -6443,8 +6417,45 @@ var $elm$core$Task$attempt = F2(
 							$elm$core$Result$Ok),
 						task))));
 	});
+var $author$project$Game$decodeAction = function (action) {
+	switch (action.$) {
+		case 'Pull':
+			return 'pull';
+		case 'Pass':
+			return 'pass';
+		case 'Look':
+			return 'look';
+		default:
+			return 'roll';
+	}
+};
 var $elm$browser$Browser$Dom$focus = _Browser_call('focus');
+var $author$project$Game$HadIt = {$: 'HadIt'};
+var $author$project$Game$Lie = {$: 'Lie'};
 var $author$project$Game$Looked = {$: 'Looked'};
+var $author$project$Game$Pulled = function (a) {
+	return {$: 'Pulled', a: a};
+};
+var $author$project$Game$Received = {$: 'Received'};
+var $author$project$Game$Rolled = {$: 'Rolled'};
+var $author$project$Game$isValidAction = F2(
+	function (rollState, action) {
+		switch (action.$) {
+			case 'Pull':
+				return _Utils_eq(rollState, $author$project$Game$Received);
+			case 'Look':
+				return _Utils_eq(rollState, $author$project$Game$Received);
+			case 'Pass':
+				return _Utils_eq(rollState, $author$project$Game$Received) || (_Utils_eq(rollState, $author$project$Game$Looked) || _Utils_eq(rollState, $author$project$Game$Rolled));
+			default:
+				return _Utils_eq(rollState, $author$project$Game$Fresh) || (_Utils_eq(rollState, $author$project$Game$Looked) || (_Utils_eq(
+					rollState,
+					$author$project$Game$Pulled($author$project$Game$Lie)) || _Utils_eq(
+					rollState,
+					$author$project$Game$Pulled($author$project$Game$HadIt))));
+		}
+	});
+var $elm$core$Debug$log = _Debug_log;
 var $author$project$Game$Uncovered = {$: 'Uncovered'};
 var $author$project$Game$look = function (model) {
 	return _Utils_update(
@@ -6472,7 +6483,6 @@ var $author$project$Main$mergeGameState = F2(
 			model,
 			{gameState: game});
 	});
-var $author$project$Game$Received = {$: 'Received'};
 var $elm$core$List$append = F2(
 	function (xs, ys) {
 		if (!ys.b) {
@@ -6836,11 +6846,6 @@ var $folkertdev$elm_deque$Deque$popFront = A2(
 		$elm$core$Tuple$mapSecond($folkertdev$elm_deque$Deque$Deque),
 		$folkertdev$elm_deque$Internal$popFront),
 	$folkertdev$elm_deque$Deque$unwrap);
-var $author$project$Game$HadIt = {$: 'HadIt'};
-var $author$project$Game$Lie = {$: 'Lie'};
-var $author$project$Game$Pulled = function (a) {
-	return {$: 'Pulled', a: a};
-};
 var $elm_community$list_extra$List$Extra$groupWhile = F2(
 	function (isSameGroup, items) {
 		return A3(
@@ -7121,14 +7126,18 @@ var $author$project$Game$pass = F2(
 			$elm$core$Maybe$withDefault,
 			1,
 			$author$project$Try$toScore(_try));
+		var _v0 = A2(
+			$elm$core$Debug$log,
+			'roll compare',
+			_Utils_Tuple2(received, beingPassed));
 		return (_Utils_cmp(beingPassed, received) > 0) ? $elm$core$Result$Ok(
 			function () {
-				var _v0 = $author$project$Try$mustPass(_try);
-				if (_v0.$ === 'Just') {
-					var nextPassableTry = _v0.a;
-					var _v1 = $folkertdev$elm_deque$Deque$popFront(model.activePlayers);
-					var currentTurn = _v1.a;
-					var rest = _v1.b;
+				var _v1 = $author$project$Try$mustPass(_try);
+				if (_v1.$ === 'Just') {
+					var nextPassableTry = _v1.a;
+					var _v2 = $folkertdev$elm_deque$Deque$popFront(model.activePlayers);
+					var currentTurn = _v2.a;
+					var rest = _v2.b;
 					var newActivePlayers = A2(
 						$folkertdev$elm_deque$Deque$pushBack,
 						A2($elm$core$Maybe$withDefault, 0, currentTurn),
@@ -7165,7 +7174,9 @@ var $author$project$Game$pass = F2(
 var $author$project$Game$NewRoll = function (a) {
 	return {$: 'NewRoll', a: a};
 };
-var $author$project$Game$Rolled = {$: 'Rolled'};
+var $author$project$Game$Roll = function (a) {
+	return {$: 'Roll', a: a};
+};
 var $elm$random$Random$Generate = function (a) {
 	return {$: 'Generate', a: a};
 };
@@ -7447,6 +7458,29 @@ var $author$project$Game$roll = F2(
 			}
 		}
 	});
+var $author$project$Game$ReRoll = {$: 'ReRoll'};
+var $author$project$Game$Look = {$: 'Look'};
+var $author$project$Game$Pass = function (a) {
+	return {$: 'Pass', a: a};
+};
+var $author$project$Game$Pull = {$: 'Pull'};
+var $author$project$Game$encodeAction = function (action) {
+	switch (action) {
+		case 'pull':
+			return $elm$core$Result$Ok($author$project$Game$Pull);
+		case 'pass':
+			return $elm$core$Result$Ok(
+				$author$project$Game$Pass(
+					_Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos)));
+		case 'look':
+			return $elm$core$Result$Ok($author$project$Game$Look);
+		case 'roll':
+			return $elm$core$Result$Ok(
+				$author$project$Game$Roll($author$project$Game$ReRoll));
+		default:
+			return $elm$core$Result$Err(action + ' is not a valid action.');
+	}
+};
 var $elm$core$List$maybeCons = F3(
 	function (f, mx, xs) {
 		var _v0 = f(mx);
@@ -7474,7 +7508,6 @@ var $elm$core$Result$fromMaybe = F2(
 			return $elm$core$Result$Err(err);
 		}
 	});
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Basics$not = _Basics_not;
 var $elm$core$String$words = _String_words;
 var $author$project$Console$update = F2(
@@ -7497,14 +7530,6 @@ var $author$project$Console$update = F2(
 					_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
 			default:
 				var consoleInput = msg.a;
-				var addConsoleEntries = function (entries) {
-					return _Utils_update(
-						console,
-						{
-							consoleHistory: _Utils_ap(console.consoleHistory, entries),
-							consoleValue: ''
-						});
-				};
 				var _v2 = $elm$core$String$words(consoleInput);
 				if (_v2.b) {
 					var x = _v2.a;
@@ -7512,96 +7537,27 @@ var $author$project$Console$update = F2(
 					switch (x) {
 						case '/c':
 							return _Utils_Tuple2(
-								addConsoleEntries(
+								A2(
+									$author$project$Console$addEntries,
+									console,
 									_List_fromArray(
 										[
 											'[chat] ' + A2($elm$core$String$dropLeft, 2, consoleInput)
 										])),
 								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
-						case 'roll':
-							return _Utils_Tuple2(
-								addConsoleEntries(
-									_List_fromArray(
-										[x])),
-								A2($author$project$Game$roll, $author$project$Game$ReRoll, game));
-						case 'look':
-							return _Utils_Tuple2(
-								addConsoleEntries(
-									_List_fromArray(
-										[x])),
-								_Utils_Tuple2(
-									$author$project$Game$look(game),
-									$elm$core$Platform$Cmd$none));
-						case 'pull':
-							return _Utils_Tuple2(
-								addConsoleEntries(
-									_List_fromArray(
-										[x])),
-								_Utils_Tuple2(
-									$author$project$Game$pull(game),
-									$elm$core$Platform$Cmd$none));
-						case 'pass':
-							var parsedTry = function () {
-								var _v6 = A2($elm$core$List$filterMap, $elm$core$String$toInt, xs);
-								if (_v6.b) {
-									if (_v6.b.b) {
-										var a = _v6.a;
-										var _v7 = _v6.b;
-										var b = _v7.a;
-										return A2(
-											$elm$core$Result$fromMaybe,
-											'`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.',
-											A2(
-												$elm$core$Debug$log,
-												'tryasdfsdaf',
-												$author$project$Try$encode(
-													_Utils_Tuple2(a, b))));
-									} else {
-										return $elm$core$Result$Err('`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.');
-									}
-								} else {
-									return $elm$core$Result$Err('`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.');
-								}
-							}();
-							if (parsedTry.$ === 'Ok') {
-								var _try = parsedTry.a;
-								var _v5 = A2($author$project$Game$pass, game, _try);
-								if (_v5.$ === 'Ok') {
-									var gameModel = _v5.a;
-									return _Utils_Tuple2(
-										addConsoleEntries(
-											_List_fromArray(
-												[
-													x + (' ' + $author$project$Try$toString(_try))
-												])),
-										_Utils_Tuple2(gameModel, $elm$core$Platform$Cmd$none));
-								} else {
-									var e = _v5.a;
-									return _Utils_Tuple2(
-										addConsoleEntries(
-											_List_fromArray(
-												[consoleInput, e])),
-										_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
-								}
-							} else {
-								var message = parsedTry.a;
-								return _Utils_Tuple2(
-									addConsoleEntries(
-										_List_fromArray(
-											[consoleInput, message])),
-									_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
-							}
 						case 'try':
 							return _Utils_Tuple2(
-								addConsoleEntries(
+								A2(
+									$author$project$Console$addEntries,
+									console,
 									_List_fromArray(
 										[
 											consoleInput,
 											'You received: ' + $author$project$Try$toString(game.tryToBeat),
 											'You must pass: ' + function () {
-											var _v8 = $author$project$Try$mustPass(game.tryToBeat);
-											if (_v8.$ === 'Just') {
-												var t = _v8.a;
+											var _v4 = $author$project$Try$mustPass(game.tryToBeat);
+											if (_v4.$ === 'Just') {
+												var t = _v4.a;
 												return $author$project$Try$toString(t);
 											} else {
 												return 'You cannot beat this roll. Sorry.';
@@ -7611,7 +7567,9 @@ var $author$project$Console$update = F2(
 								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
 						case 'help':
 							return _Utils_Tuple2(
-								addConsoleEntries(
+								A2(
+									$author$project$Console$addEntries,
+									console,
 									_List_fromArray(
 										[consoleInput, 'This console can be used to control your game via commands or chat with other players.\n\n                                        `roll` -> trigger a roll or reroll\n                                        `look` -> look at a passed roll\n                                        `pull` -> pull a passed roll\n                                        `pass` -> pass a roll\n                                        `clear` -> clear the console\n                                        `try` -> print the current try to beat, passed by the previous player\n\n                                        Prefixing your message with a tag enables special actions.\n\n                                        `/c *your message*` -> add a message to game chat\n                                        '])),
 								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
@@ -7623,16 +7581,135 @@ var $author$project$Console$update = F2(
 								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
 						case '':
 							return _Utils_Tuple2(
-								addConsoleEntries(
+								A2(
+									$author$project$Console$addEntries,
+									console,
 									_List_fromArray(
 										[''])),
 								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
 						default:
-							return _Utils_Tuple2(
-								addConsoleEntries(
-									_List_fromArray(
-										[consoleInput, 'Command not recognized.'])),
-								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
+							var isAction = $author$project$Game$encodeAction(x);
+							var _v5 = A2(
+								$elm$core$Debug$log,
+								'is valid',
+								_Utils_Tuple2(game.rollState, isAction));
+							if (isAction.$ === 'Ok') {
+								var action = isAction.a;
+								if (A2($author$project$Game$isValidAction, game.rollState, action)) {
+									switch (x) {
+										case 'roll':
+											return _Utils_Tuple2(
+												A2(
+													$author$project$Console$addEntries,
+													console,
+													_List_fromArray(
+														[x])),
+												A2($author$project$Game$roll, $author$project$Game$ReRoll, game));
+										case 'look':
+											return _Utils_Tuple2(
+												A2(
+													$author$project$Console$addEntries,
+													console,
+													_List_fromArray(
+														[x])),
+												_Utils_Tuple2(
+													$author$project$Game$look(game),
+													$elm$core$Platform$Cmd$none));
+										case 'pull':
+											return _Utils_Tuple2(
+												A2(
+													$author$project$Console$addEntries,
+													console,
+													_List_fromArray(
+														[x])),
+												_Utils_Tuple2(
+													$author$project$Game$pull(game),
+													$elm$core$Platform$Cmd$none));
+										case 'pass':
+											var parsedTry = function () {
+												var _v10 = A2($elm$core$List$filterMap, $elm$core$String$toInt, xs);
+												if (_v10.b) {
+													if (_v10.b.b) {
+														var a = _v10.a;
+														var _v11 = _v10.b;
+														var b = _v11.a;
+														return A2(
+															$elm$core$Result$fromMaybe,
+															'`pass` command requires two arguments: first, a valid Quantity of the Try, and second, a valid Value of the Try. Enter `try` or `help` for more information.',
+															A2(
+																$elm$core$Debug$log,
+																'Try failed to encode',
+																$author$project$Try$encode(
+																	_Utils_Tuple2(a, b))));
+													} else {
+														return $elm$core$Result$Err('`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.');
+													}
+												} else {
+													return $elm$core$Result$Err('`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.');
+												}
+											}();
+											if (parsedTry.$ === 'Ok') {
+												var _try = parsedTry.a;
+												var _v9 = A2($author$project$Game$pass, game, _try);
+												if (_v9.$ === 'Ok') {
+													var gameModel = _v9.a;
+													return _Utils_Tuple2(
+														A2(
+															$author$project$Console$addEntries,
+															console,
+															_List_fromArray(
+																[
+																	x + (' ' + $author$project$Try$toString(_try))
+																])),
+														_Utils_Tuple2(gameModel, $elm$core$Platform$Cmd$none));
+												} else {
+													var e = _v9.a;
+													return _Utils_Tuple2(
+														A2(
+															$author$project$Console$addEntries,
+															console,
+															_List_fromArray(
+																[consoleInput, e])),
+														_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
+												}
+											} else {
+												var message = parsedTry.a;
+												return _Utils_Tuple2(
+													A2(
+														$author$project$Console$addEntries,
+														console,
+														_List_fromArray(
+															[consoleInput, message])),
+													_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
+											}
+										default:
+											return _Utils_Tuple2(
+												A2(
+													$author$project$Console$addEntries,
+													console,
+													_List_fromArray(
+														[consoleInput, 'Command not recognized.'])),
+												_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
+									}
+								} else {
+									return _Utils_Tuple2(
+										A2(
+											$author$project$Console$addEntries,
+											console,
+											_List_fromArray(
+												[consoleInput, 'You can\'t ' + (x + ' right now.')])),
+										_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
+								}
+							} else {
+								var e = isAction.a;
+								return _Utils_Tuple2(
+									A2(
+										$author$project$Console$addEntries,
+										console,
+										_List_fromArray(
+											[consoleInput, e])),
+									_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
+							}
 					}
 				} else {
 					return _Utils_Tuple2(
@@ -7671,57 +7748,82 @@ var $author$project$Main$update = F2(
 				}
 			case 'GameAction':
 				var subMsg = msg.a;
-				switch (subMsg.$) {
-					case 'Roll':
-						var rollType = subMsg.a;
-						return A3(
-							$elm$core$Tuple$mapBoth,
-							$author$project$Main$mergeGameState(model),
-							$elm$core$Platform$Cmd$map($author$project$Main$GameAction),
-							A2($author$project$Game$roll, rollType, model.gameState));
-					case 'Pull':
-						return _Utils_Tuple2(
-							A2(
-								$author$project$Main$mergeGameState,
-								model,
-								$author$project$Game$pull(model.gameState)),
-							$elm$core$Platform$Cmd$none);
-					case 'Look':
-						return _Utils_Tuple2(
-							A2(
-								$author$project$Main$mergeGameState,
-								model,
-								$author$project$Game$look(model.gameState)),
-							$elm$core$Platform$Cmd$none);
-					default:
-						var _try = subMsg.a;
-						var _v3 = A2($author$project$Game$pass, model.gameState, _try);
-						if (_v3.$ === 'Ok') {
-							var m = _v3.a;
+				var _v2 = A2($elm$core$Debug$log, 'GameAction', subMsg);
+				if (A2($author$project$Game$isValidAction, model.gameState.rollState, subMsg)) {
+					switch (subMsg.$) {
+						case 'Roll':
+							var rollType = subMsg.a;
+							return A3(
+								$elm$core$Tuple$mapBoth,
+								$author$project$Main$mergeGameState(model),
+								$elm$core$Platform$Cmd$map($author$project$Main$GameAction),
+								A2($author$project$Game$roll, rollType, model.gameState));
+						case 'Pull':
 							return _Utils_Tuple2(
-								A2($author$project$Main$mergeGameState, model, m),
+								A2(
+									$author$project$Main$mergeGameState,
+									model,
+									$author$project$Game$pull(model.gameState)),
 								$elm$core$Platform$Cmd$none);
-						} else {
-							var e = _v3.a;
-							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-						}
+						case 'Look':
+							return _Utils_Tuple2(
+								A2(
+									$author$project$Main$mergeGameState,
+									model,
+									$author$project$Game$look(model.gameState)),
+								$elm$core$Platform$Cmd$none);
+						default:
+							var _try = subMsg.a;
+							var _v4 = A2($author$project$Game$pass, model.gameState, _try);
+							if (_v4.$ === 'Ok') {
+								var m = _v4.a;
+								return _Utils_Tuple2(
+									A2($author$project$Main$mergeGameState, model, m),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								var e = _v4.a;
+								return _Utils_Tuple2(
+									A2(
+										$author$project$Main$mergeConsoleState,
+										model,
+										A2(
+											$author$project$Console$addEntries,
+											model.consoleState,
+											_List_fromArray(
+												[e]))),
+									$elm$core$Platform$Cmd$none);
+							}
+					}
+				} else {
+					return _Utils_Tuple2(
+						A2(
+							$author$project$Main$mergeConsoleState,
+							model,
+							A2(
+								$author$project$Console$addEntries,
+								model.consoleState,
+								_List_fromArray(
+									[
+										'You can\'t ' + ($author$project$Game$decodeAction(subMsg) + ' right now.')
+									]))),
+						$elm$core$Platform$Cmd$none);
 				}
 			case 'ConsoleMsg':
 				var subMsg = msg.a;
 				var focusCmd = A2(
 					$elm$core$Task$attempt,
-					function (_v6) {
+					function (_v7) {
 						return $author$project$Main$NoOp;
 					},
 					$elm$browser$Browser$Dom$focus('console'));
-				var _v4 = A2(
+				var _v5 = A2(
 					$author$project$Console$update,
 					subMsg,
 					_Utils_Tuple2(model.consoleState, model.gameState));
-				var newConsole = _v4.a;
-				var _v5 = _v4.b;
-				var newGame = _v5.a;
-				var gameMsg = _v5.b;
+				var newConsole = _v5.a;
+				var _v6 = _v5.b;
+				var newGame = _v6.a;
+				var gameMsg = _v6.b;
 				return _Utils_Tuple2(
 					A2(
 						$author$project$Main$mergeGameState,
@@ -7743,8 +7845,6 @@ var $author$project$Console$Change = function (a) {
 var $author$project$Main$ConsoleMsg = function (a) {
 	return {$: 'ConsoleMsg', a: a};
 };
-var $author$project$Game$Look = {$: 'Look'};
-var $author$project$Game$Pull = {$: 'Pull'};
 var $author$project$Console$Submit = function (a) {
 	return {$: 'Submit', a: a};
 };
@@ -10456,9 +10556,6 @@ var $author$project$Main$ChangeQuantity = function (a) {
 };
 var $author$project$Main$ChangeValue = function (a) {
 	return {$: 'ChangeValue', a: a};
-};
-var $author$project$Game$Pass = function (a) {
-	return {$: 'Pass', a: a};
 };
 var $author$project$Main$TrySelectChanged = function (a) {
 	return {$: 'TrySelectChanged', a: a};

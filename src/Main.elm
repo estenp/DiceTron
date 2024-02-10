@@ -53,7 +53,6 @@ initGameState =
     , cupLooked = False
     , rollState = Game.Fresh
     , whosTurn = 1
-    , validActions = Set.fromList [ Game.msgToString (Game.Roll Game.ReRoll) ]
     , tryHistory = []
     , quantity = Try.Two
     , value = Try.Threes
@@ -132,29 +131,44 @@ update msg model =
 
         -- game event messages
         GameAction subMsg ->
-            -- check available actions here?
-            case subMsg of
-                Game.Roll rollType ->
-                    Game.roll rollType model.gameState
-                        |> Tuple.mapBoth
-                            (mergeGameState model)
-                            (Cmd.map GameAction)
+            -- check available actions
+            let
+                _ =
+                    Debug.log "GameAction" subMsg
+            in
+            if Game.isValidAction model.gameState.rollState subMsg then
+                case subMsg of
+                    Game.Roll rollType ->
+                        Game.roll rollType model.gameState
+                            |> Tuple.mapBoth
+                                (mergeGameState model)
+                                (Cmd.map GameAction)
 
-                Game.Pull ->
-                    ( Game.pull model.gameState |> mergeGameState model, Cmd.none )
+                    Game.Pull ->
+                        ( Game.pull model.gameState |> mergeGameState model, Cmd.none )
 
-                Game.Look ->
-                    ( Game.look model.gameState |> mergeGameState model, Cmd.none )
+                    Game.Look ->
+                        ( Game.look model.gameState |> mergeGameState model, Cmd.none )
 
-                Game.Pass try ->
-                    case Game.pass model.gameState try of
-                        Ok m ->
-                            ( m |> mergeGameState model, Cmd.none )
+                    Game.Pass try ->
+                        case Game.pass model.gameState try of
+                            Ok m ->
+                                ( m |> mergeGameState model, Cmd.none )
 
-                        Err e ->
-                            -- update (ConsoleMsg (Console.Submit e) model) -- todo: hmm..
-                            -- update NoOp model -- one of these would def be preferred, but dont currently work
-                            ( model, Cmd.none )
+                            Err e ->
+                                -- update (ConsoleMsg (Console.Submit e) model) -- todo: hmm..
+                                -- update NoOp model -- one of these would def be preferred, but dont currently work
+                                ( mergeConsoleState model (Console.addEntries model.consoleState [ e ]), Cmd.none )
+
+            else
+                ( mergeConsoleState
+                    model
+                    (Console.addEntries
+                        model.consoleState
+                        [ "You can't " ++ Game.decodeAction subMsg ++ " right now." ]
+                    )
+                , Cmd.none
+                )
 
         ConsoleMsg subMsg ->
             let

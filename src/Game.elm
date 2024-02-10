@@ -7,7 +7,6 @@ import Deque
 import Dict
 import Player
 import Random
-import Set exposing (Set)
 import Try exposing (Try)
 
 
@@ -32,26 +31,6 @@ type Roll
     | ReRoll
 
 
-msgToString : Msg -> String
-msgToString msg =
-    case msg of
-        Pull ->
-            "pull"
-
-        Pass _ ->
-            "pass"
-
-        Look ->
-            "look"
-
-        Roll _ ->
-            "roll"
-
-
-type alias ValidActions =
-    Set String
-
-
 type alias Model =
     { -- game state
       roll : Try.Cup
@@ -61,7 +40,6 @@ type alias Model =
     , cupLooked : Bool
     , rollState : RollState
     , whosTurn : Int -- index of activePlayers
-    , validActions : ValidActions
     , tryHistory : List ( Try, Int, String )
 
     -- view state
@@ -84,6 +62,57 @@ type CupState
     | Uncovered
 
 
+isValidAction : RollState -> Msg -> Bool
+isValidAction rollState action =
+    case action of
+        Pull ->
+            rollState == Received
+
+        Look ->
+            rollState == Received
+
+        Pass _ ->
+            rollState == Received || rollState == Looked || rollState == Rolled
+
+        Roll _ ->
+            rollState == Fresh || rollState == Looked || rollState == Pulled Lie || rollState == Pulled HadIt
+
+
+encodeAction : String -> Result String Msg
+encodeAction action =
+    case action of
+        "pull" ->
+            Ok Pull
+
+        "pass" ->
+            Ok (Pass ( Try.Two, Try.Twos ))
+
+        "look" ->
+            Ok Look
+
+        "roll" ->
+            Ok (Roll ReRoll)
+
+        _ ->
+            Err (action ++ " is not a valid action.")
+
+
+decodeAction : Msg -> String
+decodeAction action =
+    case action of
+        Pull ->
+            "pull"
+
+        Pass _ ->
+            "pass"
+
+        Look ->
+            "look"
+
+        Roll _ ->
+            "roll"
+
+
 roll : Roll -> Model -> ( Model, Cmd Msg )
 roll rollType model =
     case rollType of
@@ -104,6 +133,7 @@ roll rollType model =
                     -- reset
                     ( { model | tableWilds = 0 }, Random.generate (Roll << NewRoll) (Try.rollGenerator 5) )
 
+                -- reroll
                 _ ->
                     let
                         -- pull the wilds from the roll
@@ -213,6 +243,9 @@ pass model try =
 
         beingPassed =
             Try.toScore try |> Maybe.withDefault 1
+
+        _ =
+            Debug.log "roll compare" ( received, beingPassed )
     in
     if beingPassed > received then
         Ok

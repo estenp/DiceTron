@@ -1,4 +1,4 @@
-module Console exposing (Model, Msg(..), update, view)
+module Console exposing (Model, Msg(..), addEntries, update, view)
 
 import Css
 import Game
@@ -6,6 +6,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (class, css, id, type_, value)
 import Html.Styled.Events exposing (..)
 import Json.Decode as Decode
+import Set
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
 import Try
@@ -36,82 +37,16 @@ update msg ( console, game ) =
         Submit consoleInput ->
             -- validate command
             -- add to history log
-            let
-                -- for command case
-                -- * add a console to the log
-                -- * update game state
-                addConsoleEntries : List String -> Model
-                addConsoleEntries entries =
-                    { console | consoleHistory = console.consoleHistory ++ entries, consoleValue = "" }
-
-                --
-                -- |> mergeConsoleState model
-                -- newConsole = mergeConsoleState model ({ c | consoleHistory = model.consoleHistory ++ entry, consoleValue = "" })
-                --
-            in
             case String.words consoleInput of
                 x :: xs ->
                     case x of
                         "/c" ->
-                            ( addConsoleEntries [ "[chat] " ++ String.dropLeft 2 consoleInput ]
+                            ( addEntries console [ "[chat] " ++ String.dropLeft 2 consoleInput ]
                             , ( game, Cmd.none )
                             )
 
-                        "roll" ->
-                            ( addConsoleEntries [ x ]
-                            , Game.roll Game.ReRoll game
-                            )
-
-                        "look" ->
-                            ( addConsoleEntries [ x ]
-                            , ( Game.look game, Cmd.none )
-                            )
-
-                        "pull" ->
-                            ( addConsoleEntries [ x ]
-                            , ( Game.pull game, Cmd.none )
-                            )
-
-                        -- todo: apply this new util below
-                        "pass" ->
-                            let
-                                parsedTry : Result String Try.Try
-                                parsedTry =
-                                    case List.filterMap String.toInt xs of
-                                        a :: b :: _ ->
-                                            Try.encode ( a, b )
-                                                |> Debug.log "tryasdfsdaf"
-                                                |> Result.fromMaybe "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
-
-                                        [ _ ] ->
-                                            Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
-
-                                        [] ->
-                                            Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
-
-                                -- _ =
-                                --     Debug.todo "try not validated properly. handle in Game.pass"
-                            in
-                            case parsedTry of
-                                Ok try ->
-                                    case Game.pass game try of
-                                        Ok gameModel ->
-                                            ( addConsoleEntries [ x ++ " " ++ Try.toString try ]
-                                            , ( gameModel, Cmd.none )
-                                            )
-
-                                        Err e ->
-                                            ( addConsoleEntries [ consoleInput, e ]
-                                            , ( game, Cmd.none )
-                                            )
-
-                                Err message ->
-                                    ( addConsoleEntries [ consoleInput, message ]
-                                    , ( game, Cmd.none )
-                                    )
-
                         "try" ->
-                            ( addConsoleEntries
+                            ( addEntries console
                                 [ consoleInput
                                 , "You received: " ++ Try.toString game.tryToBeat
                                 , "You must pass: "
@@ -127,7 +62,7 @@ update msg ( console, game ) =
                             )
 
                         "help" ->
-                            ( addConsoleEntries
+                            ( addEntries console
                                 [ consoleInput
                                 , """This console can be used to control your game via commands or chat with other players.
 
@@ -150,10 +85,86 @@ update msg ( console, game ) =
                             ( { console | consoleHistory = [], consoleValue = "" }, ( game, Cmd.none ) )
 
                         "" ->
-                            ( addConsoleEntries [ "" ], ( game, Cmd.none ) )
+                            ( addEntries console [ "" ], ( game, Cmd.none ) )
 
                         _ ->
-                            ( addConsoleEntries [ consoleInput, "Command not recognized." ], ( game, Cmd.none ) )
+                            -- check for game actions
+                            let
+                                isAction =
+                                    Game.encodeAction x
+
+                                _ =
+                                    Debug.log "is valid" ( game.rollState, isAction )
+                            in
+                            case isAction of
+                                Ok action ->
+                                    if Game.isValidAction game.rollState action then
+                                        case x of
+                                            "roll" ->
+                                                ( addEntries console [ x ]
+                                                , Game.roll Game.ReRoll game
+                                                )
+
+                                            "look" ->
+                                                ( addEntries console [ x ]
+                                                , ( Game.look game, Cmd.none )
+                                                )
+
+                                            "pull" ->
+                                                ( addEntries console [ x ]
+                                                , ( Game.pull game, Cmd.none )
+                                                )
+
+                                            -- todo: apply this new util below
+                                            "pass" ->
+                                                let
+                                                    parsedTry : Result String Try.Try
+                                                    parsedTry =
+                                                        case List.filterMap String.toInt xs of
+                                                            a :: b :: _ ->
+                                                                Try.encode ( a, b )
+                                                                    |> Debug.log "Try failed to encode"
+                                                                    |> Result.fromMaybe "`pass` command requires two arguments: first, a valid Quantity of the Try, and second, a valid Value of the Try. Enter `try` or `help` for more information."
+
+                                                            [ _ ] ->
+                                                                Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
+
+                                                            [] ->
+                                                                Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
+
+                                                    -- _ =
+                                                    --     Debug.todo "try not validated properly. handle in Game.pass"
+                                                in
+                                                case parsedTry of
+                                                    Ok try ->
+                                                        case Game.pass game try of
+                                                            Ok gameModel ->
+                                                                ( addEntries console [ x ++ " " ++ Try.toString try ]
+                                                                , ( gameModel, Cmd.none )
+                                                                )
+
+                                                            Err e ->
+                                                                ( addEntries console [ consoleInput, e ]
+                                                                , ( game, Cmd.none )
+                                                                )
+
+                                                    Err message ->
+                                                        ( addEntries console [ consoleInput, message ]
+                                                        , ( game, Cmd.none )
+                                                        )
+
+                                            _ ->
+                                                ( addEntries console [ consoleInput, "Command not recognized." ], ( game, Cmd.none ) )
+
+                                    else
+                                        ( addEntries
+                                            console
+                                            [ consoleInput, "You can't " ++ x ++ " right now." ]
+                                        , ( game, Cmd.none )
+                                        )
+
+                                Err e ->
+                                    ( addEntries console [ consoleInput, e ], ( game, Cmd.none ) )
 
                 _ ->
                     ( console, ( game, Cmd.none ) )
@@ -217,6 +228,11 @@ view model messages =
                     ]
                ]
         )
+
+
+addEntries : Model -> List String -> Model
+addEntries console entries =
+    { console | consoleHistory = console.consoleHistory ++ entries, consoleValue = "" }
 
 
 
