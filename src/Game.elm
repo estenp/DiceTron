@@ -235,6 +235,10 @@ pull model =
             }
 
 
+{-| Attempt to update model according to a passed `Try`.
+Validates that the `Try` being passed is better than the one received.
+Returns a `Result`.
+-}
 pass : Model -> Try -> Result String Model
 pass model try =
     let

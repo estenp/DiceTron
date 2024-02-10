@@ -1,7 +1,5 @@
 module Main exposing (..)
 
--- import Model exposing (..)
-
 import Browser
 import Browser.Dom as Dom
 import Console
@@ -19,8 +17,6 @@ import Html.Styled.Events exposing (..)
 import Json.Decode as Decode
 import List
 import Player
-import Random
-import Set
 import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
@@ -84,19 +80,9 @@ init _ =
 
 type Msg
     = TrySelectChanged TrySelectMsg
-    | GameAction Game.Msg
+    | GameMsg Game.Msg
     | ConsoleMsg Console.Msg
     | NoOp
-
-
-mergeGameState : Model -> Game.Model -> Model
-mergeGameState model game =
-    { model | gameState = game }
-
-
-mergeConsoleState : Model -> Console.Model -> Model
-mergeConsoleState model console =
-    { model | consoleState = console }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -130,11 +116,11 @@ update msg model =
                     )
 
         -- game event messages
-        GameAction subMsg ->
+        GameMsg subMsg ->
             -- check available actions
             let
                 _ =
-                    Debug.log "GameAction" subMsg
+                    Debug.log "Game Action: " subMsg
             in
             if Game.isValidAction model.gameState.rollState subMsg then
                 case subMsg of
@@ -142,7 +128,7 @@ update msg model =
                         Game.roll rollType model.gameState
                             |> Tuple.mapBoth
                                 (mergeGameState model)
-                                (Cmd.map GameAction)
+                                (Cmd.map GameMsg)
 
                     Game.Pull ->
                         ( Game.pull model.gameState |> mergeGameState model, Cmd.none )
@@ -156,8 +142,6 @@ update msg model =
                                 ( m |> mergeGameState model, Cmd.none )
 
                             Err e ->
-                                -- update (ConsoleMsg (Console.Submit e) model) -- todo: hmm..
-                                -- update NoOp model -- one of these would def be preferred, but dont currently work
                                 ( mergeConsoleState model (Console.addEntries model.consoleState [ e ]), Cmd.none )
 
             else
@@ -175,19 +159,25 @@ update msg model =
                 focusCmd =
                     Task.attempt (\_ -> NoOp) (Dom.focus "console")
 
-                -- withFocus =
-                --     -- todo: apply focus logic - move out to main?
-                --     Tuple.mapSecond (\c -> Cmd.batch [ focusCmd, c ])
-                --
                 ( newConsole, ( newGame, gameMsg ) ) =
                     Console.update subMsg ( model.consoleState, model.gameState )
             in
             ( mergeGameState (mergeConsoleState model newConsole) newGame
-            , Cmd.batch [ focusCmd, Cmd.map GameAction gameMsg ]
+            , Cmd.batch [ focusCmd, Cmd.map GameMsg gameMsg ]
             )
 
         NoOp ->
             ( model, Cmd.none )
+
+
+mergeGameState : Model -> Game.Model -> Model
+mergeGameState model game =
+    { model | gameState = game }
+
+
+mergeConsoleState : Model -> Console.Model -> Model
+mergeConsoleState model console =
+    { model | consoleState = console }
 
 
 
@@ -234,8 +224,8 @@ view model =
 
         cupButtons =
             [ div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
-                [ button_ [ onClick (GameAction Game.Pull) ] [ text "pull" ]
-                , button_ [ onClick (GameAction Game.Look) ] [ text "look" ]
+                [ button_ [ onClick (GameMsg Game.Pull) ] [ text "pull" ]
+                , button_ [ onClick (GameMsg Game.Look) ] [ text "look" ]
                 ]
             ]
 
@@ -253,13 +243,13 @@ view model =
         rollButtons =
             case gameState.rollState of
                 Game.Fresh ->
-                    [ div [] [ button_ [ onClick (GameAction (Game.Roll Game.ReRoll)) ] [ text "roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameMsg (Game.Roll Game.ReRoll)) ] [ text "roll" ] ] ]
 
                 Game.Pulled _ ->
-                    [ div [] [ button_ [ onClick (GameAction (Game.Roll Game.ReRoll)) ] [ text "roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameMsg (Game.Roll Game.ReRoll)) ] [ text "roll" ] ] ]
 
                 Game.Looked ->
-                    [ div [] [ button_ [ onClick (GameAction (Game.Roll Game.ReRoll)) ] [ text "re-roll" ] ] ]
+                    [ div [] [ button_ [ onClick (GameMsg (Game.Roll Game.ReRoll)) ] [ text "re-roll" ] ] ]
 
                 _ ->
                     []
@@ -438,7 +428,7 @@ viewPassTry quantity val tryToBeat =
             [ label [ for "value" ] [ text "Value" ]
             , select_ [ onInput changeValue, id "value" ] values
             ]
-        , button_ [ css [ Tw.col_span_2 ], onClick ((GameAction << Game.Pass) ( quantity, val )) ] [ text "pass" ]
+        , button_ [ css [ Tw.col_span_2 ], onClick ((GameMsg << Game.Pass) ( quantity, val )) ] [ text "pass" ]
         ]
 
 

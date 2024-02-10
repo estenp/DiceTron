@@ -6,7 +6,6 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (class, css, id, type_, value)
 import Html.Styled.Events exposing (..)
 import Json.Decode as Decode
-import Set
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
 import Try
@@ -35,17 +34,18 @@ update msg ( console, game ) =
             ( { console | consoleIsVisible = not console.consoleIsVisible }, ( game, Cmd.none ) )
 
         Submit consoleInput ->
-            -- validate command
-            -- add to history log
             case String.words consoleInput of
                 x :: xs ->
                     case x of
+                        -- check for different types of console commands
                         "/c" ->
+                            -- chat command
                             ( addEntries console [ "[chat] " ++ String.dropLeft 2 consoleInput ]
                             , ( game, Cmd.none )
                             )
 
                         "try" ->
+                            -- current try info
                             ( addEntries console
                                 [ consoleInput
                                 , "You received: " ++ Try.toString game.tryToBeat
@@ -88,16 +88,10 @@ update msg ( console, game ) =
                             ( addEntries console [ "" ], ( game, Cmd.none ) )
 
                         _ ->
-                            -- check for game actions
-                            let
-                                isAction =
-                                    Game.encodeAction x
-
-                                _ =
-                                    Debug.log "is valid" ( game.rollState, isAction )
-                            in
-                            case isAction of
+                            case Game.encodeAction x of
                                 Ok action ->
+                                    -- if an action command is recognized,
+                                    -- check if it's valid given the state of the game
                                     if Game.isValidAction game.rollState action then
                                         case x of
                                             "roll" ->
@@ -115,28 +109,30 @@ update msg ( console, game ) =
                                                 , ( Game.pull game, Cmd.none )
                                                 )
 
-                                            -- todo: apply this new util below
                                             "pass" ->
                                                 let
+                                                    -- Parse remaining commands as `Int`s and try to encode them as a `Try` value.
                                                     parsedTry : Result String Try.Try
                                                     parsedTry =
+                                                        let
+                                                            badTryArgs =
+                                                                "`pass` command requires two arguments: first, a valid Quantity of the Try, and second, a valid Value of the Try. Enter `try` or `help` for more information."
+                                                        in
                                                         case List.filterMap String.toInt xs of
                                                             a :: b :: _ ->
                                                                 Try.encode ( a, b )
                                                                     |> Debug.log "Try failed to encode"
-                                                                    |> Result.fromMaybe "`pass` command requires two arguments: first, a valid Quantity of the Try, and second, a valid Value of the Try. Enter `try` or `help` for more information."
+                                                                    |> Result.fromMaybe badTryArgs
 
                                                             [ _ ] ->
-                                                                Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
+                                                                Err badTryArgs
 
                                                             [] ->
-                                                                Err "`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try."
-
-                                                    -- _ =
-                                                    --     Debug.todo "try not validated properly. handle in Game.pass"
+                                                                Err badTryArgs
                                                 in
                                                 case parsedTry of
                                                     Ok try ->
+                                                        -- pass function validates whether the Try beats the existing Try
                                                         case Game.pass game try of
                                                             Ok gameModel ->
                                                                 ( addEntries console [ x ++ " " ++ Try.toString try ]
@@ -170,16 +166,15 @@ update msg ( console, game ) =
                     ( console, ( game, Cmd.none ) )
 
 
+
+-- VIEW
+-- todo: better way to do this?
+
+
 type alias Messages message =
     { onEnter : String -> message
     , onInput : String -> message
     }
-
-
-
--- type ViewHtmlMsg
---     = OnEnterMsg
---     | Msg
 
 
 view : Model -> Messages a -> Html a

@@ -6385,8 +6385,8 @@ var $rtfeldman$elm_css$VirtualDom$Styled$toUnstyled = function (vdom) {
 	}
 };
 var $rtfeldman$elm_css$Html$Styled$toUnstyled = $rtfeldman$elm_css$VirtualDom$Styled$toUnstyled;
-var $author$project$Main$GameAction = function (a) {
-	return {$: 'GameAction', a: a};
+var $author$project$Main$GameMsg = function (a) {
+	return {$: 'GameMsg', a: a};
 };
 var $author$project$Main$NoOp = {$: 'NoOp'};
 var $author$project$Console$addEntries = F2(
@@ -7588,13 +7588,9 @@ var $author$project$Console$update = F2(
 										[''])),
 								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
 						default:
-							var isAction = $author$project$Game$encodeAction(x);
-							var _v5 = A2(
-								$elm$core$Debug$log,
-								'is valid',
-								_Utils_Tuple2(game.rollState, isAction));
-							if (isAction.$ === 'Ok') {
-								var action = isAction.a;
+							var _v5 = $author$project$Game$encodeAction(x);
+							if (_v5.$ === 'Ok') {
+								var action = _v5.a;
 								if (A2($author$project$Game$isValidAction, game.rollState, action)) {
 									switch (x) {
 										case 'roll':
@@ -7627,32 +7623,33 @@ var $author$project$Console$update = F2(
 													$elm$core$Platform$Cmd$none));
 										case 'pass':
 											var parsedTry = function () {
-												var _v10 = A2($elm$core$List$filterMap, $elm$core$String$toInt, xs);
-												if (_v10.b) {
-													if (_v10.b.b) {
-														var a = _v10.a;
-														var _v11 = _v10.b;
-														var b = _v11.a;
+												var badTryArgs = '`pass` command requires two arguments: first, a valid Quantity of the Try, and second, a valid Value of the Try. Enter `try` or `help` for more information.';
+												var _v9 = A2($elm$core$List$filterMap, $elm$core$String$toInt, xs);
+												if (_v9.b) {
+													if (_v9.b.b) {
+														var a = _v9.a;
+														var _v10 = _v9.b;
+														var b = _v10.a;
 														return A2(
 															$elm$core$Result$fromMaybe,
-															'`pass` command requires two arguments: first, a valid Quantity of the Try, and second, a valid Value of the Try. Enter `try` or `help` for more information.',
+															badTryArgs,
 															A2(
 																$elm$core$Debug$log,
 																'Try failed to encode',
 																$author$project$Try$encode(
 																	_Utils_Tuple2(a, b))));
 													} else {
-														return $elm$core$Result$Err('`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.');
+														return $elm$core$Result$Err(badTryArgs);
 													}
 												} else {
-													return $elm$core$Result$Err('`pass` command requires two arguments: first, the Quantity of the Try, and second, the Value of the Try.');
+													return $elm$core$Result$Err(badTryArgs);
 												}
 											}();
 											if (parsedTry.$ === 'Ok') {
 												var _try = parsedTry.a;
-												var _v9 = A2($author$project$Game$pass, game, _try);
-												if (_v9.$ === 'Ok') {
-													var gameModel = _v9.a;
+												var _v8 = A2($author$project$Game$pass, game, _try);
+												if (_v8.$ === 'Ok') {
+													var gameModel = _v8.a;
 													return _Utils_Tuple2(
 														A2(
 															$author$project$Console$addEntries,
@@ -7663,7 +7660,7 @@ var $author$project$Console$update = F2(
 																])),
 														_Utils_Tuple2(gameModel, $elm$core$Platform$Cmd$none));
 												} else {
-													var e = _v9.a;
+													var e = _v8.a;
 													return _Utils_Tuple2(
 														A2(
 															$author$project$Console$addEntries,
@@ -7701,7 +7698,7 @@ var $author$project$Console$update = F2(
 										_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
 								}
 							} else {
-								var e = isAction.a;
+								var e = _v5.a;
 								return _Utils_Tuple2(
 									A2(
 										$author$project$Console$addEntries,
@@ -7746,9 +7743,9 @@ var $author$project$Main$update = F2(
 							{gameState: _new}),
 						$elm$core$Platform$Cmd$none);
 				}
-			case 'GameAction':
+			case 'GameMsg':
 				var subMsg = msg.a;
-				var _v2 = A2($elm$core$Debug$log, 'GameAction', subMsg);
+				var _v2 = A2($elm$core$Debug$log, 'Game Action: ', subMsg);
 				if (A2($author$project$Game$isValidAction, model.gameState.rollState, subMsg)) {
 					switch (subMsg.$) {
 						case 'Roll':
@@ -7756,7 +7753,7 @@ var $author$project$Main$update = F2(
 							return A3(
 								$elm$core$Tuple$mapBoth,
 								$author$project$Main$mergeGameState(model),
-								$elm$core$Platform$Cmd$map($author$project$Main$GameAction),
+								$elm$core$Platform$Cmd$map($author$project$Main$GameMsg),
 								A2($author$project$Game$roll, rollType, model.gameState));
 						case 'Pull':
 							return _Utils_Tuple2(
@@ -7833,7 +7830,7 @@ var $author$project$Main$update = F2(
 						_List_fromArray(
 							[
 								focusCmd,
-								A2($elm$core$Platform$Cmd$map, $author$project$Main$GameAction, gameMsg)
+								A2($elm$core$Platform$Cmd$map, $author$project$Main$GameMsg, gameMsg)
 							])));
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -11284,7 +11281,7 @@ var $author$project$Main$viewPassTry = F3(
 							_List_fromArray(
 								[$author$project$Tailwind$Utilities$col_span_2])),
 							$rtfeldman$elm_css$Html$Styled$Events$onClick(
-							A2($elm$core$Basics$composeL, $author$project$Main$GameAction, $author$project$Game$Pass)(
+							A2($elm$core$Basics$composeL, $author$project$Main$GameMsg, $author$project$Game$Pass)(
 								_Utils_Tuple2(quantity, val)))
 						]),
 					_List_fromArray(
@@ -11311,7 +11308,7 @@ var $author$project$Main$view = function (model) {
 					_List_fromArray(
 						[
 							$rtfeldman$elm_css$Html$Styled$Events$onClick(
-							$author$project$Main$GameAction($author$project$Game$Pull))
+							$author$project$Main$GameMsg($author$project$Game$Pull))
 						]),
 					_List_fromArray(
 						[
@@ -11322,7 +11319,7 @@ var $author$project$Main$view = function (model) {
 					_List_fromArray(
 						[
 							$rtfeldman$elm_css$Html$Styled$Events$onClick(
-							$author$project$Main$GameAction($author$project$Game$Look))
+							$author$project$Main$GameMsg($author$project$Game$Look))
 						]),
 					_List_fromArray(
 						[
@@ -11378,7 +11375,7 @@ var $author$project$Main$view = function (model) {
 								_List_fromArray(
 									[
 										$rtfeldman$elm_css$Html$Styled$Events$onClick(
-										$author$project$Main$GameAction(
+										$author$project$Main$GameMsg(
 											$author$project$Game$Roll($author$project$Game$ReRoll)))
 									]),
 								_List_fromArray(
@@ -11400,7 +11397,7 @@ var $author$project$Main$view = function (model) {
 								_List_fromArray(
 									[
 										$rtfeldman$elm_css$Html$Styled$Events$onClick(
-										$author$project$Main$GameAction(
+										$author$project$Main$GameMsg(
 											$author$project$Game$Roll($author$project$Game$ReRoll)))
 									]),
 								_List_fromArray(
@@ -11422,7 +11419,7 @@ var $author$project$Main$view = function (model) {
 								_List_fromArray(
 									[
 										$rtfeldman$elm_css$Html$Styled$Events$onClick(
-										$author$project$Main$GameAction(
+										$author$project$Main$GameMsg(
 											$author$project$Game$Roll($author$project$Game$ReRoll)))
 									]),
 								_List_fromArray(
