@@ -48,7 +48,7 @@ type CupState
 
 
 type RollState
-    = Fresh
+    = Init
     | Received
     | Looked
     | Rolled
@@ -95,7 +95,7 @@ isValidAction rollState action =
             rollState == Received || rollState == Looked || rollState == Rolled
 
         Roll _ ->
-            rollState == Fresh || rollState == Looked || rollState == Pulled Lie || rollState == Pulled HadIt
+            rollState == Init || rollState == Looked || rollState == Pulled Lie || rollState == Pulled HadIt
 
 
 encodeAction : String -> Result String Action
@@ -151,7 +151,7 @@ roll rollType model =
                     -- reset
                     ( { model | tableWilds = 0 }, Random.generate (Roll << Generated) (Try.rollGenerator 5) )
 
-                Fresh ->
+                Init ->
                     -- reset
                     ( { model | tableWilds = 0 }, Random.generate (Roll << Generated) (Try.rollGenerator 5) )
 
@@ -352,7 +352,7 @@ view model =
 
         rollButtons =
             (case model.rollState of
-                Fresh ->
+                Init ->
                     [ div [] [ button_ [ onClick (Roll Initiated) ] [ text "roll" ] ] ]
 
                 Pulled _ ->
@@ -389,7 +389,7 @@ view model =
     in
     div [ class "play-area" ]
         (case model.rollState of
-            Fresh ->
+            Init ->
                 rollButtons
 
             Rolled ->

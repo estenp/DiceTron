@@ -38,7 +38,7 @@ initGameState =
     , cupState = Game.Covered
     , tableWilds = 0
     , cupLooked = False
-    , rollState = Game.Fresh
+    , rollState = Game.Init
     , whosTurn = 1
     , tryHistory = []
     , quantity = Try.Two
@@ -196,7 +196,7 @@ view model =
             -- main wrapper
             (if not gameIsOver then
                 case gameState.rollState of
-                    Game.Fresh ->
+                    Game.Init ->
                         [ logo
                         , playerStats
                         , tryHistory
