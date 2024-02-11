@@ -2,26 +2,22 @@ module Main exposing (..)
 
 import Browser
 import Browser.Dom as Dom
+import Common exposing (..)
 import Console
-import Css exposing (..)
-import Css.Animations exposing (..)
 import Css.Global exposing (global)
 import Data
 import Deque
-import Dict exposing (..)
+import Dict
 import Face exposing (view)
 import Game
-import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
+import Html.Styled exposing (Html, div, span, text, toUnstyled)
+import Html.Styled.Attributes exposing (class, css)
 import Html.Styled.Events exposing (..)
-import Json.Decode as Decode
 import List
 import Player
-import StyledElements exposing (..)
-import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
 import Task
-import Try exposing (Cup, Face(..), Quantity(..), Try)
+import Try
 import Tuple3
 
 
@@ -38,7 +34,7 @@ type alias Model =
 initGameState : Game.Model
 initGameState =
     { roll = []
-    , tryToBeat = ( Two, Twos )
+    , tryToBeat = ( Try.Two, Try.Twos )
     , cupState = Game.Covered
     , tableWilds = 0
     , cupLooked = False
@@ -87,26 +83,16 @@ update msg model =
                 Game.TryMsg tryMsg ->
                     case tryMsg of
                         Try.ChangeQuantity quant ->
-                            let
-                                gs =
-                                    model.gameState
-
-                                new =
-                                    { gs | quantity = quant }
-                            in
-                            ( { model | gameState = new }
+                            ( model.gameState
+                                |> (\m -> { m | quantity = quant })
+                                |> mergeGameState model
                             , Cmd.none
                             )
 
                         Try.ChangeValue val ->
-                            let
-                                gs =
-                                    model.gameState
-
-                                new =
-                                    { gs | value = val }
-                            in
-                            ( { model | gameState = new }
+                            ( model.gameState
+                                |> (\m -> { m | value = val })
+                                |> mergeGameState model
                             , Cmd.none
                             )
 
@@ -258,67 +244,6 @@ view model =
 
 
 
--- UTILS
--- Html Utils
-
-
-logo : Html msg
-logo =
-    div
-        [ css
-            [ Tw.w_32
-            , Tw.h_32
-            , Tw.flex
-            , Tw.justify_center
-            , Tw.items_center
-            , Tw.m_4
-            , Tw.shadow_color Tw.purple_200
-            , Tw.text_8xl
-            , Tw.text_color Tw.black_100
-            , Tw.font_bold
-            , Tw.border_4
-            , Tw.border_color Tw.black_100
-            , Tw.bg_gradient_to_br
-            , Tw.from_color Tw.gray
-            , Tw.to_color Tw.white
-            , Tw.rounded_2xl
-
-            -- , Tw.from_primary
-            -- , Tw.to_destruct
-            ]
-        , class "logo logo-container"
-        ]
-        [ div
-            [ id "logo" ]
-            [ text "D" ]
-        ]
-
-
-stats_ : List (Html msg) -> Html msg
-stats_ =
-    div
-        [ class "stats"
-        , css
-            ([ Tw.flex
-             , Tw.justify_around
-             , Tw.p_4
-             , Tw.text_color Tw.black_100
-             , Tw.gap_8
-             ]
-                ++ card
-                ++ [ Tw.rounded_t_none ]
-            )
-        ]
-
-
-viewCup : Cup -> List (Html Msg)
-viewCup =
-    List.map Face.view
-
-
-
--- Model Utils
--- Misc Utils
 -- MAIN
 
 

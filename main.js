@@ -7174,8 +7174,8 @@ var $author$project$Game$pass = F2(
 			}()) : $elm$core$Result$Err(
 			'You must pass a better Try than ' + ($author$project$Try$toString(model.tryToBeat) + ('. ' + ($author$project$Try$toString(_try) + (' does not beat ' + ($author$project$Try$toString(model.tryToBeat) + '.'))))));
 	});
-var $author$project$Game$NewRoll = function (a) {
-	return {$: 'NewRoll', a: a};
+var $author$project$Game$Generated = function (a) {
+	return {$: 'Generated', a: a};
 };
 var $author$project$Game$Roll = function (a) {
 	return {$: 'Roll', a: a};
@@ -7404,7 +7404,7 @@ var $author$project$Try$rollGenerator = function (quantity) {
 };
 var $author$project$Game$roll = F2(
 	function (rollType, model) {
-		if (rollType.$ === 'NewRoll') {
+		if (rollType.$ === 'Generated') {
 			var newDice = rollType.a;
 			return _Utils_Tuple2(
 				_Utils_update(
@@ -7421,7 +7421,7 @@ var $author$project$Game$roll = F2(
 							{tableWilds: 0}),
 						A2(
 							$elm$random$Random$generate,
-							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$NewRoll),
+							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
 							$author$project$Try$rollGenerator(5)));
 				case 'Fresh':
 					return _Utils_Tuple2(
@@ -7430,7 +7430,7 @@ var $author$project$Game$roll = F2(
 							{tableWilds: 0}),
 						A2(
 							$elm$random$Random$generate,
-							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$NewRoll),
+							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
 							$author$project$Try$rollGenerator(5)));
 				default:
 					var _v2 = A2(
@@ -7449,19 +7449,19 @@ var $author$project$Game$roll = F2(
 							}),
 						A2(
 							$elm$random$Random$generate,
-							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$NewRoll),
+							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
 							$author$project$Try$rollGenerator(
 								$elm$core$List$length(rest)))) : _Utils_Tuple2(
 						model,
 						A2(
 							$elm$random$Random$generate,
-							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$NewRoll),
+							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
 							$author$project$Try$rollGenerator(
 								$elm$core$List$length(model.roll))));
 			}
 		}
 	});
-var $author$project$Game$ReRoll = {$: 'ReRoll'};
+var $author$project$Game$Initiated = {$: 'Initiated'};
 var $author$project$Game$Look = {$: 'Look'};
 var $author$project$Game$Pass = function (a) {
 	return {$: 'Pass', a: a};
@@ -7479,7 +7479,7 @@ var $author$project$Game$encodeAction = function (action) {
 			return $elm$core$Result$Ok($author$project$Game$Look);
 		case 'roll':
 			return $elm$core$Result$Ok(
-				$author$project$Game$Roll($author$project$Game$ReRoll));
+				$author$project$Game$Roll($author$project$Game$Initiated));
 		default:
 			return $elm$core$Result$Err(action + ' is not a valid action.');
 	}
@@ -7606,7 +7606,7 @@ var $author$project$Console$update = F2(
 												A2(
 													$elm$core$Tuple$mapSecond,
 													$elm$core$Platform$Cmd$map($author$project$Game$ActionMsg),
-													A2($author$project$Game$roll, $author$project$Game$ReRoll, game)));
+													A2($author$project$Game$roll, $author$project$Game$Initiated, game)));
 										case 'look':
 											return _Utils_Tuple2(
 												A2(
@@ -7730,25 +7730,27 @@ var $author$project$Main$update = F2(
 					var tryMsg = subMsg.a;
 					if (tryMsg.$ === 'ChangeQuantity') {
 						var quant = tryMsg.a;
-						var gs = model.gameState;
-						var _new = _Utils_update(
-							gs,
-							{quantity: quant});
 						return _Utils_Tuple2(
-							_Utils_update(
+							A2(
+								$author$project$Main$mergeGameState,
 								model,
-								{gameState: _new}),
+								function (m) {
+									return _Utils_update(
+										m,
+										{quantity: quant});
+								}(model.gameState)),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						var val = tryMsg.a;
-						var gs = model.gameState;
-						var _new = _Utils_update(
-							gs,
-							{value: val});
 						return _Utils_Tuple2(
-							_Utils_update(
+							A2(
+								$author$project$Main$mergeGameState,
 								model,
-								{gameState: _new}),
+								function (m) {
+									return _Utils_update(
+										m,
+										{value: val});
+								}(model.gameState)),
 							$elm$core$Platform$Cmd$none);
 					}
 				} else {
@@ -9881,7 +9883,7 @@ var $author$project$Tailwind$Utilities$to_color = function (color) {
 };
 var $author$project$Tailwind$Utilities$w_32 = A2($rtfeldman$elm_css$Css$property, 'width', '8rem');
 var $author$project$Tailwind$Theme$white = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '249', '244', '245', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
-var $author$project$Main$logo = A2(
+var $author$project$Common$logo = A2(
 	$rtfeldman$elm_css$Html$Styled$div,
 	_List_fromArray(
 		[
@@ -10080,7 +10082,7 @@ var $author$project$Tailwind$Utilities$rounded_t_none = $rtfeldman$elm_css$Css$b
 			A2($rtfeldman$elm_css$Css$property, 'border-top-left-radius', '0px'),
 			A2($rtfeldman$elm_css$Css$property, 'border-top-right-radius', '0px')
 		]));
-var $author$project$Main$stats_ = $rtfeldman$elm_css$Html$Styled$div(
+var $author$project$Common$stats_ = $rtfeldman$elm_css$Html$Styled$div(
 	_List_fromArray(
 		[
 			$rtfeldman$elm_css$Html$Styled$Attributes$class('stats'),
@@ -11213,7 +11215,7 @@ var $author$project$Game$view = function (model) {
 									_List_fromArray(
 										[
 											$rtfeldman$elm_css$Html$Styled$Events$onClick(
-											$author$project$Game$Roll($author$project$Game$ReRoll))
+											$author$project$Game$Roll($author$project$Game$Initiated))
 										]),
 									_List_fromArray(
 										[
@@ -11234,7 +11236,7 @@ var $author$project$Game$view = function (model) {
 									_List_fromArray(
 										[
 											$rtfeldman$elm_css$Html$Styled$Events$onClick(
-											$author$project$Game$Roll($author$project$Game$ReRoll))
+											$author$project$Game$Roll($author$project$Game$Initiated))
 										]),
 									_List_fromArray(
 										[
@@ -11255,7 +11257,7 @@ var $author$project$Game$view = function (model) {
 									_List_fromArray(
 										[
 											$rtfeldman$elm_css$Html$Styled$Events$onClick(
-											$author$project$Game$Roll($author$project$Game$ReRoll))
+											$author$project$Game$Roll($author$project$Game$Initiated))
 										]),
 									_List_fromArray(
 										[
@@ -11516,7 +11518,7 @@ var $author$project$Main$view = function (model) {
 			consoleState,
 			{onEnter: $author$project$Console$Submit, onInput: $author$project$Console$Change}));
 	var gameIsOver = $folkertdev$elm_deque$Deque$length(gameState.activePlayers) <= 1;
-	var playerStats = $author$project$Main$stats_(
+	var playerStats = $author$project$Common$stats_(
 		A2(
 			$elm$core$List$map,
 			$author$project$Player$view(gameState.whosTurn),
@@ -11575,19 +11577,19 @@ var $author$project$Main$view = function (model) {
 						switch (_v1.$) {
 							case 'Fresh':
 								return _List_fromArray(
-									[$author$project$Main$logo, playerStats, tryHistory, table, console]);
+									[$author$project$Common$logo, playerStats, tryHistory, table, console]);
 							case 'Rolled':
 								return _List_fromArray(
-									[$author$project$Main$logo, playerStats, tryHistory, table, console]);
+									[$author$project$Common$logo, playerStats, tryHistory, table, console]);
 							case 'Received':
 								return _List_fromArray(
-									[$author$project$Main$logo, playerStats, tryHistory, table, console]);
+									[$author$project$Common$logo, playerStats, tryHistory, table, console]);
 							case 'Looked':
 								return _List_fromArray(
-									[$author$project$Main$logo, playerStats, tryHistory, table, console]);
+									[$author$project$Common$logo, playerStats, tryHistory, table, console]);
 							default:
 								return _List_fromArray(
-									[$author$project$Main$logo, playerStats, tryHistory, table, console]);
+									[$author$project$Common$logo, playerStats, tryHistory, table, console]);
 						}
 					} else {
 						return _List_fromArray(

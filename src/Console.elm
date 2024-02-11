@@ -96,7 +96,7 @@ update msg ( console, game ) =
                                         case x of
                                             "roll" ->
                                                 ( addEntries console [ x ]
-                                                , Game.roll Game.ReRoll game
+                                                , Game.roll Game.Initiated game
                                                     |> Tuple.mapSecond (Cmd.map Game.ActionMsg)
                                                 )
 

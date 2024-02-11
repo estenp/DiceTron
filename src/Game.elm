@@ -17,30 +17,8 @@ import Tailwind.Utilities as Tw
 import Try exposing (Try)
 
 
-type RollState
-    = Fresh
-    | Received
-    | Looked
-    | Rolled
-    | Pulled PullResult
 
-
-type Action
-    = Pull
-    | Pass Try
-    | Look
-    | Roll Roll
-
-
-type Msg
-    = ActionMsg Action
-    | TryMsg Try.Msg
-
-
-type Roll
-    = -- Runtime is sending a new random die value.
-      NewRoll Try.Cup
-    | ReRoll
+-- MODEL TYPES
 
 
 type alias Model =
@@ -64,14 +42,44 @@ type alias Model =
     }
 
 
+type CupState
+    = Covered
+    | Uncovered
+
+
+type RollState
+    = Fresh
+    | Received
+    | Looked
+    | Rolled
+    | Pulled PullResult
+
+
 type PullResult
     = HadIt
     | Lie
 
 
-type CupState
-    = Covered
-    | Uncovered
+
+-- MSG TYPES
+
+
+type Msg
+    = ActionMsg Action
+    | TryMsg Try.Msg
+
+
+type Action
+    = Pull
+    | Pass Try
+    | Look
+    | Roll Roll
+
+
+type Roll
+    = -- Runtime is sending a new random die value.
+      Generated Try.Cup
+    | Initiated
 
 
 isValidAction : RollState -> Action -> Bool
@@ -103,7 +111,7 @@ encodeAction action =
             Ok Look
 
         "roll" ->
-            Ok (Roll ReRoll)
+            Ok (Roll Initiated)
 
         _ ->
             Err (action ++ " is not a valid action.")
@@ -125,25 +133,27 @@ decodeAction action =
             "roll"
 
 
+{-| Takes a roll type and updates the model.
+This is the only action function that needs to return a Cmd because of the Random.generate call. Is is possible to refactor that out?
+-}
 roll : Roll -> Model -> ( Model, Cmd Action )
 roll rollType model =
     case rollType of
         -- this message only should come in from runtime
-        NewRoll newDice ->
+        Generated newDice ->
             ( { model | roll = newDice, rollState = Rolled }, Cmd.none )
 
-        ReRoll ->
-            -- checking state and factoring Wilds works well in update when we want to more generically call for a roll (whether fresh or reroll), as you might in console
-            -- but maybe this should all be determined in view and pass more specific roll message
-            -- console update would still want to determine the right roll type (or require more specfiic roll command)
+        Initiated ->
+            -- todo: at min, refactor out the redundancy
+            -- this could potentially take a payload of number of dice to roll and do logic in view instead?
             case model.rollState of
                 Pulled _ ->
                     -- reset
-                    ( { model | tableWilds = 0 }, Random.generate (Roll << NewRoll) (Try.rollGenerator 5) )
+                    ( { model | tableWilds = 0 }, Random.generate (Roll << Generated) (Try.rollGenerator 5) )
 
                 Fresh ->
                     -- reset
-                    ( { model | tableWilds = 0 }, Random.generate (Roll << NewRoll) (Try.rollGenerator 5) )
+                    ( { model | tableWilds = 0 }, Random.generate (Roll << Generated) (Try.rollGenerator 5) )
 
                 -- reroll
                 _ ->
@@ -155,12 +165,12 @@ roll rollType model =
                     if List.length rest /= 0 then
                         -- add pulled wilds to the tableWilds count, create new roll with remaining cup
                         ( { model | tableWilds = List.length wilds + model.tableWilds }
-                        , Random.generate (Roll << NewRoll) (Try.rollGenerator (List.length rest))
+                        , Random.generate (Roll << Generated) (Try.rollGenerator (List.length rest))
                         )
 
                     else
                         ( model
-                        , Random.generate (Roll << NewRoll) (Try.rollGenerator (List.length model.roll))
+                        , Random.generate (Roll << Generated) (Try.rollGenerator (List.length model.roll))
                         )
 
 
@@ -343,13 +353,13 @@ view model =
         rollButtons =
             (case model.rollState of
                 Fresh ->
-                    [ div [] [ button_ [ onClick (Roll ReRoll) ] [ text "roll" ] ] ]
+                    [ div [] [ button_ [ onClick (Roll Initiated) ] [ text "roll" ] ] ]
 
                 Pulled _ ->
-                    [ div [] [ button_ [ onClick (Roll ReRoll) ] [ text "roll" ] ] ]
+                    [ div [] [ button_ [ onClick (Roll Initiated) ] [ text "roll" ] ] ]
 
                 Looked ->
-                    [ div [] [ button_ [ onClick (Roll ReRoll) ] [ text "re-roll" ] ] ]
+                    [ div [] [ button_ [ onClick (Roll Initiated) ] [ text "re-roll" ] ] ]
 
                 _ ->
                     []
