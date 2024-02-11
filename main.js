@@ -5249,7 +5249,7 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$initConsoleState = {consoleHistory: _List_Nil, consoleIsVisible: false, consoleValue: ''};
 var $author$project$Game$Covered = {$: 'Covered'};
-var $author$project$Game$Fresh = {$: 'Fresh'};
+var $author$project$Game$Init = {$: 'Init'};
 var $author$project$Try$Threes = {$: 'Threes'};
 var $author$project$Try$Two = {$: 'Two'};
 var $author$project$Try$Twos = {$: 'Twos'};
@@ -5594,7 +5594,7 @@ var $author$project$Main$initGameState = {
 	players: $author$project$Data$my_players,
 	quantity: $author$project$Try$Two,
 	roll: _List_Nil,
-	rollState: $author$project$Game$Fresh,
+	rollState: $author$project$Game$Init,
 	tableWilds: 0,
 	tryHistory: _List_Nil,
 	tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
@@ -6451,7 +6451,7 @@ var $author$project$Game$isValidAction = F2(
 			case 'Pass':
 				return _Utils_eq(rollState, $author$project$Game$Received) || (_Utils_eq(rollState, $author$project$Game$Looked) || _Utils_eq(rollState, $author$project$Game$Rolled));
 			default:
-				return _Utils_eq(rollState, $author$project$Game$Fresh) || (_Utils_eq(rollState, $author$project$Game$Looked) || (_Utils_eq(
+				return _Utils_eq(rollState, $author$project$Game$Init) || (_Utils_eq(rollState, $author$project$Game$Looked) || (_Utils_eq(
 					rollState,
 					$author$project$Game$Pulled($author$project$Game$Lie)) || _Utils_eq(
 					rollState,
@@ -7423,7 +7423,7 @@ var $author$project$Game$roll = F2(
 							$elm$random$Random$generate,
 							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
 							$author$project$Try$rollGenerator(5)));
-				case 'Fresh':
+				case 'Init':
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -7876,6 +7876,20 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $rtfeldman$elm_css$Html$Styled$Attributes$class = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('className');
+var $rtfeldman$elm_css$VirtualDom$Styled$Node = F3(
+	function (a, b, c) {
+		return {$: 'Node', a: a, b: b, c: c};
+	});
+var $rtfeldman$elm_css$VirtualDom$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$Node;
+var $rtfeldman$elm_css$Html$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$node;
+var $rtfeldman$elm_css$Html$Styled$div = $rtfeldman$elm_css$Html$Styled$node('div');
+var $author$project$Player$getName = F2(
+	function (players, id) {
+		return function ($) {
+			return $.name;
+		}(
+			A2($author$project$Player$getPlayer, players, id));
+	});
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -9181,74 +9195,9 @@ var $rtfeldman$elm_css$Css$Preprocess$Resolve$compile = function (sheet) {
 		$rtfeldman$elm_css$Css$Structure$compactStylesheet(
 			$rtfeldman$elm_css$Css$Preprocess$Resolve$toStructure(sheet)));
 };
-var $rtfeldman$elm_css$Css$Preprocess$Snippet = function (a) {
-	return {$: 'Snippet', a: a};
-};
-var $rtfeldman$elm_css$Css$Preprocess$StyleBlock = F3(
-	function (a, b, c) {
-		return {$: 'StyleBlock', a: a, b: b, c: c};
-	});
-var $rtfeldman$elm_css$Css$Preprocess$StyleBlockDeclaration = function (a) {
-	return {$: 'StyleBlockDeclaration', a: a};
-};
-var $rtfeldman$elm_css$VirtualDom$Styled$makeSnippet = F2(
-	function (styles, sequence) {
-		var selector = A3($rtfeldman$elm_css$Css$Structure$Selector, sequence, _List_Nil, $elm$core$Maybe$Nothing);
-		return $rtfeldman$elm_css$Css$Preprocess$Snippet(
-			_List_fromArray(
-				[
-					$rtfeldman$elm_css$Css$Preprocess$StyleBlockDeclaration(
-					A3($rtfeldman$elm_css$Css$Preprocess$StyleBlock, selector, _List_Nil, styles))
-				]));
-	});
 var $rtfeldman$elm_css$Css$Preprocess$stylesheet = function (snippets) {
 	return {charset: $elm$core$Maybe$Nothing, imports: _List_Nil, namespaces: _List_Nil, snippets: snippets};
 };
-var $rtfeldman$elm_css$Css$Structure$ClassSelector = function (a) {
-	return {$: 'ClassSelector', a: a};
-};
-var $rtfeldman$elm_css$VirtualDom$Styled$templateSelector = $rtfeldman$elm_css$Css$Structure$UniversalSelectorSequence(
-	_List_fromArray(
-		[
-			$rtfeldman$elm_css$Css$Structure$ClassSelector($rtfeldman$elm_css$VirtualDom$Styled$classnameStandin)
-		]));
-var $rtfeldman$elm_css$VirtualDom$Styled$getCssTemplate = function (styles) {
-	if (!styles.b) {
-		return '';
-	} else {
-		var otherwise = styles;
-		return $rtfeldman$elm_css$Css$Preprocess$Resolve$compile(
-			$rtfeldman$elm_css$Css$Preprocess$stylesheet(
-				_List_fromArray(
-					[
-						A2($rtfeldman$elm_css$VirtualDom$Styled$makeSnippet, styles, $rtfeldman$elm_css$VirtualDom$Styled$templateSelector)
-					])));
-	}
-};
-var $rtfeldman$elm_css$Html$Styled$Internal$css = function (styles) {
-	var cssTemplate = $rtfeldman$elm_css$VirtualDom$Styled$getCssTemplate(styles);
-	var classProperty = A2($elm$virtual_dom$VirtualDom$attribute, '', '');
-	return A3($rtfeldman$elm_css$VirtualDom$Styled$Attribute, classProperty, true, cssTemplate);
-};
-var $rtfeldman$elm_css$Html$Styled$Attributes$css = $rtfeldman$elm_css$Html$Styled$Internal$css;
-var $rtfeldman$elm_css$VirtualDom$Styled$Node = F3(
-	function (a, b, c) {
-		return {$: 'Node', a: a, b: b, c: c};
-	});
-var $rtfeldman$elm_css$VirtualDom$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$Node;
-var $rtfeldman$elm_css$Html$Styled$node = $rtfeldman$elm_css$VirtualDom$Styled$node;
-var $rtfeldman$elm_css$Html$Styled$div = $rtfeldman$elm_css$Html$Styled$node('div');
-var $TSFoster$elm_tuple_extra$Tuple3$first = function (_v0) {
-	var a = _v0.a;
-	return a;
-};
-var $author$project$Player$getName = F2(
-	function (players, id) {
-		return function ($) {
-			return $.name;
-		}(
-			A2($author$project$Player$getPlayer, players, id));
-	});
 var $rtfeldman$elm_css$VirtualDom$Styled$Unstyled = function (a) {
 	return {$: 'Unstyled', a: a};
 };
@@ -9280,6 +9229,26 @@ var $rtfeldman$elm_css$Css$property = F2(
 	function (key, value) {
 		return $rtfeldman$elm_css$Css$Preprocess$AppendProperty(
 			$rtfeldman$elm_css$Css$Structure$Property(key + (':' + value)));
+	});
+var $rtfeldman$elm_css$Css$Preprocess$Snippet = function (a) {
+	return {$: 'Snippet', a: a};
+};
+var $rtfeldman$elm_css$Css$Preprocess$StyleBlock = F3(
+	function (a, b, c) {
+		return {$: 'StyleBlock', a: a, b: b, c: c};
+	});
+var $rtfeldman$elm_css$Css$Preprocess$StyleBlockDeclaration = function (a) {
+	return {$: 'StyleBlockDeclaration', a: a};
+};
+var $rtfeldman$elm_css$VirtualDom$Styled$makeSnippet = F2(
+	function (styles, sequence) {
+		var selector = A3($rtfeldman$elm_css$Css$Structure$Selector, sequence, _List_Nil, $elm$core$Maybe$Nothing);
+		return $rtfeldman$elm_css$Css$Preprocess$Snippet(
+			_List_fromArray(
+				[
+					$rtfeldman$elm_css$Css$Preprocess$StyleBlockDeclaration(
+					A3($rtfeldman$elm_css$Css$Preprocess$StyleBlock, selector, _List_Nil, styles))
+				]));
 	});
 var $rtfeldman$elm_css$Css$Global$selector = F2(
 	function (selectorStr, styles) {
@@ -9711,7 +9680,6 @@ var $author$project$Tailwind$Utilities$globalStyles = _List_fromArray(
 				A2($rtfeldman$elm_css$Css$property, '--tw-backdrop-sepia', ' ')
 			]))
 	]);
-var $author$project$Tailwind$Utilities$justify_self_center = A2($rtfeldman$elm_css$Css$property, 'justify-self', 'center');
 var $folkertdev$elm_deque$Internal$length = function (deque) {
 	return deque.sizeF + deque.sizeR;
 };
@@ -9780,6 +9748,33 @@ var $author$project$Tailwind$Utilities$border_color = function (color) {
 		$elm$core$Maybe$Just('--tw-border-opacity'),
 		color);
 };
+var $rtfeldman$elm_css$Css$Structure$ClassSelector = function (a) {
+	return {$: 'ClassSelector', a: a};
+};
+var $rtfeldman$elm_css$VirtualDom$Styled$templateSelector = $rtfeldman$elm_css$Css$Structure$UniversalSelectorSequence(
+	_List_fromArray(
+		[
+			$rtfeldman$elm_css$Css$Structure$ClassSelector($rtfeldman$elm_css$VirtualDom$Styled$classnameStandin)
+		]));
+var $rtfeldman$elm_css$VirtualDom$Styled$getCssTemplate = function (styles) {
+	if (!styles.b) {
+		return '';
+	} else {
+		var otherwise = styles;
+		return $rtfeldman$elm_css$Css$Preprocess$Resolve$compile(
+			$rtfeldman$elm_css$Css$Preprocess$stylesheet(
+				_List_fromArray(
+					[
+						A2($rtfeldman$elm_css$VirtualDom$Styled$makeSnippet, styles, $rtfeldman$elm_css$VirtualDom$Styled$templateSelector)
+					])));
+	}
+};
+var $rtfeldman$elm_css$Html$Styled$Internal$css = function (styles) {
+	var cssTemplate = $rtfeldman$elm_css$VirtualDom$Styled$getCssTemplate(styles);
+	var classProperty = A2($elm$virtual_dom$VirtualDom$attribute, '', '');
+	return A3($rtfeldman$elm_css$VirtualDom$Styled$Attribute, classProperty, true, cssTemplate);
+};
+var $rtfeldman$elm_css$Html$Styled$Attributes$css = $rtfeldman$elm_css$Html$Styled$Internal$css;
 var $author$project$Tailwind$Utilities$flex = A2($rtfeldman$elm_css$Css$property, 'display', 'flex');
 var $author$project$Tailwind$Utilities$font_bold = A2($rtfeldman$elm_css$Css$property, 'font-weight', '700');
 var $matheus23$elm_tailwind_modules_base$Tailwind$Color$Opacity = function (a) {
@@ -10033,74 +10028,6 @@ var $rtfeldman$elm_css$VirtualDom$Styled$map = F2(
 		}
 	});
 var $rtfeldman$elm_css$Html$Styled$map = $rtfeldman$elm_css$VirtualDom$Styled$map;
-var $TSFoster$elm_tuple_extra$Tuple3$mapAllThree = F4(
-	function (aFn, bFn, cFn, _v0) {
-		var a = _v0.a;
-		var b = _v0.b;
-		var c = _v0.c;
-		return _Utils_Tuple3(
-			aFn(a),
-			bFn(b),
-			cFn(c));
-	});
-var $author$project$Tailwind$Utilities$mt_4 = A2($rtfeldman$elm_css$Css$property, 'margin-top', '1rem');
-var $author$project$Tailwind$Utilities$overflow_auto = A2($rtfeldman$elm_css$Css$property, 'overflow', 'auto');
-var $TSFoster$elm_tuple_extra$Tuple3$second = function (_v0) {
-	var b = _v0.b;
-	return b;
-};
-var $rtfeldman$elm_css$Html$Styled$span = $rtfeldman$elm_css$Html$Styled$node('span');
-var $author$project$Tailwind$Utilities$shadow_md = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'),
-			A2($rtfeldman$elm_css$Css$property, '--tw-shadow-colored', '0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color)'),
-			A2($rtfeldman$elm_css$Css$property, 'box-shadow', 'var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)')
-		]));
-var $author$project$Tailwind$Utilities$shadow_sm = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 1px 2px 0 rgb(0 0 0 / 0.05)'),
-			A2($rtfeldman$elm_css$Css$property, '--tw-shadow-colored', '0 1px 2px 0 var(--tw-shadow-color)'),
-			A2($rtfeldman$elm_css$Css$property, 'box-shadow', 'var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)')
-		]));
-var $author$project$StyledElements$card = _List_fromArray(
-	[
-		$author$project$Tailwind$Utilities$shadow_sm,
-		$author$project$Tailwind$Utilities$bg_gradient_to_br,
-		$author$project$Tailwind$Utilities$from_color($author$project$Tailwind$Theme$gray),
-		$author$project$Tailwind$Utilities$to_color($author$project$Tailwind$Theme$white),
-		$author$project$Tailwind$Utilities$rounded_2xl,
-		$author$project$Tailwind$Utilities$shadow_md
-	]);
-var $author$project$Tailwind$Utilities$gap_8 = A2($rtfeldman$elm_css$Css$property, 'gap', '2rem');
-var $author$project$Tailwind$Utilities$justify_around = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'space-around');
-var $author$project$Tailwind$Utilities$p_4 = A2($rtfeldman$elm_css$Css$property, 'padding', '1rem');
-var $author$project$Tailwind$Utilities$rounded_t_none = $rtfeldman$elm_css$Css$batch(
-	_List_fromArray(
-		[
-			A2($rtfeldman$elm_css$Css$property, 'border-top-left-radius', '0px'),
-			A2($rtfeldman$elm_css$Css$property, 'border-top-right-radius', '0px')
-		]));
-var $author$project$Common$stats_ = $rtfeldman$elm_css$Html$Styled$div(
-	_List_fromArray(
-		[
-			$rtfeldman$elm_css$Html$Styled$Attributes$class('stats'),
-			$rtfeldman$elm_css$Html$Styled$Attributes$css(
-			_Utils_ap(
-				_List_fromArray(
-					[
-						$author$project$Tailwind$Utilities$flex,
-						$author$project$Tailwind$Utilities$justify_around,
-						$author$project$Tailwind$Utilities$p_4,
-						$author$project$Tailwind$Utilities$text_color($author$project$Tailwind$Theme$black_100),
-						$author$project$Tailwind$Utilities$gap_8
-					]),
-				_Utils_ap(
-					$author$project$StyledElements$card,
-					_List_fromArray(
-						[$author$project$Tailwind$Utilities$rounded_t_none]))))
-		]));
 var $rtfeldman$elm_css$Css$backgroundColor = function (c) {
 	return A2($rtfeldman$elm_css$Css$property, 'background-color', c.value);
 };
@@ -10188,7 +10115,10 @@ var $rtfeldman$elm_css$Html$Styled$Events$onInput = function (tagger) {
 			$rtfeldman$elm_css$Html$Styled$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $rtfeldman$elm_css$Html$Styled$Events$targetValue)));
 };
+var $author$project$Tailwind$Utilities$overflow_auto = A2($rtfeldman$elm_css$Css$property, 'overflow', 'auto');
+var $author$project$Tailwind$Utilities$p_4 = A2($rtfeldman$elm_css$Css$property, 'padding', '1rem');
 var $author$project$Tailwind$Theme$purple_100 = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '200', '184', '219', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
+var $rtfeldman$elm_css$Html$Styled$span = $rtfeldman$elm_css$Html$Styled$node('span');
 var $rtfeldman$elm_css$Css$Structure$Compatible = {$: 'Compatible'};
 var $rtfeldman$elm_css$Css$transparent = {color: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'transparent'};
 var $rtfeldman$elm_css$Html$Styled$Attributes$type_ = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('type');
@@ -10292,6 +10222,29 @@ var $author$project$Game$TryMsg = function (a) {
 	return {$: 'TryMsg', a: a};
 };
 var $rtfeldman$elm_css$Html$Styled$button = $rtfeldman$elm_css$Html$Styled$node('button');
+var $author$project$Tailwind$Utilities$shadow_md = $rtfeldman$elm_css$Css$batch(
+	_List_fromArray(
+		[
+			A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'),
+			A2($rtfeldman$elm_css$Css$property, '--tw-shadow-colored', '0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color)'),
+			A2($rtfeldman$elm_css$Css$property, 'box-shadow', 'var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)')
+		]));
+var $author$project$Tailwind$Utilities$shadow_sm = $rtfeldman$elm_css$Css$batch(
+	_List_fromArray(
+		[
+			A2($rtfeldman$elm_css$Css$property, '--tw-shadow', '0 1px 2px 0 rgb(0 0 0 / 0.05)'),
+			A2($rtfeldman$elm_css$Css$property, '--tw-shadow-colored', '0 1px 2px 0 var(--tw-shadow-color)'),
+			A2($rtfeldman$elm_css$Css$property, 'box-shadow', 'var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)')
+		]));
+var $author$project$StyledElements$card = _List_fromArray(
+	[
+		$author$project$Tailwind$Utilities$shadow_sm,
+		$author$project$Tailwind$Utilities$bg_gradient_to_br,
+		$author$project$Tailwind$Utilities$from_color($author$project$Tailwind$Theme$gray),
+		$author$project$Tailwind$Utilities$to_color($author$project$Tailwind$Theme$white),
+		$author$project$Tailwind$Utilities$rounded_2xl,
+		$author$project$Tailwind$Utilities$shadow_md
+	]);
 var $author$project$Tailwind$Utilities$border_2 = A2($rtfeldman$elm_css$Css$property, 'border-width', '2px');
 var $author$project$Tailwind$Utilities$border_solid = A2($rtfeldman$elm_css$Css$property, 'border-style', 'solid');
 var $author$project$Tailwind$Utilities$h_16 = A2($rtfeldman$elm_css$Css$property, 'height', '4rem');
@@ -11202,7 +11155,7 @@ var $author$project$Game$view = function (model) {
 		function () {
 			var _v2 = model.rollState;
 			switch (_v2.$) {
-				case 'Fresh':
+				case 'Init':
 					return _List_fromArray(
 						[
 							A2(
@@ -11328,7 +11281,7 @@ var $author$project$Game$view = function (model) {
 		function () {
 			var _v0 = model.rollState;
 			switch (_v0.$) {
-				case 'Fresh':
+				case 'Init':
 					return rollButtons;
 				case 'Rolled':
 					return _Utils_ap(
@@ -11378,6 +11331,84 @@ var $author$project$Game$view = function (model) {
 			}
 		}());
 };
+var $TSFoster$elm_tuple_extra$Tuple3$first = function (_v0) {
+	var a = _v0.a;
+	return a;
+};
+var $author$project$Tailwind$Utilities$justify_self_center = A2($rtfeldman$elm_css$Css$property, 'justify-self', 'center');
+var $TSFoster$elm_tuple_extra$Tuple3$mapAllThree = F4(
+	function (aFn, bFn, cFn, _v0) {
+		var a = _v0.a;
+		var b = _v0.b;
+		var c = _v0.c;
+		return _Utils_Tuple3(
+			aFn(a),
+			bFn(b),
+			cFn(c));
+	});
+var $author$project$Tailwind$Utilities$mt_4 = A2($rtfeldman$elm_css$Css$property, 'margin-top', '1rem');
+var $TSFoster$elm_tuple_extra$Tuple3$second = function (_v0) {
+	var b = _v0.b;
+	return b;
+};
+var $author$project$Try$viewHistory = function (gameState) {
+	return A2(
+		$rtfeldman$elm_css$Html$Styled$div,
+		_List_fromArray(
+			[
+				$rtfeldman$elm_css$Html$Styled$Attributes$class('history'),
+				$rtfeldman$elm_css$Html$Styled$Attributes$css(
+				_List_fromArray(
+					[$author$project$Tailwind$Utilities$justify_self_center, $author$project$Tailwind$Utilities$mt_4, $author$project$Tailwind$Utilities$overflow_auto]))
+			]),
+		A2(
+			$elm$core$List$map,
+			function (tup) {
+				return A2(
+					$rtfeldman$elm_css$Html$Styled$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$rtfeldman$elm_css$Html$Styled$text(
+							$TSFoster$elm_tuple_extra$Tuple3$second(tup) + (' -> ' + $TSFoster$elm_tuple_extra$Tuple3$first(tup)))
+						]));
+			},
+			A2(
+				$elm$core$List$map,
+				A3(
+					$TSFoster$elm_tuple_extra$Tuple3$mapAllThree,
+					$author$project$Try$toString,
+					$author$project$Player$getName(gameState.players),
+					$elm$core$Basics$identity),
+				gameState.tryHistory)));
+};
+var $author$project$Tailwind$Utilities$gap_8 = A2($rtfeldman$elm_css$Css$property, 'gap', '2rem');
+var $author$project$Tailwind$Utilities$justify_around = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'space-around');
+var $author$project$Tailwind$Utilities$rounded_t_none = $rtfeldman$elm_css$Css$batch(
+	_List_fromArray(
+		[
+			A2($rtfeldman$elm_css$Css$property, 'border-top-left-radius', '0px'),
+			A2($rtfeldman$elm_css$Css$property, 'border-top-right-radius', '0px')
+		]));
+var $author$project$Common$stats_ = $rtfeldman$elm_css$Html$Styled$div(
+	_List_fromArray(
+		[
+			$rtfeldman$elm_css$Html$Styled$Attributes$class('stats'),
+			$rtfeldman$elm_css$Html$Styled$Attributes$css(
+			_Utils_ap(
+				_List_fromArray(
+					[
+						$author$project$Tailwind$Utilities$flex,
+						$author$project$Tailwind$Utilities$justify_around,
+						$author$project$Tailwind$Utilities$p_4,
+						$author$project$Tailwind$Utilities$text_color($author$project$Tailwind$Theme$black_100),
+						$author$project$Tailwind$Utilities$gap_8
+					]),
+				_Utils_ap(
+					$author$project$StyledElements$card,
+					_List_fromArray(
+						[$author$project$Tailwind$Utilities$rounded_t_none]))))
+		]));
 var $author$project$Tailwind$Utilities$border_b_2 = A2($rtfeldman$elm_css$Css$property, 'border-bottom-width', '2px');
 var $author$project$Tailwind$Utilities$flex_1 = A2($rtfeldman$elm_css$Css$property, 'flex', '1 1 0%');
 var $author$project$Tailwind$Utilities$gap_2 = A2($rtfeldman$elm_css$Css$property, 'gap', '0.5rem');
@@ -11506,6 +11537,17 @@ var $author$project$Player$view = F2(
 					A2($elm$core$List$map, healthDiv, healthStack))
 				]));
 	});
+var $author$project$Player$viewStats = F2(
+	function (players, current) {
+		return $author$project$Common$stats_(
+			A2(
+				$elm$core$List$map,
+				$author$project$Player$view(current),
+				A2(
+					$elm$core$List$map,
+					$elm$core$Tuple$second,
+					$elm$core$Dict$toList(players))));
+	});
 var $author$project$Main$view = function (model) {
 	var _v0 = model;
 	var gameState = _v0.gameState;
@@ -11518,94 +11560,33 @@ var $author$project$Main$view = function (model) {
 			consoleState,
 			{onEnter: $author$project$Console$Submit, onInput: $author$project$Console$Change}));
 	var gameIsOver = $folkertdev$elm_deque$Deque$length(gameState.activePlayers) <= 1;
-	var playerStats = $author$project$Common$stats_(
-		A2(
-			$elm$core$List$map,
-			$author$project$Player$view(gameState.whosTurn),
-			A2(
-				$elm$core$List$map,
-				$elm$core$Tuple$second,
-				$elm$core$Dict$toList(gameState.players))));
+	var playerStats = A2($author$project$Player$viewStats, gameState.players, gameState.whosTurn);
 	var table = A2(
 		$rtfeldman$elm_css$Html$Styled$map,
 		$author$project$Main$GameMsg,
 		$author$project$Game$view(gameState));
-	var tryHistory = A2(
+	var tryHistory = $author$project$Try$viewHistory(gameState);
+	return A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_fromArray(
 			[
-				$rtfeldman$elm_css$Html$Styled$Attributes$class('history'),
-				$rtfeldman$elm_css$Html$Styled$Attributes$css(
-				_List_fromArray(
-					[$author$project$Tailwind$Utilities$justify_self_center, $author$project$Tailwind$Utilities$mt_4, $author$project$Tailwind$Utilities$overflow_auto]))
+				$rtfeldman$elm_css$Html$Styled$Attributes$class('main')
 			]),
 		A2(
-			$elm$core$List$map,
-			function (tup) {
-				return A2(
-					$rtfeldman$elm_css$Html$Styled$div,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$rtfeldman$elm_css$Html$Styled$text(
-							$TSFoster$elm_tuple_extra$Tuple3$second(tup) + (' -> ' + $TSFoster$elm_tuple_extra$Tuple3$first(tup)))
-						]));
-			},
-			A2(
-				$elm$core$List$map,
-				A3(
-					$TSFoster$elm_tuple_extra$Tuple3$mapAllThree,
-					$author$project$Try$toString,
-					$author$project$Player$getName(gameState.players),
-					$elm$core$Basics$identity),
-				gameState.tryHistory)));
-	return A2(
-		$rtfeldman$elm_css$Html$Styled$span,
-		_List_Nil,
-		_List_fromArray(
-			[
-				$rtfeldman$elm_css$Css$Global$global($author$project$Tailwind$Utilities$globalStyles),
-				A2(
-				$rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[
-						$rtfeldman$elm_css$Html$Styled$Attributes$class('main')
-					]),
-				function () {
-					if (!gameIsOver) {
-						var _v1 = gameState.rollState;
-						switch (_v1.$) {
-							case 'Fresh':
-								return _List_fromArray(
-									[$author$project$Common$logo, playerStats, tryHistory, table, console]);
-							case 'Rolled':
-								return _List_fromArray(
-									[$author$project$Common$logo, playerStats, tryHistory, table, console]);
-							case 'Received':
-								return _List_fromArray(
-									[$author$project$Common$logo, playerStats, tryHistory, table, console]);
-							case 'Looked':
-								return _List_fromArray(
-									[$author$project$Common$logo, playerStats, tryHistory, table, console]);
-							default:
-								return _List_fromArray(
-									[$author$project$Common$logo, playerStats, tryHistory, table, console]);
-						}
-					} else {
-						return _List_fromArray(
-							[
-								$rtfeldman$elm_css$Html$Styled$text(
-								'Game over.' + (A2(
-									$author$project$Player$getName,
-									gameState.players,
-									A2(
-										$elm$core$Maybe$withDefault,
-										0,
-										$folkertdev$elm_deque$Deque$first(gameState.activePlayers))) + ' wins!'))
-							]);
-					}
-				}())
-			]));
+			$elm$core$List$cons,
+			$rtfeldman$elm_css$Css$Global$global($author$project$Tailwind$Utilities$globalStyles),
+			gameIsOver ? _List_fromArray(
+				[
+					$rtfeldman$elm_css$Html$Styled$text(
+					'Game over.' + (A2(
+						$author$project$Player$getName,
+						gameState.players,
+						A2(
+							$elm$core$Maybe$withDefault,
+							0,
+							$folkertdev$elm_deque$Deque$first(gameState.activePlayers))) + ' wins!'))
+				]) : _List_fromArray(
+				[$author$project$Common$logo, playerStats, tryHistory, table, console])));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{

@@ -1,4 +1,4 @@
-module Try exposing (Cup, Face(..), Msg(..), Quantity(..), Try, assessRoll, availTrySelectOpts, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, fromScore, getLastTry, mustPass, rollGenerator, toScore, toString, view, viewSelects)
+module Try exposing (Cup, Face(..), Msg(..), Quantity(..), Try, assessRoll, availTrySelectOpts, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, fromScore, getLastTry, mustPass, rollGenerator, toScore, toString, view, viewHistory, viewSelects)
 
 import Dict exposing (Dict)
 import Dict.Extra exposing (groupBy)
@@ -6,6 +6,7 @@ import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
 import Html.Styled.Events exposing (..)
 import List.Extra exposing (frequencies)
+import Player
 import Random
 import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
@@ -433,3 +434,11 @@ viewSelects quantity tryToBeat =
 
     -- , button_ [ css [ Tw.col_span_2 ], onClick (Pass ( quantity, val )) ] [ text "pass" ]
     ]
+
+
+viewHistory gameState =
+    div [ class "history", css [ Tw.justify_self_center, Tw.mt_4, Tw.overflow_auto ] ]
+        (gameState.tryHistory
+            |> List.map (Tuple3.mapAllThree toString (Player.getName gameState.players) identity)
+            |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup) ])
+        )

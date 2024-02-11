@@ -1,5 +1,6 @@
-module Player exposing (ActivePlayers, Player, PlayerId, Players, getName, getPlayer, health, hit, ko, view)
+module Player exposing (ActivePlayers, Player, PlayerId, Players, getName, getPlayer, health, hit, ko, view, viewStats)
 
+import Common exposing (stats_)
 import Css exposing (..)
 import Deque exposing (Deque)
 import Dict exposing (Dict)
@@ -137,3 +138,12 @@ view currentTurn player =
 
         -- , text ("( " ++ hp ++ " / " ++ maxHp ++ " ) ")
         ]
+
+
+viewStats : Players -> PlayerId -> Html msg
+viewStats players current =
+    players
+        |> Dict.toList
+        |> List.map Tuple.second
+        |> List.map (view current)
+        |> stats_

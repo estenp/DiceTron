@@ -10,15 +10,13 @@ import Deque
 import Dict
 import Face exposing (view)
 import Game
-import Html.Styled exposing (Html, div, span, text, toUnstyled)
-import Html.Styled.Attributes exposing (class, css)
+import Html.Styled exposing (Html, div, text, toUnstyled)
+import Html.Styled.Attributes exposing (class)
 import Html.Styled.Events exposing (..)
-import List
 import Player
 import Tailwind.Utilities as Tw
 import Task
 import Try
-import Tuple3
 
 
 
@@ -145,6 +143,10 @@ update msg model =
             ( model, Cmd.none )
 
 
+
+-- UPDATE HELPERS
+
+
 mergeGameState : Model -> Game.Model -> Model
 mergeGameState model game =
     { model | gameState = game }
@@ -165,23 +167,15 @@ view model =
         { gameState, consoleState } =
             model
 
-        -- UI
         gameIsOver =
             Deque.length gameState.activePlayers <= 1
 
+        -- UI
         playerStats =
-            gameState.players
-                |> Dict.toList
-                |> List.map Tuple.second
-                |> List.map (Player.view gameState.whosTurn)
-                |> stats_
+            Player.viewStats gameState.players gameState.whosTurn
 
         tryHistory =
-            div [ class "history", css [ Tw.justify_self_center, Tw.mt_4, Tw.overflow_auto ] ]
-                (gameState.tryHistory
-                    |> List.map (Tuple3.mapAllThree Try.toString (Player.getName gameState.players) identity)
-                    |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup) ])
-                )
+            Try.viewHistory gameState
 
         table =
             Game.view gameState |> Html.Styled.map GameMsg
@@ -189,58 +183,21 @@ view model =
         console =
             Console.view consoleState { onEnter = Console.Submit, onInput = Console.Change } |> Html.Styled.map ConsoleMsg
     in
-    span []
-        -- span just to apply global styles to page
-        [ global Tw.globalStyles
-        , div [ class "main" ]
-            -- main wrapper
-            (if not gameIsOver then
-                case gameState.rollState of
-                    Game.Init ->
-                        [ logo
-                        , playerStats
-                        , tryHistory
-                        , table
-                        , console
-                        ]
+    div [ class "main" ]
+        (global Tw.globalStyles
+            :: (if gameIsOver then
+                    [ text ("Game over." ++ Player.getName gameState.players (Maybe.withDefault 0 (Deque.first gameState.activePlayers)) ++ " wins!")
+                    ]
 
-                    Game.Rolled ->
-                        [ logo
-                        , playerStats
-                        , tryHistory
-                        , table
-                        , console
-                        ]
-
-                    Game.Received ->
-                        [ logo
-                        , playerStats
-                        , tryHistory
-                        , table
-                        , console
-                        ]
-
-                    Game.Looked ->
-                        [ logo
-                        , playerStats
-                        , tryHistory
-                        , table
-                        , console
-                        ]
-
-                    Game.Pulled _ ->
-                        [ logo
-                        , playerStats
-                        , tryHistory
-                        , table
-                        , console
-                        ]
-
-             else
-                [ text ("Game over." ++ Player.getName gameState.players (Maybe.withDefault 0 (Deque.first gameState.activePlayers)) ++ " wins!")
-                ]
-            )
-        ]
+                else
+                    [ logo
+                    , playerStats
+                    , tryHistory
+                    , table
+                    , console
+                    ]
+               )
+        )
 
 
 
