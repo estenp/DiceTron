@@ -5,8 +5,15 @@ module Game exposing (..)
 import Css.Transitions exposing (offset)
 import Deque
 import Dict
+import Face
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
+import Html.Styled.Events exposing (..)
 import Player
 import Random
+import StyledElements exposing (..)
+import Tailwind.Theme as Tw exposing (..)
+import Tailwind.Utilities as Tw
 import Try exposing (Try)
 
 
@@ -18,11 +25,16 @@ type RollState
     | Pulled PullResult
 
 
-type Msg
+type Action
     = Pull
     | Pass Try
     | Look
     | Roll Roll
+
+
+type Msg
+    = ActionMsg Action
+    | TryMsg Try.Msg
 
 
 type Roll
@@ -62,7 +74,7 @@ type CupState
     | Uncovered
 
 
-isValidAction : RollState -> Msg -> Bool
+isValidAction : RollState -> Action -> Bool
 isValidAction rollState action =
     case action of
         Pull ->
@@ -78,7 +90,7 @@ isValidAction rollState action =
             rollState == Fresh || rollState == Looked || rollState == Pulled Lie || rollState == Pulled HadIt
 
 
-encodeAction : String -> Result String Msg
+encodeAction : String -> Result String Action
 encodeAction action =
     case action of
         "pull" ->
@@ -97,7 +109,7 @@ encodeAction action =
             Err (action ++ " is not a valid action.")
 
 
-decodeAction : Msg -> String
+decodeAction : Action -> String
 decodeAction action =
     case action of
         Pull ->
@@ -113,12 +125,12 @@ decodeAction action =
             "roll"
 
 
-roll : Roll -> Model -> ( Model, Cmd Msg )
+roll : Roll -> Model -> ( Model, Cmd Action )
 roll rollType model =
     case rollType of
         -- this message only should come in from runtime
-        NewRoll cup ->
-            ( { model | roll = cup, rollState = Rolled }, Cmd.none )
+        NewRoll newDice ->
+            ( { model | roll = newDice, rollState = Rolled }, Cmd.none )
 
         ReRoll ->
             -- checking state and factoring Wilds works well in update when we want to more generically call for a roll (whether fresh or reroll), as you might in console
@@ -137,13 +149,13 @@ roll rollType model =
                 _ ->
                     let
                         -- pull the wilds from the roll
-                        ( cup, wilds ) =
+                        ( rest, wilds ) =
                             List.partition (\d -> d /= Try.Wilds) model.roll
                     in
-                    if List.length cup /= 0 then
+                    if List.length rest /= 0 then
                         -- add pulled wilds to the tableWilds count, create new roll with remaining cup
                         ( { model | tableWilds = List.length wilds + model.tableWilds }
-                        , Random.generate (Roll << NewRoll) (Try.rollGenerator (List.length cup))
+                        , Random.generate (Roll << NewRoll) (Try.rollGenerator (List.length rest))
                         )
 
                     else
@@ -291,3 +303,103 @@ pass model try =
 look : Model -> Model
 look model =
     { model | cupState = Uncovered, cupLooked = True, rollState = Looked }
+
+
+
+-- Play Area UI
+--
+
+
+view : Model -> Html Msg
+view model =
+    let
+        cup =
+            [ section
+                [ class "roll"
+                , css [ Tw.flex, Tw.justify_evenly ]
+                ]
+                (List.map Face.view model.roll)
+            ]
+
+        cupButtons =
+            [ div [ css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
+                [ button_ [ onClick Pull ] [ text "pull" ]
+                , button_ [ onClick Look ] [ text "look" ]
+                ]
+            ]
+                |> List.map (Html.Styled.map ActionMsg)
+
+        tableWilds =
+            if model.tableWilds > 0 then
+                [ section
+                    [ id "wilds" ]
+                    (List.map Face.view (List.repeat model.tableWilds Try.Wilds))
+                , divider
+                ]
+
+            else
+                []
+
+        rollButtons =
+            (case model.rollState of
+                Fresh ->
+                    [ div [] [ button_ [ onClick (Roll ReRoll) ] [ text "roll" ] ] ]
+
+                Pulled _ ->
+                    [ div [] [ button_ [ onClick (Roll ReRoll) ] [ text "roll" ] ] ]
+
+                Looked ->
+                    [ div [] [ button_ [ onClick (Roll ReRoll) ] [ text "re-roll" ] ] ]
+
+                _ ->
+                    []
+            )
+                |> List.map (Html.Styled.map ActionMsg)
+
+        trySelects : List (Html Msg)
+        trySelects =
+            let
+                selects =
+                    Try.viewSelects model.quantity model.tryToBeat |> List.map (Html.Styled.map TryMsg)
+
+                passButton =
+                    [ button_
+                        [ css [ Tw.col_span_2 ]
+                        , onClick (ActionMsg (Pass ( model.quantity, model.value )))
+                        ]
+                        [ text "pass" ]
+                    ]
+            in
+            [ div
+                [ class "try"
+                , css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ]
+                ]
+                (selects ++ passButton)
+            ]
+    in
+    div [ class "play-area" ]
+        (case model.rollState of
+            Fresh ->
+                rollButtons
+
+            Rolled ->
+                tableWilds ++ cup ++ rollButtons ++ trySelects
+
+            Received ->
+                tableWilds ++ cupButtons ++ trySelects
+
+            Looked ->
+                tableWilds ++ cup ++ rollButtons ++ trySelects
+
+            Pulled result ->
+                let
+                    pullResult =
+                        case result of
+                            HadIt ->
+                                p [] [ text "Previous player had the roll. You will lose 1 hp." ]
+
+                            Lie ->
+                                p [] [ text "Previous player lied. They will lose 1 hp." ]
+                in
+                tableWilds ++ cup ++ [ pullResult ] ++ rollButtons
+        )

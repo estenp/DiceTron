@@ -1,11 +1,15 @@
-module Try exposing (Cup, Face(..), Quantity(..), Try, assessRoll, availTrySelectOpts, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, fromScore, getLastTry, mustPass, rollGenerator, toScore, toString, view)
+module Try exposing (Cup, Face(..), Msg(..), Quantity(..), Try, assessRoll, availTrySelectOpts, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, fromScore, getLastTry, mustPass, rollGenerator, toScore, toString, view, viewSelects)
 
 import Dict exposing (Dict)
 import Dict.Extra exposing (groupBy)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (value)
+import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
+import Html.Styled.Events exposing (..)
 import List.Extra exposing (frequencies)
 import Random
+import StyledElements exposing (..)
+import Tailwind.Theme as Tw exposing (..)
+import Tailwind.Utilities as Tw
 import Tuple2
 import Tuple3
 
@@ -37,6 +41,11 @@ type Quantity
     | Three
     | Four
     | Five
+
+
+type Msg
+    = ChangeQuantity Quantity
+    | ChangeValue Face
 
 
 
@@ -95,7 +104,7 @@ toScore try =
     Dict.get (decode try) dictionary
 
 
-{-| Convert a Try score to a Try.
+{-| Convert a Try score to a
 -}
 fromScore : Int -> Try
 fromScore score =
@@ -393,3 +402,34 @@ valueOptions =
         , ( decodeFace Fives, option [ value "5" ] [ text "fives" ] )
         , ( decodeFace Sixes, option [ value "6" ] [ text "sixes" ] )
         ]
+
+
+
+-- trySelects =
+--     [ viewPassTry model.quantity model.value model.tryToBeat ]
+
+
+viewSelects : Quantity -> Try -> List (Html Msg)
+viewSelects quantity tryToBeat =
+    let
+        ( quantities, values ) =
+            availTrySelectOpts tryToBeat quantity
+
+        changeQuantity =
+            ChangeQuantity << Maybe.withDefault Two << encodeQuantity << Maybe.withDefault 1 << String.toInt
+
+        changeValue =
+            ChangeValue << Maybe.withDefault Twos << encodeFace << Maybe.withDefault 2 << String.toInt
+    in
+    -- div [ class "try", css [ Tw.grid, Tw.grid_cols_2, Tw.gap_4, Tw.w_full ] ]
+    [ div []
+        [ label [ for "quantity" ] [ text "Quantity" ]
+        , select_ [ onInput changeQuantity, id "quantity" ] quantities
+        ]
+    , div []
+        [ label [ for "value" ] [ text "Value" ]
+        , select_ [ onInput changeValue, id "value" ] values
+        ]
+
+    -- , button_ [ css [ Tw.col_span_2 ], onClick (Pass ( quantity, val )) ] [ text "pass" ]
+    ]

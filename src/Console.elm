@@ -97,6 +97,7 @@ update msg ( console, game ) =
                                             "roll" ->
                                                 ( addEntries console [ x ]
                                                 , Game.roll Game.ReRoll game
+                                                    |> Tuple.mapSecond (Cmd.map Game.ActionMsg)
                                                 )
 
                                             "look" ->
