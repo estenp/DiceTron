@@ -147,16 +147,8 @@ roll rollType model =
             -- todo: at min, refactor out the redundancy
             -- this could potentially take a payload of number of dice to roll and do logic in view instead?
             case model.rollState of
-                Pulled _ ->
-                    -- reset
-                    ( { model | tableWilds = 0 }, Random.generate (Roll << Generated) (Try.rollGenerator 5) )
-
-                Init ->
-                    -- reset
-                    ( { model | tableWilds = 0 }, Random.generate (Roll << Generated) (Try.rollGenerator 5) )
-
-                -- reroll
-                _ ->
+                Looked ->
+                    -- if looked, it's a reroll, so pull wilds
                     let
                         -- pull the wilds from the roll
                         ( rest, wilds ) =
@@ -172,6 +164,9 @@ roll rollType model =
                         ( model
                         , Random.generate (Roll << Generated) (Try.rollGenerator (List.length model.roll))
                         )
+
+                _ ->
+                    ( { model | tableWilds = 0 }, Random.generate (Roll << Generated) (Try.rollGenerator 5) )
 
 
 pull : Model -> Model

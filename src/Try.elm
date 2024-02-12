@@ -144,7 +144,7 @@ toString : Try -> String
 toString =
     decode
         >> Tuple.mapBoth String.fromInt String.fromInt
-        >> (\( q, v ) -> q ++ " " ++ v)
+        >> (\( q, v ) -> q ++ " " ++ v ++ "'s")
 
 
 encodeFace : Int -> Maybe Face

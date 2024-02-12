@@ -46,18 +46,26 @@ update msg ( console, game ) =
 
                         "try" ->
                             -- current try info
-                            ( addEntries console
-                                [ consoleInput
-                                , "You received: " ++ Try.toString game.tryToBeat
-                                , "You must pass: "
-                                    ++ (case Try.mustPass game.tryToBeat of
-                                            Just t ->
-                                                Try.toString t
+                            ( if game.rollState == Game.Init then
+                                addEntries console
+                                    [ consoleInput
+                                    , "There is not yet an active Try. Current player likely has a fresh roll."
+                                    ]
 
-                                            Nothing ->
-                                                "You cannot beat this roll. Sorry."
-                                       )
-                                ]
+                              else
+                                addEntries console
+                                    [ consoleInput
+                                    , "Current Try: " ++ Try.toString game.tryToBeat
+                                    , "Current player must pass: "
+                                        ++ (case Try.mustPass game.tryToBeat of
+                                                Just t ->
+                                                    Try.toString t
+
+                                                Nothing ->
+                                                    "You cannot beat this roll. Sorry."
+                                           )
+                                    , "Hint: The best available try in your current roll appears to be " ++ Try.toString (Try.assessRoll game.roll) ++ "."
+                                    ]
                             , ( game, Cmd.none )
                             )
 

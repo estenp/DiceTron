@@ -7117,7 +7117,7 @@ var $author$project$Try$toString = A2(
 		function (_v0) {
 			var q = _v0.a;
 			var v = _v0.b;
-			return q + (' ' + v);
+			return q + (' ' + (v + '\'s'));
 		}));
 var $author$project$Game$pass = F2(
 	function (model, _try) {
@@ -7413,51 +7413,41 @@ var $author$project$Game$roll = F2(
 				$elm$core$Platform$Cmd$none);
 		} else {
 			var _v1 = model.rollState;
-			switch (_v1.$) {
-				case 'Pulled':
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{tableWilds: 0}),
-						A2(
-							$elm$random$Random$generate,
-							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
-							$author$project$Try$rollGenerator(5)));
-				case 'Init':
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{tableWilds: 0}),
-						A2(
-							$elm$random$Random$generate,
-							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
-							$author$project$Try$rollGenerator(5)));
-				default:
-					var _v2 = A2(
-						$elm$core$List$partition,
-						function (d) {
-							return !_Utils_eq(d, $author$project$Try$Wilds);
-						},
-						model.roll);
-					var rest = _v2.a;
-					var wilds = _v2.b;
-					return (!(!$elm$core$List$length(rest))) ? _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								tableWilds: $elm$core$List$length(wilds) + model.tableWilds
-							}),
-						A2(
-							$elm$random$Random$generate,
-							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
-							$author$project$Try$rollGenerator(
-								$elm$core$List$length(rest)))) : _Utils_Tuple2(
+			if (_v1.$ === 'Looked') {
+				var _v2 = A2(
+					$elm$core$List$partition,
+					function (d) {
+						return !_Utils_eq(d, $author$project$Try$Wilds);
+					},
+					model.roll);
+				var rest = _v2.a;
+				var wilds = _v2.b;
+				return (!(!$elm$core$List$length(rest))) ? _Utils_Tuple2(
+					_Utils_update(
 						model,
-						A2(
-							$elm$random$Random$generate,
-							A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
-							$author$project$Try$rollGenerator(
-								$elm$core$List$length(model.roll))));
+						{
+							tableWilds: $elm$core$List$length(wilds) + model.tableWilds
+						}),
+					A2(
+						$elm$random$Random$generate,
+						A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
+						$author$project$Try$rollGenerator(
+							$elm$core$List$length(rest)))) : _Utils_Tuple2(
+					model,
+					A2(
+						$elm$random$Random$generate,
+						A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
+						$author$project$Try$rollGenerator(
+							$elm$core$List$length(model.roll))));
+			} else {
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tableWilds: 0}),
+					A2(
+						$elm$random$Random$generate,
+						A2($elm$core$Basics$composeL, $author$project$Game$Roll, $author$project$Game$Generated),
+						$author$project$Try$rollGenerator(5)));
 			}
 		}
 	});
@@ -7550,14 +7540,18 @@ var $author$project$Console$update = F2(
 								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
 						case 'try':
 							return _Utils_Tuple2(
-								A2(
+								_Utils_eq(game.rollState, $author$project$Game$Init) ? A2(
+									$author$project$Console$addEntries,
+									console,
+									_List_fromArray(
+										[consoleInput, 'There is not yet an active Try. Current player likely has a fresh roll.'])) : A2(
 									$author$project$Console$addEntries,
 									console,
 									_List_fromArray(
 										[
 											consoleInput,
-											'You received: ' + $author$project$Try$toString(game.tryToBeat),
-											'You must pass: ' + function () {
+											'Current Try: ' + $author$project$Try$toString(game.tryToBeat),
+											'Current player must pass: ' + function () {
 											var _v4 = $author$project$Try$mustPass(game.tryToBeat);
 											if (_v4.$ === 'Just') {
 												var t = _v4.a;
@@ -7565,7 +7559,9 @@ var $author$project$Console$update = F2(
 											} else {
 												return 'You cannot beat this roll. Sorry.';
 											}
-										}()
+										}(),
+											'Hint: The best available try in your current roll appears to be ' + ($author$project$Try$toString(
+											$author$project$Try$assessRoll(game.roll)) + '.')
 										])),
 								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
 						case 'help':
