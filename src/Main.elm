@@ -38,7 +38,7 @@ initGameState =
     , cupLooked = False
     , rollState = Game.Init
     , whosTurn = 1
-    , tryHistory = []
+    , history = []
     , quantity = Try.Two
     , value = Try.Threes
     , activePlayers = Data.my_players |> Dict.keys |> Deque.fromList
@@ -97,6 +97,7 @@ update msg model =
                 Game.ActionMsg actionMsg ->
                     if Game.isValidAction model.gameState.rollState actionMsg then
                         case actionMsg of
+                            -- todo: make every action return a Result and catch errors at the end of this case, logging them to console?
                             Game.Roll rollType ->
                                 Game.roll rollType model.gameState
                                     |> Tuple.mapBoth
@@ -112,6 +113,10 @@ update msg model =
                             Game.Pass try ->
                                 case Game.pass model.gameState try of
                                     Ok m ->
+                                        let
+                                            _ =
+                                                Debug.log "pass" m
+                                        in
                                         ( m |> mergeGameState model, Cmd.none )
 
                                     Err e ->
@@ -175,7 +180,7 @@ view model =
             Player.viewStats gameState.players gameState.whosTurn
 
         tryHistory =
-            Try.viewHistory gameState
+            Game.viewHistory gameState |> Html.Styled.map GameMsg
 
         table =
             Game.view gameState |> Html.Styled.map GameMsg

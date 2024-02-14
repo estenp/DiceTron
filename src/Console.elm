@@ -57,14 +57,14 @@ update msg ( console, game ) =
                                     [ consoleInput
                                     , "Current Try: " ++ Try.toString game.tryToBeat
                                     , "Current player must pass: "
-                                        ++ (case Try.mustPass game.tryToBeat of
+                                        ++ (case Try.nextBest game.tryToBeat of
                                                 Just t ->
                                                     Try.toString t
 
                                                 Nothing ->
                                                     "You cannot beat this roll. Sorry."
                                            )
-                                    , "Hint: The best available try in your current roll appears to be " ++ Try.toString (Try.assessRoll game.roll) ++ "."
+                                    , "Hint: The best available try in your current roll appears to be " ++ Try.toString (Try.assessRoll (game.roll ++ List.repeat game.tableWilds Try.Wilds)) ++ "."
                                     ]
                             , ( game, Cmd.none )
                             )

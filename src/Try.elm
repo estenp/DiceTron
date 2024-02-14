@@ -1,4 +1,4 @@
-module Try exposing (Cup, Face(..), Msg(..), Quantity(..), Try, assessRoll, availTrySelectOpts, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, fromScore, getLastTry, mustPass, rollGenerator, toScore, toString, view, viewHistory, viewSelects)
+module Try exposing (Cup, Face(..), Msg(..), Quantity(..), Try, assessRoll, availTrySelectOpts, decode, decodeFace, decodeQuantity, dictionary, dieGenerator, encode, encodeFace, encodeQuantity, fromScore, getLastTry, nextBest, rollGenerator, toScore, toString, view, viewSelects)
 
 import Dict exposing (Dict)
 import Dict.Extra exposing (groupBy)
@@ -100,6 +100,13 @@ dictionary =
 
 {-| Convert a Try to a Try score.
 -}
+
+
+
+-- todo: using a dict because of the need to lookup a Tuple of Int
+-- but if we can use a record here, it will be easier to work with
+
+
 toScore : Try -> Maybe Int
 toScore try =
     Dict.get (decode try) dictionary
@@ -305,8 +312,8 @@ view =
 
 {-| Takes a Try and determines the next highest Try. If the passed Try is the highest possible, return Nothing
 -}
-mustPass : Try -> Maybe Try
-mustPass receivedTry =
+nextBest : Try -> Maybe Try
+nextBest receivedTry =
     let
         receivedTryVal =
             case toScore receivedTry of
@@ -434,11 +441,3 @@ viewSelects quantity tryToBeat =
 
     -- , button_ [ css [ Tw.col_span_2 ], onClick (Pass ( quantity, val )) ] [ text "pass" ]
     ]
-
-
-viewHistory gameState =
-    div [ class "history", css [ Tw.justify_self_center, Tw.mt_4, Tw.overflow_auto ] ]
-        (gameState.tryHistory
-            |> List.map (Tuple3.mapAllThree toString (Player.getName gameState.players) identity)
-            |> List.map (\tup -> div [] [ text (Tuple3.second tup ++ " -> " ++ Tuple3.first tup) ])
-        )

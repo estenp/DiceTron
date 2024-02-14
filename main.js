@@ -5591,12 +5591,12 @@ var $author$project$Main$initGameState = {
 		$elm$core$Dict$keys($author$project$Data$my_players)),
 	cupLooked: false,
 	cupState: $author$project$Game$Covered,
+	history: _List_Nil,
 	players: $author$project$Data$my_players,
 	quantity: $author$project$Try$Two,
 	roll: _List_Nil,
 	rollState: $author$project$Game$Init,
 	tableWilds: 0,
-	tryHistory: _List_Nil,
 	tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
 	value: $author$project$Try$Threes,
 	whosTurn: 1
@@ -6458,6 +6458,7 @@ var $author$project$Game$isValidAction = F2(
 					$author$project$Game$Pulled($author$project$Game$HadIt))));
 		}
 	});
+var $elm$core$Debug$log = _Debug_log;
 var $author$project$Game$Uncovered = {$: 'Uncovered'};
 var $author$project$Game$look = function (model) {
 	return _Utils_update(
@@ -6485,13 +6486,9 @@ var $author$project$Main$mergeGameState = F2(
 			model,
 			{gameState: game});
 	});
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
+var $author$project$Game$Turn = F3(
+	function (_try, player, notes) {
+		return {notes: notes, player: player, _try: _try};
 	});
 var $elm$core$List$head = function (list) {
 	if (list.b) {
@@ -6537,7 +6534,100 @@ var $author$project$Player$health = F2(
 		var player = A2($author$project$Player$getPlayer, players, playerId);
 		return '(' + ($elm$core$String$fromInt(player.hp) + ('/' + ($elm$core$String$fromInt(player.maxHp) + ')')));
 	});
-var $elm$core$Debug$log = _Debug_log;
+var $elm$core$Tuple$mapSecond = F2(
+	function (func, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			x,
+			func(y));
+	});
+var $folkertdev$elm_deque$Internal$empty = {front: _List_Nil, rear: _List_Nil, sizeF: 0, sizeR: 0};
+var $folkertdev$elm_deque$Internal$popFront = function (deque) {
+	var front = deque.front;
+	var rear = deque.rear;
+	var _v0 = _Utils_Tuple2(front, rear);
+	if (!_v0.a.b) {
+		if (!_v0.b.b) {
+			return _Utils_Tuple2($elm$core$Maybe$Nothing, $folkertdev$elm_deque$Internal$empty);
+		} else {
+			if (!_v0.b.b.b) {
+				var _v1 = _v0.b;
+				var x = _v1.a;
+				return _Utils_Tuple2(
+					$elm$core$Maybe$Just(x),
+					$folkertdev$elm_deque$Internal$empty);
+			} else {
+				return _Utils_Tuple2($elm$core$Maybe$Nothing, $folkertdev$elm_deque$Internal$empty);
+			}
+		}
+	} else {
+		var _v2 = _v0.a;
+		var f = _v2.a;
+		var fs = _v2.b;
+		return _Utils_Tuple2(
+			$elm$core$Maybe$Just(f),
+			$folkertdev$elm_deque$Internal$rebalance(
+				{front: fs, rear: deque.rear, sizeF: deque.sizeF - 1, sizeR: deque.sizeR}));
+	}
+};
+var $folkertdev$elm_deque$Deque$popFront = A2(
+	$elm$core$Basics$composeL,
+	A2(
+		$elm$core$Basics$composeL,
+		$elm$core$Tuple$mapSecond($folkertdev$elm_deque$Deque$Deque),
+		$folkertdev$elm_deque$Internal$popFront),
+	$folkertdev$elm_deque$Deque$unwrap);
+var $folkertdev$elm_deque$Deque$mapAbstract = F2(
+	function (f, _v0) {
+		var _abstract = _v0.a;
+		return $folkertdev$elm_deque$Deque$Deque(
+			f(_abstract));
+	});
+var $folkertdev$elm_deque$Deque$pushBack = F2(
+	function (elem, _v0) {
+		var deque = _v0.a;
+		return A2(
+			$folkertdev$elm_deque$Deque$mapAbstract,
+			$folkertdev$elm_deque$Internal$rebalance,
+			$folkertdev$elm_deque$Deque$Deque(
+				{
+					front: deque.front,
+					rear: A2($elm$core$List$cons, elem, deque.rear),
+					sizeF: deque.sizeF,
+					sizeR: deque.sizeR + 1
+				}));
+	});
+var $author$project$Game$changeTurn = F2(
+	function (_try, model) {
+		var _v0 = $folkertdev$elm_deque$Deque$popFront(model.activePlayers);
+		var currentTurn = _v0.a;
+		var rest = _v0.b;
+		var newActivePlayers = A2(
+			$folkertdev$elm_deque$Deque$pushBack,
+			A2($elm$core$Maybe$withDefault, 0, currentTurn),
+			rest);
+		var newCurrentTurn = A2(
+			$elm$core$Maybe$withDefault,
+			0,
+			$folkertdev$elm_deque$Deque$first(newActivePlayers));
+		return _Utils_update(
+			model,
+			{
+				activePlayers: newActivePlayers,
+				history: A2(
+					$elm$core$List$cons,
+					A3(
+						$author$project$Game$Turn,
+						_try,
+						A2($author$project$Player$getPlayer, model.players, model.whosTurn),
+						$elm$core$Maybe$Just(
+							A2($author$project$Player$health, model.whosTurn, model.players))),
+					model.history),
+				tryToBeat: _try,
+				whosTurn: newCurrentTurn
+			});
+	});
 var $author$project$Try$Five = {$: 'Five'};
 var $author$project$Try$Fives = {$: 'Fives'};
 var $author$project$Try$Four = {$: 'Four'};
@@ -6792,7 +6882,7 @@ var $author$project$Try$toScore = function (_try) {
 		$author$project$Try$decode(_try),
 		$author$project$Try$dictionary);
 };
-var $author$project$Try$mustPass = function (receivedTry) {
+var $author$project$Try$nextBest = function (receivedTry) {
 	var receivedTryVal = function () {
 		var _v0 = $author$project$Try$toScore(receivedTry);
 		if (_v0.$ === 'Just') {
@@ -6805,50 +6895,6 @@ var $author$project$Try$mustPass = function (receivedTry) {
 	var nextTry = $author$project$Try$fromScore(receivedTryVal + 1);
 	return ((receivedTryVal + 1) <= 20) ? $elm$core$Maybe$Just(nextTry) : $elm$core$Maybe$Nothing;
 };
-var $elm$core$Tuple$mapSecond = F2(
-	function (func, _v0) {
-		var x = _v0.a;
-		var y = _v0.b;
-		return _Utils_Tuple2(
-			x,
-			func(y));
-	});
-var $folkertdev$elm_deque$Internal$empty = {front: _List_Nil, rear: _List_Nil, sizeF: 0, sizeR: 0};
-var $folkertdev$elm_deque$Internal$popFront = function (deque) {
-	var front = deque.front;
-	var rear = deque.rear;
-	var _v0 = _Utils_Tuple2(front, rear);
-	if (!_v0.a.b) {
-		if (!_v0.b.b) {
-			return _Utils_Tuple2($elm$core$Maybe$Nothing, $folkertdev$elm_deque$Internal$empty);
-		} else {
-			if (!_v0.b.b.b) {
-				var _v1 = _v0.b;
-				var x = _v1.a;
-				return _Utils_Tuple2(
-					$elm$core$Maybe$Just(x),
-					$folkertdev$elm_deque$Internal$empty);
-			} else {
-				return _Utils_Tuple2($elm$core$Maybe$Nothing, $folkertdev$elm_deque$Internal$empty);
-			}
-		}
-	} else {
-		var _v2 = _v0.a;
-		var f = _v2.a;
-		var fs = _v2.b;
-		return _Utils_Tuple2(
-			$elm$core$Maybe$Just(f),
-			$folkertdev$elm_deque$Internal$rebalance(
-				{front: fs, rear: deque.rear, sizeF: deque.sizeF - 1, sizeR: deque.sizeR}));
-	}
-};
-var $folkertdev$elm_deque$Deque$popFront = A2(
-	$elm$core$Basics$composeL,
-	A2(
-		$elm$core$Basics$composeL,
-		$elm$core$Tuple$mapSecond($folkertdev$elm_deque$Deque$Deque),
-		$folkertdev$elm_deque$Internal$popFront),
-	$folkertdev$elm_deque$Deque$unwrap);
 var $elm_community$list_extra$List$Extra$groupWhile = F2(
 	function (isSameGroup, items) {
 		return A3(
@@ -6972,30 +7018,6 @@ var $author$project$Player$hit = F2(
 			player,
 			{hp: 0});
 	});
-var $folkertdev$elm_deque$Deque$partition = F2(
-	function (p, _v0) {
-		var deque = _v0.a;
-		var _v1 = A2($elm$core$List$partition, p, deque.rear);
-		var l2 = _v1.a;
-		var r2 = _v1.b;
-		var _v2 = A2($elm$core$List$partition, p, deque.front);
-		var l1 = _v2.a;
-		var r1 = _v2.b;
-		return _Utils_Tuple2(
-			$folkertdev$elm_deque$Deque$fromList(
-				_Utils_ap(l1, l2)),
-			$folkertdev$elm_deque$Deque$fromList(
-				_Utils_ap(r1, r2)));
-	});
-var $author$project$Player$ko = F2(
-	function (id, activePlayers) {
-		return A2(
-			$folkertdev$elm_deque$Deque$partition,
-			function (activePlayer) {
-				return !_Utils_eq(activePlayer, id);
-			},
-			activePlayers).a;
-	});
 var $folkertdev$elm_deque$Internal$last = function (deque) {
 	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
 	if ((_v0.a.b && (!_v0.a.b.b)) && (!_v0.b.b)) {
@@ -7029,85 +7051,46 @@ var $elm$core$List$repeat = F2(
 		return A3($elm$core$List$repeatHelp, _List_Nil, n, value);
 	});
 var $author$project$Game$pull = function (model) {
-	var validateReceivedTry = F2(
-		function (mustBeat, received) {
-			return (_Utils_cmp(
-				A2(
+	var receivedTry = A2(
+		$elm$core$Maybe$withDefault,
+		1,
+		$author$project$Try$toScore(model.tryToBeat));
+	var bestTryInCup = A2(
+		$elm$core$Maybe$withDefault,
+		1,
+		$author$project$Try$toScore(
+			$author$project$Try$assessRoll(
+				_Utils_ap(
+					model.roll,
+					A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)))));
+	var result = (_Utils_cmp(receivedTry, bestTryInCup) > -1) ? $author$project$Game$HadIt : $author$project$Game$Lie;
+	var hitPlayer = A2(
+		$author$project$Player$hit,
+		model.players,
+		function () {
+			if (result.$ === 'HadIt') {
+				return model.whosTurn;
+			} else {
+				return A2(
 					$elm$core$Maybe$withDefault,
-					1,
-					$author$project$Try$toScore(mustBeat)),
-				A2(
-					$elm$core$Maybe$withDefault,
-					1,
-					$author$project$Try$toScore(received))) > -1) ? $author$project$Game$HadIt : $author$project$Game$Lie;
-		});
-	var receivedTry = model.tryToBeat;
-	var bestTryInCup = $author$project$Try$assessRoll(
-		_Utils_ap(
-			model.roll,
-			A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)));
-	var pullResult = A2(validateReceivedTry, bestTryInCup, receivedTry);
-	if (pullResult.$ === 'HadIt') {
-		var hitPlayer = A2($author$project$Player$hit, model.players, model.whosTurn);
-		var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
-		var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
-		var newWhosTurn = A2(
-			$elm$core$Maybe$withDefault,
-			0,
-			$folkertdev$elm_deque$Deque$first(activePlayers));
-		return _Utils_update(
+					0,
+					$folkertdev$elm_deque$Deque$last(model.activePlayers));
+			}
+		}());
+	var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
+	return A2(
+		$author$project$Game$changeTurn,
+		_Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
+		_Utils_update(
 			model,
 			{
-				activePlayers: activePlayers,
 				cupState: $author$project$Game$Uncovered,
 				players: players,
 				quantity: $author$project$Try$Two,
-				rollState: $author$project$Game$Pulled($author$project$Game$HadIt),
-				tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
-				value: $author$project$Try$Twos,
-				whosTurn: newWhosTurn
-			});
-	} else {
-		var prevPlayer = A2(
-			$elm$core$Maybe$withDefault,
-			0,
-			$folkertdev$elm_deque$Deque$last(model.activePlayers));
-		var hitPlayer = A2($author$project$Player$hit, model.players, prevPlayer);
-		var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
-		var activePlayers = (!(!hitPlayer.hp)) ? model.activePlayers : A2($author$project$Player$ko, hitPlayer.id, model.activePlayers);
-		return _Utils_update(
-			model,
-			{
-				activePlayers: activePlayers,
-				cupState: $author$project$Game$Uncovered,
-				players: players,
-				quantity: $author$project$Try$Two,
-				rollState: $author$project$Game$Pulled($author$project$Game$Lie),
-				tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
+				rollState: $author$project$Game$Pulled(result),
 				value: $author$project$Try$Twos
-			});
-	}
+			}));
 };
-var $folkertdev$elm_deque$Deque$mapAbstract = F2(
-	function (f, _v0) {
-		var _abstract = _v0.a;
-		return $folkertdev$elm_deque$Deque$Deque(
-			f(_abstract));
-	});
-var $folkertdev$elm_deque$Deque$pushBack = F2(
-	function (elem, _v0) {
-		var deque = _v0.a;
-		return A2(
-			$folkertdev$elm_deque$Deque$mapAbstract,
-			$folkertdev$elm_deque$Internal$rebalance,
-			$folkertdev$elm_deque$Deque$Deque(
-				{
-					front: deque.front,
-					rear: A2($elm$core$List$cons, elem, deque.rear),
-					sizeF: deque.sizeF,
-					sizeR: deque.sizeR + 1
-				}));
-	});
 var $author$project$Try$toString = A2(
 	$elm$core$Basics$composeR,
 	$author$project$Try$decode,
@@ -7121,58 +7104,30 @@ var $author$project$Try$toString = A2(
 		}));
 var $author$project$Game$pass = F2(
 	function (model, _try) {
-		var received = A2(
-			$elm$core$Maybe$withDefault,
-			1,
-			$author$project$Try$toScore(model.tryToBeat));
-		var beingPassed = A2(
-			$elm$core$Maybe$withDefault,
-			1,
-			$author$project$Try$toScore(_try));
-		var _v0 = A2(
-			$elm$core$Debug$log,
-			'roll compare',
-			_Utils_Tuple2(received, beingPassed));
-		return (_Utils_cmp(beingPassed, received) > 0) ? $elm$core$Result$Ok(
-			function () {
-				var _v1 = $author$project$Try$mustPass(_try);
-				if (_v1.$ === 'Just') {
-					var nextPassableTry = _v1.a;
-					var _v2 = $folkertdev$elm_deque$Deque$popFront(model.activePlayers);
-					var currentTurn = _v2.a;
-					var rest = _v2.b;
-					var newActivePlayers = A2(
-						$folkertdev$elm_deque$Deque$pushBack,
-						A2($elm$core$Maybe$withDefault, 0, currentTurn),
-						rest);
-					var newCurrentTurn = $folkertdev$elm_deque$Deque$first(newActivePlayers);
-					return _Utils_update(
+		var _v0 = $author$project$Try$nextBest(_try);
+		if (_v0.$ === 'Nothing') {
+			return $elm$core$Result$Ok(
+				$author$project$Game$pull(
+					A2($author$project$Game$changeTurn, _try, model)));
+		} else {
+			var nextTry = _v0.a;
+			var received = A2(
+				$elm$core$Maybe$withDefault,
+				1,
+				$author$project$Try$toScore(model.tryToBeat));
+			var beingPassed = A2(
+				$elm$core$Maybe$withDefault,
+				1,
+				$author$project$Try$toScore(nextTry));
+			return (_Utils_cmp(beingPassed, received) > 0) ? $elm$core$Result$Ok(
+				A2(
+					$author$project$Game$changeTurn,
+					_try,
+					_Utils_update(
 						model,
-						{
-							activePlayers: newActivePlayers,
-							cupLooked: false,
-							cupState: $author$project$Game$Covered,
-							quantity: nextPassableTry.a,
-							rollState: $author$project$Game$Received,
-							tryHistory: A2(
-								$elm$core$List$append,
-								model.tryHistory,
-								_List_fromArray(
-									[
-										_Utils_Tuple3(
-										_try,
-										model.whosTurn,
-										A2($author$project$Player$health, model.whosTurn, model.players))
-									])),
-							tryToBeat: _try,
-							value: nextPassableTry.b,
-							whosTurn: A2($elm$core$Maybe$withDefault, 0, newCurrentTurn)
-						});
-				} else {
-					return $author$project$Game$pull(model);
-				}
-			}()) : $elm$core$Result$Err(
-			'You must pass a better Try than ' + ($author$project$Try$toString(model.tryToBeat) + ('. ' + ($author$project$Try$toString(_try) + (' does not beat ' + ($author$project$Try$toString(model.tryToBeat) + '.'))))));
+						{cupLooked: false, cupState: $author$project$Game$Covered, quantity: nextTry.a, rollState: $author$project$Game$Received, value: nextTry.b}))) : $elm$core$Result$Err(
+				'You must pass a better Try than ' + ($author$project$Try$toString(model.tryToBeat) + ('. ' + ($author$project$Try$toString(_try) + (' does not beat ' + ($author$project$Try$toString(model.tryToBeat) + '.'))))));
+		}
 	});
 var $author$project$Game$Generated = function (a) {
 	return {$: 'Generated', a: a};
@@ -7552,7 +7507,7 @@ var $author$project$Console$update = F2(
 											consoleInput,
 											'Current Try: ' + $author$project$Try$toString(game.tryToBeat),
 											'Current player must pass: ' + function () {
-											var _v4 = $author$project$Try$mustPass(game.tryToBeat);
+											var _v4 = $author$project$Try$nextBest(game.tryToBeat);
 											if (_v4.$ === 'Just') {
 												var t = _v4.a;
 												return $author$project$Try$toString(t);
@@ -7561,7 +7516,10 @@ var $author$project$Console$update = F2(
 											}
 										}(),
 											'Hint: The best available try in your current roll appears to be ' + ($author$project$Try$toString(
-											$author$project$Try$assessRoll(game.roll)) + '.')
+											$author$project$Try$assessRoll(
+												_Utils_ap(
+													game.roll,
+													A2($elm$core$List$repeat, game.tableWilds, $author$project$Try$Wilds)))) + '.')
 										])),
 								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
 						case 'help':
@@ -7780,6 +7738,7 @@ var $author$project$Main$update = F2(
 								var _v4 = A2($author$project$Game$pass, model.gameState, _try);
 								if (_v4.$ === 'Ok') {
 									var m = _v4.a;
+									var _v5 = A2($elm$core$Debug$log, 'pass', m);
 									return _Utils_Tuple2(
 										A2($author$project$Main$mergeGameState, model, m),
 										$elm$core$Platform$Cmd$none);
@@ -7816,18 +7775,18 @@ var $author$project$Main$update = F2(
 				var subMsg = msg.a;
 				var focusCmd = A2(
 					$elm$core$Task$attempt,
-					function (_v7) {
+					function (_v8) {
 						return $author$project$Main$NoOp;
 					},
 					$elm$browser$Browser$Dom$focus('console'));
-				var _v5 = A2(
+				var _v6 = A2(
 					$author$project$Console$update,
 					subMsg,
 					_Utils_Tuple2(model.consoleState, model.gameState));
-				var newConsole = _v5.a;
-				var _v6 = _v5.b;
-				var newGame = _v6.a;
-				var gameMsg = _v6.b;
+				var newConsole = _v6.a;
+				var _v7 = _v6.b;
+				var newGame = _v7.a;
+				var gameMsg = _v7.b;
 				return _Utils_Tuple2(
 					A2(
 						$author$project$Main$mergeGameState,
@@ -7993,6 +7952,14 @@ var $rtfeldman$elm_css$Css$Structure$compactHelp = F2(
 var $rtfeldman$elm_css$Css$Structure$Keyframes = function (a) {
 	return {$: 'Keyframes', a: a};
 };
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
 var $rtfeldman$elm_css$Css$Structure$withKeyframeDeclarations = F2(
 	function (keyframesByName, compactedDeclarations) {
 		return A2(
@@ -11327,27 +11294,9 @@ var $author$project$Game$view = function (model) {
 			}
 		}());
 };
-var $TSFoster$elm_tuple_extra$Tuple3$first = function (_v0) {
-	var a = _v0.a;
-	return a;
-};
 var $author$project$Tailwind$Utilities$justify_self_center = A2($rtfeldman$elm_css$Css$property, 'justify-self', 'center');
-var $TSFoster$elm_tuple_extra$Tuple3$mapAllThree = F4(
-	function (aFn, bFn, cFn, _v0) {
-		var a = _v0.a;
-		var b = _v0.b;
-		var c = _v0.c;
-		return _Utils_Tuple3(
-			aFn(a),
-			bFn(b),
-			cFn(c));
-	});
 var $author$project$Tailwind$Utilities$mt_4 = A2($rtfeldman$elm_css$Css$property, 'margin-top', '1rem');
-var $TSFoster$elm_tuple_extra$Tuple3$second = function (_v0) {
-	var b = _v0.b;
-	return b;
-};
-var $author$project$Try$viewHistory = function (gameState) {
+var $author$project$Game$viewHistory = function (gameState) {
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_fromArray(
@@ -11359,24 +11308,17 @@ var $author$project$Try$viewHistory = function (gameState) {
 			]),
 		A2(
 			$elm$core$List$map,
-			function (tup) {
+			function (turn) {
 				return A2(
 					$rtfeldman$elm_css$Html$Styled$div,
 					_List_Nil,
 					_List_fromArray(
 						[
 							$rtfeldman$elm_css$Html$Styled$text(
-							$TSFoster$elm_tuple_extra$Tuple3$second(tup) + (' -> ' + $TSFoster$elm_tuple_extra$Tuple3$first(tup)))
+							turn.player.name + (' -> ' + $author$project$Try$toString(turn._try)))
 						]));
 			},
-			A2(
-				$elm$core$List$map,
-				A3(
-					$TSFoster$elm_tuple_extra$Tuple3$mapAllThree,
-					$author$project$Try$toString,
-					$author$project$Player$getName(gameState.players),
-					$elm$core$Basics$identity),
-				gameState.tryHistory)));
+			$elm$core$List$reverse(gameState.history)));
 };
 var $author$project$Tailwind$Utilities$gap_8 = A2($rtfeldman$elm_css$Css$property, 'gap', '2rem');
 var $author$project$Tailwind$Utilities$justify_around = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'space-around');
@@ -11561,7 +11503,10 @@ var $author$project$Main$view = function (model) {
 		$rtfeldman$elm_css$Html$Styled$map,
 		$author$project$Main$GameMsg,
 		$author$project$Game$view(gameState));
-	var tryHistory = $author$project$Try$viewHistory(gameState);
+	var tryHistory = A2(
+		$rtfeldman$elm_css$Html$Styled$map,
+		$author$project$Main$GameMsg,
+		$author$project$Game$viewHistory(gameState));
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_fromArray(

@@ -9,12 +9,13 @@ import Face
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
 import Html.Styled.Events exposing (..)
-import Player
+import Player exposing (Player)
 import Random
 import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
 import Try exposing (Try)
+import Tuple3
 
 
 
@@ -30,7 +31,7 @@ type alias Model =
     , cupLooked : Bool
     , rollState : RollState
     , whosTurn : Int -- index of activePlayers
-    , tryHistory : List ( Try, Int, String )
+    , history : List Turn
 
     -- view state
     , quantity : Try.Quantity
@@ -58,6 +59,10 @@ type RollState
 type PullResult
     = HadIt
     | Lie
+
+
+type alias Turn =
+    { try : Try, player : Player, notes : Maybe String }
 
 
 
@@ -133,6 +138,31 @@ decodeAction action =
             "roll"
 
 
+changeTurn : Try -> Model -> Model
+changeTurn try model =
+    let
+        ( currentTurn, rest ) =
+            Deque.popFront model.activePlayers
+
+        newActivePlayers =
+            Deque.pushBack (Maybe.withDefault 0 currentTurn) rest
+
+        newCurrentTurn =
+            Deque.first newActivePlayers |> Maybe.withDefault 0
+    in
+    { model
+        | history =
+            Turn
+                try
+                (Player.getPlayer model.players model.whosTurn)
+                (Just (Player.health model.whosTurn model.players))
+                :: model.history
+        , tryToBeat = try
+        , whosTurn = newCurrentTurn
+        , activePlayers = newActivePlayers
+    }
+
+
 {-| Takes a roll type and updates the model.
 This is the only action function that needs to return a Cmd because of the Random.generate call. Is is possible to refactor that out?
 -}
@@ -175,81 +205,39 @@ pull model =
     -- move to pulled state
     let
         bestTryInCup =
-            Try.assessRoll (model.roll ++ List.repeat model.tableWilds Try.Wilds)
+            Try.assessRoll (model.roll ++ List.repeat model.tableWilds Try.Wilds) |> Try.toScore |> Maybe.withDefault 1
 
         receivedTry =
-            model.tryToBeat
+            model.tryToBeat |> Try.toScore |> Maybe.withDefault 1
 
-        validateReceivedTry : Try -> Try -> PullResult
-        validateReceivedTry mustBeat received =
-            if (Try.toScore mustBeat |> Maybe.withDefault 1) >= (Try.toScore received |> Maybe.withDefault 1) then
+        result =
+            if receivedTry >= bestTryInCup then
                 HadIt
 
             else
                 Lie
 
-        pullResult =
-            validateReceivedTry bestTryInCup receivedTry
+        hitPlayer =
+            Player.hit model.players
+                (case result of
+                    HadIt ->
+                        model.whosTurn
+
+                    Lie ->
+                        Maybe.withDefault 0 (Deque.last model.activePlayers)
+                )
+
+        players =
+            Dict.insert hitPlayer.id hitPlayer model.players
     in
-    case pullResult of
-        HadIt ->
-            -- current player takes a fold
-            let
-                hitPlayer =
-                    Player.hit model.players model.whosTurn
-
-                players =
-                    Dict.insert hitPlayer.id hitPlayer model.players
-
-                activePlayers =
-                    if hitPlayer.hp /= 0 then
-                        model.activePlayers
-
-                    else
-                        Player.ko hitPlayer.id model.activePlayers
-
-                newWhosTurn =
-                    Maybe.withDefault 0 (Deque.first activePlayers)
-            in
-            { model
-                | cupState = Uncovered
-                , rollState = Pulled HadIt
-                , tryToBeat = ( Try.Two, Try.Twos )
-                , quantity = Try.Two
-                , value = Try.Twos
-                , players = players
-                , activePlayers = activePlayers
-                , whosTurn = newWhosTurn
-            }
-
-        Lie ->
-            -- previous player takes a fold
-            let
-                prevPlayer =
-                    Maybe.withDefault 0 (Deque.last model.activePlayers)
-
-                hitPlayer =
-                    Player.hit model.players prevPlayer
-
-                players =
-                    Dict.insert hitPlayer.id hitPlayer model.players
-
-                activePlayers =
-                    if hitPlayer.hp /= 0 then
-                        model.activePlayers
-
-                    else
-                        Player.ko hitPlayer.id model.activePlayers
-            in
-            { model
-                | cupState = Uncovered
-                , rollState = Pulled Lie
-                , tryToBeat = ( Try.Two, Try.Twos )
-                , quantity = Try.Two
-                , value = Try.Twos
-                , players = players
-                , activePlayers = activePlayers
-            }
+    { model
+        | cupState = Uncovered
+        , rollState = Pulled result
+        , quantity = Try.Two
+        , value = Try.Twos
+        , players = players
+    }
+        |> changeTurn ( Try.Two, Try.Twos )
 
 
 {-| Attempt to update model according to a passed `Try`.
@@ -258,51 +246,40 @@ Returns a `Result`.
 -}
 pass : Model -> Try -> Result String Model
 pass model try =
-    let
-        received =
-            Try.toScore model.tryToBeat |> Maybe.withDefault 1
+    -- is it under 5 6's (or best possible try)?
+    case Try.nextBest try of
+        Nothing ->
+            -- There is no roll better than what was passed in the Try dictionary
+            -- handle 5 6's
+            --
+            -- change turn, then call `pull`
+            -- Ok (Debug.todo "handle 5 6's")
+            Ok (model |> changeTurn try |> pull)
 
-        beingPassed =
-            Try.toScore try |> Maybe.withDefault 1
+        Just nextTry ->
+            let
+                received =
+                    Try.toScore model.tryToBeat |> Maybe.withDefault 1
 
-        _ =
-            Debug.log "roll compare" ( received, beingPassed )
-    in
-    if beingPassed > received then
-        Ok
-            (case Try.mustPass try of
-                -- there is a "next" try to be passed
-                Just nextPassableTry ->
-                    let
-                        ( currentTurn, rest ) =
-                            Deque.popFront model.activePlayers
-
-                        newActivePlayers =
-                            Deque.pushBack (Maybe.withDefault 0 currentTurn) rest
-
-                        newCurrentTurn =
-                            Deque.first newActivePlayers
-                    in
-                    { model
-                        | tryHistory = List.append model.tryHistory [ ( try, model.whosTurn, Player.health model.whosTurn model.players ) ]
-                        , tryToBeat = try
-                        , whosTurn = Maybe.withDefault 0 newCurrentTurn
-                        , activePlayers = newActivePlayers
-                        , quantity = Tuple.first nextPassableTry
-                        , value = Tuple.second nextPassableTry
+                beingPassed =
+                    -- todo: see comment on toScore
+                    Try.toScore nextTry |> Maybe.withDefault 1
+            in
+            -- check that passed Try is better than current Try
+            if beingPassed > received then
+                Ok
+                    ({ model
+                        | quantity = Tuple.first nextTry
+                        , value = Tuple.second nextTry
                         , cupState = Covered
                         , cupLooked = False
                         , rollState = Received
-                    }
+                     }
+                        |> changeTurn try
+                    )
 
-                -- The last try passed was as high as you can possibly roll this means we must force a Pull message,
-                -- evaluate the roll and determine if the passer or the receiver gets a fold.
-                Nothing ->
-                    pull model
-            )
-
-    else
-        Err ("You must pass a better Try than " ++ Try.toString model.tryToBeat ++ ". " ++ Try.toString try ++ " does not beat " ++ Try.toString model.tryToBeat ++ ".")
+            else
+                Err ("You must pass a better Try than " ++ Try.toString model.tryToBeat ++ ". " ++ Try.toString try ++ " does not beat " ++ Try.toString model.tryToBeat ++ ".")
 
 
 look : Model -> Model
@@ -407,4 +384,13 @@ view model =
                                 p [] [ text "Previous player lied. They will lose 1 hp." ]
                 in
                 tableWilds ++ cup ++ [ pullResult ] ++ rollButtons
+        )
+
+
+viewHistory : Model -> Html Msg
+viewHistory gameState =
+    div [ class "history", css [ Tw.justify_self_center, Tw.mt_4, Tw.overflow_auto ] ]
+        (gameState.history
+            |> List.reverse
+            |> List.map (\turn -> div [] [ text (turn.player.name ++ " -> " ++ Try.toString turn.try) ])
         )
