@@ -5248,7 +5248,6 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$initConsoleState = {consoleHistory: _List_Nil, consoleIsVisible: false, consoleValue: ''};
-var $author$project$Game$Covered = {$: 'Covered'};
 var $author$project$Game$Init = {$: 'Init'};
 var $author$project$Try$Threes = {$: 'Threes'};
 var $author$project$Try$Two = {$: 'Two'};
@@ -5589,8 +5588,6 @@ var $author$project$Data$my_players = $elm$core$Dict$fromList(
 var $author$project$Main$initGameState = {
 	activePlayers: $folkertdev$elm_deque$Deque$fromList(
 		$elm$core$Dict$keys($author$project$Data$my_players)),
-	cupLooked: false,
-	cupState: $author$project$Game$Covered,
 	history: _List_Nil,
 	players: $author$project$Data$my_players,
 	quantity: $author$project$Try$Two,
@@ -6459,11 +6456,10 @@ var $author$project$Game$isValidAction = F2(
 		}
 	});
 var $elm$core$Debug$log = _Debug_log;
-var $author$project$Game$Uncovered = {$: 'Uncovered'};
 var $author$project$Game$look = function (model) {
 	return _Utils_update(
 		model,
-		{cupLooked: true, cupState: $author$project$Game$Uncovered, rollState: $author$project$Game$Looked});
+		{rollState: $author$project$Game$Looked});
 };
 var $elm$core$Platform$Cmd$map = _Platform_map;
 var $elm$core$Tuple$mapBoth = F3(
@@ -7087,7 +7083,7 @@ var $author$project$Game$pull = function (model) {
 				_Utils_ap(
 					model.roll,
 					A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)))));
-	var pullResult = (_Utils_cmp(receivedTry, bestTryInCup) > -1) ? $author$project$Game$HadIt : $author$project$Game$Lie;
+	var pullResult = (_Utils_cmp(bestTryInCup, receivedTry) > -1) ? $author$project$Game$HadIt : $author$project$Game$Lie;
 	var hitPlayer = A2(
 		$author$project$Player$hit,
 		model.players,
@@ -7110,10 +7106,10 @@ var $author$project$Game$pull = function (model) {
 			model,
 			{
 				activePlayers: newActivePlayers,
-				cupState: $author$project$Game$Uncovered,
 				players: newPlayers,
 				quantity: $author$project$Try$Two,
 				rollState: $author$project$Game$Pulled(pullResult),
+				tryToBeat: _Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
 				value: $author$project$Try$Twos
 			}));
 };
@@ -7151,7 +7147,7 @@ var $author$project$Game$pass = F2(
 					_try,
 					_Utils_update(
 						model,
-						{cupLooked: false, cupState: $author$project$Game$Covered, quantity: nextTry.a, rollState: $author$project$Game$Received, value: nextTry.b}))) : $elm$core$Result$Err(
+						{quantity: nextTry.a, rollState: $author$project$Game$Received, value: nextTry.b}))) : $elm$core$Result$Err(
 				'You must pass a better Try than ' + ($author$project$Try$toString(model.tryToBeat) + ('. ' + ($author$project$Try$toString(_try) + (' does not beat ' + ($author$project$Try$toString(model.tryToBeat) + '.'))))));
 		}
 	});
@@ -7528,25 +7524,29 @@ var $author$project$Console$update = F2(
 										[consoleInput, 'There is not yet an active Try. Current player likely has a fresh roll.'])) : A2(
 									$author$project$Console$addEntries,
 									console,
-									_List_fromArray(
-										[
-											consoleInput,
-											'Current Try: ' + $author$project$Try$toString(game.tryToBeat),
-											'Current player must pass: ' + function () {
-											var _v4 = $author$project$Try$nextBest(game.tryToBeat);
-											if (_v4.$ === 'Just') {
-												var t = _v4.a;
-												return $author$project$Try$toString(t);
-											} else {
-												return 'You cannot beat this roll. Sorry.';
-											}
-										}(),
-											'Hint: The best available try in your current roll appears to be ' + ($author$project$Try$toString(
-											$author$project$Try$assessRoll(
-												_Utils_ap(
-													game.roll,
-													A2($elm$core$List$repeat, game.tableWilds, $author$project$Try$Wilds)))) + '.')
-										])),
+									_Utils_ap(
+										_List_fromArray(
+											[
+												consoleInput,
+												'Current Try: ' + $author$project$Try$toString(game.tryToBeat),
+												'Current player must pass: ' + function () {
+												var _v4 = $author$project$Try$nextBest(game.tryToBeat);
+												if (_v4.$ === 'Just') {
+													var t = _v4.a;
+													return $author$project$Try$toString(t);
+												} else {
+													return 'You cannot beat this roll. Sorry.';
+												}
+											}()
+											]),
+										(_Utils_eq(game.rollState, $author$project$Game$Rolled) || _Utils_eq(game.rollState, $author$project$Game$Looked)) ? _List_fromArray(
+											[
+												'Hint: The best available try in your current roll appears to be ' + ($author$project$Try$toString(
+												$author$project$Try$assessRoll(
+													_Utils_ap(
+														game.roll,
+														A2($elm$core$List$repeat, game.tableWilds, $author$project$Try$Wilds)))) + '.')
+											]) : _List_Nil)),
 								_Utils_Tuple2(game, $elm$core$Platform$Cmd$none));
 						case 'help':
 							return _Utils_Tuple2(

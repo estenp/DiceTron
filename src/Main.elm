@@ -33,9 +33,7 @@ initGameState : Game.Model
 initGameState =
     { roll = []
     , tryToBeat = ( Try.Two, Try.Twos )
-    , cupState = Game.Covered
     , tableWilds = 0
-    , cupLooked = False
     , rollState = Game.Init
     , whosTurn = 1
     , history = []

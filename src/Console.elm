@@ -54,9 +54,9 @@ update msg ( console, game ) =
 
                               else
                                 addEntries console
-                                    [ consoleInput
-                                    , "Current Try: " ++ Try.toString game.tryToBeat
-                                    , "Current player must pass: "
+                                    ([ consoleInput
+                                     , "Current Try: " ++ Try.toString game.tryToBeat
+                                     , "Current player must pass: "
                                         ++ (case Try.nextBest game.tryToBeat of
                                                 Just t ->
                                                     Try.toString t
@@ -64,8 +64,14 @@ update msg ( console, game ) =
                                                 Nothing ->
                                                     "You cannot beat this roll. Sorry."
                                            )
-                                    , "Hint: The best available try in your current roll appears to be " ++ Try.toString (Try.assessRoll (game.roll ++ List.repeat game.tableWilds Try.Wilds)) ++ "."
-                                    ]
+                                     ]
+                                        ++ (if game.rollState == Game.Rolled || game.rollState == Game.Looked then
+                                                [ "Hint: The best available try in your current roll appears to be " ++ Try.toString (Try.assessRoll (game.roll ++ List.repeat game.tableWilds Try.Wilds)) ++ "." ]
+
+                                            else
+                                                []
+                                           )
+                                    )
                             , ( game, Cmd.none )
                             )
 

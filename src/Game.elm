@@ -15,7 +15,6 @@ import StyledElements exposing (..)
 import Tailwind.Theme as Tw exposing (..)
 import Tailwind.Utilities as Tw
 import Try exposing (Try)
-import Tuple3
 
 
 
@@ -26,9 +25,7 @@ type alias Model =
     { -- game state
       roll : Try.Cup
     , tryToBeat : Try
-    , cupState : CupState
     , tableWilds : Int
-    , cupLooked : Bool
     , rollState : RollState
     , whosTurn : Int -- index of activePlayers
     , history : List Turn
@@ -41,6 +38,12 @@ type alias Model =
     , players : Player.Players
     , activePlayers : Player.ActivePlayers
     }
+
+
+
+-- todo: this is basically unneeded because cup is visible via logic in view.
+-- should this state be managed separately like this, or as a part of the roll state?
+-- see Console ln 68 for example of why maybe managing this separately is better
 
 
 type CupState
@@ -215,7 +218,7 @@ pull model =
 
         pullResult : PullResult
         pullResult =
-            if receivedTry >= bestTryInCup then
+            if bestTryInCup >= receivedTry then
                 HadIt
 
             else
@@ -246,6 +249,7 @@ pull model =
 
         handlePullerKO : Model -> Model
         handlePullerKO =
+            -- if puller is KO'd, change turn to next player because they are no longer in the game
             if hitPlayer.hp == 0 && model.whosTurn == hitPlayer.id then
                 changeTurn ( Try.Two, Try.Twos )
 
@@ -253,12 +257,12 @@ pull model =
                 identity
     in
     { model
-        | cupState = Uncovered
-        , rollState = Pulled pullResult
+        | rollState = Pulled pullResult
         , quantity = Try.Two
         , value = Try.Twos
         , players = newPlayers
         , activePlayers = newActivePlayers
+        , tryToBeat = ( Try.Two, Try.Twos )
     }
         -- todo: dont always want to change turn here
         |> handlePullerKO
@@ -277,7 +281,6 @@ pass model try =
             -- handle 5 6's
             --
             -- change turn, then call `pull`
-            -- Ok (Debug.todo "handle 5 6's")
             Ok (model |> changeTurn try |> pull)
 
         Just nextTry ->
@@ -295,8 +298,6 @@ pass model try =
                     ({ model
                         | quantity = Tuple.first nextTry
                         , value = Tuple.second nextTry
-                        , cupState = Covered
-                        , cupLooked = False
                         , rollState = Received
                      }
                         |> changeTurn try
@@ -308,7 +309,7 @@ pass model try =
 
 look : Model -> Model
 look model =
-    { model | cupState = Uncovered, cupLooked = True, rollState = Looked }
+    { model | rollState = Looked }
 
 
 
