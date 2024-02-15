@@ -23,11 +23,11 @@ type alias Player =
 
 
 type alias Players =
-    Dict Int Player
+    Dict PlayerId Player
 
 
 type alias ActivePlayers =
-    Deque Int
+    Deque PlayerId
 
 
 health : PlayerId -> Players -> String

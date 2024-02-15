@@ -203,23 +203,28 @@ pull : Model -> Model
 pull model =
     -- check that the roll satisfied the required Try level
     -- move to pulled state
+    -- if puller is KO'd, change turn
     let
+        bestTryInCup : Int
         bestTryInCup =
             Try.assessRoll (model.roll ++ List.repeat model.tableWilds Try.Wilds) |> Try.toScore |> Maybe.withDefault 1
 
+        receivedTry : Int
         receivedTry =
             model.tryToBeat |> Try.toScore |> Maybe.withDefault 1
 
-        result =
+        pullResult : PullResult
+        pullResult =
             if receivedTry >= bestTryInCup then
                 HadIt
 
             else
                 Lie
 
+        hitPlayer : Player
         hitPlayer =
             Player.hit model.players
-                (case result of
+                (case pullResult of
                     HadIt ->
                         model.whosTurn
 
@@ -227,17 +232,36 @@ pull model =
                         Maybe.withDefault 0 (Deque.last model.activePlayers)
                 )
 
-        players =
+        newPlayers : Player.Players
+        newPlayers =
             Dict.insert hitPlayer.id hitPlayer model.players
+
+        newActivePlayers : Player.ActivePlayers
+        newActivePlayers =
+            if hitPlayer.hp == 0 then
+                Player.ko hitPlayer.id model.activePlayers
+
+            else
+                model.activePlayers
+
+        handlePullerKO : Model -> Model
+        handlePullerKO =
+            if hitPlayer.hp == 0 && model.whosTurn == hitPlayer.id then
+                changeTurn ( Try.Two, Try.Twos )
+
+            else
+                identity
     in
     { model
         | cupState = Uncovered
-        , rollState = Pulled result
+        , rollState = Pulled pullResult
         , quantity = Try.Two
         , value = Try.Twos
-        , players = players
+        , players = newPlayers
+        , activePlayers = newActivePlayers
     }
-        |> changeTurn ( Try.Two, Try.Twos )
+        -- todo: dont always want to change turn here
+        |> handlePullerKO
 
 
 {-| Attempt to update model according to a passed `Try`.
@@ -263,7 +287,7 @@ pass model try =
 
                 beingPassed =
                     -- todo: see comment on toScore
-                    Try.toScore nextTry |> Maybe.withDefault 1
+                    Try.toScore try |> Maybe.withDefault 1
             in
             -- check that passed Try is better than current Try
             if beingPassed > received then

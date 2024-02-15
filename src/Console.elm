@@ -130,7 +130,6 @@ update msg ( console, game ) =
                                                         case List.filterMap String.toInt xs of
                                                             a :: b :: _ ->
                                                                 Try.encode ( a, b )
-                                                                    |> Debug.log "Try failed to encode"
                                                                     |> Result.fromMaybe badTryArgs
 
                                                             [ _ ] ->

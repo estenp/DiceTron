@@ -7018,6 +7018,30 @@ var $author$project$Player$hit = F2(
 			player,
 			{hp: 0});
 	});
+var $folkertdev$elm_deque$Deque$partition = F2(
+	function (p, _v0) {
+		var deque = _v0.a;
+		var _v1 = A2($elm$core$List$partition, p, deque.rear);
+		var l2 = _v1.a;
+		var r2 = _v1.b;
+		var _v2 = A2($elm$core$List$partition, p, deque.front);
+		var l1 = _v2.a;
+		var r1 = _v2.b;
+		return _Utils_Tuple2(
+			$folkertdev$elm_deque$Deque$fromList(
+				_Utils_ap(l1, l2)),
+			$folkertdev$elm_deque$Deque$fromList(
+				_Utils_ap(r1, r2)));
+	});
+var $author$project$Player$ko = F2(
+	function (id, activePlayers) {
+		return A2(
+			$folkertdev$elm_deque$Deque$partition,
+			function (activePlayer) {
+				return !_Utils_eq(activePlayer, id);
+			},
+			activePlayers).a;
+	});
 var $folkertdev$elm_deque$Internal$last = function (deque) {
 	var _v0 = _Utils_Tuple2(deque.front, deque.rear);
 	if ((_v0.a.b && (!_v0.a.b.b)) && (!_v0.b.b)) {
@@ -7063,12 +7087,12 @@ var $author$project$Game$pull = function (model) {
 				_Utils_ap(
 					model.roll,
 					A2($elm$core$List$repeat, model.tableWilds, $author$project$Try$Wilds)))));
-	var result = (_Utils_cmp(receivedTry, bestTryInCup) > -1) ? $author$project$Game$HadIt : $author$project$Game$Lie;
+	var pullResult = (_Utils_cmp(receivedTry, bestTryInCup) > -1) ? $author$project$Game$HadIt : $author$project$Game$Lie;
 	var hitPlayer = A2(
 		$author$project$Player$hit,
 		model.players,
 		function () {
-			if (result.$ === 'HadIt') {
+			if (pullResult.$ === 'HadIt') {
 				return model.whosTurn;
 			} else {
 				return A2(
@@ -7077,17 +7101,19 @@ var $author$project$Game$pull = function (model) {
 					$folkertdev$elm_deque$Deque$last(model.activePlayers));
 			}
 		}());
-	var players = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
-	return A2(
-		$author$project$Game$changeTurn,
-		_Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos),
+	var handlePullerKO = ((!hitPlayer.hp) && _Utils_eq(model.whosTurn, hitPlayer.id)) ? $author$project$Game$changeTurn(
+		_Utils_Tuple2($author$project$Try$Two, $author$project$Try$Twos)) : $elm$core$Basics$identity;
+	var newActivePlayers = (!hitPlayer.hp) ? A2($author$project$Player$ko, hitPlayer.id, model.activePlayers) : model.activePlayers;
+	var newPlayers = A3($elm$core$Dict$insert, hitPlayer.id, hitPlayer, model.players);
+	return handlePullerKO(
 		_Utils_update(
 			model,
 			{
+				activePlayers: newActivePlayers,
 				cupState: $author$project$Game$Uncovered,
-				players: players,
+				players: newPlayers,
 				quantity: $author$project$Try$Two,
-				rollState: $author$project$Game$Pulled(result),
+				rollState: $author$project$Game$Pulled(pullResult),
 				value: $author$project$Try$Twos
 			}));
 };
@@ -7118,7 +7144,7 @@ var $author$project$Game$pass = F2(
 			var beingPassed = A2(
 				$elm$core$Maybe$withDefault,
 				1,
-				$author$project$Try$toScore(nextTry));
+				$author$project$Try$toScore(_try));
 			return (_Utils_cmp(beingPassed, received) > 0) ? $elm$core$Result$Ok(
 				A2(
 					$author$project$Game$changeTurn,
@@ -7593,11 +7619,8 @@ var $author$project$Console$update = F2(
 														return A2(
 															$elm$core$Result$fromMaybe,
 															badTryArgs,
-															A2(
-																$elm$core$Debug$log,
-																'Try failed to encode',
-																$author$project$Try$encode(
-																	_Utils_Tuple2(a, b))));
+															$author$project$Try$encode(
+																_Utils_Tuple2(a, b)));
 													} else {
 														return $elm$core$Result$Err(badTryArgs);
 													}
