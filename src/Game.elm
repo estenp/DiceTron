@@ -44,11 +44,9 @@ type alias Model =
 -- todo: this is basically unneeded because cup is visible via logic in view.
 -- should this state be managed separately like this, or as a part of the roll state?
 -- see Console ln 68 for example of why maybe managing this separately is better
-
-
-type CupState
-    = Covered
-    | Uncovered
+-- type CupState
+--     = Covered
+--     | Uncovered
 
 
 type RollState
@@ -86,6 +84,7 @@ type Action
 
 type Roll
     = -- Runtime is sending a new random die value.
+      -- Generated could be made opaque?
       Generated Try.Cup
     | Initiated
 
@@ -274,11 +273,10 @@ Returns a `Result`.
 -}
 pass : Model -> Try -> Result String Model
 pass model try =
-    -- is it under 5 6's (or best possible try)?
     case Try.nextBest try of
         Nothing ->
-            -- There is no roll better than what was passed in the Try dictionary
-            -- handle 5 6's
+            -- There is no roll in the Try dictionary better than what was passed
+            -- Which indicates 5 6's, or highest possible roll has been passed
             --
             -- change turn, then call `pull`
             Ok (model |> changeTurn try |> pull)
@@ -408,7 +406,7 @@ view model =
                             Lie ->
                                 p [] [ text "Previous player lied. They will lose 1 hp." ]
                 in
-                tableWilds ++ cup ++ [ pullResult ] ++ rollButtons
+                tableWilds ++ cup ++ (pullResult :: rollButtons)
         )
 
 

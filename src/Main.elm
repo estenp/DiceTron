@@ -95,7 +95,6 @@ update msg model =
                 Game.ActionMsg actionMsg ->
                     if Game.isValidAction model.gameState.rollState actionMsg then
                         case actionMsg of
-                            -- todo: make every action return a Result and catch errors at the end of this case, logging them to console?
                             Game.Roll rollType ->
                                 Game.roll rollType model.gameState
                                     |> Tuple.mapBoth
@@ -110,12 +109,12 @@ update msg model =
 
                             Game.Pass try ->
                                 case Game.pass model.gameState try of
-                                    Ok m ->
+                                    Ok newGameModel ->
                                         let
                                             _ =
-                                                Debug.log "pass" m
+                                                Debug.log "pass" newGameModel
                                         in
-                                        ( m |> mergeGameState model, Cmd.none )
+                                        ( mergeGameState model newGameModel, Cmd.none )
 
                                     Err e ->
                                         ( mergeConsoleState model (Console.addEntries model.consoleState [ e ]), Cmd.none )

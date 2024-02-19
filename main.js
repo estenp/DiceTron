@@ -7760,10 +7760,10 @@ var $author$project$Main$update = F2(
 								var _try = actionMsg.a;
 								var _v4 = A2($author$project$Game$pass, model.gameState, _try);
 								if (_v4.$ === 'Ok') {
-									var m = _v4.a;
-									var _v5 = A2($elm$core$Debug$log, 'pass', m);
+									var newGameModel = _v4.a;
+									var _v5 = A2($elm$core$Debug$log, 'pass', newGameModel);
 									return _Utils_Tuple2(
-										A2($author$project$Main$mergeGameState, model, m),
+										A2($author$project$Main$mergeGameState, model, newGameModel),
 										$elm$core$Platform$Cmd$none);
 								} else {
 									var e = _v4.a;
@@ -11310,10 +11310,7 @@ var $author$project$Game$view = function (model) {
 						tableWilds,
 						_Utils_ap(
 							cup,
-							_Utils_ap(
-								_List_fromArray(
-									[pullResult]),
-								rollButtons)));
+							A2($elm$core$List$cons, pullResult, rollButtons)));
 			}
 		}());
 };
