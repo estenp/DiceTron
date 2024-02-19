@@ -184,7 +184,7 @@ mergeConsoleState model console =
 -- VIEW
 
 
-view : Model -> Browser.Document Msg
+view : Model -> Html Msg
 view model =
     let
         { gameState, consoleState } =
@@ -206,27 +206,21 @@ view model =
         console =
             Console.view consoleState { onEnter = Console.Submit, onInput = Console.Change } |> Html.Styled.map ConsoleMsg
     in
-    { title = "Dicetron"
-    , body =
-        [ toUnstyled
-            (div [ class "main" ]
-                (global Tw.globalStyles
-                    :: (if gameIsOver then
-                            [ text ("Game over." ++ Player.getName gameState.players (Maybe.withDefault 0 (Deque.first gameState.activePlayers)) ++ " wins!")
-                            ]
+    div [ class "main" ]
+        (global Tw.globalStyles
+            :: (if gameIsOver then
+                    [ text ("Game over." ++ Player.getName gameState.players (Maybe.withDefault 0 (Deque.first gameState.activePlayers)) ++ " wins!")
+                    ]
 
-                        else
-                            [ logo
-                            , playerStats
-                            , tryHistory
-                            , table
-                            , console
-                            ]
-                       )
-                )
-            )
-        ]
-    }
+                else
+                    [ logo
+                    , playerStats
+                    , tryHistory
+                    , table
+                    , console
+                    ]
+               )
+        )
 
 
 
@@ -239,7 +233,11 @@ main =
         { init = init
         , update = update
         , subscriptions = \_ -> Sub.none
-        , view = view
+        , view =
+            \model ->
+                { title = "Dicetron"
+                , body = [ view model |> toUnstyled ]
+                }
         , onUrlChange = UrlChanged
         , onUrlRequest = LinkClicked
         }
