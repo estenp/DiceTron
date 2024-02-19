@@ -269,7 +269,7 @@ pull model =
 
 {-| Attempt to update model according to a passed `Try`.
 Validates that the `Try` being passed is better than the one received.
-Returns a `Result`.
+Returns an `Error` if the `Try` being passed is not better than the `Try` to beat.
 -}
 pass : Model -> Try -> Result String Model
 pass model try =

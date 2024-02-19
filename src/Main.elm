@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Browser.Dom as Dom
+import Browser.Navigation as Nav
 import Common exposing (..)
 import Console
 import Css.Global exposing (global)
@@ -17,6 +18,7 @@ import Player
 import Tailwind.Utilities as Tw
 import Task
 import Try
+import Url
 
 
 
@@ -24,7 +26,9 @@ import Try
 
 
 type alias Model =
-    { gameState : Game.Model
+    { key : Nav.Key
+    , url : Url.Url
+    , gameState : Game.Model
     , consoleState : Console.Model
     }
 
@@ -52,10 +56,12 @@ initConsoleState =
     }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
+init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init flags url key =
     ( { gameState = initGameState
       , consoleState = initConsoleState
+      , url = url
+      , key = key
       }
     , Cmd.none
     )
@@ -66,7 +72,9 @@ init _ =
 
 
 type Msg
-    = GameMsg Game.Msg
+    = LinkClicked Browser.UrlRequest
+    | UrlChanged Url.Url
+    | GameMsg Game.Msg
     | ConsoleMsg Console.Msg
     | NoOp
 
@@ -74,6 +82,19 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        LinkClicked urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model, Nav.pushUrl model.key (Url.toString url) )
+
+                Browser.External href ->
+                    ( model, Nav.load href )
+
+        UrlChanged url ->
+            ( { model | url = url }
+            , Cmd.none
+            )
+
         GameMsg subMsg ->
             case subMsg of
                 Game.TryMsg tryMsg ->
@@ -163,7 +184,7 @@ mergeConsoleState model console =
 -- VIEW
 
 
-view : Model -> Html Msg
+view : Model -> Browser.Document Msg
 view model =
     let
         { gameState, consoleState } =
@@ -185,21 +206,27 @@ view model =
         console =
             Console.view consoleState { onEnter = Console.Submit, onInput = Console.Change } |> Html.Styled.map ConsoleMsg
     in
-    div [ class "main" ]
-        (global Tw.globalStyles
-            :: (if gameIsOver then
-                    [ text ("Game over." ++ Player.getName gameState.players (Maybe.withDefault 0 (Deque.first gameState.activePlayers)) ++ " wins!")
-                    ]
+    { title = "Dicetron"
+    , body =
+        [ toUnstyled
+            (div [ class "main" ]
+                (global Tw.globalStyles
+                    :: (if gameIsOver then
+                            [ text ("Game over." ++ Player.getName gameState.players (Maybe.withDefault 0 (Deque.first gameState.activePlayers)) ++ " wins!")
+                            ]
 
-                else
-                    [ logo
-                    , playerStats
-                    , tryHistory
-                    , table
-                    , console
-                    ]
-               )
-        )
+                        else
+                            [ logo
+                            , playerStats
+                            , tryHistory
+                            , table
+                            , console
+                            ]
+                       )
+                )
+            )
+        ]
+    }
 
 
 
@@ -208,9 +235,11 @@ view model =
 
 main : Program () Model Msg
 main =
-    Browser.element
+    Browser.application
         { init = init
         , update = update
         , subscriptions = \_ -> Sub.none
-        , view = view >> toUnstyled
+        , view = view
+        , onUrlChange = UrlChanged
+        , onUrlRequest = LinkClicked
         }
