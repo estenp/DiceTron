@@ -10,7 +10,7 @@
   "scripts": {
     "tw:build": "node generatetw.js",
     "app:build": "elm make src/Main.elm --output=main.js",
-    "app:run": "echo file:///Users/esten/Developer/elm-dice/index.html && npx elm-watch hot",
+    "app:run": "npm run tw:build && elm reactor",
     "app:format": "elm-format --yes src/",
     "build": "npm run tw:build && npm run app:build"
   },

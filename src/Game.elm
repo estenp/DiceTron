@@ -263,7 +263,6 @@ pull model =
         , activePlayers = newActivePlayers
         , tryToBeat = ( Try.Two, Try.Twos )
     }
-        -- todo: dont always want to change turn here
         |> handlePullerKO
 
 
