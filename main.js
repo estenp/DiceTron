@@ -7772,6 +7772,7 @@ var $author$project$Main$update = F2(
 				}
 			case 'UrlChanged':
 				var url = msg.a;
+				var _v2 = A2($elm$core$Debug$log, 'url changed', url);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -7834,15 +7835,15 @@ var $author$project$Main$update = F2(
 									$elm$core$Platform$Cmd$none);
 							default:
 								var _try = actionMsg.a;
-								var _v5 = A2($author$project$Game$pass, model.gameState, _try);
-								if (_v5.$ === 'Ok') {
-									var newGameModel = _v5.a;
-									var _v6 = A2($elm$core$Debug$log, 'pass', newGameModel);
+								var _v6 = A2($author$project$Game$pass, model.gameState, _try);
+								if (_v6.$ === 'Ok') {
+									var newGameModel = _v6.a;
+									var _v7 = A2($elm$core$Debug$log, 'pass', newGameModel);
 									return _Utils_Tuple2(
 										A2($author$project$Main$mergeGameState, model, newGameModel),
 										$elm$core$Platform$Cmd$none);
 								} else {
-									var e = _v5.a;
+									var e = _v6.a;
 									return _Utils_Tuple2(
 										A2(
 											$author$project$Main$mergeConsoleState,
@@ -7874,18 +7875,18 @@ var $author$project$Main$update = F2(
 				var subMsg = msg.a;
 				var focusCmd = A2(
 					$elm$core$Task$attempt,
-					function (_v9) {
+					function (_v10) {
 						return $author$project$Main$NoOp;
 					},
 					$elm$browser$Browser$Dom$focus('console'));
-				var _v7 = A2(
+				var _v8 = A2(
 					$author$project$Console$update,
 					subMsg,
 					_Utils_Tuple2(model.consoleState, model.gameState));
-				var newConsole = _v7.a;
-				var _v8 = _v7.b;
-				var newGame = _v8.a;
-				var gameMsg = _v8.b;
+				var newConsole = _v8.a;
+				var _v9 = _v8.b;
+				var newGame = _v9.a;
+				var gameMsg = _v9.b;
 				return _Utils_Tuple2(
 					A2(
 						$author$project$Main$mergeGameState,
@@ -9746,6 +9747,7 @@ var $folkertdev$elm_deque$Internal$length = function (deque) {
 	return deque.sizeF + deque.sizeR;
 };
 var $folkertdev$elm_deque$Deque$length = A2($elm$core$Basics$composeL, $folkertdev$elm_deque$Internal$length, $folkertdev$elm_deque$Deque$unwrap);
+var $rtfeldman$elm_css$Html$Styled$a = $rtfeldman$elm_css$Html$Styled$node('a');
 var $author$project$Tailwind$Utilities$bg_gradient_to_br = A2($rtfeldman$elm_css$Css$property, 'background-image', 'linear-gradient(to bottom right, var(--tw-gradient-stops))');
 var $matheus23$elm_tailwind_modules_base$Tailwind$Color$Color = F5(
 	function (a, b, c, d, e) {
@@ -9886,6 +9888,9 @@ var $author$project$Tailwind$Utilities$from_color = function (color) {
 };
 var $author$project$Tailwind$Theme$gray = A5($matheus23$elm_tailwind_modules_base$Tailwind$Color$Color, 'rgb', '232', '232', '232', $matheus23$elm_tailwind_modules_base$Tailwind$Color$ViaVariable);
 var $author$project$Tailwind$Utilities$h_32 = A2($rtfeldman$elm_css$Css$property, 'height', '8rem');
+var $rtfeldman$elm_css$Html$Styled$Attributes$href = function (url) {
+	return A2($rtfeldman$elm_css$Html$Styled$Attributes$stringProperty, 'href', url);
+};
 var $rtfeldman$elm_css$Html$Styled$Attributes$id = $rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
 var $author$project$Tailwind$Utilities$items_center = A2($rtfeldman$elm_css$Css$property, 'align-items', 'center');
 var $author$project$Tailwind$Utilities$justify_center = A2($rtfeldman$elm_css$Css$property, 'justify-content', 'center');
@@ -9976,7 +9981,16 @@ var $author$project$Common$logo = A2(
 				]),
 			_List_fromArray(
 				[
-					$rtfeldman$elm_css$Html$Styled$text('D')
+					A2(
+					$rtfeldman$elm_css$Html$Styled$a,
+					_List_fromArray(
+						[
+							$rtfeldman$elm_css$Html$Styled$Attributes$href('/home')
+						]),
+					_List_fromArray(
+						[
+							$rtfeldman$elm_css$Html$Styled$text('D')
+						]))
 				]))
 		]));
 var $rtfeldman$elm_css$VirtualDom$Styled$KeyedNode = F3(
@@ -11603,6 +11617,7 @@ var $author$project$Main$view = function (model) {
 		$rtfeldman$elm_css$Html$Styled$map,
 		$author$project$Main$GameMsg,
 		$author$project$Game$viewHistory(gameState));
+	var _v1 = A2($elm$core$Debug$log, 'model', model);
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$div,
 		_List_fromArray(

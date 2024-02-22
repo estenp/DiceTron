@@ -10,9 +10,9 @@
   "scripts": {
     "tw:build": "node generatetw.js",
     "app:build": "elm make src/Main.elm --output=main.js",
-    "app:run": "npm run tw:build && elm reactor",
-    "app:format": "elm-format --yes src/",
-    "build": "npm run tw:build && npm run app:build"
+    "build": "npm run tw:build && npm run app:build",
+    "app:run": "elm-live src/Main.elm --start-page=index.html --pushstate --  --output=main.js",
+    "app:format": "elm-format --yes src/"
   },
   "devDependencies": {
     "elm-tailwind-modules": "^0.5.0",

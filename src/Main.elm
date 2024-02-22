@@ -91,6 +91,10 @@ update msg model =
                     ( model, Nav.load href )
 
         UrlChanged url ->
+            let
+                _ =
+                    Debug.log "url changed" url
+            in
             ( { model | url = url }
             , Cmd.none
             )
@@ -187,6 +191,9 @@ mergeConsoleState model console =
 view : Model -> Html Msg
 view model =
     let
+        _ =
+            Debug.log "model" model
+
         { gameState, consoleState } =
             model
 

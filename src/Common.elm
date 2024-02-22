@@ -1,7 +1,7 @@
 module Common exposing (logo, stats_)
 
-import Html.Styled exposing (Html, div, text)
-import Html.Styled.Attributes exposing (class, css, for, id, type_, value)
+import Html.Styled exposing (Html, a, div, text)
+import Html.Styled.Attributes exposing (class, css, for, href, id, type_, value)
 import StyledElements exposing (card)
 import Tailwind.Theme as Tw exposing (Color)
 import Tailwind.Utilities as Tw
@@ -35,7 +35,10 @@ logo =
         ]
         [ div
             [ id "logo" ]
-            [ text "D" ]
+            [ a
+                [ href "/home" ]
+                [ text "D" ]
+            ]
         ]
 
 
